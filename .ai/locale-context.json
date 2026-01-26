@@ -1,0 +1,128 @@
+{
+  "_comment": "i18n and localization configuration. AI reads this to set correct defaults.",
+  "_instructions": {
+    "target_market": "Primary market code (UA, US, EU, etc.)",
+    "ui_language": "Default UI language (uk-UA, en-US, etc.)",
+    "forbidden_langs": "CRITICAL: Languages that must NEVER appear in code/UI",
+    "supported_languages": "Languages you plan to support (now or future)",
+    "currency": "Default currency code",
+    "date_format": "Display format for dates"
+  },
+  
+  "target_market": "UA",
+  "ui_language": "uk-UA",
+  
+  "forbidden_langs": [
+    "ru",
+    "ru-RU",
+    "russian"
+  ],
+  
+  "supported_languages": {
+    "current": [
+      "uk-UA"
+    ],
+    "planned": [
+      "en-US"
+    ],
+    "_comment": "Move from 'planned' to 'current' when translations are ready"
+  },
+  
+  "currency": {
+    "code": "UAH",
+    "symbol": "₴",
+    "format": "1 234,56 ₴"
+  },
+  
+  "phone": {
+    "prefix": "+380",
+    "format": "+380 XX XXX XX XX",
+    "regex": "^\\+380\\d{9}$",
+    "example": "+380501234567"
+  },
+  
+  "date_format": {
+    "display": "DD.MM.YYYY",
+    "api": "YYYY-MM-DD",
+    "_comment": "display = user-facing, api = backend/database"
+  },
+  
+  "mock_data": {
+    "_comment": "Default mock data for tests, examples, demos. MUST match target market.",
+    "names": [
+      "Олена Коваленко",
+      "Іван Шевченко",
+      "Марія Бойко",
+      "Андрій Мельник",
+      "Тетяна Ткаченко"
+    ],
+    "cities": [
+      "Київ",
+      "Львів",
+      "Одеса",
+      "Харків",
+      "Дніпро",
+      "Запоріжжя",
+      "Вінниця"
+    ],
+    "emails": [
+      "user@example.ua",
+      "test@company.com",
+      "demo@startup.ua"
+    ],
+    "companies": [
+      "ТОВ Інноваційні Рішення",
+      "ПП Технології Майбутнього",
+      "Стартап Україна"
+    ],
+    "addresses": {
+      "street_example": "вул. Хрещатик, 1",
+      "city_example": "Київ",
+      "postal_code_example": "01001"
+    }
+  },
+  
+  "validation": {
+    "_comment": "Regex patterns for Ukrainian market data validation",
+    "tax_id": {
+      "regex": "^\\d{10}$",
+      "description": "ІПН (10 digits)",
+      "example": "1234567890"
+    },
+    "iban": {
+      "regex": "^UA\\d{27}$",
+      "description": "Ukrainian IBAN",
+      "example": "UA123456789012345678901234567"
+    },
+    "postal_code": {
+      "regex": "^\\d{5}$",
+      "description": "Ukrainian postal code",
+      "example": "01001"
+    }
+  },
+  
+  "accessibility": {
+    "default_theme": "light",
+    "support_themes": ["light", "dark"],
+    "font_size_base": "16px",
+    "font_size_unit": "rem",
+    "_comment": "Never use px for font sizes - always rem/em for accessibility"
+  },
+  
+  "_update_instructions": {
+    "when_adding_language": [
+      "1. Add locale code to supported_languages.planned",
+      "2. Create /locales/{locale}/ directory",
+      "3. Translate all .json files",
+      "4. Test with AI: //CHECK:I18N",
+      "5. Move from 'planned' to 'current'"
+    ],
+    "when_entering_new_market": [
+      "1. Update target_market",
+      "2. Update currency, phone, validation patterns",
+      "3. Update mock_data with local examples",
+      "4. Review forbidden_langs (some markets may have different restrictions)",
+      "5. Update RULES_PRODUCT.md section 3 if needed"
+    ]
+  }
+}

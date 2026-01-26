@@ -1,0 +1,31 @@
+{
+  "_comment": "Token usage tracking for AI conversations. Update 'current_usage' manually or via script.",
+  "_instructions": {
+    "daily_limit": "Your subscription daily token limit (check at claude.ai/settings)",
+    "warning_threshold": "At 90% AI will warn you to wrap up",
+    "critical_threshold": "At 95% AI enters finalization-only mode",
+    "current_usage": "UPDATE THIS: Tokens used today (reset at midnight UTC)",
+    "last_reset": "UPDATE THIS: ISO date when current_usage was reset to 0"
+  },
+  
+  "subscription_type": "pro",
+  "daily_limit": 200000,
+  "warning_threshold": 0.90,
+  "critical_threshold": 0.95,
+  
+  "current_usage": 0,
+  "last_reset": "2025-01-26T00:00:00Z",
+  
+  "_usage_notes": {
+    "how_to_update": "After each session, update current_usage += tokens_used_in_session",
+    "how_to_reset": "At start of new day (UTC midnight), set current_usage = 0 and update last_reset",
+    "automation": "You can create a script to auto-update this file (see templates/update-tokens.sh)"
+  },
+  
+  "history": {
+    "_comment": "Optional: Track daily usage for analytics",
+    "2025-01-26": 0,
+    "2025-01-25": 156432,
+    "2025-01-24": 187234
+  }
+}
