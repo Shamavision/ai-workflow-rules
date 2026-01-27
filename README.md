@@ -3,7 +3,7 @@
 <!-- Hero Section -->
 <img src="public/wellme-logo.svg" alt="Wellme.Creative Team - AI Workflow Rules" width="500">
 
-# 🛡️ AI Workflow Rules Framework
+# AI Workflow Rules Framework
 
 ### **Protect Your AI Workflow IP. Build Secure, Compliant Applications.**
 
@@ -27,27 +27,27 @@
 
 ---
 
-## 🎯 What Is This?
+## What Is This?
 
 AI Workflow Rules Framework is a **comprehensive security and compliance system** for modern development teams working with AI-assisted coding. It protects your intellectual property, ensures code security, and enforces quality standards automatically.
 
 **Built for:**
-- 🏢 Software agencies managing multiple client projects
-- 👨‍💻 Development teams requiring consistent security standards
-- 🚀 Companies preparing for GDPR/compliance audits
-- 🌍 Projects targeting international markets
+- Software agencies managing multiple client projects
+- Development teams requiring consistent security standards
+- Companies preparing for GDPR/compliance audits
+- Projects targeting international markets
 
 <br>
 
 <div align="center" style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## ✨ Core Features
+## Core Features
 
 <table width="100%">
 <tr>
-<td width="33%" align="center" style="padding: 20px;">
+<td width="33%" align="center" valign="top" style="padding: 20px;">
 
-### 🛡️ Security Onion
+### Security Onion
 
 5-layer protection<br>
 Automated scanning<br>
@@ -55,9 +55,9 @@ Zero-config setup<br>
 **310+ patterns**
 
 </td>
-<td width="33%" align="center" style="padding: 20px;">
+<td width="33%" align="center" valign="top" style="padding: 20px;">
 
-### ⚖️ Legal Protection
+### Legal Protection
 
 GDPR compliant<br>
 License system<br>
@@ -65,9 +65,9 @@ Trademark protection<br>
 **Anti-counterfeit**
 
 </td>
-<td width="33%" align="center" style="padding: 20px;">
+<td width="33%" align="center" valign="top" style="padding: 20px;">
 
-### 🚀 Modern Stack
+### Modern Stack
 
 AI/Voice search ready<br>
 i18n architecture<br>
@@ -82,7 +82,7 @@ SEO optimized<br>
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 **Get started in 4 simple steps:**
 
@@ -111,7 +111,7 @@ chmod +x /path/to/your-project/.git/hooks/pre-commit
 
 <div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## 🛡️ Security Onion Architecture
+## Security Onion Architecture
 
 Comprehensive **5-layer protection** from client data to production:
 
@@ -127,31 +127,31 @@ Comprehensive **5-layer protection** from client data to production:
 
 ---
 
-## 🔐 Developer Experience
+## Developer Experience
 
 **Automated quality enforcement in your workflow:**
 
 ```bash
 # Pre-commit hooks run automatically
 git commit -m "feat: add new feature"
-# → ✅ Secrets scan
-# → ✅ Code quality check
-# → ✅ Security validation
-# → ✅ Commit allowed
+# → Secrets scan
+# → Code quality check
+# → Security validation
+# → Commit allowed
 ```
 
 ```bash
 # Pre-deploy validation
 ./scripts/seo-check.sh
-# → ✅ 8 comprehensive checks
-# → ✅ Security audit
-# → ✅ Performance validation
-# → ✅ Deploy approved
+# → 8 comprehensive checks
+# → Security audit
+# → Performance validation
+# → Deploy approved
 ```
 
 <div align="center">
 
-### 🎯 Zero Configuration Required
+### Zero Configuration Required
 
 Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projects
 
@@ -161,71 +161,71 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 
 <div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## 📋 Complete Feature Set
+## Complete Feature Set
 
 <table width="100%">
 <tr>
 <td width="33%" valign="top">
 
-### 🌍 Internationalization
+### Internationalization
 
-✅ i18n-ready architecture
-✅ Namespace translations
-✅ RTL support built-in
-✅ Multi-locale management
-✅ Bundle optimization
+🔵 i18n-ready architecture<br>
+🔵 Namespace translations<br>
+🔵 RTL support built-in<br>
+🔵 Multi-locale management<br>
+🔵 Bundle optimization
 
 <br>
 
-### 📊 SEO & Performance
+### SEO & Performance
 
-✅ 8 automated audits
-✅ AI crawler support
-✅ Voice search ready
-✅ Core Web Vitals
-✅ Lighthouse optimized
+🔵 8 automated audits<br>
+🔵 AI crawler support<br>
+🔵 Voice search ready<br>
+🔵 Core Web Vitals<br>
+🔵 Lighthouse optimized
 
 </td>
 <td width="33%" valign="top">
 
-### ♿ Accessibility
+### Accessibility
 
-✅ WCAG 2.1 Level AA
-✅ Keyboard navigation
-✅ Screen reader optimized
-✅ Color contrast validation
-✅ Semantic HTML enforcement
+🔵 WCAG 2.1 Level AA<br>
+🔵 Keyboard navigation<br>
+🔵 Screen reader optimized<br>
+🔵 Color contrast validation<br>
+🔵 Semantic HTML enforcement
 
 <br>
 
-### 🔒 Security Scanning
+### Security Scanning
 
-✅ 40+ secret patterns
-✅ API key detection
-✅ Credentials scanning
-✅ License protection
-✅ Regional compliance
+🔵 40+ secret patterns<br>
+🔵 API key detection<br>
+🔵 Credentials scanning<br>
+🔵 License protection<br>
+🔵 Regional compliance
 
 </td>
 <td width="33%" valign="top">
 
-### ⚖️ Legal & Compliance
+### Legal & Compliance
 
-✅ GDPR compliant
-✅ Privacy-first metrics
-✅ Proprietary license
-✅ Trademark protection
-✅ Certificate system
+🔵 GDPR compliant<br>
+🔵 Privacy-first metrics<br>
+🔵 Proprietary license<br>
+🔵 Trademark protection<br>
+🔵 Certificate system
 
 <br>
 
-### 🏢 Enterprise Ready
+### Enterprise Ready
 
-✅ HMAC-SHA256 licenses
-✅ Anti-counterfeit verification
-✅ White-label options
-✅ Multi-project support
-✅ Team collaboration
+🔵 HMAC-SHA256 licenses<br>
+🔵 Anti-counterfeit verification<br>
+🔵 White-label options<br>
+🔵 Multi-project support<br>
+🔵 Team collaboration
 
 </td>
 </tr>
@@ -235,10 +235,10 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 
 ---
 
-## 🌟 Use Cases
+## Use Cases
 
 <details>
-<summary><strong>🏢 Software Agencies</strong> - Managing multiple client projects</summary>
+<summary><strong>Software Agencies</strong> - Managing multiple client projects</summary>
 <br>
 
 **Perfect for agencies with 5-50 developers:**
@@ -255,38 +255,38 @@ cp -r ai-workflow-rules/ ~/clients/new-client/
 ```
 
 **Benefits:**
-- ✅ Standardize security across all client projects
-- ✅ GDPR compliance out-of-box
-- ✅ Reduce security audit time by 80%
-- ✅ Professional client presentation
+- Standardize security across all client projects
+- GDPR compliance out-of-box
+- Reduce security audit time by 80%
+- Professional client presentation
 
 </details>
 
 <details>
-<summary><strong>🚀 Startups</strong> - Preparing for EU expansion</summary>
+<summary><strong>Startups</strong> - Preparing for EU expansion</summary>
 <br>
 
 **Ready for investor due diligence:**
 
-- ✅ **GDPR compliant** from day one
-- ✅ **Security audit automation** (save weeks of work)
-- ✅ **Investor-ready documentation** (license, trademark, certificates)
-- ✅ **Scalable i18n architecture** (expand to new markets easily)
+- **GDPR compliant** from day one
+- **Security audit automation** (save weeks of work)
+- **Investor-ready documentation** (license, trademark, certificates)
+- **Scalable i18n architecture** (expand to new markets easily)
 
 **Result:** Pass security audits faster, impress investors with enterprise-grade infrastructure.
 
 </details>
 
 <details>
-<summary><strong>👨‍💻 Freelancers</strong> - Protecting workflow IP</summary>
+<summary><strong>Freelancers</strong> - Protecting workflow IP</summary>
 <br>
 
 **Sell your AI workflow as a product:**
 
-- ✅ **License system** for selling your rules to clients
-- ✅ **Anti-counterfeit protection** prevents unauthorized copying
-- ✅ **Professional presentation** stands out from competition
-- ✅ **Consistent quality** across all your projects
+- **License system** for selling your rules to clients
+- **Anti-counterfeit protection** prevents unauthorized copying
+- **Professional presentation** stands out from competition
+- **Consistent quality** across all your projects
 
 **Example:** Charge $500-2000 per client for your "Premium AI Workflow Package"
 
@@ -296,23 +296,23 @@ cp -r ai-workflow-rules/ ~/clients/new-client/
 
 <div align="center" style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## 📊 Framework Stats
+## Framework Stats
 
 <table width="100%">
 <tr>
-<td width="25%" align="center">
+<td width="25%" align="center" valign="top">
 <div style="font-size: 32px; font-weight: bold;">25+</div>
 <div>Files</div>
 </td>
-<td width="25%" align="center">
+<td width="25%" align="center" valign="top">
 <div style="font-size: 32px; font-weight: bold;">5,000+</div>
 <div>Lines of Docs</div>
 </td>
-<td width="25%" align="center">
+<td width="25%" align="center" valign="top">
 <div style="font-size: 32px; font-weight: bold;">6</div>
 <div>Automated Checks</div>
 </td>
-<td width="25%" align="center">
+<td width="25%" align="center" valign="top">
 <div style="font-size: 32px; font-weight: bold;">310+</div>
 <div>Security Patterns</div>
 </td>
@@ -323,15 +323,15 @@ cp -r ai-workflow-rules/ ~/clients/new-client/
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 **Core Documentation:**
 
-- 📘 **[RULES_CORE.md](RULES_CORE.md)** - Technical workflow, git strategy, security practices
-- 📗 **[RULES_PRODUCT.md](RULES_PRODUCT.md)** - Product development, i18n, accessibility, scaling
-- 📕 **[LICENSE](LICENSE)** - Proprietary license terms
-- 📙 **[CERTIFICATE.md](CERTIFICATE.md)** - Authenticity verification
-- 📓 **[TRADEMARK.md](TRADEMARK.md)** - Brand protection guidelines
+- **[RULES_CORE.md](RULES_CORE.md)** - Technical workflow, git strategy, security practices
+- **[RULES_PRODUCT.md](RULES_PRODUCT.md)** - Product development, i18n, accessibility, scaling
+- **[LICENSE](LICENSE)** - Proprietary license terms
+- **[CERTIFICATE.md](CERTIFICATE.md)** - Authenticity verification
+- **[TRADEMARK.md](TRADEMARK.md)** - Brand protection guidelines
 
 **Configuration Files:**
 
@@ -351,13 +351,13 @@ cp -r ai-workflow-rules/ ~/clients/new-client/
 
 <div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## 🌐 Regional Compliance (Optional Module)
+## Regional Compliance (Optional Module)
 
 For projects requiring **specific market compliance:**
 
 <table width="100%">
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 **What it does:**
 - Automated tracker detection
@@ -367,7 +367,7 @@ For projects requiring **specific market compliance:**
 - Migration tools
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 **Use cases:**
 - Ukrainian market projects
@@ -386,7 +386,7 @@ For projects requiring **specific market compliance:**
 
 ---
 
-## 🏢 Enterprise Features
+## Enterprise Features
 
 ### License Management
 
@@ -410,10 +410,10 @@ python scripts/generate-license.py \
 
 **Anti-counterfeit protection:**
 
-- ✅ SHA-256 checksums for all critical files
-- ✅ PGP signature verification
-- ✅ Authenticity verification script
-- ✅ Tamper detection alerts
+- SHA-256 checksums for all critical files
+- PGP signature verification
+- Authenticity verification script
+- Tamper detection alerts
 
 ---
 
@@ -426,38 +426,38 @@ python scripts/generate-license.py \
 - Client-facing documentation
 - Revenue sharing model
 
-**Contact:** partnerships@yourcompany.com
+**Contact:** partnerships@wellme.ua
 
 <br>
 
 <div align="center" style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## 🎯 Why Choose This Framework?
+## Why Choose This Framework?
 
 <table width="100%">
 <tr>
-<td width="20%" align="center">
-<div style="font-size: 48px;">✅</div>
+<td width="20%" align="center" valign="top">
+<div style="font-size: 48px;">🟡</div>
 <strong>Comprehensive</strong><br>
 <small>Complete security, compliance, and quality system</small>
 </td>
-<td width="20%" align="center">
-<div style="font-size: 48px;">✅</div>
+<td width="20%" align="center" valign="top">
+<div style="font-size: 48px;">🟡</div>
 <strong>Production-Ready</strong><br>
 <small>Used by agencies managing multiple projects</small>
 </td>
-<td width="20%" align="center">
-<div style="font-size: 48px;">✅</div>
+<td width="20%" align="center" valign="top">
+<div style="font-size: 48px;">🟡</div>
 <strong>Modular</strong><br>
 <small>Enable only features you need</small>
 </td>
-<td width="20%" align="center">
-<div style="font-size: 48px;">✅</div>
+<td width="20%" align="center" valign="top">
+<div style="font-size: 48px;">🟡</div>
 <strong>Maintained</strong><br>
 <small>Regular updates and security patches</small>
 </td>
-<td width="20%" align="center">
-<div style="font-size: 48px;">✅</div>
+<td width="20%" align="center" valign="top">
+<div style="font-size: 48px;">🟡</div>
 <strong>Supported</strong><br>
 <small>Enterprise support available</small>
 </td>
@@ -470,7 +470,7 @@ python scripts/generate-license.py \
 
 <div align="center">
 
-## 🚦 Ready to Get Started?
+## Ready to Get Started?
 
 **Protect your AI workflow in 5 minutes**
 
@@ -488,24 +488,25 @@ python scripts/generate-license.py \
 
 ---
 
-### 📞 Support & Community
+### Support & Community
 
 - **Documentation:** [RULES_CORE.md](RULES_CORE.md) • [RULES_PRODUCT.md](RULES_PRODUCT.md)
 - **Issues:** [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
-- **Enterprise:** partnerships@yourcompany.com
-- **Security:** security@yourcompany.com
+- **Enterprise:** partnerships@wellme.ua
+- **Security:** security@wellme.ua
+- **Website:** [wellme.ua](https://wellme.ua)
 
 <br>
 
 <div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## ⚖️ License
+## License
 
 **Proprietary License** - See [LICENSE](LICENSE) for full terms.
 
 <table width="100%">
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 **❌ Restrictions:**
 - No redistribution without permission
@@ -514,7 +515,7 @@ python scripts/generate-license.py \
 - No AI training without authorization
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 **✅ Permissions:**
 - Commercial use (with valid license)
@@ -528,7 +529,7 @@ python scripts/generate-license.py \
 
 <div align="center" style="padding-top: 20px;">
 For white-label partnerships and enterprise licensing, contact:<br>
-<strong>partnerships@yourcompany.com</strong>
+<strong>partnerships@wellme.ua</strong>
 </div>
 
 </div>
@@ -547,6 +548,6 @@ For white-label partnerships and enterprise licensing, contact:<br>
   <img src="https://img.shields.io/badge/Powered%20by-Wellme.Creative%20Team-0099CC?style=flat-square&labelColor=1D1D1B" alt="Powered by">
 </p>
 
-© 2025 AI Workflow Rules. All rights reserved.
+[wellme.ua](https://wellme.ua) • © 2025 AI Workflow Rules. All rights reserved.
 
 </div>
