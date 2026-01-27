@@ -1,0 +1,596 @@
+{
+  "_comment": "Forbidden Russian Tracking Services - Ukrainian Market Protection",
+  "_version": "1.0",
+  "_last_updated": "2025-01-27",
+  "_legal_basis": "Ukrainian wartime regulations - protection of citizen data from russian state surveillance",
+
+  "threat_levels": {
+    "CRITICAL": "Direct security threat - data sent to russian state servers",
+    "HIGH": "Russian commercial service - potential data sharing with state",
+    "MEDIUM": "Russian service - compliance and reputation risk"
+  },
+
+  "blacklist": {
+    "analytics": [
+      {
+        "name": "Яндекс.Метрика",
+        "domains": [
+          "metrika.yandex.ru",
+          "mc.yandex.ru",
+          "yandex.ru/metrika",
+          "metrika.yandex.com"
+        ],
+        "patterns": [
+          "metrika.yandex",
+          "ym(\\s*\\(|\\.|\\[)",
+          "yaCounter"
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian state-controlled analytics - all data accessible to russian government",
+        "alternatives": [
+          "Google Analytics 4 (GDPR-compliant)",
+          "Plausible Analytics (privacy-first, EU-hosted)",
+          "Matomo (self-hosted, full control)",
+          "Fathom Analytics (privacy-focused)"
+        ],
+        "replacement_guide": {
+          "from": "<script src=\"https://mc.yandex.ru/metrika/tag.js\"></script>",
+          "to": "<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX\"></script>"
+        }
+      },
+      {
+        "name": "Яндекс.Вебмастер",
+        "domains": [
+          "webvisor.com",
+          "mc.webvisor.org"
+        ],
+        "patterns": [
+          "webvisor",
+          "yandex.*webmaster"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Screen recording and session replay sent to russian servers",
+        "alternatives": [
+          "Google Search Console",
+          "Bing Webmaster Tools",
+          "Hotjar (session recording)",
+          "Microsoft Clarity (free, privacy-focused)"
+        ]
+      },
+      {
+        "name": "Top.Mail.ru",
+        "domains": [
+          "top.mail.ru",
+          "top-fwz1.mail.ru",
+          "rs.mail.ru"
+        ],
+        "patterns": [
+          "top\\.mail\\.ru",
+          "top-fwz1",
+          "_tmr"
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian state-affiliated analytics - Mail.ru Group controlled",
+        "alternatives": [
+          "Google Analytics 4",
+          "Plausible Analytics",
+          "Matomo"
+        ]
+      },
+      {
+        "name": "Рамблер/топ-100",
+        "domains": [
+          "counter.rambler.ru",
+          "top100.rambler.ru"
+        ],
+        "patterns": [
+          "rambler.*counter",
+          "top100.*rambler"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian analytics service",
+        "alternatives": [
+          "Google Analytics 4",
+          "Plausible Analytics"
+        ]
+      },
+      {
+        "name": "LiveInternet",
+        "domains": [
+          "liveinternet.ru",
+          "counter.yadro.ru"
+        ],
+        "patterns": [
+          "liveinternet",
+          "counter\\.yadro"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian counter service",
+        "alternatives": [
+          "Google Analytics 4",
+          "Simple Analytics"
+        ]
+      }
+    ],
+
+    "social": [
+      {
+        "name": "VK (ВКонтакте) Pixel",
+        "domains": [
+          "vk.com/js/api",
+          "vk.com/pixel",
+          "vkontakte.ru"
+        ],
+        "patterns": [
+          "vk\\.com",
+          "VK\\.Retargeting",
+          "VK\\.Goal",
+          "vkontakte"
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian state-controlled social network - direct FSB access",
+        "alternatives": [
+          "Facebook Pixel (Meta)",
+          "LinkedIn Insight Tag",
+          "Twitter Pixel",
+          "TikTok Pixel (non-russian version)"
+        ]
+      },
+      {
+        "name": "OK.ru (Одноклассники) Pixel",
+        "domains": [
+          "ok.ru",
+          "odnoklassniki.ru"
+        ],
+        "patterns": [
+          "ok\\.ru",
+          "odnoklassniki",
+          "ODKL"
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian social network - Mail.ru Group (state-controlled)",
+        "alternatives": [
+          "Facebook Pixel",
+          "LinkedIn Insight Tag"
+        ]
+      },
+      {
+        "name": "Telegram Widget (russian version)",
+        "domains": [
+          "telegram.org/js/telegram-widget.js"
+        ],
+        "patterns": [
+          "telegram\\.org/js/telegram-widget"
+        ],
+        "threat_level": "MEDIUM",
+        "reason": "Telegram has russian origins - use with caution",
+        "alternatives": [
+          "Embedded social feeds (Twitter, LinkedIn)",
+          "Custom contact forms",
+          "WhatsApp Business API"
+        ],
+        "note": "Telegram itself may be acceptable if using non-russian hosting, but verify data flows"
+      }
+    ],
+
+    "cdn": [
+      {
+        "name": "Yandex CDN",
+        "domains": [
+          "yastatic.net",
+          "yandex.st",
+          "yandex.net/bootstrap"
+        ],
+        "patterns": [
+          "yastatic",
+          "yandex\\.st",
+          "yandex\\.net"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian CDN - code injection risk, data leakage",
+        "alternatives": [
+          "Cloudflare CDN",
+          "jsDelivr (GitHub-based)",
+          "unpkg (npm-based)",
+          "Google Hosted Libraries",
+          "cdnjs"
+        ],
+        "replacement_guide": {
+          "from": "https://yastatic.net/jquery/3.6.0/jquery.min.js",
+          "to": "https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+        }
+      },
+      {
+        "name": "Mail.ru CDN",
+        "domains": [
+          "imgsmail.ru",
+          "filin.mail.ru"
+        ],
+        "patterns": [
+          "imgsmail",
+          "filin\\.mail"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian state-affiliated CDN",
+        "alternatives": [
+          "Cloudflare CDN",
+          "jsDelivr",
+          "unpkg"
+        ]
+      }
+    ],
+
+    "payments": [
+      {
+        "name": "Яндекс.Касса / ЮKassa",
+        "domains": [
+          "yookassa.ru",
+          "kassa.yandex.ru",
+          "money.yandex.ru"
+        ],
+        "patterns": [
+          "yookassa",
+          "kassa\\.yandex",
+          "money\\.yandex"
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian payment processor - sanctions risk, data leakage",
+        "alternatives": [
+          "Stripe (international, UA-supported)",
+          "PayPal",
+          "WayForPay (Ukrainian)",
+          "Fondy (Ukrainian)",
+          "LiqPay (Ukrainian - ПриватБанк)",
+          "Portmone (Ukrainian)"
+        ]
+      },
+      {
+        "name": "QIWI",
+        "domains": [
+          "qiwi.com",
+          "qiwi.ru"
+        ],
+        "patterns": [
+          "qiwi\\."
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian payment system - sanctions, legal risk",
+        "alternatives": [
+          "Stripe",
+          "WayForPay (Ukrainian)",
+          "LiqPay (Ukrainian)"
+        ]
+      },
+      {
+        "name": "WebMoney",
+        "domains": [
+          "webmoney.ru",
+          "webmoney.ua"
+        ],
+        "patterns": [
+          "webmoney"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian-origin payment system",
+        "alternatives": [
+          "PayPal",
+          "Stripe",
+          "Ukrainian payment processors"
+        ]
+      }
+    ],
+
+    "maps": [
+      {
+        "name": "Яндекс.Карты",
+        "domains": [
+          "api-maps.yandex.ru",
+          "maps.yandex.ru"
+        ],
+        "patterns": [
+          "yandex.*map",
+          "ymaps"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian maps - geolocation tracking to russian servers",
+        "alternatives": [
+          "Google Maps API",
+          "OpenStreetMap (open-source)",
+          "Mapbox",
+          "Leaflet.js + OSM tiles"
+        ]
+      },
+      {
+        "name": "2GIS",
+        "domains": [
+          "2gis.ru",
+          "2gis.com"
+        ],
+        "patterns": [
+          "2gis"
+        ],
+        "threat_level": "MEDIUM",
+        "reason": "Russian mapping service (originally Kazakhstan)",
+        "alternatives": [
+          "Google Maps",
+          "OpenStreetMap"
+        ]
+      }
+    ],
+
+    "video": [
+      {
+        "name": "Rutube",
+        "domains": [
+          "rutube.ru"
+        ],
+        "patterns": [
+          "rutube"
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian state propaganda platform",
+        "alternatives": [
+          "YouTube",
+          "Vimeo",
+          "Self-hosted (using Cloudflare Stream)"
+        ]
+      },
+      {
+        "name": "VK Video",
+        "domains": [
+          "vk.com/video",
+          "vkvideo.ru"
+        ],
+        "patterns": [
+          "vk.*video",
+          "vkvideo"
+        ],
+        "threat_level": "CRITICAL",
+        "reason": "Russian state-controlled video platform",
+        "alternatives": [
+          "YouTube",
+          "Vimeo"
+        ]
+      }
+    ],
+
+    "search": [
+      {
+        "name": "Yandex Search Widget",
+        "domains": [
+          "yandex.ru/search",
+          "site.yandex.ru"
+        ],
+        "patterns": [
+          "yandex.*search",
+          "site\\.yandex"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian search engine integration",
+        "alternatives": [
+          "Google Custom Search",
+          "Algolia (advanced)",
+          "Elasticsearch (self-hosted)"
+        ]
+      }
+    ],
+
+    "ecommerce": [
+      {
+        "name": "Wildberries SDK",
+        "domains": [
+          "wildberries.ru",
+          "wbstatic.net"
+        ],
+        "patterns": [
+          "wildberries",
+          "wbstatic"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian e-commerce platform - sanctions risk",
+        "alternatives": [
+          "Shopify",
+          "WooCommerce (WordPress)",
+          "Magento",
+          "Prom.ua (Ukrainian)"
+        ]
+      },
+      {
+        "name": "Ozon SDK",
+        "domains": [
+          "ozon.ru"
+        ],
+        "patterns": [
+          "ozon\\.ru"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian e-commerce - sanctions, legal risk",
+        "alternatives": [
+          "Shopify",
+          "WooCommerce"
+        ]
+      }
+    ],
+
+    "fonts": [
+      {
+        "name": "Yandex Fonts",
+        "domains": [
+          "fonts.yandex.ru"
+        ],
+        "patterns": [
+          "fonts\\.yandex"
+        ],
+        "threat_level": "MEDIUM",
+        "reason": "Russian CDN for fonts - tracking via font loading",
+        "alternatives": [
+          "Google Fonts",
+          "Adobe Fonts",
+          "Self-hosted fonts",
+          "Bunny Fonts (GDPR-compliant Google Fonts proxy)"
+        ]
+      }
+    ],
+
+    "captcha": [
+      {
+        "name": "Yandex SmartCaptcha",
+        "domains": [
+          "smartcaptcha.yandexcloud.net"
+        ],
+        "patterns": [
+          "smartcaptcha.*yandex"
+        ],
+        "threat_level": "HIGH",
+        "reason": "Russian captcha service - user behavior tracking",
+        "alternatives": [
+          "Google reCAPTCHA v3",
+          "hCaptcha (privacy-focused)",
+          "Cloudflare Turnstile (invisible)",
+          "Friendly Captcha (EU-based)"
+        ]
+      }
+    ]
+  },
+
+  "whitelist": {
+    "_comment": "Safe alternatives - Western and Ukrainian services",
+    "analytics": [
+      "Google Analytics (gtag.js, analytics.js)",
+      "Plausible Analytics",
+      "Matomo",
+      "Fathom Analytics",
+      "Simple Analytics",
+      "Microsoft Clarity"
+    ],
+    "social": [
+      "Facebook Pixel",
+      "LinkedIn Insight Tag",
+      "Twitter Pixel",
+      "Pinterest Tag",
+      "TikTok Pixel (international)"
+    ],
+    "cdn": [
+      "Cloudflare CDN",
+      "jsDelivr",
+      "unpkg",
+      "cdnjs",
+      "Google Hosted Libraries",
+      "jsdelivr"
+    ],
+    "payments": [
+      "Stripe",
+      "PayPal",
+      "WayForPay (Ukrainian)",
+      "Fondy (Ukrainian)",
+      "LiqPay (Ukrainian)",
+      "Portmone (Ukrainian)",
+      "Square"
+    ],
+    "maps": [
+      "Google Maps API",
+      "OpenStreetMap",
+      "Mapbox",
+      "Leaflet.js"
+    ],
+    "video": [
+      "YouTube",
+      "Vimeo",
+      "Cloudflare Stream"
+    ],
+    "captcha": [
+      "Google reCAPTCHA",
+      "hCaptcha",
+      "Cloudflare Turnstile",
+      "Friendly Captcha"
+    ]
+  },
+
+  "detection_patterns": {
+    "_comment": "Regex patterns for automated detection",
+    "script_src": [
+      "metrika\\.yandex",
+      "top\\.mail\\.ru",
+      "vk\\.com",
+      "ok\\.ru",
+      "yastatic",
+      "rutube\\.ru",
+      "wildberries",
+      "yookassa"
+    ],
+    "javascript_code": [
+      "ym\\(",
+      "yaCounter",
+      "VK\\.Retargeting",
+      "VK\\.Goal",
+      "_tmr",
+      "ODKL"
+    ],
+    "domains_in_urls": [
+      "\\.yandex\\.",
+      "\\.mail\\.ru",
+      "\\.vk\\.com",
+      "\\.ok\\.ru",
+      "yastatic\\.net",
+      "rutube\\.ru",
+      "wildberries\\.ru",
+      "ozon\\.ru"
+    ]
+  },
+
+  "legal_compliance": {
+    "ukrainian_law": {
+      "basis": "Wartime regulations protect citizen data from hostile state surveillance",
+      "risk": "Using russian services exposes Ukrainian user data to russian intelligence",
+      "penalties": "Reputation damage, legal liability, sanctions violations"
+    },
+    "gdpr": {
+      "issue": "Russian services do not comply with GDPR data protection standards",
+      "transfers": "Data transfers to russia violate GDPR Article 44-50"
+    },
+    "sanctions": {
+      "financial": "Many russian services under international sanctions",
+      "payment_processors": "Russian payment systems sanctioned by US/EU"
+    }
+  },
+
+  "seo_impact": {
+    "_comment": "Removing russian trackers IMPROVES SEO, not harms it",
+    "benefits": [
+      "Faster page load (no russian CDN delays)",
+      "Better Core Web Vitals scores",
+      "No geolocation issues (russian servers far from UA users)",
+      "Improved trust signals (no russian tracking)",
+      "GDPR compliance = better EU rankings"
+    ],
+    "myths": [
+      {
+        "myth": "Blocking Yandex hurts SEO",
+        "reality": "Yandex has <1% market share in Ukraine. Google dominates 95%+. No SEO impact."
+      },
+      {
+        "myth": "Need Яндекс.Метрика for analytics",
+        "reality": "Google Analytics provides same data + better international support + GDPR compliance"
+      }
+    ]
+  },
+
+  "migration_guide": {
+    "_comment": "Quick migration from russian to safe alternatives",
+    "steps": [
+      "1. Audit: Run ./scripts/seo-check.sh to find russian trackers",
+      "2. Replace: Use alternatives from this file",
+      "3. Test: Verify analytics still work",
+      "4. Deploy: Push to production",
+      "5. Monitor: Check no russian requests in Network tab"
+    ],
+    "timeline": "Most migrations take 1-2 hours"
+  },
+
+  "metadata": {
+    "created_at": "2025-01-27T00:00:00Z",
+    "updated_at": "2025-01-27T00:00:00Z",
+    "version": "1.0",
+    "maintained_by": "AI Workflow Rules Framework"
+  }
+}
