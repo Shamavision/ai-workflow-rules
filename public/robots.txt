@@ -4,7 +4,7 @@
 # ==============================================================================
 #
 # PURPOSE:
-#   Control how search engines (Google, Bing, etc.) crawl your website
+#   Control how search engines, AI assistants, and voice search crawl your site
 #
 # IMPORTANT:
 #   - This is a TEMPLATE for client projects
@@ -12,10 +12,18 @@
 #   - Customize based on your needs
 #   - This file is PUBLIC (anyone can view it)
 #
-# CURRENT CONFIGURATION:
-#   ✅ Allow all search engines
-#   ✅ Allow all pages (SEO-friendly)
+# CURRENT CONFIGURATION (Ukrainian Market Optimized):
+#   ✅ Allow search engines (Google, Bing, DuckDuckGo)
+#   ✅ Allow AI assistants (ChatGPT, Claude, Bard, Perplexity)
+#   ✅ Allow voice search (Google Assistant, Alexa, Siri)
 #   ✅ Sitemap declared
+#   ❌ Block russian search engines (Yandex, Mail.ru, Rambler)
+#
+# WHY BLOCK RUSSIAN SERVICES:
+#   - Security: Prevent data leakage to russian state servers
+#   - SEO: Yandex <1% market share in Ukraine (Google 95%+)
+#   - Legal: Ukrainian wartime data protection compliance
+#   - See: RULES_PRODUCT.md Section 8 (Forbidden Tracking)
 #
 # LEARN MORE:
 #   https://developers.google.com/search/docs/crawling-indexing/robots/intro
@@ -80,21 +88,120 @@ Sitemap: https://yourdomain.com/sitemap.xml
 # SPECIFIC SEARCH ENGINES
 # ==============================================================================
 
-# Google
+# Google (primary for Ukrainian market - 95%+ share)
 User-agent: Googlebot
 Allow: /
 
-# Bing
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Video
+Allow: /
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+# Bing (2nd largest in Ukraine)
 User-agent: Bingbot
 Allow: /
 
-# Yandex (if targeting russian market - currently NOT recommended for UA)
-# User-agent: Yandex
-# Disallow: /
+User-agent: BingPreview
+Allow: /
 
-# DuckDuckGo
+# DuckDuckGo (privacy-focused)
 User-agent: DuckDuckBot
 Allow: /
+
+# ==============================================================================
+# AI ASSISTANTS & AGENTS (Allow for AI-friendly indexing)
+# ==============================================================================
+
+# OpenAI (ChatGPT, GPT-4)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Google Bard/Gemini
+User-agent: Google-Extended
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+# Common Crawl (AI training datasets)
+User-agent: CCBot
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# ==============================================================================
+# VOICE ASSISTANTS (Allow for voice search)
+# ==============================================================================
+
+# Google Assistant
+User-agent: Googlebot
+Allow: /
+
+# Alexa (Amazon)
+User-agent: ia_archiver
+Allow: /
+
+# Siri (Apple)
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# ==============================================================================
+# BLOCK RUSSIAN SEARCH ENGINES (Ukrainian Market Protection)
+# ==============================================================================
+
+# Yandex (russian state-controlled search engine)
+# Blocked for Ukrainian market security
+User-agent: Yandex
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: YandexImages
+Disallow: /
+
+User-agent: YandexVideo
+Disallow: /
+
+User-agent: YandexMedia
+Disallow: /
+
+User-agent: YandexBlogs
+Disallow: /
+
+User-agent: YandexNews
+Disallow: /
+
+User-agent: YandexMetrika
+Disallow: /
+
+# Mail.ru (russian)
+User-agent: Mail.RU_Bot
+Disallow: /
+
+# Rambler (russian)
+User-agent: StackRambler
+Disallow: /
 
 # ==============================================================================
 # BLOCK BAD BOTS (Optional)
@@ -136,25 +243,31 @@ User-agent: Googlebot-Mobile
 Allow: /
 
 # ==============================================================================
-# UKRAINIAN MARKET SPECIFIC
+# UKRAINIAN MARKET SPECIFIC NOTES
 # ==============================================================================
 
-# For Ukrainian market projects:
-# - Allow Ukrainian search engines
-# - Block russian search engines (if applicable)
-
-# Allow Google (primary for UA market)
-User-agent: Googlebot
-Allow: /
-
-# Block Yandex (russian search engine)
-# Uncomment if you want to exclude russian traffic
-# User-agent: Yandex
-# Disallow: /
-
-# Block Mail.ru (russian)
-# User-agent: Mail.RU_Bot
-# Disallow: /
+# This robots.txt is optimized for Ukrainian market:
+#
+# ✅ ALLOWED:
+#   - Google (95%+ market share in Ukraine)
+#   - Bing (2%+ market share)
+#   - DuckDuckGo (privacy-focused users)
+#   - AI Assistants (ChatGPT, Claude, Bard, Perplexity)
+#   - Voice Search (Google Assistant, Alexa, Siri)
+#
+# ❌ BLOCKED:
+#   - Yandex (russian state-controlled, <1% UA market share)
+#   - Mail.ru (russian)
+#   - Rambler (russian)
+#
+# RATIONALE:
+#   - Security: Block russian surveillance vectors
+#   - SEO: Focus on 95%+ market (Google)
+#   - AI-Friendly: Allow AI assistants for modern discoverability
+#   - Voice: Enable voice search optimization
+#   - Legal: Comply with Ukrainian wartime data protection
+#
+# See: RULES_PRODUCT.md Section 8 (Forbidden Tracking)
 
 # ==============================================================================
 # NEXT.JS SPECIFIC

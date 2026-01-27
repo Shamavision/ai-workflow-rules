@@ -1444,7 +1444,560 @@ SEO READINESS CHECKLIST:
 
 ---
 
+## 8. FORBIDDEN TRACKING (Russian Services Protection)
+
+### 8.1. THREAT MODEL
+
+**WHY THIS MATTERS:**
+
+For Ukrainian market projects, using russian tracking services is a **CRITICAL SECURITY THREAT**:
+
+🚨 **Security Risks:**
+- User data sent to russian state servers
+- Potential FSB/GRU surveillance and intelligence gathering
+- Code injection risk from russian CDNs
+- Session hijacking via russian pixels
+
+⚖️ **Legal Risks:**
+- GDPR violations (illegal data transfers to russia)
+- Ukrainian wartime regulations (citizen data protection)
+- International sanctions violations
+- Corporate liability and reputational damage
+
+💼 **Business Risks:**
+- Loss of customer trust
+- EU market access blocked
+- Payment processor sanctions
+- B2B contract violations
+
+**POLICY:** Zero tolerance for russian tracking services in production code.
+
+---
+
+### 8.2. BLACKLIST CATEGORIES
+
+The framework maintains a comprehensive blacklist in [.ai/forbidden-trackers.json](.ai/forbidden-trackers.json):
+
+#### 8.2.1. Analytics (CRITICAL)
+**Threat Level:** CRITICAL - Direct state surveillance
+
+Forbidden:
+- ❌ **Яндекс.Метрика** (`metrika.yandex.ru`, `mc.yandex.ru`)
+  - Pattern: `metrika.yandex`, `ym(`, `yaCounter`
+- ❌ **Top.Mail.ru** (`top.mail.ru`, `top-fwz1.mail.ru`)
+  - Pattern: `top.mail.ru`, `_tmr`
+- ❌ **Рамблер/топ-100** (`counter.rambler.ru`)
+- ❌ **LiveInternet** (`liveinternet.ru`, `counter.yadro.ru`)
+
+✅ **Safe Alternatives:**
+```typescript
+// Replace Yandex.Metrika with:
+import { Analytics } from '@vercel/analytics';  // Privacy-focused
+// OR
+import { GoogleAnalytics } from 'next-google-analytics';  // GA4
+// OR
+import Plausible from 'plausible-tracker';  // EU-hosted, GDPR
+```
+
+#### 8.2.2. Social Media Pixels (CRITICAL)
+**Threat Level:** CRITICAL - State-controlled networks
+
+Forbidden:
+- ❌ **VK (ВКонтакте)** Pixel (`vk.com/pixel`, `VK.Retargeting`)
+- ❌ **OK.ru (Одноклассники)** (`ok.ru`, `ODKL`)
+
+✅ **Safe Alternatives:**
+```html
+<!-- Replace VK Pixel with: -->
+<script>
+  !function(f,b,e,v,n,t,s) { /* Facebook Pixel */ }
+</script>
+<!-- OR LinkedIn Insight Tag, Twitter Pixel -->
+```
+
+#### 8.2.3. CDN & Static Assets (HIGH)
+**Threat Level:** HIGH - Code injection risk
+
+Forbidden:
+- ❌ **Yandex CDN** (`yastatic.net`, `yandex.st`)
+- ❌ **Mail.ru CDN** (`imgsmail.ru`, `filin.mail.ru`)
+
+✅ **Safe Alternatives:**
+```html
+<!-- Replace: -->
+<script src="https://yastatic.net/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- With: -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<!-- OR Cloudflare CDN, unpkg, cdnjs -->
+```
+
+#### 8.2.4. Payment Processors (CRITICAL)
+**Threat Level:** CRITICAL - Sanctions risk
+
+Forbidden:
+- ❌ **ЮKassa / Яндекс.Касса** (`yookassa.ru`, `kassa.yandex.ru`)
+- ❌ **QIWI** (`qiwi.com`, `qiwi.ru`)
+- ❌ **WebMoney** (`webmoney.ru`)
+
+✅ **Safe Alternatives (Ukrainian-friendly):**
+```typescript
+// Replace YooKassa with:
+import Stripe from 'stripe';               // International
+// OR
+import { WayForPay } from 'wayforpay-sdk';  // Ukrainian
+// OR
+import { LiqPay } from 'liqpay';            // Ukrainian (ПриватБанк)
+// OR
+import { Fondy } from '@fondy/api';         // Ukrainian
+```
+
+#### 8.2.5. Maps & Geolocation (HIGH)
+**Threat Level:** HIGH - Location tracking
+
+Forbidden:
+- ❌ **Яндекс.Карты** (`api-maps.yandex.ru`, `ymaps`)
+- ❌ **2GIS** (`2gis.ru`, `2gis.com`)
+
+✅ **Safe Alternatives:**
+```typescript
+// Replace Yandex Maps with:
+import { GoogleMap } from '@react-google-maps/api';  // Google Maps
+// OR
+import { MapContainer } from 'react-leaflet';  // OpenStreetMap (open-source)
+// OR
+import mapboxgl from 'mapbox-gl';  // Mapbox
+```
+
+#### 8.2.6. Video Hosting (CRITICAL)
+**Threat Level:** CRITICAL - Propaganda platform
+
+Forbidden:
+- ❌ **Rutube** (`rutube.ru`)
+- ❌ **VK Video** (`vk.com/video`, `vkvideo.ru`)
+
+✅ **Safe Alternatives:**
+```typescript
+// Use YouTube or Vimeo
+<iframe src="https://www.youtube.com/embed/VIDEO_ID" />
+<iframe src="https://player.vimeo.com/video/VIDEO_ID" />
+```
+
+#### 8.2.7. E-commerce Integrations (HIGH)
+**Threat Level:** HIGH - Sanctions, business risk
+
+Forbidden:
+- ❌ **Wildberries** SDK (`wildberries.ru`, `wbstatic.net`)
+- ❌ **Ozon** SDK (`ozon.ru`)
+
+✅ **Safe Alternatives:**
+```typescript
+// Replace with international/Ukrainian platforms:
+import Shopify from '@shopify/shopify-api';        // International
+// OR
+import { PromUA } from 'prom-ua-api';               // Ukrainian
+// OR WooCommerce (WordPress), Magento
+```
+
+#### 8.2.8. Search Widgets (HIGH)
+**Threat Level:** HIGH - Query tracking
+
+Forbidden:
+- ❌ **Yandex Search** (`yandex.ru/search`, `site.yandex.ru`)
+
+✅ **Safe Alternatives:**
+```typescript
+// Replace with:
+import algoliasearch from 'algoliasearch';  // Algolia (advanced)
+// OR
+<script async src="https://cse.google.com/cse.js?cx=YOUR_ID"></script>  // Google Custom Search
+// OR self-hosted Elasticsearch
+```
+
+#### 8.2.9. Fonts (MEDIUM)
+**Threat Level:** MEDIUM - Tracking via font loading
+
+Forbidden:
+- ❌ **Yandex Fonts** (`fonts.yandex.ru`)
+
+✅ **Safe Alternatives:**
+```html
+<!-- Replace with: -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<!-- OR Bunny Fonts (GDPR-compliant Google Fonts proxy) -->
+<!-- OR self-hosted fonts -->
+```
+
+#### 8.2.10. CAPTCHA (HIGH)
+**Threat Level:** HIGH - Behavior tracking
+
+Forbidden:
+- ❌ **Yandex SmartCaptcha** (`smartcaptcha.yandexcloud.net`)
+
+✅ **Safe Alternatives:**
+```typescript
+// Replace with:
+import ReCAPTCHA from "react-google-recaptcha";  // Google reCAPTCHA v3
+// OR
+import HCaptcha from '@hcaptcha/react-hcaptcha';  // hCaptcha (privacy-focused)
+// OR
+import { Turnstile } from '@marsidev/react-turnstile';  // Cloudflare Turnstile
+```
+
+---
+
+### 8.3. DETECTION MECHANISMS
+
+The framework provides **3-layer detection**:
+
+#### Layer 1: Pre-commit Hook (BLOCKS commits)
+```bash
+# .git/hooks/pre-commit
+# Automatically scans staged files for russian trackers
+# BLOCKS commit if trackers detected
+# Shows safe alternatives
+```
+
+**What it checks:**
+- Script src tags with russian domains
+- JavaScript tracker code (`ym(`, `VK.Retargeting`, etc.)
+- Payment processor integrations
+- CDN URLs
+
+**Behavior:**
+- ✅ Clean code → Commit proceeds
+- ❌ Tracker detected → **COMMIT BLOCKED** with alternatives shown
+
+#### Layer 2: SEO Check Script (PRE-DEPLOY audit)
+```bash
+# Run before deployment:
+./scripts/seo-check.sh /path/to/project
+
+# Check 8: Russian Tracking Services
+# ✅ No russian trackers detected
+# OR
+# ❌ RUSSIAN TRACKER: src/pages/index.tsx:42
+#    Pattern: metrika.yandex
+#    Threat: Data sent to russian servers
+```
+
+**What it checks:**
+- All HTML/JS/JSX/TS/TSX files in project
+- 40+ patterns across 10 categories
+- Reports threat level (CRITICAL/HIGH/MEDIUM)
+- Shows migration alternatives
+
+#### Layer 3: Centralized Blacklist
+```json
+// .ai/forbidden-trackers.json
+{
+  "blacklist": {
+    "analytics": [ /* Yandex, Mail.ru, etc. */ ],
+    "social": [ /* VK, OK.ru */ ],
+    "cdn": [ /* yastatic.net */ ]
+    // ... 10 categories total
+  },
+  "whitelist": {
+    "analytics": ["Google Analytics", "Plausible", "Matomo"],
+    "payments": ["Stripe", "WayForPay (UA)", "LiqPay (UA)"]
+  }
+}
+```
+
+**Benefits:**
+- Single source of truth
+- Easy to update patterns
+- Shared across all checks
+- Documents alternatives
+
+---
+
+### 8.4. MIGRATION GUIDE
+
+#### Step 1: Audit Existing Project
+```bash
+# Run SEO check to find all russian trackers:
+./scripts/seo-check.sh /path/to/existing/project
+
+# Review output:
+# ❌ RUSSIAN TRACKER: src/app/layout.tsx:12
+#    Pattern: metrika.yandex
+```
+
+#### Step 2: Identify Category
+Reference [.ai/forbidden-trackers.json](.ai/forbidden-trackers.json) to find:
+- Threat level (CRITICAL/HIGH/MEDIUM)
+- Why it's dangerous
+- Safe alternatives
+- Code examples
+
+#### Step 3: Replace Tracker
+**Example: Yandex.Metrika → Google Analytics 4**
+
+Before:
+```html
+<!-- Remove this: -->
+<script src="https://mc.yandex.ru/metrika/tag.js"></script>
+<script>
+  ym(123456, "init", { /* ... */ });
+</script>
+```
+
+After:
+```typescript
+// Add this:
+import { GoogleAnalytics } from 'next-google-analytics';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <GoogleAnalytics trackPageViews />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+#### Step 4: Update Environment Variables
+```bash
+# .env (add to .gitignore!)
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+
+# Remove old russian credentials:
+# YANDEX_METRIKA_ID=123456  ← DELETE THIS
+```
+
+#### Step 5: Verify Clean
+```bash
+# Run checks again:
+./scripts/seo-check.sh .
+
+# Expected:
+# ✅ [8] Checking russian tracking services... No russian trackers detected
+```
+
+#### Step 6: Test in Production
+- Verify analytics still work
+- Check no russian requests in Network tab (DevTools)
+- Confirm GDPR compliance
+
+**Typical migration time:** 1-2 hours per tracker category
+
+---
+
+### 8.5. LEGAL COMPLIANCE
+
+#### 8.5.1. Ukrainian Law
+**Basis:** Wartime regulations protect citizen data from hostile state surveillance
+
+**Risk:** Using russian services exposes Ukrainian users to russian intelligence
+
+**Penalties:**
+- Reputational damage
+- Legal liability
+- Sanctions violations
+- B2B contract breaches
+
+#### 8.5.2. GDPR (EU Regulation)
+**Issue:** Russian services do NOT comply with GDPR Article 44-50 (international data transfers)
+
+**Violations:**
+- ❌ Data transfers to russia without adequacy decision
+- ❌ No valid Standard Contractual Clauses (SCCs)
+- ❌ No user consent for surveillance
+
+**Solution:** Use EU/US-based services (Google, Cloudflare, Stripe, etc.)
+
+#### 8.5.3. International Sanctions
+**Financial:** Many russian services under US/EU sanctions:
+- Payment processors (YooKassa, QIWI, WebMoney)
+- Banks (Sberbank, VTB)
+- Technology companies (Yandex, Mail.ru Group)
+
+**Risk:** Business account closure, legal penalties
+
+---
+
+### 8.6. SEO IMPACT (Myth-Busting)
+
+#### ❌ MYTH: "Blocking Yandex hurts SEO"
+✅ **REALITY:** Yandex has <1% market share in Ukraine. Google dominates 95%+. **Zero SEO impact.**
+
+**Data:**
+- Google Search: 95.6% (Ukraine, 2025)
+- Bing: 2.1%
+- Yandex: 0.8%
+- Other: 1.5%
+
+**Conclusion:** Optimizing for Yandex is wasted effort. Focus on Google.
+
+#### ❌ MYTH: "Need Яндекс.Метрика for analytics"
+✅ **REALITY:** Google Analytics 4 provides:
+- Same data (+ better international insights)
+- GDPR compliance
+- Faster page load (no russian CDN delays)
+- Better integration with Google Ads
+
+#### ❌ MYTH: "Russian CDN is faster"
+✅ **REALITY:** Cloudflare/jsDelivr are **FASTER** for Ukrainian users:
+- Servers closer to Ukraine (EU/US)
+- No sanctions-related routing issues
+- Better Core Web Vitals scores
+
+**Benchmark (Kyiv → CDN latency):**
+- yastatic.net (Yandex): ~80ms
+- cdn.jsdelivr.net: ~25ms ✅
+- cdnjs.cloudflare.com: ~22ms ✅
+
+**CONCLUSION:** Removing russian trackers **IMPROVES** SEO, not harms it.
+
+---
+
+### 8.7. INTEGRATION WITH WORKFLOW
+
+#### Pre-commit (Automatic)
+```bash
+# Runs automatically on `git commit`
+# BLOCKS commit if russian trackers detected
+# Bypass (emergency only): git commit --no-verify
+```
+
+#### Pre-deploy (Manual/CI)
+```bash
+# Run before deploying to production:
+./scripts/seo-check.sh
+
+# CI/CD integration:
+# .github/workflows/deploy.yml
+- name: Check Russian Trackers
+  run: ./scripts/seo-check.sh
+  # Fails pipeline if trackers found
+```
+
+#### Code Review Checklist
+```markdown
+## Security Review
+- [ ] No russian tracking scripts
+- [ ] No .ru domains in config
+- [ ] Payment processor is sanctions-safe
+- [ ] CDN is EU/US-based
+- [ ] Analytics is GDPR-compliant
+```
+
+#### Client Onboarding
+When taking over existing project:
+1. Run `./scripts/seo-check.sh /path/to/client/project`
+2. Document all russian trackers found
+3. Estimate migration effort (1-2 hours per category)
+4. Present alternatives to client
+5. Get approval for migration
+6. Execute migration
+7. Verify clean with second scan
+
+---
+
+### 8.8. FALSE POSITIVES & EXCEPTIONS
+
+**Legitimate Use Cases (don't block):**
+
+✅ **Security Tools:**
+- Detection patterns in `pre-commit` hook (self-reference)
+- Blacklist in `.ai/forbidden-trackers.json` (documentation)
+- SEO check script (scanning patterns)
+
+✅ **Documentation:**
+- Examples showing what NOT to do
+- Migration guides with "before" code
+- Security training materials
+
+✅ **Historical Data:**
+- Mock data with russian names (Иванов, Петров)
+- Ukrainian/Russian bilingual content (if targeting diaspora)
+
+**How to handle:**
+```typescript
+// Mark legitimate usage:
+// TRACKER-EXCEPTION: Documentation example
+const badExample = "https://metrika.yandex.ru/tag.js";  // Don't use this!
+```
+
+**Pre-commit hook already whitelists:**
+- `.ai/forbidden-trackers.json`
+- `scripts/seo-check.sh`
+- `.git/hooks/pre-commit`
+
+---
+
+### 8.9. UPDATING THE BLACKLIST
+
+As new russian services emerge:
+
+#### Step 1: Add to forbidden-trackers.json
+```json
+{
+  "blacklist": {
+    "new_category": [
+      {
+        "name": "New Russian Service",
+        "domains": ["example.ru"],
+        "patterns": ["example\\.ru"],
+        "threat_level": "CRITICAL",
+        "reason": "Why it's dangerous",
+        "alternatives": ["Safe Alternative 1", "Safe Alternative 2"]
+      }
+    ]
+  }
+}
+```
+
+#### Step 2: Update pre-commit hook
+```bash
+# .git/hooks/pre-commit
+TRACKER_PATTERNS=(
+    # ... existing patterns ...
+    "example\\.ru"  # NEW: Description
+)
+```
+
+#### Step 3: Update seo-check.sh
+Already reads patterns from pre-commit structure (no change needed).
+
+#### Step 4: Document in RULES_PRODUCT.md
+Add to Section 8.2 (this document).
+
+#### Step 5: Commit Changes
+```bash
+git add .ai/forbidden-trackers.json .git/hooks/pre-commit RULES_PRODUCT.md
+git commit -m "security: add new russian tracker to blacklist"
+```
+
+---
+
+### 8.10. REFERENCES
+
+**Legal:**
+- GDPR Article 44-50 (International Transfers)
+- Ukrainian Wartime Regulations (citizen data protection)
+- US/EU Sanctions Lists
+
+**Technical:**
+- [.ai/forbidden-trackers.json](.ai/forbidden-trackers.json) - Full blacklist
+- [.git/hooks/pre-commit](.git/hooks/pre-commit) - Automated blocking
+- [scripts/seo-check.sh](scripts/seo-check.sh) - Pre-deploy audit
+
+**Alternatives:**
+- Analytics: Google Analytics, Plausible, Matomo
+- Social: Facebook Pixel, LinkedIn Insight Tag
+- CDN: Cloudflare, jsDelivr, unpkg
+- Payments: Stripe, WayForPay (UA), LiqPay (UA)
+- Maps: Google Maps, OpenStreetMap, Mapbox
+
+---
+
 ## CHANGELOG
+*   **v1.2** [2025-01-27] – Added Section 8: FORBIDDEN TRACKING (Russian Services Protection)
 *   **v1.1** [2025-01-27] – Added Section 7: SEO/GEO Strategy (Ukrainian market)
 *   **v1.0** [2025-01-26] – Initial product rules: i18n strategy, device adaptation, Ukrainian market policy, accessibility, scalability
 

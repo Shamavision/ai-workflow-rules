@@ -19,6 +19,8 @@
 #   4. Canonical URLs and sitemap
 #   5. Open Graph / Twitter Cards (social media)
 #   6. GEO targeting (Ukrainian market)
+#   7. Performance hints (image optimization, next/image)
+#   8. Russian tracking services (CRITICAL SECURITY)
 #
 # OUTPUT:
 #   ✅ SEO OK - No issues
@@ -363,6 +365,137 @@ check_performance_hints() {
     return 0
 }
 
+# Check 8: Russian Tracking Services (CRITICAL SECURITY)
+check_russian_trackers() {
+    start_check "russian tracking services"
+
+    # Russian tracking patterns (critical security threats)
+    local TRACKER_PATTERNS=(
+        # Analytics
+        "metrika\\.yandex"
+        "mc\\.yandex"
+        "yaCounter"
+        "ym\\("
+        "webvisor"
+        "top\\.mail\\.ru"
+        "top-fwz1\\.mail\\.ru"
+        "_tmr"
+        "rambler.*counter"
+        "liveinternet"
+        "counter\\.yadro"
+
+        # Social
+        "vk\\.com/js/api"
+        "vk\\.com/pixel"
+        "VK\\.Retargeting"
+        "VK\\.Goal"
+        "ok\\.ru"
+        "ODKL"
+
+        # CDN
+        "yastatic\\.net"
+        "yandex\\.st"
+        "imgsmail"
+        "filin\\.mail"
+
+        # Payments
+        "yookassa"
+        "kassa\\.yandex"
+        "money\\.yandex"
+        "qiwi\\."
+        "webmoney"
+
+        # Maps
+        "api-maps\\.yandex"
+        "ymaps"
+        "2gis"
+
+        # Video
+        "rutube\\.ru"
+        "vk.*video"
+        "vkvideo"
+
+        # E-commerce
+        "wildberries"
+        "wbstatic"
+        "ozon\\.ru"
+
+        # Fonts
+        "fonts\\.yandex"
+
+        # Captcha
+        "smartcaptcha.*yandex"
+    )
+
+    local trackers_found=false
+    local tracker_count=0
+
+    # Find files to scan (HTML, JS, JSX, TSX)
+    local files_to_scan=$(find "$PROJECT_PATH" -type f \( \
+        -name "*.html" -o \
+        -name "*.js" -o \
+        -name "*.jsx" -o \
+        -name "*.ts" -o \
+        -name "*.tsx" \
+    \) ! -path "*/node_modules/*" ! -path "*/.next/*" ! -path "*/dist/*" ! -path "*/build/*" 2>/dev/null)
+
+    if [ -z "$files_to_scan" ]; then
+        print_success "No files to scan"
+        return 0
+    fi
+
+    # Scan for russian trackers
+    while IFS= read -r file; do
+        for pattern in "${TRACKER_PATTERNS[@]}"; do
+            if grep -qE "$pattern" "$file" 2>/dev/null; then
+                if [ "$trackers_found" == "false" ]; then
+                    echo ""
+                    trackers_found=true
+                fi
+
+                local line_num=$(grep -nE "$pattern" "$file" | head -n 1 | cut -d: -f1)
+                local relative_path="${file#$PROJECT_PATH/}"
+
+                print_error "RUSSIAN TRACKER: $relative_path:$line_num"
+                print_info "Pattern: $pattern"
+                ((tracker_count++))
+
+                # Show context (first match only per file)
+                break
+            fi
+        done
+    done <<< "$files_to_scan"
+
+    if [ "$trackers_found" == "true" ]; then
+        echo ""
+        echo -e "${RED}🚨 SECURITY THREAT: $tracker_count russian tracker(s) detected!${NC}"
+        echo ""
+        echo -e "${YELLOW}Why this is critical:${NC}"
+        echo "  • User data sent to russian state servers"
+        echo "  • Potential FSB/GRU surveillance"
+        echo "  • GDPR violations (illegal data transfers)"
+        echo "  • Sanctions risk"
+        echo "  • Legal liability for Ukrainian businesses"
+        echo ""
+        echo -e "${GREEN}Safe alternatives:${NC}"
+        echo "  Analytics:  Google Analytics 4, Plausible, Matomo"
+        echo "  Social:     Facebook Pixel, LinkedIn Insight Tag"
+        echo "  Payments:   Stripe, PayPal, WayForPay (UA), LiqPay (UA)"
+        echo "  CDN:        Cloudflare, jsDelivr, unpkg"
+        echo "  Maps:       Google Maps, OpenStreetMap, Mapbox"
+        echo "  Video:      YouTube, Vimeo, Cloudflare Stream"
+        echo ""
+        echo -e "${BLUE}Migration guide:${NC}"
+        echo "  See: .ai/forbidden-trackers.json for detailed alternatives"
+        echo "  Typical migration time: 1-2 hours"
+        echo ""
+    else
+        print_success "No russian trackers detected"
+    fi
+
+    return 0
+}
+
 # ==============================================================================
 # VERDICT
 # ==============================================================================
@@ -461,6 +594,7 @@ main() {
     check_social_meta
     check_geo_targeting
     check_performance_hints
+    check_russian_trackers
 
     # Print verdict
     print_verdict
