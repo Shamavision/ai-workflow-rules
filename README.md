@@ -20,19 +20,12 @@
   <img src="https://img.shields.io/badge/GDPR-Compliant-0099CC?style=flat-square&labelColor=1D1D1B" alt="GDPR">
 </p>
 
----
-
 **Enterprise-grade framework for protecting AI development workflows,**
 **ensuring security compliance, and maintaining code quality across all your projects.**
 
 </div>
 
-<br>
-
-<!-- What Is This Section - White Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#FFFFFF" style="padding: 30px;">
+---
 
 ## 🎯 What Is This?
 
@@ -44,73 +37,50 @@ AI Workflow Rules Framework is a **comprehensive security and compliance system*
 - 🚀 Companies preparing for GDPR/compliance audits
 - 🌍 Projects targeting international markets
 
-</td>
-</tr>
-</table>
-
 <br>
 
-<!-- Core Features Section - Dark Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#1D1D1B" style="padding: 30px;">
-<div align="center">
+<div align="center" style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## <span style="color: #FAAF0D;">✨ Core Features</span>
-
-</div>
+## ✨ Core Features
 
 <table width="100%">
 <tr>
-<td width="33%" align="center" style="color: #FFFFFF; padding: 20px;">
+<td width="33%" align="center" style="padding: 20px;">
 
 ### 🛡️ Security Onion
 
-<span style="color: #CCCCCC;">
 5-layer protection<br>
 Automated scanning<br>
 Zero-config setup<br>
-<strong style="color: #FAAF0D;">310+ patterns</strong>
-</span>
+**310+ patterns**
 
 </td>
-<td width="33%" align="center" style="color: #FFFFFF; padding: 20px;">
+<td width="33%" align="center" style="padding: 20px;">
 
 ### ⚖️ Legal Protection
 
-<span style="color: #CCCCCC;">
 GDPR compliant<br>
 License system<br>
 Trademark protection<br>
-<strong style="color: #FAAF0D;">Anti-counterfeit</strong>
-</span>
+**Anti-counterfeit**
 
 </td>
-<td width="33%" align="center" style="color: #FFFFFF; padding: 20px;">
+<td width="33%" align="center" style="padding: 20px;">
 
 ### 🚀 Modern Stack
 
-<span style="color: #CCCCCC;">
 AI/Voice search ready<br>
 i18n architecture<br>
 SEO optimized<br>
-<strong style="color: #FAAF0D;">Performance focused</strong>
-</span>
+**Performance focused**
 
 </td>
 </tr>
 </table>
 
-</td>
-</tr>
-</table>
+</div>
 
-<br>
-
-<!-- Quick Start Section - White Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#FFFFFF" style="padding: 30px;">
+---
 
 ## 🚀 Quick Start
 
@@ -137,99 +107,25 @@ chmod +x /path/to/your-project/.git/hooks/pre-commit
   <img src="https://img.shields.io/badge/⏱️%20Setup%20Time-5%20minutes-FAAF0D?style=for-the-badge&labelColor=1D1D1B" alt="Setup Time">
 </div>
 
-</td>
-</tr>
-</table>
-
 <br>
 
-<!-- Security Onion Section - Dark Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#1D1D1B" style="padding: 30px; color: #FFFFFF;">
+<div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## <span style="color: #FAAF0D;">🛡️ Security Onion Architecture</span>
+## 🛡️ Security Onion Architecture
 
 Comprehensive **5-layer protection** from client data to production:
 
-<table width="100%">
-<tr>
-<td width="20%" style="color: #FFFFFF;">
+| Layer | Focus | Features |
+|-------|-------|----------|
+| **Layer 1** → Client Data | Smart .gitignore • Secrets detection • Environment validation |
+| **Layer 2** → AI Workflow IP | License keys • Certificate of Authenticity • Anti-counterfeit • Trademark |
+| **Layer 3** → Pre-commit Security | API keys scanning • Code quality • Pattern detection • Regional compliance |
+| **Layer 4** → Code Quality | Lint automation • Type safety • Dependency scanning • Quality gates |
+| **Layer 5** → Production | SEO audit • Security headers • Performance validation • AI/Voice ready |
 
-**Layer 1**
-<span style="color: #FAAF0D;">►</span> Client Data
+</div>
 
-</td>
-<td width="80%" style="color: #CCCCCC;">
-
-Smart .gitignore • Secrets detection • Environment validation
-
-</td>
-</tr>
-<tr>
-<td width="20%" style="color: #FFFFFF;">
-
-**Layer 2**
-<span style="color: #FAAF0D;">►</span> AI Workflow IP
-
-</td>
-<td width="80%" style="color: #CCCCCC;">
-
-License keys • Certificate of Authenticity • Anti-counterfeit • Trademark
-
-</td>
-</tr>
-<tr>
-<td width="20%" style="color: #FFFFFF;">
-
-**Layer 3**
-<span style="color: #FAAF0D;">►</span> Pre-commit Security
-
-</td>
-<td width="80%" style="color: #CCCCCC;">
-
-API keys scanning • Code quality • Pattern detection • Regional compliance
-
-</td>
-</tr>
-<tr>
-<td width="20%" style="color: #FFFFFF;">
-
-**Layer 4**
-<span style="color: #FAAF0D;">►</span> Code Quality
-
-</td>
-<td width="80%" style="color: #CCCCCC;">
-
-Lint automation • Type safety • Dependency scanning • Quality gates
-
-</td>
-</tr>
-<tr>
-<td width="20%" style="color: #FFFFFF;">
-
-**Layer 5**
-<span style="color: #FAAF0D;">►</span> Production
-
-</td>
-<td width="80%" style="color: #CCCCCC;">
-
-SEO audit • Security headers • Performance validation • AI/Voice ready
-
-</td>
-</tr>
-</table>
-
-</td>
-</tr>
-</table>
-
-<br>
-
-<!-- Developer Experience Section - White Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#FFFFFF" style="padding: 30px;">
+---
 
 ## 🔐 Developer Experience
 
@@ -255,38 +151,23 @@ git commit -m "feat: add new feature"
 
 <div align="center">
 
-### <span style="color: #FAAF0D;">🎯 Zero Configuration Required</span>
+### 🎯 Zero Configuration Required
 
 Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projects
 
 </div>
 
-</td>
-</tr>
-</table>
-
 <br>
 
-<!-- Features Grid - Dark Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#1D1D1B" style="padding: 30px;">
+<div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-<div align="center">
-
-## <span style="color: #FAAF0D;">📋 Complete Feature Set</span>
-
-</div>
+## 📋 Complete Feature Set
 
 <table width="100%">
 <tr>
+<td width="33%" valign="top">
 
-<!-- Column 1 -->
-<td width="33%" valign="top" style="padding: 20px; color: #FFFFFF;">
-
-### <span style="color: #FAAF0D;">🌍</span> Internationalization
-
-<span style="color: #CCCCCC;">
+### 🌍 Internationalization
 
 ✅ i18n-ready architecture
 ✅ Namespace translations
@@ -294,13 +175,9 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 ✅ Multi-locale management
 ✅ Bundle optimization
 
-</span>
-
 <br>
 
-### <span style="color: #FAAF0D;">📊</span> SEO & Performance
-
-<span style="color: #CCCCCC;">
+### 📊 SEO & Performance
 
 ✅ 8 automated audits
 ✅ AI crawler support
@@ -308,16 +185,10 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 ✅ Core Web Vitals
 ✅ Lighthouse optimized
 
-</span>
-
 </td>
+<td width="33%" valign="top">
 
-<!-- Column 2 -->
-<td width="33%" valign="top" style="padding: 20px; color: #FFFFFF;">
-
-### <span style="color: #FAAF0D;">♿</span> Accessibility
-
-<span style="color: #CCCCCC;">
+### ♿ Accessibility
 
 ✅ WCAG 2.1 Level AA
 ✅ Keyboard navigation
@@ -325,13 +196,9 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 ✅ Color contrast validation
 ✅ Semantic HTML enforcement
 
-</span>
-
 <br>
 
-### <span style="color: #FAAF0D;">🔒</span> Security Scanning
-
-<span style="color: #CCCCCC;">
+### 🔒 Security Scanning
 
 ✅ 40+ secret patterns
 ✅ API key detection
@@ -339,16 +206,10 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 ✅ License protection
 ✅ Regional compliance
 
-</span>
-
 </td>
+<td width="33%" valign="top">
 
-<!-- Column 3 -->
-<td width="33%" valign="top" style="padding: 20px; color: #FFFFFF;">
-
-### <span style="color: #FAAF0D;">⚖️</span> Legal & Compliance
-
-<span style="color: #CCCCCC;">
+### ⚖️ Legal & Compliance
 
 ✅ GDPR compliant
 ✅ Privacy-first metrics
@@ -356,13 +217,9 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 ✅ Trademark protection
 ✅ Certificate system
 
-</span>
-
 <br>
 
-### <span style="color: #FAAF0D;">🏢</span> Enterprise Ready
-
-<span style="color: #CCCCCC;">
+### 🏢 Enterprise Ready
 
 ✅ HMAC-SHA256 licenses
 ✅ Anti-counterfeit verification
@@ -370,23 +227,13 @@ Works out-of-box with **Next.js**, **React**, **Node.js**, and **Python** projec
 ✅ Multi-project support
 ✅ Team collaboration
 
-</span>
-
-</td>
-
-</tr>
-</table>
-
 </td>
 </tr>
 </table>
 
-<br>
+</div>
 
-<!-- Use Cases Section - White Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#FFFFFF" style="padding: 30px;">
+---
 
 ## 🌟 Use Cases
 
@@ -445,54 +292,36 @@ cp -r ai-workflow-rules/ ~/clients/new-client/
 
 </details>
 
-</td>
-</tr>
-</table>
-
 <br>
 
-<!-- Stats Section - Dark Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#1D1D1B" style="padding: 30px; color: #FFFFFF;">
+<div align="center" style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-<div align="center">
-
-## <span style="color: #FAAF0D;">📊 Framework Stats</span>
+## 📊 Framework Stats
 
 <table width="100%">
 <tr>
-<td width="25%" align="center" style="padding: 20px;">
-<div style="font-size: 32px; color: #FAAF0D; font-weight: bold;">25+</div>
-<div style="color: #CCCCCC;">Files</div>
+<td width="25%" align="center">
+<div style="font-size: 32px; font-weight: bold;">25+</div>
+<div>Files</div>
 </td>
-<td width="25%" align="center" style="padding: 20px;">
-<div style="font-size: 32px; color: #FAAF0D; font-weight: bold;">5,000+</div>
-<div style="color: #CCCCCC;">Lines of Docs</div>
+<td width="25%" align="center">
+<div style="font-size: 32px; font-weight: bold;">5,000+</div>
+<div>Lines of Docs</div>
 </td>
-<td width="25%" align="center" style="padding: 20px;">
-<div style="font-size: 32px; color: #FAAF0D; font-weight: bold;">6</div>
-<div style="color: #CCCCCC;">Automated Checks</div>
+<td width="25%" align="center">
+<div style="font-size: 32px; font-weight: bold;">6</div>
+<div>Automated Checks</div>
 </td>
-<td width="25%" align="center" style="padding: 20px;">
-<div style="font-size: 32px; color: #FAAF0D; font-weight: bold;">310+</div>
-<div style="color: #CCCCCC;">Security Patterns</div>
+<td width="25%" align="center">
+<div style="font-size: 32px; font-weight: bold;">310+</div>
+<div>Security Patterns</div>
 </td>
 </tr>
 </table>
 
 </div>
 
-</td>
-</tr>
-</table>
-
-<br>
-
-<!-- Documentation Section - White Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#FFFFFF" style="padding: 30px;">
+---
 
 ## 📚 Documentation
 
@@ -518,24 +347,17 @@ cp -r ai-workflow-rules/ ~/clients/new-client/
 - `scripts/generate-license.py` - Server-side key generation
 - `scripts/seo-check.sh` - Comprehensive security & SEO audit
 
-</td>
-</tr>
-</table>
-
 <br>
 
-<!-- Regional Compliance Section - Dark Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#1D1D1B" style="padding: 30px; color: #FFFFFF;">
+<div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## <span style="color: #FAAF0D;">🌐 Regional Compliance (Optional Module)</span>
+## 🌐 Regional Compliance (Optional Module)
 
 For projects requiring **specific market compliance:**
 
 <table width="100%">
 <tr>
-<td width="50%" style="color: #CCCCCC; padding: 20px;">
+<td width="50%">
 
 **What it does:**
 - Automated tracker detection
@@ -545,7 +367,7 @@ For projects requiring **specific market compliance:**
 - Migration tools
 
 </td>
-<td width="50%" style="color: #CCCCCC; padding: 20px;">
+<td width="50%">
 
 **Use cases:**
 - Ukrainian market projects
@@ -558,20 +380,11 @@ For projects requiring **specific market compliance:**
 </tr>
 </table>
 
-<div align="center" style="color: #CCCCCC; padding-top: 10px;">
-<em>This module is optional and can be enabled for projects requiring regional compliance.</em>
+*This module is optional and can be enabled for projects requiring regional compliance.*
+
 </div>
 
-</td>
-</tr>
-</table>
-
-<br>
-
-<!-- Enterprise Features Section - White Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#FFFFFF" style="padding: 30px;">
+---
 
 ## 🏢 Enterprise Features
 
@@ -615,63 +428,47 @@ python scripts/generate-license.py \
 
 **Contact:** partnerships@yourcompany.com
 
-</td>
-</tr>
-</table>
-
 <br>
 
-<!-- Why Choose Section - Dark Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#1D1D1B" style="padding: 30px; color: #FFFFFF;">
+<div align="center" style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-<div align="center">
-
-## <span style="color: #FAAF0D;">🎯 Why Choose This Framework?</span>
+## 🎯 Why Choose This Framework?
 
 <table width="100%">
 <tr>
-<td width="20%" align="center" style="padding: 20px;">
+<td width="20%" align="center">
 <div style="font-size: 48px;">✅</div>
-<strong style="color: #FAAF0D;">Comprehensive</strong><br>
-<span style="color: #CCCCCC; font-size: 14px;">Complete security, compliance, and quality system</span>
+<strong>Comprehensive</strong><br>
+<small>Complete security, compliance, and quality system</small>
 </td>
-<td width="20%" align="center" style="padding: 20px;">
+<td width="20%" align="center">
 <div style="font-size: 48px;">✅</div>
-<strong style="color: #FAAF0D;">Production-Ready</strong><br>
-<span style="color: #CCCCCC; font-size: 14px;">Used by agencies managing multiple projects</span>
+<strong>Production-Ready</strong><br>
+<small>Used by agencies managing multiple projects</small>
 </td>
-<td width="20%" align="center" style="padding: 20px;">
+<td width="20%" align="center">
 <div style="font-size: 48px;">✅</div>
-<strong style="color: #FAAF0D;">Modular</strong><br>
-<span style="color: #CCCCCC; font-size: 14px;">Enable only features you need</span>
+<strong>Modular</strong><br>
+<small>Enable only features you need</small>
 </td>
-<td width="20%" align="center" style="padding: 20px;">
+<td width="20%" align="center">
 <div style="font-size: 48px;">✅</div>
-<strong style="color: #FAAF0D;">Maintained</strong><br>
-<span style="color: #CCCCCC; font-size: 14px;">Regular updates and security patches</span>
+<strong>Maintained</strong><br>
+<small>Regular updates and security patches</small>
 </td>
-<td width="20%" align="center" style="padding: 20px;">
+<td width="20%" align="center">
 <div style="font-size: 48px;">✅</div>
-<strong style="color: #FAAF0D;">Supported</strong><br>
-<span style="color: #CCCCCC; font-size: 14px;">Enterprise support available</span>
+<strong>Supported</strong><br>
+<small>Enterprise support available</small>
 </td>
 </tr>
 </table>
 
 </div>
 
-</td>
-</tr>
-</table>
+---
 
-<br>
-
-<!-- Getting Started CTA - White Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#FFFFFF" style="padding: 40px;" align="center">
+<div align="center">
 
 ## 🚦 Ready to Get Started?
 
@@ -687,6 +484,8 @@ python scripts/generate-license.py \
 **Questions?** Open an issue or contact support
 **Want enterprise features?** Contact us for licensing options
 
+</div>
+
 ---
 
 ### 📞 Support & Community
@@ -696,24 +495,17 @@ python scripts/generate-license.py \
 - **Enterprise:** partnerships@yourcompany.com
 - **Security:** security@yourcompany.com
 
-</td>
-</tr>
-</table>
-
 <br>
 
-<!-- License Section - Dark Background -->
-<table width="100%">
-<tr>
-<td bgcolor="#1D1D1B" style="padding: 30px; color: #FFFFFF;">
+<div style="background-color: #1D1D1B; padding: 40px; color: white;">
 
-## <span style="color: #FAAF0D;">⚖️ License</span>
+## ⚖️ License
 
 **Proprietary License** - See [LICENSE](LICENSE) for full terms.
 
 <table width="100%">
 <tr>
-<td width="50%" style="color: #CCCCCC; padding: 20px;">
+<td width="50%">
 
 **❌ Restrictions:**
 - No redistribution without permission
@@ -722,7 +514,7 @@ python scripts/generate-license.py \
 - No AI training without authorization
 
 </td>
-<td width="50%" style="color: #CCCCCC; padding: 20px;">
+<td width="50%">
 
 **✅ Permissions:**
 - Commercial use (with valid license)
@@ -735,22 +527,15 @@ python scripts/generate-license.py \
 </table>
 
 <div align="center" style="padding-top: 20px;">
-<span style="color: #CCCCCC;">
-For white-label partnerships and enterprise licensing, contact:
-</span><br>
-<strong style="color: #FAAF0D;">partnerships@yourcompany.com</strong>
+For white-label partnerships and enterprise licensing, contact:<br>
+<strong>partnerships@yourcompany.com</strong>
 </div>
 
-</td>
-</tr>
-</table>
-
-<br>
-
-<!-- Footer - White Background -->
-<div align="center">
+</div>
 
 ---
+
+<div align="center">
 
 <img src="public/wellme-logo.svg" alt="Wellme.Creative Team" width="300">
 
