@@ -1,5 +1,5 @@
 # Certificate of Authenticity
-**AI Workflow Rules Framework v4.0**
+**AI Workflow Rules Framework v5.0**
 
 ---
 
@@ -27,9 +27,9 @@ unmodified version of the Software directly from the original creator.
 - **Legal:** legal@[your-company].com
 
 ### Certificate Metadata
-- **Certificate ID:** AWRF-v4.0-2025-01-27
+- **Certificate ID:** AWRF-v5.0-2025-01-27
 - **Issued Date:** 2025-01-27
-- **Expiration:** None (perpetual for v4.0)
+- **Expiration:** None (perpetual for v5.0)
 - **Certificate Authority:** [Your Company Name] Self-Signed
 
 ---
@@ -293,7 +293,7 @@ This certificate may be updated to:
 https://[your-company].com/certificate
 
 **Version History:**
-- **v1.0** (2025-01-27) — Initial certificate for v4.0
+- **v1.0** (2025-01-27) — Initial certificate for v5.0
 
 ---
 
@@ -336,13 +336,13 @@ Indicators that this is a legitimate copy:
 ## 📄 CERTIFICATE VALIDITY
 
 **This certificate is valid for:**
-- **Product:** AI Workflow Rules Framework v4.0
+- **Product:** AI Workflow Rules Framework v5.0
 - **Issued:** 2025-01-27
-- **Expires:** Never (for v4.0; new certificate for v5.0)
+- **Expires:** Never (for v5.0; new certificate for v5.0)
 
 **Certificate Chain:**
 ```
-AI Workflow Rules v4.0
+AI Workflow Rules v5.0
   └─ [Your Company Name] Root Authority
       └─ Verified by PGP Key [FINGERPRINT]
 ```
@@ -355,5 +355,5 @@ For questions or to report counterfeits: legal@[your-company].com
 
 ---
 
-*This document is part of the AI Workflow Rules Framework v4.0*
+*This document is part of the AI Workflow Rules Framework v5.0*
 *Copyright © 2025 [Your Company Name]. All Rights Reserved.*

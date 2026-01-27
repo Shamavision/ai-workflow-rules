@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # AUTHENTICITY VERIFICATION SCRIPT
-# AI Workflow Rules Framework v4.0
+# AI Workflow Rules Framework v5.0
 # ==============================================================================
 #
 # PURPOSE:
@@ -55,7 +55,7 @@ VERBOSE=false
 print_header() {
     echo -e "${BLUE}============================================${NC}"
     echo -e "${BLUE}  Authenticity Verification${NC}"
-    echo -e "${BLUE}  AI Workflow Rules v4.0${NC}"
+    echo -e "${BLUE}  AI Workflow Rules v5.0${NC}"
     echo -e "${BLUE}============================================${NC}"
     echo ""
 }
@@ -348,7 +348,7 @@ generate_checksums() {
 
     mkdir -p "$PROJECT_ROOT/.ai"
 
-    echo "# AI Workflow Rules v4.0 - SHA-256 Checksums" > "$CHECKSUMS_FILE"
+    echo "# AI Workflow Rules v5.0 - SHA-256 Checksums" > "$CHECKSUMS_FILE"
     echo "# Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> "$CHECKSUMS_FILE"
     echo "# DO NOT MODIFY THIS FILE" >> "$CHECKSUMS_FILE"
     echo "" >> "$CHECKSUMS_FILE"

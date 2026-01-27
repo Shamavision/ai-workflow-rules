@@ -1,5 +1,5 @@
 # Metrics Collection & Privacy Policy
-**AI Workflow Rules Framework v4.0**
+**AI Workflow Rules Framework v5.0**
 
 **Effective Date:** 2025-01-27
 **Last Updated:** 2025-01-27
@@ -293,6 +293,6 @@ By using the Software, you acknowledge that:
 
 **Last Updated:** 2025-01-27
 **Version:** 1.0
-**License Framework:** AI Workflow Rules v4.0
+**License Framework:** AI Workflow Rules v5.0
 
 For questions: privacy@[your-company].com

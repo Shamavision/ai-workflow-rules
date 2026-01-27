@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # LICENSE ACTIVATION SCRIPT
-# AI Workflow Rules Framework v4.0
+# AI Workflow Rules Framework v5.0
 # ==============================================================================
 #
 # PURPOSE:

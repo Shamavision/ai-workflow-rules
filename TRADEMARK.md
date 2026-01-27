@@ -1,5 +1,5 @@
 # Trademark & Brand Protection Guidelines
-**AI Workflow Rules Framework v4.0**
+**AI Workflow Rules Framework v5.0**
 
 **Effective Date:** 2025-01-27
 **Version:** 1.0
@@ -375,7 +375,7 @@ We will investigate promptly and work with you to resolve any legitimate concern
 
 **END OF TRADEMARK GUIDELINES**
 
-*This document is part of the AI Workflow Rules Framework v4.0*
+*This document is part of the AI Workflow Rules Framework v5.0*
 *Copyright © 2025 [Your Company Name]. All Rights Reserved.*
 
 *"AI Workflow Rules" is a trademark of [Your Company Name].*

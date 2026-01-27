@@ -1,4 +1,4 @@
-# AI WORKFLOW & RULES CORE v4.0
+# AI WORKFLOW & RULES CORE v5.0
 
 ## 0. RULES SECURITY & LOCATION
 
@@ -51,7 +51,7 @@ touch .ai/token-limits.json .ai/locale-context.json
 # Скопируй содержимое этих файлов туда
 # Затем:
 git add .
-git commit -m "init: AI workflow rules v4.0"
+git commit -m "init: AI workflow rules v5.0"
 git branch -M main
 git remote add origin git@github.com:YOUR_USERNAME/ai-workflow-rules.git
 git push -u origin main
@@ -568,7 +568,7 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
-*   **v4.0** [2025-01-26] – Added Rules Security (submodule), Token Management system, language rules clarified, split into CORE + PRODUCT
+*   **v5.0** [2025-01-26] – Added Rules Security (submodule), Token Management system, language rules clarified, split into CORE + PRODUCT
 *   **v3.5** [2025-01-26] – Added security-first checklist, AI API security, project metadata, anti-overengineering
 *   **v3.4** [2025-01-26] – Added iterative workflow, roadmap templates, stage commits, discussion protocol
 *   **v3.3** [2025-01-26] – Ukrainian market policy, token management, workflow triggers

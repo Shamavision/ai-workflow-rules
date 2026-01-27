@@ -43,7 +43,7 @@ cd ai-workflow-rules
 
 # Add all files
 git add .
-git commit -m "init: AI workflow rules v4.0"
+git commit -m "init: AI workflow rules v5.0"
 git push -u origin main
 ```
 
@@ -289,7 +289,7 @@ cat .ai-rules/.ai/token-limits.json
 
 ## 📈 VERSION HISTORY
 
-- **v4.0** [2025-01-26] — Split into CORE + PRODUCT, added token management, security enhancements
+- **v5.0** [2025-01-26] — Split into CORE + PRODUCT, added token management, security enhancements
 - **v3.5** [2025-01-26] — Added AI API security, anti-overengineering rules
 - **v3.0** — Initial comprehensive version
 
@@ -305,7 +305,7 @@ cat .ai-rules/.ai/token-limits.json
 
 ### Что создано:
 
-1. ✅ **RULES_CORE.md v4.0** — технический workflow
+1. ✅ **RULES_CORE.md v5.0** — технический workflow
 2. ✅ **RULES_PRODUCT.md v1.0** — продуктовые правила
 3. ✅ **.ai/token-limits.json** — трекинг токенов с комментариями
 4. ✅ **.ai/locale-context.json** — i18n конфигурация с примерами

@@ -1,7 +1,7 @@
 /**
  * ===========================================================================
  * ENVIRONMENT VALIDATION & TYPE-SAFE ENV VARS
- * AI Workflow Rules Framework v4.0
+ * AI Workflow Rules Framework v5.0
  * ===========================================================================
  *
  * PURPOSE:
