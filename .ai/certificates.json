@@ -1,0 +1,188 @@
+{
+  "_comment": "Trust indicators and authenticity verification configuration",
+  "_version": "1.0",
+  "_last_updated": "2025-01-27",
+
+  "product_info": {
+    "name": "AI Workflow Rules Framework",
+    "version": "4.0",
+    "release_date": "2025-01-27",
+    "publisher": "[Your Company Name]",
+    "website": "https://[your-company].com",
+    "support_email": "support@[your-company].com"
+  },
+
+  "certificate": {
+    "id": "AWRF-v4.0-2025-01-27",
+    "issued_date": "2025-01-27T00:00:00Z",
+    "expiration": null,
+    "type": "self-signed",
+    "authority": "[Your Company Name]"
+  },
+
+  "checksums": {
+    "_comment": "SHA-256 checksums for critical files. Generated via: ./scripts/verify-authenticity.sh --update-checksums",
+    "_instructions": "Run verification: ./scripts/verify-authenticity.sh",
+
+    "RULES_CORE.md": {
+      "sha256": "[TO_BE_GENERATED]",
+      "last_verified": "2025-01-27T00:00:00Z"
+    },
+    "RULES_PRODUCT.md": {
+      "sha256": "[TO_BE_GENERATED]",
+      "last_verified": "2025-01-27T00:00:00Z"
+    },
+    "LICENSE": {
+      "sha256": "[TO_BE_GENERATED]",
+      "last_verified": "2025-01-27T00:00:00Z"
+    },
+    "LICENSE-METRICS.md": {
+      "sha256": "[TO_BE_GENERATED]",
+      "last_verified": "2025-01-27T00:00:00Z"
+    },
+    "CERTIFICATE.md": {
+      "sha256": "[TO_BE_GENERATED]",
+      "last_verified": "2025-01-27T00:00:00Z"
+    },
+    "TRADEMARK.md": {
+      "sha256": "[TO_BE_GENERATED]",
+      "last_verified": "2025-01-27T00:00:00Z"
+    }
+  },
+
+  "pgp_signature": {
+    "_comment": "PGP signature for verification (optional but recommended)",
+    "public_key_url": "https://[your-company].com/pgp-key.asc",
+    "fingerprint": "[YOUR_PGP_FINGERPRINT]",
+    "signature_file": "CERTIFICATE.md.sig"
+  },
+
+  "verification": {
+    "authenticity_script": "./scripts/verify-authenticity.sh",
+    "license_activation": "./scripts/activate-license.sh",
+    "online_verification": {
+      "enabled": false,
+      "endpoint": "https://[your-company].com/api/verify",
+      "_comment": "Set enabled: true if you implement online verification"
+    }
+  },
+
+  "trust_indicators": {
+    "_comment": "Indicators that this is an authentic copy",
+    "required_files": [
+      "LICENSE",
+      "LICENSE-METRICS.md",
+      "CERTIFICATE.md",
+      "TRADEMARK.md",
+      "RULES_CORE.md",
+      "RULES_PRODUCT.md",
+      ".ai/token-limits.json",
+      ".ai/locale-context.json"
+    ],
+    "required_scripts": [
+      "scripts/activate-license.sh",
+      "scripts/verify-authenticity.sh",
+      "scripts/generate-license.py",
+      "scripts/seo-check.sh"
+    ],
+    "forbidden_patterns": [
+      "node_modules/ai-workflow-rules",
+      "public-github-clone",
+      "counterfeit",
+      "cracked"
+    ]
+  },
+
+  "anti_counterfeit": {
+    "watermark": {
+      "enabled": true,
+      "type": "metadata",
+      "_comment": "Internal watermarking in RULES files (invisible to users)"
+    },
+    "tamper_detection": {
+      "enabled": true,
+      "method": "sha256_checksums",
+      "alert_on_mismatch": true
+    },
+    "license_validation": {
+      "required": true,
+      "format": "AWRF-XXXX-XXXX-XXXX-XXXX",
+      "hmac_signed": true
+    }
+  },
+
+  "reporting": {
+    "counterfeit_report_email": "legal@[your-company].com",
+    "security_issues_email": "security@[your-company].com",
+    "general_support_email": "support@[your-company].com",
+    "bug_tracker": "https://[your-company].com/issues"
+  },
+
+  "official_sources": {
+    "_comment": "Only these sources are authorized to distribute AI Workflow Rules",
+    "website": "https://[your-company].com",
+    "documentation": "https://[your-company].com/docs",
+    "private_git": "git@github.com:[your-username]/ai-workflow-rules.git",
+    "authorized_resellers": []
+  },
+
+  "unauthorized_sources": {
+    "_warning": "DO NOT download from these types of sources",
+    "examples": [
+      "Public GitHub repositories (unless official)",
+      "File-sharing sites (MediaFire, Mega, etc.)",
+      "Torrent sites",
+      "Third-party marketplaces without authorization",
+      "Social media file attachments",
+      "Unofficial mirrors"
+    ]
+  },
+
+  "license_info": {
+    "type": "proprietary",
+    "license_file": "LICENSE",
+    "metrics_policy": "LICENSE-METRICS.md",
+    "gdpr_compliant": true,
+    "ccpa_compliant": true
+  },
+
+  "version_history": {
+    "4.0": {
+      "release_date": "2025-01-27",
+      "changes": "Initial release with Phase 1 security",
+      "breaking_changes": false
+    }
+  },
+
+  "security_updates": {
+    "_comment": "Check for security updates and patches",
+    "check_url": "https://[your-company].com/security-updates",
+    "notification_email": "security-updates@[your-company].com",
+    "subscribe": true
+  },
+
+  "compliance": {
+    "gdpr": {
+      "compliant": true,
+      "data_controller": "[Your Company Name]",
+      "dpo_email": "dpo@[your-company].com",
+      "privacy_policy": "LICENSE-METRICS.md"
+    },
+    "ccpa": {
+      "compliant": true,
+      "privacy_notice": "LICENSE-METRICS.md"
+    },
+    "ukrainian_law": {
+      "compliant": true,
+      "wartime_regulations": true,
+      "no_russian_content": true
+    }
+  },
+
+  "metadata": {
+    "created_at": "2025-01-27T00:00:00Z",
+    "updated_at": "2025-01-27T00:00:00Z",
+    "schema_version": "1.0",
+    "format": "json"
+  }
+}

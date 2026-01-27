@@ -1,0 +1,247 @@
+# ==============================================================================
+# ROBOTS.TXT - Search Engine Indexing Rules
+# AI Workflow Rules Framework v4.0
+# ==============================================================================
+#
+# PURPOSE:
+#   Control how search engines (Google, Bing, etc.) crawl your website
+#
+# IMPORTANT:
+#   - This is a TEMPLATE for client projects
+#   - Copy to your project's public/ directory
+#   - Customize based on your needs
+#   - This file is PUBLIC (anyone can view it)
+#
+# CURRENT CONFIGURATION:
+#   ✅ Allow all search engines
+#   ✅ Allow all pages (SEO-friendly)
+#   ✅ Sitemap declared
+#
+# LEARN MORE:
+#   https://developers.google.com/search/docs/crawling-indexing/robots/intro
+#
+# ==============================================================================
+
+# ==============================================================================
+# DEFAULT RULE - ALLOW ALL
+# ==============================================================================
+
+User-agent: *
+Allow: /
+
+# This allows all search engines to index all pages
+# Change "Allow: /" to "Disallow: /" to block indexing entirely
+
+# ==============================================================================
+# BLOCK SPECIFIC PATHS (Examples - uncomment as needed)
+# ==============================================================================
+
+# Block admin panel
+# Disallow: /admin/
+
+# Block API routes (if you don't want them indexed)
+# Disallow: /api/
+
+# Block user profiles (privacy)
+# Disallow: /users/
+
+# Block search results (duplicate content)
+# Disallow: /search?
+
+# Block private files
+# Disallow: /private/
+
+# Block temporary files
+# Disallow: /tmp/
+
+# ==============================================================================
+# SITEMAP LOCATION
+# ==============================================================================
+
+# Tell search engines where your sitemap is
+# Replace with your actual domain
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# If you have multiple sitemaps:
+# Sitemap: https://yourdomain.com/sitemap-pages.xml
+# Sitemap: https://yourdomain.com/sitemap-posts.xml
+
+# ==============================================================================
+# CRAWL DELAY (Optional)
+# ==============================================================================
+
+# Slow down aggressive crawlers (seconds between requests)
+# Uncomment if your server is getting overloaded by bots
+
+# User-agent: *
+# Crawl-delay: 10
+
+# ==============================================================================
+# SPECIFIC SEARCH ENGINES
+# ==============================================================================
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# Yandex (if targeting russian market - currently NOT recommended for UA)
+# User-agent: Yandex
+# Disallow: /
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# ==============================================================================
+# BLOCK BAD BOTS (Optional)
+# ==============================================================================
+
+# Block scrapers, spammers, and malicious bots
+# Uncomment as needed
+
+# User-agent: AhrefsBot
+# Disallow: /
+
+# User-agent: SemrushBot
+# Disallow: /
+
+# User-agent: MJ12bot
+# Disallow: /
+
+# User-agent: DotBot
+# Disallow: /
+
+# ==============================================================================
+# MEDIA FILES (Optional)
+# ==============================================================================
+
+# Allow indexing images
+User-agent: Googlebot-Image
+Allow: /
+
+# Allow indexing videos
+User-agent: Googlebot-Video
+Allow: /
+
+# ==============================================================================
+# MOBILE (Optional)
+# ==============================================================================
+
+# Allow mobile crawlers
+User-agent: Googlebot-Mobile
+Allow: /
+
+# ==============================================================================
+# UKRAINIAN MARKET SPECIFIC
+# ==============================================================================
+
+# For Ukrainian market projects:
+# - Allow Ukrainian search engines
+# - Block russian search engines (if applicable)
+
+# Allow Google (primary for UA market)
+User-agent: Googlebot
+Allow: /
+
+# Block Yandex (russian search engine)
+# Uncomment if you want to exclude russian traffic
+# User-agent: Yandex
+# Disallow: /
+
+# Block Mail.ru (russian)
+# User-agent: Mail.RU_Bot
+# Disallow: /
+
+# ==============================================================================
+# NEXT.JS SPECIFIC
+# ==============================================================================
+
+# If using Next.js, you may want to block certain paths:
+
+# Block Next.js build artifacts
+Disallow: /_next/static/
+
+# Allow Next.js images optimization
+Allow: /_next/image
+
+# ==============================================================================
+# WORDPRESS SPECIFIC (If migrating from WordPress)
+# ==============================================================================
+
+# Block WordPress admin
+# Disallow: /wp-admin/
+# Disallow: /wp-login.php
+
+# Block WordPress includes
+# Disallow: /wp-includes/
+
+# ==============================================================================
+# SECURITY NOTES
+# ==============================================================================
+
+# ⚠️  robots.txt is PUBLIC
+#     - Never put secrets here
+#     - Disallow doesn't prevent access (just indexing)
+#     - Use authentication for actual security
+
+# ⚠️  Disallow !== Block
+#     - robots.txt only asks bots to not crawl
+#     - Malicious bots may ignore it
+#     - Use server-side auth for sensitive pages
+
+# ==============================================================================
+# TESTING
+# ==============================================================================
+
+# Test your robots.txt:
+# 1. Visit: https://yourdomain.com/robots.txt
+# 2. Google Search Console: https://search.google.com/search-console/robots-txt-tester
+# 3. Bing Webmaster Tools: https://www.bing.com/webmasters
+
+# ==============================================================================
+# COMMON MISTAKES TO AVOID
+# ==============================================================================
+
+# ❌ DON'T block everything (unless intentional):
+#    User-agent: *
+#    Disallow: /
+#    ^ This blocks ALL search engines from indexing your site!
+
+# ❌ DON'T forget sitemap:
+#    Without sitemap, search engines may not find all pages
+
+# ❌ DON'T use wildcards incorrectly:
+#    Disallow: /*.php  # Wrong syntax
+#    Use: Disallow: /admin/*.php  # Correct
+
+# ❌ DON'T rely on robots.txt for security:
+#    It's a suggestion, not authentication
+
+# ==============================================================================
+# BEST PRACTICES
+# ==============================================================================
+
+# ✅ Keep it simple (start with Allow: / for everything)
+# ✅ Declare your sitemap
+# ✅ Test with Google Search Console
+# ✅ Block duplicate content (search results, filters)
+# ✅ Allow important pages for SEO
+# ✅ Update when site structure changes
+# ✅ Monitor crawl errors in Search Console
+
+# ==============================================================================
+# SUPPORT
+# ==============================================================================
+
+# Questions about robots.txt?
+# - Google Guide: https://developers.google.com/search/docs/crawling-indexing/robots/intro
+# - Bing Guide: https://www.bing.com/webmasters/help/how-to-create-a-robots-txt-file-cb7c31ec
+# - Test tool: https://www.google.com/webmasters/tools/robots-testing-tool
+
+# ==============================================================================
+# END OF FILE
+# ==============================================================================
