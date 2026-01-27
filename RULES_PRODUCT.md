@@ -1061,9 +1061,393 @@ FEATURE IS DONE WHEN:
 
 ---
 
+## 7. SEO/GEO STRATEGY (Ukrainian Market)
+
+### 7.1. PHILOSOPHY
+**Balance:** Защита бизнеса + SEO для украинского рынка
+
+- ✅ **SEO-friendly:** Поисковые системы могут индексировать контент
+- 🔒 **Geo-targeted:** Фокус на украинский рынок, блокируем russian
+- 🚀 **Performance:** Быстрая загрузка = лучший SEO ranking
+
+### 7.2. ROBOTS.TXT CONFIGURATION
+
+**Location:** `public/robots.txt`
+
+#### Best Practices:
+```txt
+# Allow all by default (good for SEO)
+User-agent: *
+Allow: /
+
+# Declare sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Block russian search engines (Ukrainian market policy)
+User-agent: Yandex
+Disallow: /
+
+User-agent: Mail.RU_Bot
+Disallow: /
+```
+
+**Common Mistakes to Avoid:**
+```txt
+# ❌ DON'T block everything:
+User-agent: *
+Disallow: /
+# This prevents ALL search engines from indexing!
+
+# ✅ DO allow important pages:
+User-agent: *
+Allow: /
+```
+
+### 7.3. HTML META TAGS (Ukrainian Market)
+
+#### Required Meta Tags:
+```html
+<html lang="uk-UA">
+<head>
+  <!-- Charset -->
+  <meta charset="UTF-8" />
+
+  <!-- Viewport (mobile) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Title (50-60 chars) -->
+  <title>Ваш заголовок тут - Назва сайту</title>
+
+  <!-- Description (150-160 chars) -->
+  <meta name="description" content="Опис вашого сайту для пошукових систем" />
+
+  <!-- Keywords (optional, less important now) -->
+  <meta name="keywords" content="ключові, слова, українською" />
+
+  <!-- Language alternatives (hreflang) -->
+  <link rel="alternate" hreflang="uk-UA" href="https://yourdomain.com" />
+  <link rel="alternate" hreflang="en-US" href="https://yourdomain.com/en" />
+  <link rel="alternate" hreflang="x-default" href="https://yourdomain.com" />
+
+  <!-- Canonical URL (avoid duplicate content) -->
+  <link rel="canonical" href="https://yourdomain.com/page" />
+</head>
+</html>
+```
+
+#### Open Graph (Social Media):
+```html
+<!-- Facebook / LinkedIn -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://yourdomain.com/" />
+<meta property="og:title" content="Заголовок для соціальних мереж" />
+<meta property="og:description" content="Опис для соціальних мереж" />
+<meta property="og:image" content="https://yourdomain.com/og-image.jpg" />
+<meta property="og:locale" content="uk_UA" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="https://yourdomain.com/" />
+<meta name="twitter:title" content="Заголовок для Twitter" />
+<meta name="twitter:description" content="Опис для Twitter" />
+<meta name="twitter:image" content="https://yourdomain.com/twitter-image.jpg" />
+```
+
+### 7.4. SITEMAP.XML
+
+**Location:** `public/sitemap.xml`
+
+#### Basic Structure:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://yourdomain.com/</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+
+    <!-- Language alternatives -->
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://yourdomain.com/" />
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://yourdomain.com/en" />
+  </url>
+
+  <!-- Other pages... -->
+</urlset>
+```
+
+#### Next.js Auto-Generation:
+```typescript
+// app/sitemap.ts
+import { MetadataRoute } from 'next';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    {
+      url: 'https://yourdomain.com',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1,
+      alternates: {
+        languages: {
+          'uk-UA': 'https://yourdomain.com',
+          'en-US': 'https://yourdomain.com/en',
+        },
+      },
+    },
+    // Add more URLs...
+  ];
+}
+```
+
+### 7.5. STRUCTURED DATA (Schema.org)
+
+**Improves search results with rich snippets**
+
+#### Organization Schema:
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Ваша компанія",
+  "url": "https://yourdomain.com",
+  "logo": "https://yourdomain.com/logo.png",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+380-50-123-4567",
+    "contactType": "customer service",
+    "availableLanguage": ["uk", "en"]
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "UA",
+    "addressLocality": "Київ",
+    "postalCode": "01001",
+    "streetAddress": "вул. Хрещатик, 1"
+  }
+}
+</script>
+```
+
+#### LocalBusiness Schema (for local businesses):
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Назва бізнесу",
+  "image": "https://yourdomain.com/business.jpg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "вул. Хрещатик, 1",
+    "addressLocality": "Київ",
+    "postalCode": "01001",
+    "addressCountry": "UA"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "50.4501",
+    "longitude": "30.5234"
+  },
+  "url": "https://yourdomain.com",
+  "telephone": "+380501234567",
+  "priceRange": "$$"
+}
+</script>
+```
+
+### 7.6. PERFORMANCE OPTIMIZATION (SEO Impact)
+
+**Google ranks faster sites higher**
+
+#### Core Web Vitals:
+- **LCP (Largest Contentful Paint):** <2.5s ✅
+- **FID (First Input Delay):** <100ms ✅
+- **CLS (Cumulative Layout Shift):** <0.1 ✅
+
+#### Quick Wins:
+```typescript
+// 1. Image optimization (Next.js)
+import Image from 'next/image';
+
+<Image
+  src="/hero.jpg"
+  alt="Опис зображення"
+  width={1200}
+  height={600}
+  priority // For above-the-fold images
+  loading="lazy" // For below-the-fold
+/>
+
+// 2. Font optimization
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'], // Ukrainian support
+  display: 'swap' // Avoid FOIT
+});
+
+// 3. Lazy loading components
+import dynamic from 'next/dynamic';
+
+const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
+  loading: () => <p>Завантаження...</p>,
+  ssr: false // Client-side only
+});
+```
+
+### 7.7. UKRAINIAN MARKET SEO SPECIFICS
+
+#### Google is Primary:
+- 🇺🇦 **95%+ market share** in Ukraine
+- Focus SEO efforts on Google Search Console
+- Bing is secondary (~2-3% share)
+
+#### Block Russian Search Engines:
+```txt
+# robots.txt
+User-agent: Yandex
+Disallow: /
+
+User-agent: Mail.RU_Bot
+Disallow: /
+```
+
+**Why?**
+- Ukrainian market policy (see Section 3)
+- Compliance with wartime regulations
+- Reduce unwanted traffic from russian IPs
+
+#### Ukrainian Language SEO:
+```html
+<!-- Always specify UK locale -->
+<html lang="uk-UA">
+
+<!-- Not "uk" alone, full locale -->
+<meta property="og:locale" content="uk_UA" />
+
+<!-- Hreflang for multi-language sites -->
+<link rel="alternate" hreflang="uk-UA" href="..." />
+```
+
+### 7.8. SEO CHECKLIST (Pre-Launch)
+
+```markdown
+SEO READINESS CHECKLIST:
+- [ ] robots.txt configured (Allow: /, Sitemap declared)
+- [ ] sitemap.xml generated and submitted to Google Search Console
+- [ ] HTML lang="uk-UA" on all pages
+- [ ] Meta title (50-60 chars) and description (150-160 chars)
+- [ ] Canonical URLs on all pages
+- [ ] Open Graph tags for social media
+- [ ] Structured data (Organization/LocalBusiness schema)
+- [ ] Mobile-friendly (responsive design)
+- [ ] HTTPS enabled (SSL certificate)
+- [ ] Core Web Vitals passing (LCP, FID, CLS)
+- [ ] No LANG-CRITICAL violations (run //CHECK:LANG)
+- [ ] Images optimized (<200KB, WebP format)
+- [ ] 404 page exists
+- [ ] No broken links (run link checker)
+- [ ] Google Analytics / Plausible installed
+```
+
+### 7.9. GOOGLE SEARCH CONSOLE SETUP
+
+**Essential for Ukrainian market:**
+
+1. **Verify ownership:**
+   - HTML file upload
+   - Meta tag
+   - Google Analytics
+   - DNS TXT record
+
+2. **Submit sitemap:**
+   ```
+   https://yourdomain.com/sitemap.xml
+   ```
+
+3. **Set target country:**
+   - International Targeting → Ukraine (UA)
+
+4. **Monitor:**
+   - Indexing status
+   - Search performance
+   - Core Web Vitals
+   - Mobile usability
+   - Security issues
+
+### 7.10. SEO AUTOMATION
+
+#### Pre-deploy SEO Check:
+```bash
+# Run before each deployment
+./scripts/seo-check.sh
+
+# Expected output:
+# ✅ robots.txt configured
+# ✅ No LANG-CRITICAL violations
+# ✅ Meta tags present
+# ✅ Sitemap exists
+```
+
+#### CI/CD Integration:
+```yaml
+# .github/workflows/deploy.yml
+- name: SEO Check
+  run: |
+    chmod +x scripts/seo-check.sh
+    ./scripts/seo-check.sh
+
+- name: Lighthouse CI
+  uses: treosh/lighthouse-ci-action@v9
+  with:
+    urls: |
+      https://staging.yourdomain.com
+    uploadArtifacts: true
+```
+
+### 7.11. MONITORING & ANALYTICS
+
+#### Recommended Tools:
+- **Google Search Console** (free, essential)
+- **Google Analytics 4** or **Plausible Analytics** (privacy-friendly)
+- **PageSpeed Insights** (performance)
+- **Screaming Frog** (site audit)
+
+#### Key Metrics to Track:
+- Organic search traffic (Ukraine)
+- Click-through rate (CTR) in search results
+- Average position for target keywords
+- Core Web Vitals scores
+- Bounce rate
+- Page load time
+
+### 7.12. LANG-CRITICAL IN SEO CONTEXT
+
+**Flexible Policy (as discussed):**
+
+#### Hard Rules (Always Block):
+- ❌ `.ru` domains in production config
+- ❌ `lang="ru"` in public HTML
+- ❌ Russian legal documents
+
+#### Soft Rules (Warning + Review):
+- ⚠️ Detection patterns in security tools (this is OK)
+- ⚠️ Historical data in databases
+- ⚠️ Names in mock data (may be russian names)
+
+**Use `//CHECK:LANG` for automated scan before deploy**
+
+---
+
 ## CHANGELOG
+*   **v1.1** [2025-01-27] – Added Section 7: SEO/GEO Strategy (Ukrainian market)
 *   **v1.0** [2025-01-26] – Initial product rules: i18n strategy, device adaptation, Ukrainian market policy, accessibility, scalability
 
 ---
 
-*Stored in private repo with RULES_CORE.md. Last updated: 2025-01-26*
+*Stored in private repo with RULES_CORE.md. Last updated: 2025-01-27*

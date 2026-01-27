@@ -1,0 +1,310 @@
+# ==============================================================================
+# .GITIGNORE - AI Workflow Rules Framework v4.0
+# Security Onion: 5 Layers of Protection
+# ==============================================================================
+
+# ==============================================================================
+# LAYER 1: AI RULES (CORPORATE IP - CRITICAL!)
+# ==============================================================================
+# These files contain proprietary intellectual property
+# NEVER commit to public repositories
+
+.ai-rules/
+RULES_*.md
+.ai/token-limits.json
+
+# Note: .ai/locale-context.json CAN be committed if project-specific
+# Note: .ai/certificates.json CAN be committed (no secrets)
+# Note: .ai/checksums.sha256 CAN be committed (integrity verification)
+
+# ==============================================================================
+# LAYER 2: LICENSE & ACTIVATION
+# ==============================================================================
+# License keys must remain private
+
+.ai/license.json
+*.license
+license-keys.txt
+licenses.json
+licenses.csv
+
+# ==============================================================================
+# LAYER 3: SECRETS & API KEYS
+# ==============================================================================
+# Prevent accidental secret commits
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+.env.backup
+
+# AI API credentials
+.anthropic
+.openai
+.claude
+ai-logs/
+ai-costs.db
+.ai-cache/
+ai-responses/
+*.ai.log
+
+# Cryptographic keys
+*.key
+*.pem
+*.p12
+*.pfx
+*.cer
+*.crt
+*.pub
+id_rsa
+id_ecdsa
+id_ed25519
+
+# Secret directories
+secrets/
+private/
+credentials/
+
+# ==============================================================================
+# LAYER 4: DEPENDENCIES & BUILD
+# ==============================================================================
+
+# Node.js
+node_modules/
+.pnp
+.pnp.js
+bower_components/
+jspm_packages/
+
+# Build outputs
+/build
+/dist
+/.next/
+/out/
+.vercel
+.turbo
+.nuxt
+.output
+.vuepress/dist
+.docusaurus
+
+# Testing
+/coverage
+/.nyc_output
+*.lcov
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# ==============================================================================
+# LAYER 5: IDE & EDITORS
+# ==============================================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==============================================================================
+# OS FILES
+# ==============================================================================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# ==============================================================================
+# DATABASE
+# ==============================================================================
+
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+
+# ==============================================================================
+# TEMPORARY FILES
+# ==============================================================================
+
+tmp/
+temp/
+*.tmp
+*.temp
+*.cache
+.cache/
+
+# ==============================================================================
+# TESTING & QUALITY
+# ==============================================================================
+
+# Test output
+test-results/
+playwright-report/
+cypress/videos/
+cypress/screenshots/
+
+# Coverage reports
+coverage/
+.nyc_output/
+htmlcov/
+
+# ==============================================================================
+# PYTHON (if using)
+# ==============================================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+ENV/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ==============================================================================
+# DOCKER
+# ==============================================================================
+
+docker-compose.override.yml
+.dockerignore
+
+# ==============================================================================
+# CI/CD
+# ==============================================================================
+
+.github/secrets/
+.gitlab-ci-local/
+
+# ==============================================================================
+# MONITORING & ANALYTICS
+# ==============================================================================
+
+.sentry/
+sentry-debug-configuration.json
+.lighthouseci/
+
+# ==============================================================================
+# BACKUP FILES
+# ==============================================================================
+
+*.bak
+*.backup
+*.old
+*~
+
+# ==============================================================================
+# DOCUMENTATION (Generated)
+# ==============================================================================
+
+# Only ignore generated docs, not source
+docs/_build/
+docs/.vuepress/.temp/
+site/
+
+# ==============================================================================
+# SECURITY SCAN RESULTS
+# ==============================================================================
+
+trivy-results.json
+snyk-results.json
+dependency-check-report.html
+
+# ==============================================================================
+# PROJECT-SPECIFIC
+# ==============================================================================
+
+# Add your custom ignores below:
+# Example:
+# /uploads/
+# /downloads/
+
+# ==============================================================================
+# EXCEPTIONS (DO commit these)
+# ==============================================================================
+
+# Allow specific .env example files
+!.env.example
+!.env.template
+
+# Allow public keys if needed
+# !public-keys/*.pub
+
+# Allow example credentials
+!credentials.example.json
+
+# Allow security baseline
+!.security-baseline
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+
+# This .gitignore implements the Security Onion approach:
+#
+# Layer 1: Client Data (protected by .ai-rules/ submodule)
+# Layer 2: RULES (RULES_*.md never committed)
+# Layer 3: Secrets (API keys, .env, private keys)
+# Layer 4: Client Code (dependencies, builds)
+# Layer 5: Public/SEO (robots.txt committed, but sensitive config ignored)
+#
+# For more info: See RULES_CORE.md Section 0 (Rules Security)
+
+# ==============================================================================
+# END OF FILE
+# ==============================================================================
