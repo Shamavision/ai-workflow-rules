@@ -1,0 +1,223 @@
+PROPRIETARY LICENSE AGREEMENT
+AI Workflow Rules Framework v4.0
+
+Copyright © 2025 [Your Company Name]. All Rights Reserved.
+
+================================================================================
+IMPORTANT – READ CAREFULLY BEFORE USING THIS SOFTWARE
+================================================================================
+
+This software and associated documentation files (the "Software") are the
+proprietary and confidential property of [Your Company Name] (the "Licensor").
+
+BY ACCESSING, DOWNLOADING, COPYING, OR USING THE SOFTWARE, YOU (THE "LICENSEE")
+AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. IF YOU DO NOT AGREE, DO NOT USE
+THE SOFTWARE.
+
+================================================================================
+1. GRANT OF LIMITED LICENSE
+================================================================================
+
+Subject to the terms of this Agreement, Licensor grants Licensee a limited,
+non-exclusive, non-transferable, revocable license to:
+
+  a) Use the Software internally within Licensee's organization
+  b) Modify the Software for Licensee's internal use only
+  c) Create derivative works solely for Licensee's internal projects
+
+This license is PERSONAL and NON-TRANSFERABLE. Each user or organization must
+obtain their own license directly from Licensor.
+
+================================================================================
+2. RESTRICTIONS – STRICTLY PROHIBITED
+================================================================================
+
+Licensee shall NOT, under any circumstances:
+
+  a) REDISTRIBUTION: Distribute, sublicense, sell, rent, lease, or transfer
+     the Software or any portion thereof to any third party
+
+  b) PUBLIC SHARING: Share the Software via public repositories (GitHub,
+     GitLab, Bitbucket, etc.), file sharing services, or any public platform
+
+  c) COPYING: Make copies of the Software for distribution to others, whether
+     for commercial purposes or not
+
+  d) REVERSE ENGINEERING: Decompile, disassemble, reverse engineer, or attempt
+     to derive the source code, algorithms, or structure of the Software
+
+  e) REMOVAL OF NOTICES: Remove, obscure, or modify any copyright, trademark,
+     or proprietary notices contained in the Software
+
+  f) CIRCUMVENTION: Bypass, disable, or circumvent any security features,
+     license verification mechanisms, or authenticity checks
+
+  g) TRADEMARK MISUSE: Use Licensor's trademarks, service marks, or trade
+     names without prior written permission
+
+  h) COMPETITIVE USE: Use the Software to develop competing products or
+     services that replicate its functionality
+
+  i) TRAINING AI MODELS: Use the Software or its content to train artificial
+     intelligence, machine learning models, or large language models without
+     explicit written permission from Licensor
+
+================================================================================
+3. OWNERSHIP & INTELLECTUAL PROPERTY
+================================================================================
+
+The Software is licensed, not sold. Licensor retains all right, title, and
+interest in and to the Software, including all intellectual property rights.
+
+This includes but is not limited to:
+  - Source code and documentation
+  - Algorithms, methodologies, and workflows
+  - Trade secrets and proprietary processes
+  - Trademarks and brand identity
+
+Licensee acquires no ownership rights through this license.
+
+================================================================================
+4. AUTHENTICITY VERIFICATION
+================================================================================
+
+This Software includes authenticity verification mechanisms to prevent
+counterfeiting and unauthorized use. Licensee agrees:
+
+  a) To activate the license using the provided activation script
+  b) Not to tamper with or bypass authenticity checks
+  c) To verify authenticity using scripts/verify-authenticity.sh
+  d) That Licensor may audit Licensee's use for compliance
+
+Unauthorized copies, counterfeit versions, or tampered installations are
+STRICTLY PROHIBITED and may result in legal action.
+
+================================================================================
+5. CONFIDENTIALITY
+================================================================================
+
+The Software contains trade secrets and proprietary methodologies. Licensee
+agrees to:
+
+  a) Keep the Software confidential
+  b) Not disclose the Software to unauthorized third parties
+  c) Use the same degree of care to protect the Software as Licensee uses
+     to protect its own confidential information (but no less than reasonable
+     care)
+
+================================================================================
+6. DATA COLLECTION & PRIVACY
+================================================================================
+
+This Software may collect anonymous usage metrics to improve functionality.
+All data collection is governed by LICENSE-METRICS.md and complies with GDPR.
+
+Collected data includes:
+  - Anonymous usage patterns (no personal data)
+  - Performance metrics (load times, errors)
+  - Feature adoption rates
+
+Licensee may opt-out of non-essential metrics. See LICENSE-METRICS.md for
+details.
+
+================================================================================
+7. WARRANTY DISCLAIMER
+================================================================================
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, UNINTERRUPTED,
+OR MEET LICENSEE'S REQUIREMENTS.
+
+================================================================================
+8. LIMITATION OF LIABILITY
+================================================================================
+
+IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
+CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST DATA, OR
+BUSINESS INTERRUPTION, ARISING OUT OF OR RELATED TO THIS LICENSE OR THE USE
+OF THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+LICENSOR'S TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT PAID BY LICENSEE FOR
+THE LICENSE (IF ANY).
+
+================================================================================
+9. TERMINATION
+================================================================================
+
+This license is effective until terminated.
+
+Licensor may terminate this license immediately if Licensee:
+  - Breaches any term of this Agreement
+  - Engages in unauthorized distribution or copying
+  - Attempts to reverse engineer or circumvent security measures
+
+Upon termination, Licensee must:
+  - Cease all use of the Software
+  - Delete all copies in Licensee's possession or control
+  - Certify in writing that all copies have been destroyed
+
+================================================================================
+10. ENFORCEMENT & LEGAL REMEDIES
+================================================================================
+
+Licensee acknowledges that unauthorized use, copying, or distribution of the
+Software causes irreparable harm to Licensor. In the event of breach, Licensor
+is entitled to:
+
+  a) Immediate injunctive relief without posting bond
+  b) Monetary damages (actual and consequential)
+  c) Recovery of attorney's fees and court costs
+  d) Any other remedies available at law or equity
+
+================================================================================
+11. GOVERNING LAW & JURISDICTION
+================================================================================
+
+This Agreement shall be governed by the laws of [Your Jurisdiction], without
+regard to conflicts of law principles.
+
+Any disputes arising under this Agreement shall be resolved exclusively in the
+courts of [Your Jurisdiction].
+
+================================================================================
+12. ENTIRE AGREEMENT
+================================================================================
+
+This Agreement constitutes the entire agreement between Licensor and Licensee
+regarding the Software and supersedes all prior agreements, understandings,
+and communications.
+
+No modification of this Agreement shall be valid unless made in writing and
+signed by both parties.
+
+================================================================================
+13. SEVERABILITY
+================================================================================
+
+If any provision of this Agreement is found to be unenforceable, the remaining
+provisions shall remain in full force and effect.
+
+================================================================================
+14. CONTACT INFORMATION
+================================================================================
+
+For licensing inquiries, permission requests, or legal notices:
+
+  Email: legal@[your-company].com
+  Website: https://[your-company].com/licensing
+
+================================================================================
+ACKNOWLEDGMENT
+================================================================================
+
+BY USING THE SOFTWARE, LICENSEE ACKNOWLEDGES THAT LICENSEE HAS READ THIS
+AGREEMENT, UNDERSTANDS IT, AND AGREES TO BE BOUND BY ITS TERMS.
+
+================================================================================
+Last Updated: 2025-01-27
+Version: 1.0
+License ID: [Generated upon activation]
+================================================================================
