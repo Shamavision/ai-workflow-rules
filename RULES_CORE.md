@@ -362,6 +362,26 @@ Proceed? [YES/ADJUST]
 - [ ] Skip introductions/conclusions
 - [ ] Batch operations where possible
 
+### 2.11. AUTOMATIC TOKEN TRACKING
+
+**AI automatically updates `.ai/token-limits.json` at:**
+- End of session (when user says goodbye/завершает работу)
+- After major commits
+- At 80% tokens (checkpoint creation)
+
+**Auto-update includes:**
+```json
+{
+  "daily_usage": <current_session_tokens>,
+  "monthly_usage": <cumulative>,
+  "sessions[].usage": <session_total>,
+  "sessions[].final_commit": "<SHA>",
+  "history[date]": <daily_total>
+}
+```
+
+**User never needs to manually update this file.**
+
 ---
 
 ## 3. ITERATIVE WORKFLOW (The Sacred Process)
