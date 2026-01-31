@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/wellme-logo.svg" alt="Wellme.Creative Team - AI Workflow Rules" width="500">
+<img src="public/wellme-logo.svg" alt="Wellme™ - AI Workflow Rules" width="500">
 
 # AI Workflow Rules Framework
 
@@ -135,7 +135,7 @@ LICENSE                          # MIT License
 
 **Why this matters:**
 
-As a Ukrainian company (Wellme.Creative Team), we face **high legal risks** if our projects accidentally include russian services. This framework provides:
+As a Ukrainian company (Wellme™), we face **high legal risks** if our projects accidentally include russian services. This framework provides:
 
 ✅ **Automatic detection** of 40+ russian tracking services
 ✅ **NPM package scanning** for supply-chain attacks
@@ -259,7 +259,7 @@ done
 
 **AS-IS, NO WARRANTY:**
 
-This framework is provided **"as-is"** without any warranty. While we (Wellme.Creative Team) use it in production for our Ukrainian projects, **you use it at your own risk.**
+This framework is provided **"as-is"** without any warranty. While we (Wellme™) use it in production for our Ukrainian projects, **you use it at your own risk.**
 
 ✅ **Free to use** (MIT License)
 ✅ **Modify for your needs**
@@ -295,7 +295,7 @@ We welcome contributions from the community!
 **MIT License** - See [LICENSE](LICENSE) for full terms.
 
 ```
-Copyright (c) 2025 Wellme.Creative Team (Ukraine)
+Copyright (c) 2025 Wellme™(Ukraine)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy...
 ```
@@ -340,11 +340,11 @@ This framework solves **our** problems. We hope it helps you too.
 
 ---
 
-<img src="public/wellme-logo.svg" alt="Wellme.Creative Team" width="300">
+<img src="public/wellme-logo.svg" alt="Wellme™" width="300">
 
 **AI Workflow Rules Framework v7.0**
 *Open Source • Made in Ukraine 🇺🇦*
 
-[wellme.ua](https://wellme.ua) • © 2025 Wellme.Creative Team
+[wellme.ua](https://wellme.ua) • © 2025 Wellme™
 
 </div>
