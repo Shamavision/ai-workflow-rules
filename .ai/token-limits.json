@@ -1,17 +1,18 @@
 {
-  "_comment": "Token usage tracking v2.0 - AI Workflow Rules Framework v6.0",
-  "_instructions": "AI automatically updates this file per Section 2.11. No manual updates needed.",
+  "_comment": "Token usage tracking v2.0 - AI Workflow Rules Framework",
+  "_instructions": "UNIVERSAL TEMPLATE - Copy this file to your project and customize. AI reads this at session start and automatically updates it per RULES_CORE.md Section 2.11.",
+  "_usage": "Update 'plan' and limits based on your Anthropic subscription. AI will track usage automatically.",
 
   "plan": "pro",
   "monthly_limit": 6000000,
   "daily_limit": 200000,
 
   "current_month": "2026-01",
-  "monthly_usage": 140000,
-  "monthly_percentage": 2.3,
+  "monthly_usage": 0,
+  "monthly_percentage": 0,
 
-  "daily_usage": 140000,
-  "daily_percentage": 70,
+  "daily_usage": 0,
+  "daily_percentage": 0,
   "last_reset_daily": "2026-01-31T00:00:00Z",
   "last_reset_monthly": "2026-01-01T00:00:00Z",
 
@@ -22,43 +23,26 @@
     "critical": 95
   },
 
-  "current_status": "caution",
-  "current_zone": "🟠 Orange - Silent mode active",
+  "current_status": "green",
+  "current_zone": "🟢 Green - Full capacity",
 
-  "sessions": [
-    {
-      "date": "2026-01-31",
-      "usage": 140000,
-      "tasks_completed": 8,
-      "major_work": [
-        "forbidden-trackers.json v2.0 integration",
-        "seo-check.sh dynamic JSON parsing + npm scanner",
-        "RULES v6.0 token management overhaul",
-        "Section 2.11 automatic token tracking"
-      ],
-      "final_commit": "732246b"
-    }
-  ],
+  "sessions": [],
 
   "optimization_stats": {
-    "context_compressions": 1,
-    "tokens_saved_by_compression": 111000,
-    "diff_only_mode_activations": 3,
-    "lazy_loading_prevented_reads": 5
+    "context_compressions": 0,
+    "tokens_saved_by_compression": 0,
+    "diff_only_mode_activations": 0,
+    "lazy_loading_prevented_reads": 0
   },
 
   "notes": [
-    "Monthly limit estimated at 6M for Pro - verify with Anthropic",
-    "Context compression auto-triggers at 50% (100k tokens)",
-    "Session checkpoints created at 80% (160k tokens)",
-    "Update monthly_usage at end of each day"
+    "Monthly limits: Free tier ~300k, Pro ~6M, Team ~30M (verify with Anthropic)",
+    "Context compression auto-triggers at 50% (saves 40-60% tokens)",
+    "Session checkpoints created at 80% tokens",
+    "AI automatically updates this file - no manual updates needed"
   ],
 
   "history": {
-    "_comment": "Daily usage tracking",
-    "2026-01-31": 140000,
-    "2026-01-30": 0,
-    "2026-01-29": 0,
-    "2026-01-28": 198000
+    "_comment": "Daily usage tracking - AI fills this automatically"
   }
 }
