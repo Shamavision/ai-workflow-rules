@@ -1,31 +1,62 @@
 {
-  "_comment": "Token usage tracking for AI conversations. Update 'current_usage' manually or via script.",
-  "_instructions": {
-    "daily_limit": "Your subscription daily token limit (check at claude.ai/settings)",
-    "warning_threshold": "At 90% AI will warn you to wrap up",
-    "critical_threshold": "At 95% AI enters finalization-only mode",
-    "current_usage": "UPDATE THIS: Tokens used today (reset at midnight UTC)",
-    "last_reset": "UPDATE THIS: ISO date when current_usage was reset to 0"
-  },
-  
-  "subscription_type": "pro",
+  "_comment": "Token usage tracking v2.0 - AI Workflow Rules Framework v6.0",
+  "_instructions": "AI reads this file at session start. User updates after each session or via script.",
+
+  "plan": "pro",
+  "monthly_limit": 6000000,
   "daily_limit": 200000,
-  "warning_threshold": 0.90,
-  "critical_threshold": 0.95,
-  
-  "current_usage": 0,
-  "last_reset": "2025-01-26T00:00:00Z",
-  
-  "_usage_notes": {
-    "how_to_update": "After each session, update current_usage += tokens_used_in_session",
-    "how_to_reset": "At start of new day (UTC midnight), set current_usage = 0 and update last_reset",
-    "automation": "You can create a script to auto-update this file (see templates/update-tokens.sh)"
+
+  "current_month": "2026-01",
+  "monthly_usage": 113000,
+  "monthly_percentage": 1.9,
+
+  "daily_usage": 113000,
+  "daily_percentage": 57,
+  "last_reset_daily": "2026-01-31T00:00:00Z",
+  "last_reset_monthly": "2026-01-01T00:00:00Z",
+
+  "thresholds": {
+    "green": 50,
+    "moderate": 70,
+    "caution": 90,
+    "critical": 95
   },
-  
+
+  "current_status": "moderate",
+  "current_zone": "🟡 Yellow - Brief mode active",
+
+  "sessions": [
+    {
+      "date": "2026-01-31",
+      "usage": 113000,
+      "tasks_completed": 7,
+      "major_work": [
+        "forbidden-trackers.json v2.0 integration",
+        "seo-check.sh dynamic JSON parsing + npm scanner",
+        "RULES v6.0 token management overhaul"
+      ]
+    }
+  ],
+
+  "optimization_stats": {
+    "context_compressions": 0,
+    "tokens_saved_by_compression": 0,
+    "diff_only_mode_activations": 3,
+    "lazy_loading_prevented_reads": 5
+  },
+
+  "notes": [
+    "Monthly limit estimated at 6M for Pro - verify with Anthropic",
+    "Context compression auto-triggers at 50% (100k tokens)",
+    "Session checkpoints created at 80% (160k tokens)",
+    "Update monthly_usage at end of each day"
+  ],
+
   "history": {
-    "_comment": "Optional: Track daily usage for analytics",
-    "2025-01-26": 0,
-    "2025-01-25": 156432,
-    "2025-01-24": 187234
+    "_comment": "Daily usage tracking",
+    "2026-01-31": 113000,
+    "2026-01-30": 0,
+    "2026-01-29": 0,
+    "2026-01-28": 198000
   }
 }

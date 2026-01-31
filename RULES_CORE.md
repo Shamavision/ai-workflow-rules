@@ -107,6 +107,47 @@ AI автоматически ищет RULES в следующих местах 
 
 ---
 
+## 0. SESSION START PROTOCOL (ОБЯЗАТЕЛЬНО)
+
+### 🚨 CRITICAL: Read RULES First!
+
+**BEFORE any work in the session, AI MUST:**
+
+1. **Check for RULES files:**
+   ```bash
+   # Priority order:
+   1. .ai-rules/RULES_CORE.md      ✅ Primary
+   2. .ai/RULES_CORE.md
+   3. ~/ai-workflow-rules/RULES_CORE.md
+   ```
+
+2. **Read key sections:**
+   - Section 0: Session Start (this)
+   - Section 2: Token Management
+   - Section 7: Communication (language rules!)
+   - Project-specific: RULES_PRODUCT.md
+
+3. **Show SESSION START confirmation:**
+   ```markdown
+   [SESSION START]
+   ✓ RULES_CORE.md loaded
+   ✓ Language: Russian (internal dialogue)
+   ✓ Token limit: 200k daily
+   ✓ Current usage: [X]k ([Y]%)
+
+   Ready to work. В чем помочь?
+   ```
+
+**WHY THIS MATTERS:**
+Today's session started with me speaking English, forgetting Russian language rule. This wastes time and breaks workflow.
+
+**AUTO-FAIL if skipped:**
+- ❌ Wrong language used
+- ❌ Token limits ignored
+- ❌ Workflow violations
+
+---
+
 ## 1. CORE PRINCIPLES (Non-negotiable)
 *   **No Bullshit Mode:** If you're less than 90% sure, flag it with `[ASSUMPTION]` or ask. Never present a guess as a fact.
 *   **Discuss → Approve → Execute:** NEVER start coding/editing before getting explicit approval of the PLAN.
@@ -114,116 +155,212 @@ AI автоматически ищет RULES в следующих местах 
 *   **Roadmap-Driven Development:** Every task generates a roadmap. Each stage ends with commit + rules update.
 *   **Token-Conscious:** Minimize token waste. Monitor usage. Stop at 90% to preserve budget.
 
-## 2. TOKEN MANAGEMENT (критично для бюджета)
+## 2. TOKEN MANAGEMENT v2.0 (критично для бюджета)
 
-### 2.1. TRACKING & LIMITS
+### 2.1. LIMITS & TRACKING
 ````json
-// .ai/token-limits.json
+// .ai/token-limits.json (updated structure)
 {
-  "subscription_type": "pro",
+  "plan": "pro",
+  "monthly_limit": 6000000,     // 6M for Pro (verify with Anthropic)
   "daily_limit": 200000,
-  "warning_threshold": 0.90,
-  "critical_threshold": 0.95,
-  "current_usage": 0,
-  "last_reset": "2025-01-26T00:00:00Z"
+  "current_month": "2026-01",
+  "monthly_usage": 0,            // Track cumulative
+  "daily_usage": 0,
+  "last_reset_daily": "2026-01-31T00:00:00Z",
+  "last_reset_monthly": "2026-01-01T00:00:00Z",
+  "sessions": []                 // Session history for analysis
 }
 ````
 
-### 2.2. AI MONITORING BEHAVIOR
-**В начале каждой сессии:**
-````markdown
-[SESSION START]
-Reading token limits from .ai/token-limits.json...
-Daily limit: 200,000 tokens
-Used today: 45,234 tokens (23%)
-Remaining: 154,766 tokens
+### 2.2. GRADUATED WARNING SYSTEM
 
-Status: ✅ Green zone - full capacity available
+**Automatic status display at 30%+ usage:**
+````markdown
+[TOKEN STATUS] Session: 92k/200k (46%) | Remaining: ~108k | 🟢 Green
 ````
 
-**Во время работы (каждые ~20k токенов):**
+**Zones:**
+- 🟢 **0-50% (GREEN):** Full capacity. Normal mode.
+- 🟡 **50-70% (MODERATE):** Activate optimizations. Brief mode.
+- 🟠 **70-90% (CAUTION):** Aggressive compression. Silent mode.
+- 🔴 **90-95% (CRITICAL):** Finalization only. Commit + stop.
+- ⛔ **95-100% (EMERGENCY):** Commit only. Hard stop.
+
+### 2.3. CONTEXT COMPRESSION (saves 40-60%)
+
+**Auto-triggers:**
+- Every 3 completed tasks
+- At 50% token usage
+- User command: `//COMPACT`
+
+**Process:**
 ````markdown
-[TOKEN UPDATE]
-Session usage: 18,432 tokens
-Total today: 89,156 tokens (45%)
-Status: ✅ Green zone
+[COMPACTING CONTEXT]
+Previous: 8 tasks with full details (~35k tokens)
+Compressed to: Summary of decisions (~8k tokens)
+Saved: ~27k tokens (77%)
+
+Compressed history:
+✓ forbidden-trackers.json v2.0 created
+✓ seo-check.sh updated (dynamic JSON + npm scan)
+✓ RULES_PRODUCT.md Section 8 updated
+
+Current task preserved with full context.
 ````
 
-### 2.3. WARNING LEVELS
+**What gets compressed:**
+- ✅ Code snippets (already in files)
+- ✅ Implementation details
+- ✅ Alternative approaches rejected
+- ✅ Long explanations
 
-#### 🟡 90% WARNING
+**Never compressed:**
+- ❌ Active decisions/agreements
+- ❌ Current task context
+- ❌ User preferences
+- ❌ Critical warnings
+
+### 2.4. LAZY LOADING POLICY (read only what's needed)
+
+**DO NOT:**
+- ❌ Read files "for context"
+- ❌ "Let me check X to understand structure"
+- ❌ Grep "to see what's there"
+
+**DO:**
+- ✅ Read ONLY files being modified
+- ✅ Ask before reading if unsure: "Need file X?"
+- ✅ Use existing context from conversation
+
+**Example:**
 ````markdown
-[TOKEN WARNING: 90%]
-⚠️ Израсходовано 180,000 / 200,000 токенов (90%)
-
-Рекомендую:
-1. Завершить текущую стадию (осталось на ~15-20 минут работы)
-2. Создать commit
-3. Обновить RULES.md если есть изменения
-4. Продолжить завтра со свежим лимитом
-
-Оставшихся токенов хватит на:
-- 2-3 небольших компонента
-- 1 средний рефакторинг
-- Финализация текущей фичи
-
-Продолжаем текущую задачу или останавливаемся? [CONTINUE/STOP]
+User: "Update function foo in bar.ts"
+❌ BAD: Read bar.ts + 3 related files (12k tokens)
+✅ GOOD: Read bar.ts only (3k tokens)
 ````
 
-#### 🔴 95% CRITICAL
+### 2.5. VERBOSITY AUTO-SCALING
+
+**Automatic adjustment based on token usage:**
+
+**🟢 0-50% (NORMAL):**
+- Code + brief explanation
+- Show alternatives when relevant
+- Full error messages
+
+**🟡 50-70% (BRIEF):**
+- Code + one-line summary
+- Skip obvious explanations
+- Diff format for edits
+
+**🟠 70-90% (SILENT):**
+- Code only, zero fluff
+- No introductions/conclusions
+- Absolute minimum text
+
+**🔴 90%+ (EMERGENCY):**
+- Commit operations only
+- One-word confirmations
+
+**User overrides:**
+- `//VERBOSE` - detailed mode (once)
+- `//SILENT` - silent until cancelled
+- `//THINK` - show reasoning (once)
+
+### 2.6. DIFF-ONLY MODE (activates at 50%+)
+
 ````markdown
-[TOKEN CRITICAL: 95%]
-🚨 Осталось 10,000 токенов (5% лимита)
+❌ INEFFICIENT (show full file):
+"Here's updated file.ts (150 lines)..."
 
-Режим финализации:
-- Только критичные операции
-- Создание commit
-- Краткие ответы
-- Никаких новых фич
+✅ EFFICIENT (show only changes):
+"file.ts:45
+- old code
++ new code
 
-Действия:
-1. [ОБЯЗАТЕЛЬНО] Commit текущей работы
-2. [ОПЦИОНАЛЬНО] Обновить RULES.md
-3. [STOP] Остановка до завтра
+file.ts:78
++ added function"
 
-Финализируем и останавливаемся? [YES - обязательно]
+Saves: 80-90% tokens
 ````
 
-### 2.4. TOKEN OPTIMIZATION (как AI экономит токены)
+### 2.7. SESSION CHECKPOINTS (for multi-day projects)
 
-**✅ ЧТО ДЕЛАЮ:**
-*   Использую diffs вместо полных файлов (`// REMOVE: ... // ADD: ...`)
-*   Не повторяю код, который уже показал ранее
-*   Краткие ответы для простых вопросов
-*   Ссылаюсь на существующий код через `@see filename.ts` вместо дублирования
-*   Избегаю избыточного форматирования (лишние списки, повторения)
-*   Для больших файлов показываю структуру + ключевые части
-
-**❌ ЧЕГО ИЗБЕГАЮ:**
-*   Длинных объяснений без явного запроса (`//THINK`)
-*   Повторного вывода файлов >50 строк
-*   Дублирования контекста из предыдущих сообщений
-*   Примеров кода, если паттерн уже понятен
-*   "Академических" объяснений — фокус на практике
-
-**ПРИМЕР:**
+**At 80% tokens, create checkpoint:**
 ````markdown
-# ❌ Неэффективно (1200 токенов):
-"Вот полный компонент Button.tsx:
-[весь файл 80 строк]
-Теперь добавим hover эффект..."
+[CHECKPOINT CREATED: .ai/checkpoint-2026-01-31.md]
 
-# ✅ Эффективно (200 токенов):
-"В Button.tsx, строка 23:
-// ADD:
-  &:hover { opacity: 0.8; }
-"
+Completed:
+- ✓ Task A (details in commit SHA123)
+- ✓ Task B (details in commit SHA456)
+
+Active: Task C (50% done - see lines 45-67 in file.ts)
+
+Next session resume from: Task C continuation
 ````
 
-### 2.5. USER RESPONSIBILITIES
-*   Проверяй `.ai/token-limits.json` перед большими задачами
-*   Если токенов <30% — планируй короткие сессии
-*   Обновляй `current_usage` и `last_reset` вручную или через скрипт
+**Next day:** Resume from checkpoint instead of full context replay (saves ~30-50k tokens).
+
+### 2.8. TASK COST ESTIMATES (real data)
+
+**Reading:**
+- Small file (<500 lines): ~1-2k
+- Large file (>1000 lines): ~3-5k
+- Grep/search: ~2-3k
+
+**Writing:**
+- New file (100-200 lines): ~3-5k
+- Edit existing: ~2-4k
+- React component: ~4-7k
+- Medium refactor: ~8-12k
+
+**Planning:**
+- Roadmap creation: ~8-15k
+- Discussion with options: ~5-10k
+
+**Integration (today's actual):**
+- JSON v2.0: ~6k
+- Bash script update: ~4k
+- Docs update: ~3k
+Total: ~13k (vs estimated 45k - we optimized!)
+
+### 2.9. TOKEN BUDGET ALLOCATION
+
+**For large tasks:**
+````markdown
+User: "Do A, B, C, D"
+
+[BUDGET ANALYSIS]
+Available: 108k tokens
+
+A: ~15k (high priority)
+B: ~25k (medium)
+C: ~40k (low)
+D: ~10k (high)
+
+Plan:
+Today: A + D + B = 50k (leaves 58k buffer)
+Tomorrow: C = 40k
+
+Proceed? [YES/ADJUST]
+````
+
+### 2.10. OPTIMIZATION CHECKLIST
+
+**Before each response, AI checks:**
+- [ ] Can I use Edit instead of Write?
+- [ ] Can I show diff instead of full file?
+- [ ] Is this explanation necessary or obvious?
+- [ ] Am I repeating context from earlier?
+- [ ] Can I reference instead of duplicate?
+- [ ] Should I compress context now (3 tasks done)?
+
+**At 50%+ tokens:**
+- [ ] Activate BRIEF mode
+- [ ] Use diff-only for code
+- [ ] Skip introductions/conclusions
+- [ ] Batch operations where possible
 
 ---
 
@@ -568,6 +705,7 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
+*   **v6.0** [2026-01-31] – Token Management v2.0: context compression, lazy loading, verbosity auto-scaling, session checkpoints, graduated warnings, monthly tracking. Added SESSION START PROTOCOL (Section 0) for mandatory RULES reading.
 *   **v5.0** [2025-01-26] – Added Rules Security (submodule), Token Management system, language rules clarified, split into CORE + PRODUCT
 *   **v3.5** [2025-01-26] – Added security-first checklist, AI API security, project metadata, anti-overengineering
 *   **v3.4** [2025-01-26] – Added iterative workflow, roadmap templates, stage commits, discussion protocol
@@ -576,4 +714,4 @@ Before proposing solution:
 
 ---
 
-*This document is living. Update with approval. Stored in private repo. Last updated: 2025-01-26*
+*This document is living. Update with approval. Stored in private repo. Last updated: 2026-01-31*

@@ -1679,36 +1679,60 @@ The framework provides **3-layer detection**:
 # ❌ RUSSIAN TRACKER: src/pages/index.tsx:42
 #    Pattern: metrika.yandex
 #    Threat: Data sent to russian servers
+
+# Check 9: NPM Packages (NEW in v2.0!)
+# ✅ No forbidden packages in dependencies
+# OR
+# ❌ FORBIDDEN NPM PACKAGES DETECTED!
+#    yandex-metrika (Yandex Metrika) - CRITICAL
+#    Alternatives: plausible.io, google-analytics
 ```
 
 **What it checks:**
 - All HTML/JS/JSX/TS/TSX files in project
+- **NPM dependencies in package.json** (NEW!)
 - 40+ patterns across 10 categories
 - Reports threat level (CRITICAL/HIGH/MEDIUM)
-- Shows migration alternatives
+- Shows migration alternatives with specific package recommendations
 
-#### Layer 3: Centralized Blacklist
+#### Layer 3: Centralized Blacklist (v2.0 - Enhanced Structure)
 ```json
-// .ai/forbidden-trackers.json
+// .ai/forbidden-trackers.json v2.0
 {
-  "blacklist": {
-    "analytics": [ /* Yandex, Mail.ru, etc. */ ],
-    "social": [ /* VK, OK.ru */ ],
-    "cdn": [ /* yastatic.net */ ]
-    // ... 10 categories total
-  },
-  "whitelist": {
-    "analytics": ["Google Analytics", "Plausible", "Matomo"],
-    "payments": ["Stripe", "WayForPay (UA)", "LiqPay (UA)"]
-  }
+  "$schema": "./forbidden-services-schema.json",
+  "version": "2.0.0",
+  "categories": [
+    {
+      "id": "analytics",
+      "name": "Аналітика та трекінг (CRITICAL)",
+      "services": [
+        {
+          "id": "yandex-metrika",
+          "name": "Yandex Metrika",
+          "domains": ["mc.yandex.ru", ...],
+          "patterns": ["metrika\\.yandex", ...],  // Regex for code scanning
+          "npmPackages": ["yandex-metrika", "ym"],  // NEW! For package.json
+          "risk": "CRITICAL",
+          "reason": "...",
+          "alternatives": ["Plausible", "Google Analytics 4"],
+          "replacement_guide": { "from": "...", "to": "..." }
+        }
+      ]
+    }
+  ],
+  "whitelist": { ... },
+  "legal_compliance": { ... }
 }
 ```
 
 **Benefits:**
 - Single source of truth
-- Easy to update patterns
+- **NPM package detection** (prevents supply-chain attacks)
+- Category-based organization (easier navigation)
+- Detailed service metadata (risk levels, reasons, alternatives)
+- Replacement guides with code examples
 - Shared across all checks
-- Documents alternatives
+- JSON Schema validation support
 
 ---
 
@@ -1934,21 +1958,28 @@ const badExample = "https://metrika.yandex.ru/tag.js";  // Don't use this!
 
 As new russian services emerge:
 
-#### Step 1: Add to forbidden-trackers.json
+#### Step 1: Add to forbidden-trackers.json (v2.0 structure)
 ```json
 {
-  "blacklist": {
-    "new_category": [
-      {
-        "name": "New Russian Service",
-        "domains": ["example.ru"],
-        "patterns": ["example\\.ru"],
-        "threat_level": "CRITICAL",
-        "reason": "Why it's dangerous",
-        "alternatives": ["Safe Alternative 1", "Safe Alternative 2"]
-      }
-    ]
-  }
+  "categories": [
+    {
+      "id": "new_category",
+      "name": "Category Name (RISK LEVEL)",
+      "description": "What this category represents",
+      "services": [
+        {
+          "id": "service-id",
+          "name": "Service Name",
+          "domains": ["example.ru"],
+          "patterns": ["example\\.ru"],
+          "npmPackages": ["npm-package-name"],  // NEW! Add if has npm package
+          "risk": "CRITICAL",
+          "reason": "Why it's dangerous",
+          "alternatives": ["Safe Alternative 1", "Safe Alternative 2"]
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -1997,10 +2028,11 @@ git commit -m "security: add new russian tracker to blacklist"
 ---
 
 ## CHANGELOG
+*   **v1.3** [2026-01-31] – Enhanced Section 8: forbidden-trackers.json v2.0 with npmPackages support, category-based structure, improved seo-check.sh with package.json scanning
 *   **v1.2** [2025-01-27] – Added Section 8: FORBIDDEN TRACKING (Russian Services Protection)
 *   **v1.1** [2025-01-27] – Added Section 7: SEO/GEO Strategy (Ukrainian market)
 *   **v1.0** [2025-01-26] – Initial product rules: i18n strategy, device adaptation, Ukrainian market policy, accessibility, scalability
 
 ---
 
-*Stored in private repo with RULES_CORE.md. Last updated: 2025-01-27*
+*Stored in private repo with RULES_CORE.md. Last updated: 2026-01-31*

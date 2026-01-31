@@ -21,6 +21,7 @@
 #   6. GEO targeting (Ukrainian market)
 #   7. Performance hints (image optimization, next/image)
 #   8. Russian tracking services (CRITICAL SECURITY)
+#   9. NPM packages (forbidden russian dependencies)
 #
 # OUTPUT:
 #   ✅ SEO OK - No issues
@@ -369,63 +370,27 @@ check_performance_hints() {
 check_russian_trackers() {
     start_check "russian tracking services"
 
-    # Russian tracking patterns (critical security threats)
-    local TRACKER_PATTERNS=(
-        # Analytics
-        "metrika\\.yandex"
-        "mc\\.yandex"
-        "yaCounter"
-        "ym\\("
-        "webvisor"
-        "top\\.mail\\.ru"
-        "top-fwz1\\.mail\\.ru"
-        "_tmr"
-        "rambler.*counter"
-        "liveinternet"
-        "counter\\.yadro"
+    # Load patterns from JSON (v2.0)
+    local JSON_FILE="${PROJECT_PATH}/.ai/forbidden-trackers.json"
+    local TRACKER_PATTERNS=()
 
-        # Social
-        "vk\\.com/js/api"
-        "vk\\.com/pixel"
-        "VK\\.Retargeting"
-        "VK\\.Goal"
-        "ok\\.ru"
-        "ODKL"
+    # Check if JSON exists and jq is available
+    if [ -f "$JSON_FILE" ] && command -v jq &> /dev/null; then
+        # Parse JSON and extract all patterns
+        while IFS= read -r pattern; do
+            TRACKER_PATTERNS+=("$pattern")
+        done < <(jq -r '.categories[].services[].patterns[]' "$JSON_FILE" 2>/dev/null)
+    fi
 
-        # CDN
-        "yastatic\\.net"
-        "yandex\\.st"
-        "imgsmail"
-        "filin\\.mail"
-
-        # Payments
-        "yookassa"
-        "kassa\\.yandex"
-        "money\\.yandex"
-        "qiwi\\."
-        "webmoney"
-
-        # Maps
-        "api-maps\\.yandex"
-        "ymaps"
-        "2gis"
-
-        # Video
-        "rutube\\.ru"
-        "vk.*video"
-        "vkvideo"
-
-        # E-commerce
-        "wildberries"
-        "wbstatic"
-        "ozon\\.ru"
-
-        # Fonts
-        "fonts\\.yandex"
-
-        # Captcha
-        "smartcaptcha.*yandex"
-    )
+    # Fallback to hardcoded patterns if JSON not available or jq not installed
+    if [ ${#TRACKER_PATTERNS[@]} -eq 0 ]; then
+        print_info "JSON not found or jq unavailable, using fallback patterns"
+        TRACKER_PATTERNS=(
+            "metrika\\.yandex" "mc\\.yandex" "yaCounter" "ym\\("
+            "vk\\.com" "ok\\.ru" "yastatic" "yookassa"
+            "rutube" "wildberries" "2gis"
+        )
+    fi
 
     local trackers_found=false
     local tracker_count=0
@@ -491,6 +456,85 @@ check_russian_trackers() {
         echo ""
     else
         print_success "No russian trackers detected"
+    fi
+
+    return 0
+}
+
+# Check 9: NPM Packages (Forbidden russian packages)
+check_npm_packages() {
+    start_check "npm dependencies for russian packages"
+
+    local package_json="$PROJECT_PATH/package.json"
+
+    if [ ! -f "$package_json" ]; then
+        print_info "No package.json found, skipping"
+        return 0
+    fi
+
+    # Load forbidden packages from JSON
+    local JSON_FILE="${PROJECT_PATH}/.ai/forbidden-trackers.json"
+    local forbidden_packages=()
+    local found_packages=()
+
+    # Check if jq is available
+    if ! command -v jq &> /dev/null; then
+        print_warning "jq not installed, cannot scan npm packages"
+        print_info "Install jq: sudo apt install jq (Linux) or brew install jq (Mac)"
+        return 0
+    fi
+
+    # Extract forbidden packages from JSON
+    if [ -f "$JSON_FILE" ]; then
+        while IFS= read -r pkg; do
+            [ -n "$pkg" ] && forbidden_packages+=("$pkg")
+        done < <(jq -r '.categories[].services[].npmPackages[]?' "$JSON_FILE" 2>/dev/null)
+    fi
+
+    if [ ${#forbidden_packages[@]} -eq 0 ]; then
+        print_info "No forbidden packages list found in JSON"
+        return 0
+    fi
+
+    # Scan dependencies and devDependencies
+    for pkg in "${forbidden_packages[@]}"; do
+        if jq -e ".dependencies[\"$pkg\"] or .devDependencies[\"$pkg\"]" "$package_json" >/dev/null 2>&1; then
+            found_packages+=("$pkg")
+        fi
+    done
+
+    # Report findings
+    if [ ${#found_packages[@]} -gt 0 ]; then
+        echo ""
+        echo -e "${RED}🚨 FORBIDDEN NPM PACKAGES DETECTED!${NC}"
+        echo ""
+
+        for pkg in "${found_packages[@]}"; do
+            # Get service info from JSON
+            local service_name=$(jq -r ".categories[].services[] | select(.npmPackages[]? == \"$pkg\") | .name" "$JSON_FILE" 2>/dev/null | head -n 1)
+            local risk_level=$(jq -r ".categories[].services[] | select(.npmPackages[]? == \"$pkg\") | .risk" "$JSON_FILE" 2>/dev/null | head -n 1)
+            local reason=$(jq -r ".categories[].services[] | select(.npmPackages[]? == \"$pkg\") | .reason" "$JSON_FILE" 2>/dev/null | head -n 1)
+            local alternatives=$(jq -r ".categories[].services[] | select(.npmPackages[]? == \"$pkg\") | .alternatives[]" "$JSON_FILE" 2>/dev/null | tr '\n' ', ' | sed 's/,$//')
+
+            print_error "$pkg ($service_name) - $risk_level"
+            echo -e "  ${YELLOW}Reason: $reason${NC}"
+
+            if [ -n "$alternatives" ]; then
+                echo -e "  ${GREEN}Alternatives: $alternatives${NC}"
+            fi
+            echo ""
+        done
+
+        echo -e "${BLUE}Action Required:${NC}"
+        echo "  1. Remove forbidden packages from package.json"
+        echo "  2. Install safe alternatives listed above"
+        echo "  3. Update imports in your code"
+        echo "  4. Run npm install / yarn install"
+        echo ""
+
+        return 1
+    else
+        print_success "No forbidden packages in dependencies"
     fi
 
     return 0
@@ -595,6 +639,7 @@ main() {
     check_geo_targeting
     check_performance_hints
     check_russian_trackers
+    check_npm_packages
 
     # Print verdict
     print_verdict
