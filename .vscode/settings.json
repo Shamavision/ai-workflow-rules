@@ -1,0 +1,154 @@
+{
+  // ========================================
+  // AI Workflow Rules - VS Code Settings
+  // ========================================
+  //
+  // These settings enhance your development experience
+  // when using AI Workflow Rules Framework.
+  //
+  // ========================================
+
+  // ----------------------------------------
+  // Editor Settings
+  // ----------------------------------------
+
+  // Format on save (keeps code clean)
+  "editor.formatOnSave": true,
+
+  // Visual rulers at 80 and 120 columns (readability)
+  "editor.rulers": [80, 120],
+
+  // Trim trailing whitespace
+  "files.trimTrailingWhitespace": true,
+
+  // Insert final newline
+  "files.insertFinalNewline": true,
+
+  // ----------------------------------------
+  // File Associations
+  // ----------------------------------------
+
+  "files.associations": {
+    "RULES_*.md": "markdown",
+    ".env.example": "dotenv",
+    "*.env": "dotenv"
+  },
+
+  // ----------------------------------------
+  // Files to Exclude
+  // ----------------------------------------
+
+  "files.exclude": {
+    // Hide .ai-rules if using git submodule
+    "**/.ai-rules": true,
+
+    // Standard exclusions
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true
+  },
+
+  // ----------------------------------------
+  // Search Exclusions
+  // ----------------------------------------
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.next": true,
+    "**/.ai-rules": true
+  },
+
+  // ----------------------------------------
+  // Markdown Settings
+  // ----------------------------------------
+
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    }
+  },
+
+  // ----------------------------------------
+  // TypeScript/JavaScript Settings
+  // ----------------------------------------
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+
+  // ----------------------------------------
+  // JSON Settings
+  // ----------------------------------------
+
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ----------------------------------------
+  // Git Settings
+  // ----------------------------------------
+
+  "git.ignoreLimitWarning": true,
+
+  // ----------------------------------------
+  // Extension Recommendations
+  // ----------------------------------------
+
+  // Suggested extensions (user can choose to install):
+  // - esbenp.prettier-vscode (code formatting)
+  // - dbaeumer.vscode-eslint (linting)
+  // - ms-vscode.vscode-typescript-next (TypeScript support)
+  // - bierner.markdown-preview-github-styles (Markdown preview)
+
+  // ----------------------------------------
+  // Terminal Settings
+  // ----------------------------------------
+
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+
+  // ----------------------------------------
+  // Security
+  // ----------------------------------------
+
+  // Warn about committing .env files
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true
+  }
+}
