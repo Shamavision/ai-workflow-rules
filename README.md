@@ -178,13 +178,13 @@ cd D:/Projects/my-app  # Windows - замените на ваш путь
 # cd ~/Projects/my-app  # Mac/Linux - замените на ваш путь
 
 # 2. Скопируйте pre-commit hook В ВАШ проект
-# ОТКУДА → КУДА
+# ОТКУДА (из scripts/) → КУДА (в .git/hooks/)
 
 # Windows:
-cp C:/Temp/ai-workflow-rules/.git/hooks/pre-commit D:/Projects/my-app/.git/hooks/
+cp C:/Temp/ai-workflow-rules/scripts/pre-commit D:/Projects/my-app/.git/hooks/
 
 # Mac/Linux:
-# cp ~/Downloads/ai-workflow-rules/.git/hooks/pre-commit ~/Projects/my-app/.git/hooks/
+# cp ~/Downloads/ai-workflow-rules/scripts/pre-commit ~/Projects/my-app/.git/hooks/
 
 # 3. Сделайте исполняемым (только Mac/Linux)
 # chmod +x .git/hooks/pre-commit
