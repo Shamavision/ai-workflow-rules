@@ -170,17 +170,40 @@ cp .editorconfig ~/Projects/my-app/
 
 ### Шаг 3: Установите Git Hooks (защита от утечек)
 
+📌 **Git hook** - это автоматическая проверка перед каждым коммитом. Блокирует утечки секретов и российские трекеры.
+
 ```bash
-# Перейдите В ВАШ проект (не в репозиторий!)
-cd D:/Projects/my-app  # Windows
-# cd ~/Projects/my-app  # Mac/Linux
+# 1. Перейдите В ВАШ проект (не в репозиторий!)
+cd D:/Projects/my-app  # Windows - замените на ваш путь
+# cd ~/Projects/my-app  # Mac/Linux - замените на ваш путь
 
-# Скопируйте pre-commit hook
-cp C:/Temp/ai-workflow-rules/.git/hooks/pre-commit .git/hooks/  # Windows
-# cp ~/Downloads/ai-workflow-rules/.git/hooks/pre-commit .git/hooks/  # Mac/Linux
+# 2. Скопируйте pre-commit hook В ВАШ проект
+# ОТКУДА → КУДА
 
-# Сделайте исполняемым (Mac/Linux only)
-chmod +x .git/hooks/pre-commit
+# Windows:
+cp C:/Temp/ai-workflow-rules/.git/hooks/pre-commit D:/Projects/my-app/.git/hooks/
+
+# Mac/Linux:
+# cp ~/Downloads/ai-workflow-rules/.git/hooks/pre-commit ~/Projects/my-app/.git/hooks/
+
+# 3. Сделайте исполняемым (только Mac/Linux)
+# chmod +x .git/hooks/pre-commit
+
+# 4. Проверьте что файл скопировался
+ls .git/hooks/pre-commit
+# Должно показать: .git/hooks/pre-commit
+```
+
+**Что означает `.git/hooks/`?**
+Это скрытая папка ВНУТРИ вашего проекта:
+```
+D:/Projects/my-app/
+├── .git/              ← Скрытая папка Git
+│   └── hooks/         ← Сюда копируем
+│       └── pre-commit ✅
+├── .ai/
+├── src/
+└── package.json
 ```
 
 ---
