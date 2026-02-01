@@ -4,18 +4,17 @@
 # ==============================================================================
 
 # ==============================================================================
-# LAYER 1: AI RULES (CORPORATE IP - CRITICAL!)
+# LAYER 1: AI RULES (NOW OPEN SOURCE!)
 # ==============================================================================
-# These files contain proprietary intellectual property
-# NEVER commit to public repositories
+# Note: This project is now MIT licensed and open source.
+# RULES files are committed to help the community.
 
+# If using as git submodule:
 .ai-rules/
-RULES_*.md
-.ai/token-limits.json
 
-# Note: .ai/locale-context.json CAN be committed if project-specific
-# Note: .ai/certificates.json CAN be committed (no secrets)
-# Note: .ai/checksums.sha256 CAN be committed (integrity verification)
+# Note: .ai/locale-context.json is committed (project config)
+# Note: .ai/token-limits.json is committed (template with PRESETS)
+# Note: .ai/forbidden-trackers.json is committed (community blacklist)
 
 # ==============================================================================
 # LAYER 2: LICENSE & ACTIVATION
@@ -115,8 +114,13 @@ next-env.d.ts
 # ==============================================================================
 
 # VSCode
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 *.code-workspace
+
+# Note: We commit .vscode/settings.json as part of the template
+# Users can override locally, git will show changes
 
 # JetBrains IDEs
 .idea/

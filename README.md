@@ -37,6 +37,25 @@ AI Workflow Rules Framework is an **open source template** for developers workin
 
 ---
 
+## ⚠️ Token Usage Warning
+
+**First-time setup cost:** ~66k tokens (~33% of Pro daily limit, ~44% of Free)
+
+**Why?** AI reads all RULES files automatically to understand your project context.
+
+**This is ONE-TIME cost.** After setup:
+- ✅ AI uses context compression (~40-60% savings)
+- ✅ Lazy loading (reads only what's needed)
+- ✅ Session checkpoints for multi-day work
+
+**Recommendations:**
+- 🟢 **Pro/Team plan:** Full installation recommended (~134k tokens left for work)
+- 🟡 **Free plan:** Consider minimal installation (30k tokens) or delete optional files after reading
+
+📖 **Full details:** [TOKEN_USAGE.md](TOKEN_USAGE.md)
+
+---
+
 ## 🧅 ONION Architecture (3 Layers)
 
 Multi-layer protection for your development workflow:
@@ -126,7 +145,18 @@ This framework works with multiple AI assistants:
   └── token-limits.json          # AI budget tracking template
 
 scripts/
-  └── seo-check.sh               # 9 automated security & SEO checks
+  ├── seo-check.sh               # 9 automated security & SEO checks
+  ├── setup.sh                   # Automatic setup (Unix/Mac/WSL)
+  ├── setup.ps1                  # Automatic setup (Windows PowerShell)
+  └── validate-setup.sh          # Verify installation
+
+examples/
+  ├── react-i18n.tsx             # i18n component example
+  ├── api-security.ts            # Secure API route example
+  └── env-usage.ts               # Environment variables example
+
+.vscode/
+  └── settings.json              # VS Code configuration
 
 .git/hooks/
   └── pre-commit                 # Automatic checks on every commit
@@ -134,8 +164,13 @@ scripts/
 RULES_CORE.md                    # AI workflow instructions (token mgmt, security)
 RULES_PRODUCT.md                 # Ukrainian market specifics (i18n, SEO, compliance)
 START.md                         # Quick onboarding guide for AI assistants
+QUICKSTART.md                    # 5-minute setup guide
+CHEATSHEET.md                    # One-page quick reference
 INSTALL.md                       # Installation guide (multiple options)
 AI_COMPATIBILITY.md              # AI assistant compatibility matrix
+TOKEN_USAGE.md                   # Token cost transparency
+.env.example                     # Environment variables template
+.editorconfig                    # Cross-IDE consistency
 README.md                        # This file
 LICENSE                          # MIT License
 ```
