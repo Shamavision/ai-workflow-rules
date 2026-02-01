@@ -95,6 +95,26 @@ nano .ai/forbidden-trackers.json
 
 ---
 
+## 🤖 Supported AI Assistants
+
+This framework works with multiple AI assistants:
+
+| AI Assistant | Support Level | Installation | Token Tracking |
+|-------------|---------------|--------------|----------------|
+| **Claude Code** | ✅ Full | Automatic | ✅ Yes |
+| **Cursor IDE** | ✅ Full | Automatic | ✅ Yes |
+| **ChatGPT** | ⚠️ Partial | Manual (copy-paste) | ⚠️ Basic |
+| **GitHub Copilot** | ⚠️ Limited | Copy files | ❌ No |
+| **Gemini** | ⚠️ Partial | Manual (copy-paste) | ⚠️ Basic |
+
+**📖 Full compatibility details:** [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md)
+
+**🚀 Quick onboarding for AI:** [START.md](START.md)
+
+**📦 Installation guide:** [INSTALL.md](INSTALL.md)
+
+---
+
 ## 📋 What's Included
 
 ### Core Files
@@ -113,6 +133,9 @@ scripts/
 
 RULES_CORE.md                    # AI workflow instructions (token mgmt, security)
 RULES_PRODUCT.md                 # Ukrainian market specifics (i18n, SEO, compliance)
+START.md                         # Quick onboarding guide for AI assistants
+INSTALL.md                       # Installation guide (multiple options)
+AI_COMPATIBILITY.md              # AI assistant compatibility matrix
 README.md                        # This file
 LICENSE                          # MIT License
 ```
