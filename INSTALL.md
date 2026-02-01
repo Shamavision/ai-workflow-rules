@@ -4,6 +4,47 @@ Choose the installation method that works best for your environment.
 
 ---
 
+## ⚠️ Token Cost: Choose Your Installation Type
+
+**First-time setup uses AI tokens** (AI reads all files automatically).
+
+| Installation | Token Cost | Best For |
+|-------------|------------|----------|
+| **Minimal** | ~30k tokens | Free plan users, minimal features |
+| **Full** | ~66k tokens | Pro/Team users, all features |
+| **Automatic** | ~66k tokens | Everyone (script does everything) |
+
+📖 **Details:** See [TOKEN_USAGE.md](TOKEN_USAGE.md)
+
+---
+
+## Installation Methods
+
+### Quick Start (Recommended) 🚀
+
+**Use automatic setup script:**
+
+```bash
+# Clone repository
+git clone https://github.com/Shamavision/ai-workflow-rules.git
+cd ai-workflow-rules
+
+# Run setup script
+./scripts/setup.sh  # Unix/Mac/WSL
+# OR
+.\scripts\setup.ps1  # Windows PowerShell
+
+# Script will:
+# - Install git hooks
+# - Configure token limits (interactive)
+# - Create .env from template
+# - Validate installation
+```
+
+**Done!** Skip to [Verify Installation](#verify-installation) section.
+
+---
+
 ## Option A: Simple Copy (Recommended) ✅
 
 **Best for:** Quick start, most users, all AI assistants
