@@ -89,45 +89,277 @@ Multi-layer protection for your development workflow:
 
 ## 🚀 Quick Start
 
-### 1. Download & Integrate
+### Визуально: Что мы делаем
 
+```
+ПЕРЕД установкой:
+📂 ai-workflow-rules/         ← Скачанный репозиторий (НЕ ваш проект!)
+   ├── .ai/
+   ├── RULES_*.md
+   └── scripts/
+
+📂 my-awesome-project/         ← ВАШ рабочий проект
+   ├── src/
+   └── package.json
+
+ПОСЛЕ установки:
+📂 my-awesome-project/         ← ВАШ проект + защита
+   ├── .ai/ ⭐                 ← Скопировали сюда
+   ├── RULES_*.md ⭐          ← Скопировали сюда
+   ├── scripts/ ⭐            ← Скопировали сюда
+   ├── src/
+   └── package.json
+```
+
+---
+
+### Шаг 1: Скачайте репозиторий
+
+**Windows (Git Bash или PowerShell):**
 ```bash
-# Clone or download
+# Скачиваем во временную папку (НЕ в ваш проект!)
+cd C:\Temp
 git clone https://github.com/Shamavision/ai-workflow-rules.git
 cd ai-workflow-rules
-
-# Copy to your project
-cp -r .ai /path/to/your-project/
-cp RULES_*.md /path/to/your-project/
-cp -r scripts /path/to/your-project/
 ```
 
-### 2. Install Git Hooks
+**Mac / Linux:**
+```bash
+# Скачиваем во временную папку
+cd ~/Downloads
+git clone https://github.com/Shamavision/ai-workflow-rules.git
+cd ai-workflow-rules
+```
+
+📌 **Важно:** Это ВРЕМЕННАЯ копия. Мы скопируем нужные файлы в ваш проект на следующем шаге.
+
+---
+
+### Шаг 2: Скопируйте файлы в ВАШ проект
+
+**Замените `/path/to/your-project` на реальный путь к ВАШЕМУ проекту!**
+
+**Пример для Windows:**
+```bash
+# Если ваш проект в D:\Projects\my-app
+cp -r .ai D:/Projects/my-app/
+cp RULES_*.md D:/Projects/my-app/
+cp -r scripts D:/Projects/my-app/
+cp .editorconfig D:/Projects/my-app/
+```
+
+**Пример для Mac/Linux:**
+```bash
+# Если ваш проект в ~/Projects/my-app
+cp -r .ai ~/Projects/my-app/
+cp RULES_*.md ~/Projects/my-app/
+cp -r scripts ~/Projects/my-app/
+cp .editorconfig ~/Projects/my-app/
+```
+
+**Используете VS Code?** Еще проще:
+1. Откройте **2 окна VS Code**:
+   - Окно 1: `C:\Temp\ai-workflow-rules` (скачанный репозиторий)
+   - Окно 2: `D:\Projects\my-app` (ваш проект)
+2. Перетащите мышкой:
+   - Папку `.ai` → в корень вашего проекта
+   - Файлы `RULES_*.md` → в корень вашего проекта
+   - Папку `scripts` → в корень вашего проекта
+
+---
+
+### Шаг 3: Установите Git Hooks (защита от утечек)
 
 ```bash
-# Copy pre-commit hook
-cp .git/hooks/pre-commit /path/to/your-project/.git/hooks/
-chmod +x /path/to/your-project/.git/hooks/pre-commit
+# Перейдите В ВАШ проект (не в репозиторий!)
+cd D:/Projects/my-app  # Windows
+# cd ~/Projects/my-app  # Mac/Linux
+
+# Скопируйте pre-commit hook
+cp C:/Temp/ai-workflow-rules/.git/hooks/pre-commit .git/hooks/  # Windows
+# cp ~/Downloads/ai-workflow-rules/.git/hooks/pre-commit .git/hooks/  # Mac/Linux
+
+# Сделайте исполняемым (Mac/Linux only)
+chmod +x .git/hooks/pre-commit
 ```
 
-### 3. Customize
+---
+
+### Шаг 4: Проверьте что получилось
 
 ```bash
-# Edit token limits for your plan
-nano .ai/token-limits.json  # Update with your Anthropic plan
+# Перейдите в ВАШ проект
+cd D:/Projects/my-app  # ваш путь
 
-# (Optional) Customize forbidden services
-nano .ai/forbidden-trackers.json
+# Проверьте структуру
+ls -la
+
+# Должно быть:
+# .ai/                   ✅
+# RULES_CORE.md          ✅
+# RULES_PRODUCT.md       ✅
+# scripts/               ✅
+# .editorconfig          ✅
 ```
 
-### 4. Run Security Check
+---
+
+### Шаг 5: Настройте под себя
+
+Откройте файл `.ai/token-limits.json` в вашем проекте и обновите лимиты:
+
+```json
+{
+  "provider": "anthropic",
+  "plan": "Pro",  // или "Free", "Team", "Enterprise"
+  "limits": {
+    "daily": 200000,  // ваш лимит
+    "session": 66000
+  }
+}
+```
+
+---
+
+### Шаг 6: Готово! 🎉
+
+Теперь откройте **ваш проект** в Claude Code / Cursor / Copilot:
 
 ```bash
-# Before deploy
-./scripts/seo-check.sh /path/to/your-project
+# В VS Code
+code D:/Projects/my-app
 
-# ✅ All checks passed - ready to deploy!
+# Или просто откройте папку через File → Open Folder
 ```
+
+AI автоматически прочитает RULES файлы и начнет работать с защитой!
+
+---
+
+## 🆘 Troubleshooting (Частые проблемы)
+
+### ❌ "cp: command not found" (Windows)
+
+**Проблема:** Команда `cp` не работает в PowerShell.
+
+**Решение:**
+```powershell
+# Используйте Copy-Item в PowerShell
+Copy-Item -Recurse .ai D:\Projects\my-app\
+Copy-Item RULES_*.md D:\Projects\my-app\
+Copy-Item -Recurse scripts D:\Projects\my-app\
+```
+
+Или используйте **Git Bash** (входит в Git for Windows).
+
+---
+
+### ❌ "Не понимаю где мой проект"
+
+**Найдите путь к вашему проекту:**
+
+**Windows:**
+1. Откройте папку проекта в Explorer
+2. Кликните в адресной строке
+3. Скопируйте путь (например: `D:\Projects\my-app`)
+
+**Mac:**
+1. Откройте папку в Finder
+2. Правый клик → "Get Info"
+3. Скопируйте путь из "Where:"
+
+**VS Code:**
+1. Откройте ваш проект в VS Code
+2. Terminal → New Terminal
+3. Напечатайте `pwd` (покажет текущий путь)
+
+---
+
+### ❌ "Скопировал не туда / запутался"
+
+**Проверьте структуру:**
+
+```bash
+# Перейдите в ВАШ проект
+cd D:\Projects\my-app
+
+# Посмотрите что там
+ls -la
+# или (Windows PowerShell):
+dir
+```
+
+**Должны увидеть:**
+- `.ai/` (папка)
+- `RULES_CORE.md` (файл)
+- `RULES_PRODUCT.md` (файл)
+- `scripts/` (папка)
+
+**Если не видите:** Скопировали в неправильное место. Удалите и повторите Шаг 2.
+
+---
+
+### ❌ "AI не видит RULES файлы"
+
+**Проверьте:**
+
+1. **Файлы в корне проекта?**
+   ```bash
+   # В папке проекта:
+   ls RULES_*.md
+   # Должно показать: RULES_CORE.md  RULES_PRODUCT.md
+   ```
+
+2. **Открыли правильный проект в VS Code?**
+   - File → Open Folder → выберите ВАШУ папку проекта
+   - НЕ папку `ai-workflow-rules`!
+
+3. **Перезапустите AI:**
+   - Закройте VS Code
+   - Откройте снова
+   - AI прочитает RULES при старте
+
+---
+
+### ❌ "Git hooks не работают"
+
+**Windows:** Убедитесь что у вас установлен Git Bash:
+```bash
+# Проверка
+git --version
+# Должно показать версию Git
+```
+
+**Mac/Linux:** Проверьте права:
+```bash
+ls -la .git/hooks/pre-commit
+# Должно быть: -rwxr-xr-x (x = executable)
+
+# Если нет, добавьте права:
+chmod +x .git/hooks/pre-commit
+```
+
+---
+
+### 💡 Все еще не работает?
+
+1. **Проверьте через VS Code:**
+   - Откройте 2 окна: репозиторий + ваш проект
+   - Перетащите файлы мышкой (самый надежный способ!)
+
+2. **Убедитесь что копируете ИЗ репозитория В проект:**
+   ```
+   ❌ НЕПРАВИЛЬНО:
+   my-app/ → ai-workflow-rules/
+
+   ✅ ПРАВИЛЬНО:
+   ai-workflow-rules/ → my-app/
+   ```
+
+3. **Спросите в Issues:**
+   - [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
+   - Опишите что делали, что получилось
+   - Прикрепите скриншот структуры папок
 
 ---
 
