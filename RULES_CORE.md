@@ -1,4 +1,4 @@
-# AI WORKFLOW & RULES CORE v5.0
+# AI WORKFLOW & RULES CORE v6.1
 
 ## 0. RULES SECURITY & LOCATION
 
@@ -382,6 +382,155 @@ Proceed? [YES/ADJUST]
 
 **User never needs to manually update this file.**
 
+### 2.12. POST-PUSH COMPRESSION (MANDATORY)
+
+**After every successful `git push` to GitHub:**
+
+````markdown
+[POST-PUSH PROTOCOL]
+✓ Changes pushed to remote
+→ Running context compression...
+
+Previous context: ~45k tokens
+Compressed to: ~12k tokens
+Saved: ~33k tokens (73%)
+
+Ready for next task with fresh context.
+````
+
+**Why this is mandatory:**
+- Git history preserves ALL details (commits, diffs, files)
+- Keeping full implementation details in context is wasteful
+- We can always `git show <commit>` to review specifics
+- Fresh context = better focus on new tasks
+
+**What gets compressed after push:**
+- ✅ Implementation details (code is in git)
+- ✅ Discussion about approaches (decision is in commit)
+- ✅ File contents that were read (files exist in repo)
+- ✅ Long explanations (essence captured in commit message)
+
+**What stays in context:**
+- ❌ Active agreements and preferences
+- ❌ User's communication style
+- ❌ Project-specific patterns learned
+- ❌ Current session metadata
+
+**User commands:**
+- `//COMPACT` - compress now (manual trigger)
+- `//CONTEXT` - show current context size
+- Post-push compression happens automatically
+
+### 2.13. FOCUS OPTIMIZATION (Quality > Speed)
+
+**Philosophy:** We don't save tokens, we **concentrate attention** on what matters.
+
+**The Principle:**
+> Remove waste. Preserve value. Respect user's time and budget.
+
+**What is WASTE (eliminate):**
+- ❌ Reading files we won't modify "just to understand structure"
+- ❌ Repeating code snippets that are already in chat history
+- ❌ Verbose introductions ("Let me explain what I'm going to do...")
+- ❌ Obvious explanations ("This function does X" when name is `doX()`)
+- ❌ Multiple file reads when one targeted read is enough
+- ❌ Showing full file content when diff would suffice
+
+**What is VALUE (preserve):**
+- ✅ Deep analysis when user asks "why?" or "how?"
+- ✅ Security warnings and critical explanations
+- ✅ Alternative approaches when choice matters
+- ✅ Reasoning when decision is non-obvious
+- ✅ Error context and debugging insights
+- ✅ Educational explanations when user is learning
+
+**Practical Techniques:**
+
+**1. Targeted Reading (not exploratory):**
+````markdown
+❌ "Let me read auth.ts, user.ts, and middleware.ts to understand auth flow"
+✅ "Reading auth.ts to modify login function"
+
+Saves: 60-80% on unnecessary reads
+````
+
+**2. Reference, Don't Repeat:**
+````markdown
+❌ Showing full 50-line function again
+✅ "Updating function from lines 45-67 (see above)"
+
+Saves: 90% on repeated context
+````
+
+**3. Batch Operations:**
+````markdown
+❌ Read file → Edit → Read again → Edit again
+✅ Read once → Plan all edits → Execute batch
+
+Saves: 40-50% on repeated reads
+````
+
+**4. Smart Verbosity:**
+````markdown
+Simple fix:
+  ✅ "Fixed typo in line 42."
+
+Complex refactor:
+  ✅ "Refactored auth flow:
+      - Moved validation to middleware (security)
+      - Separated concerns (maintainability)
+      - Added error handling (reliability)"
+
+Match explanation depth to task complexity.
+````
+
+**5. DIFF-FIRST mindset (50%+ tokens):**
+````markdown
+Instead of:
+  "Here's the updated file: [150 lines]"
+
+Show:
+  "file.ts:23-25
+  - const old = 'approach';
+  + const new = 'approach';
+
+  file.ts:67
+  + function newFeature() { ... }"
+
+Saves: 80-90% for edits
+````
+
+**When to be VERBOSE (override optimization):**
+- User explicitly asks for explanation
+- Security-critical decision
+- Debugging complex issue
+- Teaching/mentoring moment
+- Discussing trade-offs in architecture
+- First-time pattern introduction
+
+**Emergency Focus (90%+ tokens):**
+At critical token levels, preserve enough budget to:
+1. Complete current task
+2. Create commit
+3. Compress context
+
+````markdown
+🔴 [EMERGENCY MODE: 92% tokens]
+Completing current task in minimal mode.
+After commit → compression → you'll have fresh budget.
+````
+
+**The Balance:**
+````
+Tokens are not money to hoard.
+Tokens are attention to spend wisely.
+
+Spend on value: insights, security, quality.
+Don't spend on waste: repetition, fluff, obvious.
+
+This creates respect: for user, for craft, for ecosystem.
+````
+
 ---
 
 ## 3. ITERATIVE WORKFLOW (The Sacred Process)
@@ -725,6 +874,7 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
+*   **v6.1** [2026-02-01] – Added POST-PUSH COMPRESSION (mandatory workflow after git push) and FOCUS OPTIMIZATION (Quality > Speed philosophy). Philosophy: "We don't save tokens, we concentrate attention on critical tasks."
 *   **v6.0** [2026-01-31] – Token Management v2.0: context compression, lazy loading, verbosity auto-scaling, session checkpoints, graduated warnings, monthly tracking. Added SESSION START PROTOCOL (Section 0) for mandatory RULES reading.
 *   **v5.0** [2025-01-26] – Added Rules Security (submodule), Token Management system, language rules clarified, split into CORE + PRODUCT
 *   **v3.5** [2025-01-26] – Added security-first checklist, AI API security, project metadata, anti-overengineering
@@ -734,4 +884,4 @@ Before proposing solution:
 
 ---
 
-*This document is living. Update with approval. Stored in private repo. Last updated: 2026-01-31*
+*This document is living. Update with approval. Stored in private repo. Last updated: 2026-02-01*
