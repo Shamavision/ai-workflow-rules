@@ -107,8 +107,35 @@ Multi-layer protection for your development workflow:
 
 ## 🚀 Quick Start
 
+### Option 1: Interactive Installer ✨ (Recommended)
+
+**One command setup via NPX:**
+
+```bash
+# Using GitHub (available now):
+npx github:Shamavision/ai-workflow-rules init
+
+# Or via NPM (coming soon after publication):
+# npx @shamavision/ai-workflow-rules init
+```
+
+**What it does:**
+- 🧙 Interactive wizard guides you through setup
+- ⚙️ Auto-configures token limits for your AI provider (Claude, ChatGPT, Gemini, etc.)
+- 🔒 Installs security pre-commit hooks
+- 📝 Updates .gitignore automatically
+- 📦 Copies all necessary files to your project
+
+**Requirements:** Node.js 14+ installed
+
+**Perfect for:** Developers who want fast, guided installation
+
+---
+
+### Option 2: Manual Installation
+
 <details>
-<summary><b>📖 Click to expand installation guide</b></summary>
+<summary><b>📖 Click to expand manual installation guide</b></summary>
 
 ### Визуально: Что мы делаем
 

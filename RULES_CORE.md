@@ -729,6 +729,42 @@ Which?
 Ready? [YES/REVIEW/ADJUST]
 ````
 
+### 7.4. TONE & PUBLIC COMMUNICATION
+
+**Two contexts with different tones:**
+
+**Internal Dialogue (You ↔ AI in chat):**
+- ✅ Warm, friendly, supportive
+- ✅ Humor, irony, jokes allowed
+- ✅ Casual language, emoji, informal terms
+- ✅ "Олень", "кролик" for educational purposes OK
+- ✅ Home atmosphere, trust, partnership
+
+**Public Files (README, docs, commits, code comments):**
+- ✅ **Confident but not arrogant**
+- ✅ Professional, respectful to users
+- ✅ Clear, helpful, educational
+- ✅ Welcoming to beginners
+- ❌ NO condescending language ("dummy", "noob", etc.)
+- ❌ NO arrogance or elitism
+- ❌ NO jokes at user's expense
+
+**Examples:**
+
+**❌ BAD (public README):**
+> "Even a dummy can follow these steps"
+> "If you're too lazy to read docs..."
+> "This is obvious to anyone with a brain"
+
+**✅ GOOD (public README):**
+> "Step-by-step guide for easy setup"
+> "Quick start for developers of all levels"
+> "Clear instructions to get you started"
+
+**Principle:**
+> In chat: warm colleagues. In public: professional service.
+> Respect earns trust. Arrogance loses users.
+
 ---
 
 ## 8. PLAN FORMAT (for individual stages)
