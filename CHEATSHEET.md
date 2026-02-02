@@ -34,10 +34,11 @@ Type these in conversation with your AI assistant:
 
 | Command | What It Does |
 |---------|--------------|
+| `//START` | Initialize session (load RULES, auto-configure) |
+| `//TOKENS` | Show token usage status |
 | `//CHECK:SECURITY` | Security audit (secrets, XSS, injection) |
 | `//CHECK:LANG` | Russian content detection |
 | `//CHECK:ALL` | Full audit (security + performance + i18n) |
-| `//TOKENS` | Show token usage status |
 | `//COMPACT` | Compress context (saves tokens) |
 | `//THINK` | Show AI reasoning in `<thinking>` tags |
 
@@ -229,6 +230,6 @@ git commit --no-verify -m "docs: legitimate exception"
 
 Questions? [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
 
-**AI Workflow Rules Framework v7.0** • Made in Ukraine 🇺🇦
+**AI Workflow Rules Framework v7.1 Universal** • Made in Ukraine 🇺🇦
 
 </div>
