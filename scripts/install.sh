@@ -97,7 +97,7 @@ echo ""
 echo -e "${YELLOW}Installation directory:${NC} $TARGET_DIR"
 echo ""
 echo "This will install AI Workflow Rules Framework in your project."
-echo "Files will be copied: .ai/, RULES_*.md, scripts/, etc."
+echo "Files will be copied: .ai/, .claude/, RULES_*.md, scripts/, etc."
 echo ""
 read -p "Continue? (y/n): " -n 1 -r
 echo ""
@@ -131,6 +131,31 @@ if [ -d "$TEMP_DIR/.ai" ]; then
     mkdir -p "$TARGET_DIR/.ai"
     cp -r "$TEMP_DIR/.ai/"* "$TARGET_DIR/.ai/"
     print_success "Copied .ai/ configuration"
+fi
+
+# Copy .claude directory (Layer 0: CLAUDE.md + hooks)
+if [ -d "$TEMP_DIR/.claude" ]; then
+    mkdir -p "$TARGET_DIR/.claude"
+    mkdir -p "$TARGET_DIR/.claude/hooks"
+
+    # Copy CLAUDE.md (universal session start)
+    if [ -f "$TEMP_DIR/.claude/CLAUDE.md" ]; then
+        cp "$TEMP_DIR/.claude/CLAUDE.md" "$TARGET_DIR/.claude/"
+        print_success "Copied .claude/CLAUDE.md (Layer 0)"
+    fi
+
+    # Copy settings.json
+    if [ -f "$TEMP_DIR/.claude/settings.json" ]; then
+        cp "$TEMP_DIR/.claude/settings.json" "$TARGET_DIR/.claude/"
+        print_success "Copied .claude/settings.json"
+    fi
+
+    # Copy hooks
+    if [ -d "$TEMP_DIR/.claude/hooks" ]; then
+        cp -r "$TEMP_DIR/.claude/hooks/"* "$TARGET_DIR/.claude/hooks/" 2>/dev/null || true
+        chmod +x "$TARGET_DIR/.claude/hooks/"*.sh 2>/dev/null || true
+        print_success "Copied .claude/hooks/"
+    fi
 fi
 
 # Copy RULES files
@@ -303,6 +328,8 @@ FILES_TO_CHECK=(
     "AGENTS.md"
     ".ai/token-limits.json"
     ".ai/forbidden-trackers.json"
+    ".claude/CLAUDE.md"
+    ".claude/settings.json"
     "scripts/seo-check.sh"
 )
 
