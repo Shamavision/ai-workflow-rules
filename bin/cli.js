@@ -123,6 +123,13 @@ async function main() {
     await copyFile(templatesDir, currentDir, 'RULES_CORE.md');
     await copyFile(templatesDir, currentDir, 'START.md');
 
+    // Copy documentation files
+    await copyFile(templatesDir, currentDir, 'CHEATSHEET.md');
+    await copyFile(templatesDir, currentDir, 'QUICKSTART.md');
+    await copyFile(templatesDir, currentDir, 'TOKEN_USAGE.md');
+    await copyFile(templatesDir, currentDir, 'AI_COMPATIBILITY.md');
+    await copyFile(templatesDir, currentDir, 'LICENSE');
+
     // Copy RULES_PRODUCT.md if requested
     if (answers.installProductRules) {
       await copyFile(templatesDir, currentDir, 'RULES_PRODUCT.md');
