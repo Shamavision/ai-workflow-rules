@@ -129,6 +129,16 @@ done
 
 echo "━━━ Scanning file contents for secrets..."
 
+# Whitelist: Don't scan these files (they contain secret patterns for detection)
+SECRET_WHITELIST=(
+    ".env.example"
+    "scripts/pre-commit"
+    ".git/hooks/pre-commit"
+    "scripts/seo-check.sh"
+    ".ai/token-limits.json"
+    "examples/"
+)
+
 # Patterns for common secrets
 SECRET_PATTERNS=(
     # API Keys
@@ -172,6 +182,19 @@ for file in $STAGED_FILES; do
         continue
     fi
 
+    # Skip whitelisted files (contain patterns for detection)
+    skip=false
+    for whitelist_file in "${SECRET_WHITELIST[@]}"; do
+        if [[ "$file" == *"$whitelist_file"* ]]; then
+            skip=true
+            break
+        fi
+    done
+
+    if [ "$skip" == "true" ]; then
+        continue
+    fi
+
     # Scan file content
     for pattern in "${SECRET_PATTERNS[@]}"; do
         if grep -qiE "$pattern" "$file" 2>/dev/null; then
@@ -193,6 +216,15 @@ done
 
 echo "━━━ Checking for LANG-CRITICAL violations..."
 
+# Whitelist: Don't scan these files (they contain patterns for detection)
+LANG_WHITELIST=(
+    "scripts/pre-commit"
+    ".git/hooks/pre-commit"
+    "scripts/seo-check.sh"
+    ".ai/forbidden-trackers.json"
+    "RULES_PRODUCT.md"
+)
+
 LANG_PATTERNS=(
     '\.ru[^a-z]'              # .ru domains
     'ru-RU'                    # Russian locale
@@ -212,6 +244,19 @@ for file in $STAGED_FILES; do
 
     # Skip node_modules
     if [[ "$file" =~ node_modules ]]; then
+        continue
+    fi
+
+    # Skip whitelisted files (contain patterns for detection)
+    skip=false
+    for whitelist_file in "${LANG_WHITELIST[@]}"; do
+        if [[ "$file" == *"$whitelist_file"* ]]; then
+            skip=true
+            break
+        fi
+    done
+
+    if [ "$skip" == "true" ]; then
         continue
     fi
 
@@ -298,8 +343,10 @@ echo "━━━ Checking for russian tracking services..."
 TRACKER_WHITELIST=(
     ".ai/forbidden-trackers.json"
     "scripts/seo-check.sh"
+    "scripts/pre-commit"
     ".git/hooks/pre-commit"
     "RULES_PRODUCT.md"
+    "README.md"
     "public/robots.txt"
 )
 
