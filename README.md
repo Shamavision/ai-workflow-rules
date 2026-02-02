@@ -67,7 +67,7 @@
 - 📖 **Comprehensive guides** - QUICKSTART (5 min), CHEATSHEET (1 page), TOKEN_USAGE analysis
 - 🔧 **Production examples** - Real-world code for i18n, security, env management
 - 🤖 **Universal AI compatibility** - AGENTS.md (auto-loaded by 90%+ tools), START.md manual fallback
-- 🛠️ **Automation toolkit** - setup.sh, validate-setup.sh, seo-check.sh
+- 🛠️ **Automation toolkit** - install.sh, install.ps1, seo-check.sh, validate-setup.sh
 - ⚙️ **IDE configs** - .vscode/settings.json, .editorconfig for consistency
 
 ---
@@ -479,9 +479,10 @@ This framework works with multiple AI assistants through **AGENTS.md universal s
   └── token-limits.json          # AI budget tracking template
 
 scripts/
+  ├── install.sh                 # One-line installer (Mac/Linux/WSL)
+  ├── install.ps1                # One-line installer (Windows PowerShell)
   ├── seo-check.sh               # 9 automated security & SEO checks
-  ├── setup.sh                   # Automatic setup (Unix/Mac/WSL)
-  ├── setup.ps1                  # Automatic setup (Windows PowerShell)
+  ├── pre-commit                 # Git hook for security scanning
   └── validate-setup.sh          # Verify installation
 
 examples/
@@ -606,13 +607,12 @@ When working with AI (Claude Code, etc.), they will automatically:
 
 ```bash
 # Start new client project
-cp -r ai-workflow-rules/ ~/projects/new-client/
 cd ~/projects/new-client/
 
-# Customize
-nano .ai/token-limits.json  # Set your plan limits
+# One-line installation
+bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/scripts/install.sh)
 
-# Work with AI assistant
+# Choose provider (Anthropic/OpenAI/Google/etc.) in interactive wizard
 # AI reads RULES automatically, follows security guidelines
 
 # Before deploy
@@ -625,8 +625,9 @@ nano .ai/token-limits.json  # Set your plan limits
 ```bash
 # Standardize across all projects
 for project in ~/clients/*/; do
-  cp -r ai-workflow-rules/.ai "$project"
-  cp ai-workflow-rules/RULES_*.md "$project"
+  cd "$project"
+  # One-line install in each project
+  bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/scripts/install.sh) <<< $'1\n2\n'  # Auto-select Anthropic Pro
   echo "✅ Protected: $project"
 done
 
@@ -634,6 +635,7 @@ done
 # - Same security standards
 # - GDPR compliance
 # - Russian services protection
+# - Automated installation in seconds
 ```
 
 ### Example 3: Startup (EU Expansion)
