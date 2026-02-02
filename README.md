@@ -16,6 +16,20 @@
 **3-layer protection framework for AI-assisted development.**
 **Built for security, compliance, and Ukrainian market requirements.**
 
+---
+
+### 📑 Navigation
+
+<div align="center">
+
+**[🚀 Quick Start](#-quick-start)** •
+**[📖 Documentation](#-documentation)** •
+**[🆘 Troubleshooting](#-troubleshooting-частые-проблемы)** •
+**[🤖 AI Support](#-supported-ai-assistants)** •
+**[🤝 Contributing](#-contributing)**
+
+</div>
+
 </div>
 
 ---
@@ -88,6 +102,9 @@ Multi-layer protection for your development workflow:
 ---
 
 ## 🚀 Quick Start
+
+<details>
+<summary><b>📖 Click to expand installation guide</b></summary>
 
 ### Визуально: Что мы делаем
 
@@ -257,9 +274,14 @@ code D:/Projects/my-app
 
 AI автоматически прочитает RULES файлы и начнет работать с защитой!
 
+</details>
+
 ---
 
 ## 🆘 Troubleshooting (Частые проблемы)
+
+<details>
+<summary><b>🔧 Click to expand common problems and solutions</b></summary>
 
 ### ❌ "cp: command not found" (Windows)
 
@@ -384,9 +406,14 @@ chmod +x .git/hooks/pre-commit
    - Опишите что делали, что получилось
    - Прикрепите скриншот структуры папок
 
+</details>
+
 ---
 
 ## 🤖 Supported AI Assistants
+
+<details>
+<summary><b>🤖 Click to see all supported AI platforms</b></summary>
 
 This framework works with multiple AI assistants:
 
@@ -404,9 +431,14 @@ This framework works with multiple AI assistants:
 
 **📦 Installation guide:** [INSTALL.md](INSTALL.md)
 
+</details>
+
 ---
 
 ## 📋 What's Included
+
+<details>
+<summary><b>📦 Click to see complete feature list</b></summary>
 
 ### Core Files
 
@@ -461,7 +493,7 @@ LICENSE                          # MIT License
 
 ---
 
-## 🇺🇦 Ukrainian Market Protection
+### 🇺🇦 Ukrainian Market Protection
 
 **Why this matters:**
 
@@ -482,7 +514,7 @@ As a Ukrainian company (Wellme™), we face **high legal risks** if our projects
 
 ---
 
-## 🤖 AI Budget Management
+### 🤖 AI Budget Management
 
 **Problem:** AI assistants cost money. Free plans run out fast. Pro plans have daily limits.
 
@@ -505,9 +537,14 @@ As a Ukrainian company (Wellme™), we face **high legal risks** if our projects
 - ✅ Saves 40-60% tokens with smart compression
 - ✅ Works with Free, Pro, and Team plans
 
+</details>
+
 ---
 
 ## 📖 Documentation
+
+<details>
+<summary><b>📚 Click to see full documentation and examples</b></summary>
 
 ### For Developers
 
@@ -533,7 +570,7 @@ When working with AI (Claude Code, etc.), they will automatically:
 
 ---
 
-## 🛠️ Usage Examples
+### 🛠️ Usage Examples
 
 ### Example 1: Freelancer
 
@@ -585,7 +622,7 @@ done
 
 ---
 
-## ⚠️ Disclaimer
+### ⚠️ Disclaimer
 
 **AS-IS, NO WARRANTY:**
 
@@ -598,6 +635,8 @@ This framework is provided **"as-is"** without any warranty. While we (Wellme™
 ❌ **No support guarantees** - community-driven
 
 **For production use:** Test thoroughly before deploying.
+
+</details>
 
 ---
 
@@ -636,6 +675,9 @@ Permission is hereby granted, free of charge, to any person obtaining a copy...
 
 ## 🌟 Why We Built This
 
+<details>
+<summary><b>💡 Click to read our story</b></summary>
+
 As a **Ukrainian IT company**, we face unique challenges:
 - **Legal risks** from accidental russian service integration
 - **Compliance requirements** for EU/international clients
@@ -645,6 +687,8 @@ As a **Ukrainian IT company**, we face unique challenges:
 This framework solves **our** problems. We hope it helps you too.
 
 **Made with ❤️ in Ukraine** 🇺🇦
+
+</details>
 
 ---
 
