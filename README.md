@@ -135,6 +135,8 @@ npx github:Shamavision/ai-workflow-rules init
 
 **One command - automatic installation:**
 
+⚠️ **Important:** Open terminal in your **project's root directory** (not in `/Downloads` or temp folders)!
+
 **Mac / Linux / WSL:**
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/scripts/install.sh)
