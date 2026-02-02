@@ -121,9 +121,10 @@ next-env.d.ts
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
+!.vscode/*.code-snippets
 *.code-workspace
 
-# Note: We commit .vscode/settings.json as part of the template
+# Note: We commit .vscode/settings.json and snippets as part of the template
 # Users can override locally, git will show changes
 
 # JetBrains IDEs

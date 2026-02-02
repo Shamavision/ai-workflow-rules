@@ -8,21 +8,37 @@ This project uses **AI Workflow Rules Framework v7.1 Universal** — a set of ru
 
 ---
 
-## 🚀 Automatic Loading (Recommended)
+## 🚀 Quick Start (Universal)
 
-**Most modern AI tools will load rules automatically from [`AGENTS.md`](AGENTS.md):**
+**⚡ Fastest way to start any AI session:**
 
-✅ **Supported:**
-- Claude Code (loads AGENTS.md)
+Just type `//START` in your first message and the AI will:
+1. Read AGENTS.md automatically
+2. Execute Session Start Protocol
+3. Display `[SESSION START]` confirmation
+4. Start working with full context
+
+**✅ Works everywhere:** Claude Code CLI, VSCode Extension, Cursor, ChatGPT Web, Gemini, any AI tool!
+
+---
+
+## 📖 Automatic Loading (CLI/Cursor)
+
+**Some AI tools load rules automatically from [`AGENTS.md`](AGENTS.md):**
+
+✅ **Full auto-load (CLI only):**
+- Claude Code CLI (loads AGENTS.md + hooks work)
 - Cursor (loads AGENTS.md)
 - Windsurf (loads AGENTS.md)
 - Continue.dev (loads AGENTS.md)
 - Aider (loads AGENTS.md)
-- OpenAI Codex (loads AGENTS.md)
-- Google Jules (loads AGENTS.md)
-- Most AI coding assistants (AGENTS.md is the universal standard)
 
-If your AI tool supports AGENTS.md, **you don't need to do anything** — rules will load automatically! 🎉
+⚠️ **Partial support:**
+- Claude Code VSCode Extension (AGENTS.md not auto-loaded, hooks don't work)
+- OpenAI Codex (AGENTS.md support varies)
+- Google Jules (AGENTS.md support varies)
+
+💡 **Recommendation:** Use `//START` command to guarantee Session Start across all tools!
 
 ---
 

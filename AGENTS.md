@@ -7,6 +7,10 @@
 > - AND you have NOT yet displayed `[SESSION START]` confirmation
 > - **STOP immediately** and execute Session Start Protocol (Section 🚀 below)
 >
+> **USER COMMAND TRIGGER:**
+> - If user sends `//START` command → execute Session Start Protocol immediately
+> - This is the universal session initialization trigger
+>
 > **DO NOT skip this step.** Session Start Protocol is MANDATORY before any other work.
 
 ---
@@ -43,18 +47,24 @@ This protocol is enforced through **3 redundant layers** to guarantee execution:
 
 **Layer 1: File Directive** (This file, lines 3-10)
 - Prominent warning at top of AGENTS.md
-- Works if AI reads AGENTS.md automatically
-- Zero-config solution
+- **⚠️ CLI/Cursor ONLY:** VSCode Extension doesn't auto-load AGENTS.md
+- For VSCode: Use snippet `session-start` (type it in new chat) or manual script (Layer 3)
 
 **Layer 2: User Prompt Hook** (`.claude/hooks/user-prompt-submit.sh`)
 - Automatically injects Session Start instruction on first message
 - Creates `.ai/.session-started` marker after execution
-- Works with Claude Code, Cursor, Windsurf (hook-enabled tools)
+- **⚠️ CLI ONLY:** Works in Claude Code CLI, but NOT in VSCode Extension ([bug #16114](https://github.com/anthropics/claude-code/issues/16114))
 
 **Layer 3: Manual Fallback** (`scripts/session-init.sh`)
 - Generate Session Start message manually
-- Universal solution for ChatGPT Web, Gemini, etc.
+- Universal solution for ChatGPT Web, Gemini, VSCode Extension, etc.
 - Usage: `./scripts/session-init.sh | clip` (copy to clipboard)
+
+**🎯 VSCode Extension Users:**
+1. Just type `//START` in new chat and send it
+2. Or: Type `//start` → Tab (snippet expands with details)
+3. Or: Run `./scripts/session-init.sh | clip` → paste into chat
+4. **Reminder:** VSCode Extension doesn't support Layers 1-2 yet
 
 **Why 3 layers?**
 - Guarantees Session Start across all AI tools
@@ -114,6 +124,7 @@ This protocol is enforced through **3 redundant layers** to guarantee execution:
 - **Variable/function names:** English, camelCase/PascalCase
 
 ### 3. Workflow Triggers
+- `//START` - Execute Session Start Protocol (first message in new session)
 - `//TOKENS` - Show current token status
 - `//CHECK:SECURITY` - Security audit (secrets, XSS, injection)
 - `//CHECK:LANG` - LANG-CRITICAL violations scan

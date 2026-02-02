@@ -1,0 +1,31 @@
+{
+  "Claude Session Start Protocol": {
+    "prefix": "//start",
+    "body": [
+      "🤖 **Session Start Protocol Required**",
+      "",
+      "Before we begin, please:",
+      "",
+      "1. Read the file: `AGENTS.md`",
+      "2. Execute Session Start Protocol (Section 🚀, lines 19-38)",
+      "3. Display `[SESSION START]` confirmation block with:",
+      "   - Loaded rules version",
+      "   - Language settings (Russian dialogue, English code)",
+      "   - Token limits and current usage",
+      "   - Status zone (🟢/🟡/🟠/🔴)",
+      "",
+      "Then say: \"Ready to work. В чем помочь?\"",
+      "",
+      "---",
+      "",
+      "**Why this matters:**",
+      "- Ensures consistent workflow across sessions",
+      "- Activates security guards (no secrets, no russian trackers)",
+      "- Sets language rules correctly",
+      "- Enables token management",
+      "",
+      "This is **MANDATORY** - please don't skip! 🚨"
+    ],
+    "description": "//START command - Execute Session Start Protocol"
+  }
+}
