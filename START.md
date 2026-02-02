@@ -33,12 +33,13 @@ Just type `//START` in your first message and the AI will:
 - Continue.dev (loads AGENTS.md)
 - Aider (loads AGENTS.md)
 
-⚠️ **Partial support:**
-- Claude Code VSCode Extension (AGENTS.md not auto-loaded, hooks don't work)
+⚠️ **Partial support (AGENTS.md not auto-loaded, but CLAUDE.md works):**
+- Claude Code VSCode Extension ✅ (Use `//START` - works via CLAUDE.md Layer 0!)
 - OpenAI Codex (AGENTS.md support varies)
 - Google Jules (AGENTS.md support varies)
 
 💡 **Recommendation:** Use `//START` command to guarantee Session Start across all tools!
+✨ **NEW:** VSCode Extension now fully supported via `.claude/CLAUDE.md` auto-loading!
 
 ---
 

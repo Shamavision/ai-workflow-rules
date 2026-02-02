@@ -47,8 +47,11 @@ licenses.csv
 # AI API credentials
 .anthropic
 .openai
-.claude
+# Claude Code settings
+.claude/*  # Ignore all files in .claude by default
 !.claude/hooks/  # Exception: commit hooks (part of framework)
+!.claude/CLAUDE.md  # Exception: session instructions (part of framework)
+!.claude/settings.json  # Exception: project settings (if exists)
 ai-logs/
 ai-costs.db
 .ai-cache/

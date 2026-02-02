@@ -41,34 +41,44 @@
 Ready to work. В чем помочь?
 ```
 
-### 🧅 3-Layer Session Start Protection (ONION)
+### 🧅 4-Layer Session Start Protection (ONION)
 
-This protocol is enforced through **3 redundant layers** to guarantee execution:
+This protocol is enforced through **4 redundant layers** to guarantee execution:
 
-**Layer 1: File Directive** (This file, lines 3-10)
+**Layer 0: CLAUDE.md** (`.claude/CLAUDE.md`) ✨ **NEW: Universal VSCode/CLI Solution**
+- Auto-loaded by Claude Code in EVERY session (CLI + VSCode Extension)
+- Contains Session Start Protocol instructions
+- Recognizes `//START` and `//start` commands
+- **✅ WORKS EVERYWHERE:** CLI, VSCode Extension, and future Claude Code versions
+- **Recommended approach** for maximum compatibility
+
+**Layer 1: AGENTS.md Directive** (This file, lines 3-10)
 - Prominent warning at top of AGENTS.md
-- **⚠️ CLI/Cursor ONLY:** VSCode Extension doesn't auto-load AGENTS.md
-- For VSCode: Use snippet `session-start` (type it in new chat) or manual script (Layer 3)
+- **✅ CLI/Cursor/Windsurf:** Auto-loaded via AGENTS.md standard
+- **⚠️ VSCode Extension:** AGENTS.md not auto-loaded yet (use Layer 0 instead)
 
 **Layer 2: User Prompt Hook** (`.claude/hooks/user-prompt-submit.sh`)
 - Automatically injects Session Start instruction on first message
 - Creates `.ai/.session-started` marker after execution
-- **⚠️ CLI ONLY:** Works in Claude Code CLI, but NOT in VSCode Extension ([bug #16114](https://github.com/anthropics/claude-code/issues/16114))
+- **✅ CLI ONLY:** Works in Claude Code CLI
+- **⚠️ VSCode Extension:** Hooks not supported yet ([bug #16114](https://github.com/anthropics/claude-code/issues/16114))
 
 **Layer 3: Manual Fallback** (`scripts/session-init.sh`)
 - Generate Session Start message manually
-- Universal solution for ChatGPT Web, Gemini, VSCode Extension, etc.
+- Universal solution for ChatGPT Web, Gemini, and other AI tools
 - Usage: `./scripts/session-init.sh | clip` (copy to clipboard)
 
-**🎯 VSCode Extension Users:**
-1. Just type `//START` in new chat and send it
+**🎯 VSCode Extension Users (UPDATED):**
+1. ✅ **Best:** Just type `//START` or `//start` in new chat (Layer 0 handles it automatically!)
 2. Or: Type `//start` → Tab (snippet expands with details)
 3. Or: Run `./scripts/session-init.sh | clip` → paste into chat
-4. **Reminder:** VSCode Extension doesn't support Layers 1-2 yet
+4. **Note:** Layer 0 (CLAUDE.md) solves the VSCode limitation!
 
-**Why 3 layers?**
-- Guarantees Session Start across all AI tools
+**Why 4 layers?**
+- Guarantees Session Start across all AI tools (CLI, VSCode, web, future)
+- Layer 0 (CLAUDE.md) provides universal baseline for Claude Code
 - No single point of failure
+- Graceful degradation: if one layer fails, others activate
 - Follows project's ONION security philosophy
 
 3. **Follow core principles:**
@@ -84,7 +94,7 @@ This protocol is enforced through **3 redundant layers** to guarantee execution:
 ```
 .
 ├── AGENTS.md              ← You are here (universal config)
-├── RULES_CORE.md          ← Full AI workflow rules (v6.1)
+├── RULES_CORE.md          ← Full AI workflow rules (v7.1)
 ├── RULES_PRODUCT.md       ← Ukrainian market specifics
 ├── .ai/
 │   ├── token-limits.json  ← Token budget tracking
@@ -92,8 +102,10 @@ This protocol is enforced through **3 redundant layers** to guarantee execution:
 │   ├── forbidden-trackers.json
 │   └── .session-started   ← Session marker (auto-generated, gitignored)
 ├── .claude/
+│   ├── CLAUDE.md          ← ✨ Layer 0: Universal Session Start (NEW!)
+│   ├── settings.json      ← Claude Code settings
 │   └── hooks/
-│       └── user-prompt-submit.sh  ← Layer 2: Auto Session Start
+│       └── user-prompt-submit.sh  ← Layer 2: Auto Session Start (CLI only)
 ├── scripts/
 │   ├── pre-commit         ← Security checks (secrets, trackers)
 │   ├── seo-check.sh       ← Pre-deploy validation
@@ -235,6 +247,7 @@ git commit --no-verify
 
 ## 📝 Version History
 
+- **v7.2** [2026-02-02] - Added Layer 0: CLAUDE.md for universal VSCode Extension support. Now 4-layer protection system. Solves VSCode auto-load limitation.
 - **v7.1** [2026-02-02] - Universal AGENTS.md support added
 - **v7.0** [2026-02-01] - Production release with 3-layer protection
 - **v6.1** [2026-02-01] - Post-push compression, focus optimization
@@ -253,4 +266,4 @@ This is an open-source framework. See [README.md](README.md) for contribution gu
 ---
 
 **Last Updated:** 2026-02-02
-**Framework Version:** 7.1 Universal
+**Framework Version:** 7.2 Universal
