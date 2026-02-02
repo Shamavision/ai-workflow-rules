@@ -247,6 +247,7 @@ git commit --no-verify
 
 ## 📝 Version History
 
+- **v7.2.1** [2026-02-02] - Repository made public. GitHub branch protection configured (onion_protect ruleset).
 - **v7.2** [2026-02-02] - Added Layer 0: CLAUDE.md for universal VSCode Extension support. Now 4-layer protection system. Solves VSCode auto-load limitation.
 - **v7.1** [2026-02-02] - Universal AGENTS.md support added
 - **v7.0** [2026-02-01] - Production release with 3-layer protection
