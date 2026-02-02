@@ -7,14 +7,16 @@
 ### **Open Source Security Framework for Ukrainian Developers**
 
 <p>
-  <img src="https://img.shields.io/badge/version-7.0-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
+  <img src="https://img.shields.io/badge/version-7.1%20Universal-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square&labelColor=1D1D1B" alt="License">
   <img src="https://img.shields.io/badge/status-Production%20Ready-success?style=flat-square&labelColor=1D1D1B" alt="Status">
+  <img src="https://img.shields.io/badge/AGENTS.md-Universal-blue?style=flat-square&labelColor=1D1D1B" alt="AGENTS.md">
   <img src="https://img.shields.io/badge/Made%20in-Ukraine%20🇺🇦-0099CC?style=flat-square&labelColor=1D1D1B" alt="Made in Ukraine">
 </p>
 
 **3-layer protection framework for AI-assisted development.**
 **Built for security, compliance, and Ukrainian market requirements.**
+**✨ NEW in v7.1: Universal AGENTS.md support for ALL AI coding tools!**
 
 ---
 
@@ -46,7 +48,8 @@
 | 🇺🇦 **Ukrainian Compliance** | Zero tolerance for russian tracking services | GDPR-ready, ethical code by default |
 | 🤖 **AI Budget Management** | Token tracking, compression, optimization | Save 40-60% tokens, work smarter |
 | ⚡ **Pre-Deploy Checks** | 9 automated audits (SEO, security, dependencies) | Ship clean code every time |
-| 🌍 **Universal AI Support** | Works with Claude, ChatGPT, Copilot, Cursor, Gemini | One framework, any AI assistant |
+| 🌍 **Universal AI Support** | AGENTS.md standard: Claude, Cursor, Windsurf, Aider, OpenAI + 60k projects | Auto-loaded in 90%+ AI tools |
+| 🚀 **Session Start Protocol** | 3-layer enforcement (ONION): file directive + hook + manual fallback | AI loads rules automatically, guaranteed |
 | 📚 **Ready-to-Use Examples** | React i18n, API security, environment setup | Copy-paste production patterns |
 | 🚀 **Automation Scripts** | One-command setup for Windows, Mac, Linux | 5-minute installation |
 
@@ -62,7 +65,7 @@
 
 - 📖 **Comprehensive guides** - QUICKSTART (5 min), CHEATSHEET (1 page), TOKEN_USAGE analysis
 - 🔧 **Production examples** - Real-world code for i18n, security, env management
-- 🤖 **AI compatibility layer** - START.md for ChatGPT/Gemini, automatic for Claude/Cursor
+- 🤖 **Universal AI compatibility** - AGENTS.md (auto-loaded by 90%+ tools), START.md manual fallback
 - 🛠️ **Automation toolkit** - setup.sh, validate-setup.sh, seo-check.sh
 - ⚙️ **IDE configs** - .vscode/settings.json, .editorconfig for consistency
 
@@ -415,15 +418,22 @@ chmod +x .git/hooks/pre-commit
 <details>
 <summary><b>🤖 Click to see all supported AI platforms</b></summary>
 
-This framework works with multiple AI assistants:
+This framework works with multiple AI assistants through **AGENTS.md universal standard**:
 
-| AI Assistant | Support Level | Installation | Token Tracking |
-|-------------|---------------|--------------|----------------|
-| **Claude Code** | ✅ Full | Automatic | ✅ Yes |
-| **Cursor IDE** | ✅ Full | Automatic | ✅ Yes |
-| **ChatGPT** | ⚠️ Partial | Manual (copy-paste) | ⚠️ Basic |
-| **GitHub Copilot** | ⚠️ Limited | Copy files | ❌ No |
-| **Gemini** | ⚠️ Partial | Manual (copy-paste) | ⚠️ Basic |
+| AI Assistant | Support Level | Auto-Load | Config File |
+|-------------|---------------|-----------|-------------|
+| **Claude Code** | ✅ Full | ✅ Yes | AGENTS.md or .claude/CLAUDE.md |
+| **Cursor** | ✅ Full | ✅ Yes | AGENTS.md or .cursorrules |
+| **Windsurf** | ✅ Full | ✅ Yes | AGENTS.md |
+| **Aider** | ✅ Full | ✅ Yes | AGENTS.md |
+| **Continue.dev** | ✅ Full | ✅ Yes | AGENTS.md |
+| **OpenAI Codex** | ✅ Full | ✅ Yes | AGENTS.md |
+| **Google Jules** | ✅ Full | ✅ Yes | AGENTS.md |
+| **ChatGPT (Web)** | ⚠️ Partial | ❌ Manual | START.md (copy-paste) |
+| **GitHub Copilot** | ⚠️ Limited | ⚠️ Partial | AGENTS.md (limited context) |
+| **Gemini (Web)** | ⚠️ Partial | ❌ Manual | START.md (copy-paste) |
+
+**✨ 90%+ of AI coding tools now support AGENTS.md auto-loading!**
 
 **📖 Full compatibility details:** [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md)
 
@@ -716,7 +726,7 @@ This framework solves **our** problems. We hope it helps you too.
 
 <img src="public/wellme-logo.svg" alt="Wellme™" width="300">
 
-**AI Workflow Rules Framework v7.0**
+**AI Workflow Rules Framework v7.1 Universal**
 *Open Source • Made in Ukraine 🇺🇦*
 
 [wellme.ua](https://wellme.ua) • © 2025 Wellme™
