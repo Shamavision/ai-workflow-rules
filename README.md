@@ -107,205 +107,66 @@ Multi-layer protection for your development workflow:
 
 ## 🚀 Quick Start
 
-### Option 1: Interactive Installer ✨ (Recommended)
+**Two ways to install - both automatic:**
 
-**One command setup via NPX:**
+---
+
+### 1️⃣ NPX Installer (Recommended)
+
+**Interactive wizard with guided setup:**
 
 ```bash
 # Using GitHub (available now):
 npx github:Shamavision/ai-workflow-rules init
 
-# Or via NPM (coming soon after publication):
+# Or via NPM (coming soon):
 # npx @shamavision/ai-workflow-rules init
 ```
 
-**What it does:**
-- 🧙 Interactive wizard guides you through setup
-- ⚙️ Auto-configures token limits for your AI provider (Claude, ChatGPT, Gemini, etc.)
-- 🔒 Installs security pre-commit hooks
-- 📝 Updates .gitignore automatically
-- 📦 Copies all necessary files to your project
+✅ Interactive wizard
+✅ Auto-configures everything
+✅ Works on all platforms
 
-**Requirements:** Node.js 14+ installed
-
-**Perfect for:** Developers who want fast, guided installation
+**Requirements:** Node.js 14+
 
 ---
 
-### Option 2: Manual Installation
+### 2️⃣ Terminal Script (No NPX)
 
-<details>
-<summary><b>📖 Click to expand manual installation guide</b></summary>
+**One command - automatic installation:**
 
-### Визуально: Что мы делаем
-
+**Mac / Linux / WSL:**
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/scripts/install.sh)
 ```
-ПЕРЕД установкой:
-📂 ai-workflow-rules/         ← Скачанный репозиторий (НЕ ваш проект!)
-   ├── .ai/
-   ├── RULES_*.md
-   └── scripts/
 
-📂 my-awesome-project/         ← ВАШ рабочий проект
-   ├── src/
-   └── package.json
-
-ПОСЛЕ установки:
-📂 my-awesome-project/         ← ВАШ проект + защита
-   ├── .ai/ ⭐                 ← Скопировали сюда
-   ├── RULES_*.md ⭐          ← Скопировали сюда
-   ├── scripts/ ⭐            ← Скопировали сюда
-   ├── src/
-   └── package.json
+**Windows PowerShell:**
+```powershell
+iwr -useb https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/scripts/install.ps1 | iex
 ```
+
+✅ Downloads files automatically
+✅ Copies to your project
+✅ Configures hooks
+✅ No manual steps
+
+**Requirements:** Git installed
 
 ---
 
-### Шаг 1: Скачайте репозиторий
+### 3️⃣ Start Working
 
-**Windows (Git Bash или PowerShell):**
-```bash
-# Скачиваем во временную папку (НЕ в ваш проект!)
-cd C:\Temp
-git clone https://github.com/Shamavision/ai-workflow-rules.git
-cd ai-workflow-rules
+**Open your project in AI tool and type:**
+
+```
+//START
 ```
 
-**Mac / Linux:**
-```bash
-# Скачиваем во временную папку
-cd ~/Downloads
-git clone https://github.com/Shamavision/ai-workflow-rules.git
-cd ai-workflow-rules
-```
-
-📌 **Важно:** Это ВРЕМЕННАЯ копия. Мы скопируем нужные файлы в ваш проект на следующем шаге.
+AI will load all rules and show confirmation. Ready to work! 🎉
 
 ---
 
-### Шаг 2: Скопируйте файлы в ВАШ проект
-
-**Замените `/path/to/your-project` на реальный путь к ВАШЕМУ проекту!**
-
-**Пример для Windows:**
-```bash
-# Если ваш проект в D:\Projects\my-app
-cp -r .ai D:/Projects/my-app/
-cp RULES_*.md D:/Projects/my-app/
-cp -r scripts D:/Projects/my-app/
-cp .editorconfig D:/Projects/my-app/
-```
-
-**Пример для Mac/Linux:**
-```bash
-# Если ваш проект в ~/Projects/my-app
-cp -r .ai ~/Projects/my-app/
-cp RULES_*.md ~/Projects/my-app/
-cp -r scripts ~/Projects/my-app/
-cp .editorconfig ~/Projects/my-app/
-```
-
-**Используете VS Code?** Еще проще:
-1. Откройте **2 окна VS Code**:
-   - Окно 1: `C:\Temp\ai-workflow-rules` (скачанный репозиторий)
-   - Окно 2: `D:\Projects\my-app` (ваш проект)
-2. Перетащите мышкой:
-   - Папку `.ai` → в корень вашего проекта
-   - Файлы `RULES_*.md` → в корень вашего проекта
-   - Папку `scripts` → в корень вашего проекта
-
----
-
-### Шаг 3: Установите Git Hooks (защита от утечек)
-
-📌 **Git hook** - это автоматическая проверка перед каждым коммитом. Блокирует утечки секретов и российские трекеры.
-
-```bash
-# 1. Перейдите В ВАШ проект (не в репозиторий!)
-cd D:/Projects/my-app  # Windows - замените на ваш путь
-# cd ~/Projects/my-app  # Mac/Linux - замените на ваш путь
-
-# 2. Скопируйте pre-commit hook В ВАШ проект
-# ОТКУДА (из scripts/) → КУДА (в .git/hooks/)
-
-# Windows:
-cp C:/Temp/ai-workflow-rules/scripts/pre-commit D:/Projects/my-app/.git/hooks/
-
-# Mac/Linux:
-# cp ~/Downloads/ai-workflow-rules/scripts/pre-commit ~/Projects/my-app/.git/hooks/
-
-# 3. Сделайте исполняемым (только Mac/Linux)
-# chmod +x .git/hooks/pre-commit
-
-# 4. Проверьте что файл скопировался
-ls .git/hooks/pre-commit
-# Должно показать: .git/hooks/pre-commit
-```
-
-**Что означает `.git/hooks/`?**
-Это скрытая папка ВНУТРИ вашего проекта:
-```
-D:/Projects/my-app/
-├── .git/              ← Скрытая папка Git
-│   └── hooks/         ← Сюда копируем
-│       └── pre-commit ✅
-├── .ai/
-├── src/
-└── package.json
-```
-
----
-
-### Шаг 4: Проверьте что получилось
-
-```bash
-# Перейдите в ВАШ проект
-cd D:/Projects/my-app  # ваш путь
-
-# Проверьте структуру
-ls -la
-
-# Должно быть:
-# .ai/                   ✅
-# RULES_CORE.md          ✅
-# RULES_PRODUCT.md       ✅
-# scripts/               ✅
-# .editorconfig          ✅
-```
-
----
-
-### Шаг 5: Настройте под себя
-
-Откройте файл `.ai/token-limits.json` в вашем проекте и обновите лимиты:
-
-```json
-{
-  "provider": "anthropic",
-  "plan": "Pro",  // или "Free", "Team", "Enterprise"
-  "limits": {
-    "daily": 200000,  // ваш лимит
-    "session": 66000
-  }
-}
-```
-
----
-
-### Шаг 6: Готово! 🎉
-
-Теперь откройте **ваш проект** в Claude Code / Cursor / Copilot:
-
-```bash
-# В VS Code
-code D:/Projects/my-app
-
-# Или просто откройте папку через File → Open Folder
-```
-
-AI автоматически прочитает RULES файлы и начнет работать с защитой!
-
-</details>
+**🔧 Need manual installation?** See detailed guide: [INSTALL.md](INSTALL.md)
 
 ---
 
