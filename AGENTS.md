@@ -1,0 +1,245 @@
+# AI Workflow Rules Framework
+
+> **🚨 AI ASSISTANT: READ THIS FIRST!**
+>
+> **MANDATORY SESSION START CHECK:**
+> - If this is your **FIRST message** in this session
+> - AND you have NOT yet displayed `[SESSION START]` confirmation
+> - **STOP immediately** and execute Session Start Protocol (Section 🚀 below)
+>
+> **DO NOT skip this step.** Session Start Protocol is MANDATORY before any other work.
+
+---
+
+> **Universal AI Agent Configuration**
+> This file is automatically loaded by Claude Code, Cursor, Windsurf, Aider, Continue.dev, and other AI coding assistants supporting the AGENTS.md standard.
+
+---
+
+## 🚀 Session Start Protocol (MANDATORY)
+
+**BEFORE any work in this session, AI MUST:**
+
+1. **Load project rules:**
+   - Read `RULES_CORE.md` (Sections 0, 2, 7)
+   - Read `.ai/token-limits.json` for budget tracking
+
+2. **Display SESSION START confirmation:**
+
+```
+[SESSION START]
+✓ RULES_CORE.md loaded (vX.X)
+✓ Language: Russian (internal dialogue)
+✓ Token limit: [daily_limit] daily ([provider] [plan])
+✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
+✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
+
+Ready to work. В чем помочь?
+```
+
+### 🧅 3-Layer Session Start Protection (ONION)
+
+This protocol is enforced through **3 redundant layers** to guarantee execution:
+
+**Layer 1: File Directive** (This file, lines 3-10)
+- Prominent warning at top of AGENTS.md
+- Works if AI reads AGENTS.md automatically
+- Zero-config solution
+
+**Layer 2: User Prompt Hook** (`.claude/hooks/user-prompt-submit.sh`)
+- Automatically injects Session Start instruction on first message
+- Creates `.ai/.session-started` marker after execution
+- Works with Claude Code, Cursor, Windsurf (hook-enabled tools)
+
+**Layer 3: Manual Fallback** (`scripts/session-init.sh`)
+- Generate Session Start message manually
+- Universal solution for ChatGPT Web, Gemini, etc.
+- Usage: `./scripts/session-init.sh | clip` (copy to clipboard)
+
+**Why 3 layers?**
+- Guarantees Session Start across all AI tools
+- No single point of failure
+- Follows project's ONION security philosophy
+
+3. **Follow core principles:**
+   - Internal dialogue: **Russian** (code comments/commits: English)
+   - Token-conscious: Monitor usage, optimize at 50%+
+   - Discuss → Approve → Execute (never code before approval)
+   - Stage-based workflow with atomic commits
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── AGENTS.md              ← You are here (universal config)
+├── RULES_CORE.md          ← Full AI workflow rules (v6.1)
+├── RULES_PRODUCT.md       ← Ukrainian market specifics
+├── .ai/
+│   ├── token-limits.json  ← Token budget tracking
+│   ├── locale-context.json
+│   ├── forbidden-trackers.json
+│   └── .session-started   ← Session marker (auto-generated, gitignored)
+├── .claude/
+│   └── hooks/
+│       └── user-prompt-submit.sh  ← Layer 2: Auto Session Start
+├── scripts/
+│   ├── pre-commit         ← Security checks (secrets, trackers)
+│   ├── seo-check.sh       ← Pre-deploy validation
+│   └── session-init.sh    ← Layer 3: Manual Session Start
+└── examples/              ← Production code examples
+```
+
+---
+
+## 🎯 Core Principles
+
+### 1. Token Management v2.0
+- **Track usage** - Show status at 30%+ consumption
+- **Auto-optimize** at 50%+ (diff-only, brief mode)
+- **Compress context** after major commits (saves 40-60%)
+- **Emergency mode** at 90%+ (commit only, hard stop)
+
+**Token Status Zones:**
+- 🟢 **0-50% (GREEN):** Full capacity, normal mode
+- 🟡 **50-70% (MODERATE):** Brief mode, optimizations active
+- 🟠 **70-90% (CAUTION):** Silent mode, aggressive compression
+- 🔴 **90-95% (CRITICAL):** Finalization only, commit + stop
+
+### 2. Language Rules
+- **Internal dialogue (You ↔ AI):** Russian
+- **Code comments:** English only
+- **Commit messages:** English only (`type(scope): description`)
+- **Variable/function names:** English, camelCase/PascalCase
+
+### 3. Workflow Triggers
+- `//TOKENS` - Show current token status
+- `//CHECK:SECURITY` - Security audit (secrets, XSS, injection)
+- `//CHECK:LANG` - LANG-CRITICAL violations scan
+- `//CHECK:ALL` - Full audit (security + performance + lang + i18n)
+- `//COMPACT` - Manual context compression
+- `//THINK` - Show reasoning in `<thinking>` tags
+
+### 4. Git Discipline
+- **One stage = one commit** (atomic)
+- **Format:** `type(scope): description`
+  - Types: `feat`, `fix`, `refactor`, `docs`, `security`, `i18n`, `rules`
+- **AI suggests → I approve** - Never auto-commit
+- **Post-push compression** - Mandatory after successful push
+
+### 5. Security Guards
+- ❌ Never hardcode secrets (use `process.env.VAR`)
+- ❌ Never commit `.env`, `credentials.json`, private keys
+- ❌ Never use russian tracking services (Yandex, VK, Mail.ru)
+- ✅ Pre-commit hook scans for secrets/trackers automatically
+
+---
+
+## 📖 Detailed Documentation
+
+**Full rules:**
+- [RULES_CORE.md](RULES_CORE.md) - Complete workflow, token management, iterative process
+- [RULES_PRODUCT.md](RULES_PRODUCT.md) - Ukrainian market, i18n, SEO, compliance
+
+**Quick guides:**
+- [QUICKSTART.md](QUICKSTART.md) - 5-minute setup
+- [CHEATSHEET.md](CHEATSHEET.md) - One-page reference
+- [TOKEN_USAGE.md](TOKEN_USAGE.md) - Token cost transparency
+
+**Compatibility:**
+- [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md) - Tested AI assistants matrix
+- [START.md](START.md) - Onboarding for new AI sessions
+
+---
+
+## 🔧 Project-Specific Notes
+
+**Ukrainian Market Focus:**
+- Zero tolerance for russian services (legal + security risk)
+- GDPR-compliant by default
+- i18n-ready architecture (uk-UA primary, multi-language support)
+
+**Testing & Validation:**
+- Pre-commit hooks: `scripts/pre-commit` (secrets, trackers, LANG-CRITICAL)
+- Pre-deploy: `scripts/seo-check.sh` (9 automated checks)
+- Git hooks installed: `.git/hooks/pre-commit`
+
+**Tech Stack:**
+- Node.js / React / Next.js (typical projects)
+- TypeScript preferred
+- Bash scripts for automation
+
+---
+
+## ⚠️ Red Flags - Auto-Stop Conditions
+
+**STOP and ask confirmation if:**
+- Deleting >10 files
+- Changing core configs (`package.json`, `tsconfig`)
+- Database migrations
+- Major dependency updates
+- `rm -rf` or recursive deletes
+- Publishing to npm/production
+- Auth/authorization changes
+- **[LANG-CRITICAL]** Russian content detected
+- **[AI-API-CRITICAL]** API key in client code
+- **[TOKEN-CRITICAL]** >95% tokens used
+
+---
+
+## 📊 Success Metrics
+
+**Session quality indicators:**
+- ✅ Session Start Protocol executed
+- ✅ Token status displayed at 30%+ usage
+- ✅ Russian used for dialogue (English for code)
+- ✅ Atomic commits with clear messages
+- ✅ No secrets/trackers committed
+- ✅ Context compressed after pushes
+
+---
+
+## 🆘 Emergency Commands
+
+```bash
+# Reset to safe state
+git reset --soft HEAD~1
+
+# Check what's staged
+git status
+git diff --cached
+
+# Bypass hooks (emergency only!)
+git commit --no-verify
+
+# Check token usage
+# AI should display automatically at 30%+
+
+# Compress context manually
+# Use: //COMPACT command
+```
+
+---
+
+## 📝 Version History
+
+- **v7.1** [2026-02-02] - Universal AGENTS.md support added
+- **v7.0** [2026-02-01] - Production release with 3-layer protection
+- **v6.1** [2026-02-01] - Post-push compression, focus optimization
+- **v6.0** [2026-01-31] - Token Management v2.0, Session Start Protocol
+
+---
+
+## 🤝 Contributing
+
+This is an open-source framework. See [README.md](README.md) for contribution guidelines.
+
+**Made with ❤️ in Ukraine 🇺🇦**
+**License:** MIT
+**Website:** [wellme.ua](https://wellme.ua)
+
+---
+
+**Last Updated:** 2026-02-02
+**Framework Version:** 7.1 Universal
