@@ -1,0 +1,71 @@
+# Exclude everything except what we need in NPM package
+# NPM package should only contain: bin/, npm-templates/, package.json, README.md, LICENSE
+
+# Development files
+*.log
+*.tmp
+.env
+.env.*
+!.env.example
+
+# Git
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# AI logs and temp files
+.ai/.session-started
+.ai/checkpoint-*.md
+ai-logs/
+
+# Examples and docs (not needed in NPM)
+examples/
+public/
+templates/
+lib/
+
+# Scripts (we have them in npm-templates/scripts/)
+scripts/
+
+# Project-specific files
+INSTALL.md
+QUICKSTART.md
+TOKEN_USAGE.md
+AI_COMPATIBILITY.md
+START.md
+task.txt
+
+# These files ARE in the root (for GitHub users)
+# but DON'T need to be in NPM package
+# (they're in npm-templates/ instead)
+AGENTS.md
+RULES_CORE.md
+RULES_PRODUCT.md
+.ai/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Testing
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Dependencies (will be installed by npm)
+node_modules/

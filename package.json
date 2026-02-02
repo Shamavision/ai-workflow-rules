@@ -1,0 +1,48 @@
+{
+  "name": "@shamavision/ai-workflow-rules",
+  "version": "7.1.0",
+  "description": "Universal AI workflow rules framework for Claude, Cursor, Windsurf, and other AI coding assistants. Session management, token optimization, security guards, and best practices.",
+  "keywords": [
+    "ai",
+    "workflow",
+    "rules",
+    "claude",
+    "cursor",
+    "windsurf",
+    "aider",
+    "copilot",
+    "coding-assistant",
+    "productivity",
+    "token-management",
+    "security"
+  ],
+  "main": "bin/cli.js",
+  "bin": {
+    "ai-workflow-rules": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "npm-templates/"
+  ],
+  "scripts": {
+    "test": "node bin/cli.js --help"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shamavision/ai-workflow-rules.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Shamavision/ai-workflow-rules/issues"
+  },
+  "homepage": "https://github.com/Shamavision/ai-workflow-rules#readme",
+  "author": "Shamavision <shamavision@wellme.ua>",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^8.2.6",
+    "fs-extra": "^11.2.0",
+    "chalk": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

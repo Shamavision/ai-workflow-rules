@@ -1,0 +1,103 @@
+{
+  "_comment": "🤖 Universal AI Token Tracker v3.0 - Just Works™",
+  "_disclaimer": "Limits are CONSERVATIVE (intentionally 10-20% lower). You'll get early warnings, not surprises.",
+  "_howto": "1. Set 'provider' below  2. Set 'plan'  3. Copy limits from PRESETS (or leave defaults)  4. Done!",
+
+  "provider": "anthropic",
+  "plan": "pro",
+
+  "monthly_limit": 5000000,
+  "daily_limit": 150000,
+
+  "PRESETS": {
+    "_note": "These are SAFE estimates. Your actual limits may be higher - always check provider docs.",
+
+    "anthropic": {
+      "free": { "monthly": 250000, "daily": 8000 },
+      "pro": { "monthly": 5000000, "daily": 150000 },
+      "team": { "monthly": 25000000, "daily": 800000 },
+      "_docs": "https://console.anthropic.com/settings/limits",
+      "_updated": "2026-01"
+    },
+
+    "openai": {
+      "free": { "monthly": 80000, "daily": 4000 },
+      "plus": { "monthly": 800000, "daily": 40000 },
+      "team": { "monthly": 4000000, "daily": 150000 },
+      "_docs": "https://platform.openai.com/account/limits",
+      "_updated": "2026-01"
+    },
+
+    "google": {
+      "free": { "monthly": 400000, "daily": 15000 },
+      "pro": { "monthly": 1500000, "daily": 80000 },
+      "_docs": "https://ai.google.dev/pricing",
+      "_updated": "2026-01"
+    },
+
+    "cursor": {
+      "free": { "monthly": 150000, "daily": 8000 },
+      "pro": { "monthly": 1500000, "daily": 80000 },
+      "_docs": "https://cursor.sh/pricing",
+      "_updated": "2026-01"
+    },
+
+    "github_copilot": {
+      "free": { "monthly": 100000, "daily": 5000 },
+      "individual": { "monthly": 500000, "daily": 25000 },
+      "business": { "monthly": 2000000, "daily": 100000 },
+      "_docs": "https://github.com/features/copilot",
+      "_updated": "2026-01"
+    },
+
+    "custom": {
+      "_info": "Set your own limits above if your provider isn't listed"
+    },
+
+    "disabled": {
+      "_info": "Set 'provider' to 'disabled' and 'tracking_enabled' to false to turn off tracking completely"
+    }
+  },
+
+  "tracking_enabled": true,
+
+  "current_month": "2026-01",
+  "monthly_usage": 0,
+  "monthly_percentage": 0,
+
+  "daily_usage": 0,
+  "daily_percentage": 0,
+  "last_reset_daily": "2026-01-31T00:00:00Z",
+  "last_reset_monthly": "2026-01-01T00:00:00Z",
+
+  "thresholds": {
+    "green": 50,
+    "moderate": 70,
+    "caution": 90,
+    "critical": 95
+  },
+
+  "current_status": "green",
+  "current_zone": "🟢 Green - Full capacity",
+
+  "sessions": [],
+
+  "optimization_stats": {
+    "context_compressions": 0,
+    "tokens_saved_by_compression": 0,
+    "diff_only_mode_activations": 0,
+    "lazy_loading_prevented_reads": 0
+  },
+
+  "notes": [
+    "Limits are CONSERVATIVE (10-20% lower) for early warnings",
+    "Check PRESETS above for your provider and plan",
+    "Context compression auto-triggers at 50% (saves 40-60% tokens)",
+    "Session checkpoints created at 80% tokens",
+    "AI automatically updates this file - no manual tracking needed"
+  ],
+
+  "history": {
+    "_comment": "Daily usage tracking - AI fills this automatically"
+  }
+}
