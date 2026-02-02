@@ -16,6 +16,9 @@
 # Note: .ai/token-limits.json is committed (template with PRESETS)
 # Note: .ai/forbidden-trackers.json is committed (community blacklist)
 
+# Session markers (temporary, per-session)
+.ai/.session-started
+
 # ==============================================================================
 # LAYER 2: LICENSE & ACTIVATION
 # ==============================================================================
@@ -45,6 +48,7 @@ licenses.csv
 .anthropic
 .openai
 .claude
+!.claude/hooks/  # Exception: commit hooks (part of framework)
 ai-logs/
 ai-costs.db
 .ai-cache/
