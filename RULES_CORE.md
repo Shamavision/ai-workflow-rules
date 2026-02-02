@@ -111,14 +111,16 @@ AI автоматически ищет RULES в следующих местах 
 
 ### 🚨 CRITICAL: Read RULES First!
 
+**GOOD NEWS (v7.1):** Most modern AI tools (Claude Code, Cursor, Windsurf, Aider, etc.) automatically load `AGENTS.md` at session start. If you're reading this, auto-loading likely worked! ✅
+
 **BEFORE any work in the session, AI MUST:**
 
 1. **Check for RULES files:**
    ```bash
-   # Priority order:
-   1. .ai-rules/RULES_CORE.md      ✅ Primary
-   2. .ai/RULES_CORE.md
-   3. ~/ai-workflow-rules/RULES_CORE.md
+   # Priority order (v7.1 Universal - Simplified):
+   1. AGENTS.md                    ✅ Universal (auto-loaded by 90%+ tools)
+   2. START.md                     ✅ Manual fallback (old versions, ChatGPT Web)
+   3. .ai-rules/RULES_CORE.md      ✅ Legacy (private submodule, if used)
    ```
 
 2. **Read key sections:**
@@ -874,6 +876,7 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
+*   **v7.1** [2026-02-02] – Universal AGENTS.md support added. Framework now works with 90%+ AI coding tools (Claude Code, Cursor, Windsurf, Aider, Continue, OpenAI Codex, Google Jules, etc.) through AGENTS.md universal standard. Auto-loading in most tools. BUG-005 fixed (Session Start Protocol not applied automatically).
 *   **v6.1** [2026-02-01] – Added POST-PUSH COMPRESSION (mandatory workflow after git push) and FOCUS OPTIMIZATION (Quality > Speed philosophy). Philosophy: "We don't save tokens, we concentrate attention on critical tasks."
 *   **v6.0** [2026-01-31] – Token Management v2.0: context compression, lazy loading, verbosity auto-scaling, session checkpoints, graduated warnings, monthly tracking. Added SESSION START PROTOCOL (Section 0) for mandatory RULES reading.
 *   **v5.0** [2025-01-26] – Added Rules Security (submodule), Token Management system, language rules clarified, split into CORE + PRODUCT
@@ -884,4 +887,4 @@ Before proposing solution:
 
 ---
 
-*This document is living. Update with approval. Stored in private repo. Last updated: 2026-02-01*
+*This document is living. Update with approval. Last updated: 2026-02-02 (v7.1 Universal)*

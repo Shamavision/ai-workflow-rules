@@ -2,9 +2,33 @@
 
 ## Project Context
 
-This project uses **AI Workflow Rules Framework** — a set of rules for safe and efficient AI-assisted development.
+This project uses **AI Workflow Rules Framework v7.1 Universal** — a set of rules for safe and efficient AI-assisted development.
+
+**✨ New in v7.1:** Universal AGENTS.md support for automatic rule loading across all AI tools!
 
 ---
+
+## 🚀 Automatic Loading (Recommended)
+
+**Most modern AI tools will load rules automatically from [`AGENTS.md`](AGENTS.md):**
+
+✅ **Supported:**
+- Claude Code (loads AGENTS.md)
+- Cursor (loads AGENTS.md)
+- Windsurf (loads AGENTS.md)
+- Continue.dev (loads AGENTS.md)
+- Aider (loads AGENTS.md)
+- OpenAI Codex (loads AGENTS.md)
+- Google Jules (loads AGENTS.md)
+- Most AI coding assistants (AGENTS.md is the universal standard)
+
+If your AI tool supports AGENTS.md, **you don't need to do anything** — rules will load automatically! 🎉
+
+---
+
+## 📖 Manual Loading (Fallback)
+
+### For AI tools WITHOUT AGENTS.md support (ChatGPT Web, etc.):
 
 ## What You Need to Do
 
@@ -52,22 +76,26 @@ All rules are **mandatory** during this session:
 
 ## Important Notes
 
-### For Claude Code / Cursor Users
-✅ You already read RULES automatically — this file is optional for you.
+### For AI Tools WITH Automatic Loading (Claude Code, Cursor, Windsurf, etc.)
+✅ You already loaded RULES from `AGENTS.md` automatically — this file is optional reference.
 
-### For ChatGPT / Gemini Users
-⚠️ You need to **manually read** this file at the start of each session because you don't have automatic file access.
+**Auto-loaded file:**
+- `AGENTS.md` (universal standard) ⭐
+
+### For ChatGPT Web / Gemini Web / Other Manual AI
+⚠️ You need to **manually read** RULES at the start of each session:
 
 **How to use:**
-1. Copy the content of `RULES_CORE.md` into the first message
-2. Tell ChatGPT: "Follow these rules throughout our conversation"
+1. Read [`AGENTS.md`](AGENTS.md) or [`RULES_CORE.md`](RULES_CORE.md)
+2. Tell the AI: "Follow these rules throughout our conversation"
 3. Start working
 
-### For GitHub Copilot Users
-⚠️ You have limited context. Focus on:
+### For GitHub Copilot
+⚠️ Limited context support. Focus on:
 - Security rules (no secrets, no russian trackers)
 - Code quality standards
 - Basic workflow (discuss before changing)
+- Check AGENTS.md periodically for guidance
 
 ---
 
@@ -151,8 +179,10 @@ project/
 
 <div align="center">
 
-**AI Workflow Rules Framework v7.0**
+**AI Workflow Rules Framework v7.1 Universal**
 *Made in Ukraine 🇺🇦 • Open Source (MIT License)*
+
+**✨ New:** AGENTS.md support for universal AI compatibility
 
 [GitHub](https://github.com/Shamavision/ai-workflow-rules) • [Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
 

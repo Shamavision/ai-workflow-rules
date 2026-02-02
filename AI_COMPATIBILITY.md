@@ -1,20 +1,51 @@
 # 🤖 AI Assistant Compatibility
 
-This framework supports multiple AI assistants with varying levels of integration.
+**Framework Version:** 7.1 Universal
+
+This framework supports multiple AI assistants through **AGENTS.md universal standard** (auto-loaded by 90%+ modern AI coding tools).
 
 ---
 
 ## Compatibility Matrix
 
-| AI Assistant | RULES Support | Auto-Read | Token Tracking | Installation | Recommended |
-|-------------|---------------|-----------|----------------|--------------|-------------|
-| **Claude Code** | ✅ Full | ✅ Automatic | ✅ Full | Copy files | ⭐⭐⭐⭐⭐ |
-| **Cursor IDE** | ✅ Full | ✅ Automatic | ✅ Full | Copy files | ⭐⭐⭐⭐⭐ |
-| **ChatGPT (Web)** | ⚠️ Partial | ❌ Manual | ⚠️ Basic | Copy-paste START.md | ⭐⭐⭐ |
-| **ChatGPT (API)** | ✅ Full | ⚠️ Per-session | ✅ Full | API prompt injection | ⭐⭐⭐⭐ |
-| **GitHub Copilot** | ⚠️ Partial | ❌ Limited | ❌ None | Copy files | ⭐⭐ |
-| **Gemini (Google)** | ⚠️ Partial | ❌ Manual | ⚠️ Basic | Copy-paste START.md | ⭐⭐⭐ |
-| **JetBrains AI** | ⚠️ Basic | ⚠️ Plugin-dependent | ❌ None | Copy files + plugin | ⭐⭐ |
+| AI Assistant | AGENTS.md | Auto-Load | Config File | Token Tracking | Recommended |
+|-------------|-----------|-----------|-------------|----------------|-------------|
+| **Claude Code** | ✅ Yes | ✅ Automatic | AGENTS.md | ✅ Full | ⭐⭐⭐⭐⭐ |
+| **Cursor** | ✅ Yes | ✅ Automatic | AGENTS.md | ✅ Full | ⭐⭐⭐⭐⭐ |
+| **Windsurf** | ✅ Yes | ✅ Automatic | AGENTS.md | ✅ Full | ⭐⭐⭐⭐⭐ |
+| **Aider** | ✅ Yes | ✅ Automatic | AGENTS.md | ✅ Full | ⭐⭐⭐⭐ |
+| **Continue.dev** | ✅ Yes | ✅ Automatic | AGENTS.md | ✅ Full | ⭐⭐⭐⭐ |
+| **OpenAI Codex** | ✅ Yes | ✅ Automatic | AGENTS.md | ✅ Full | ⭐⭐⭐⭐ |
+| **Google Jules** | ✅ Yes | ✅ Automatic | AGENTS.md | ✅ Full | ⭐⭐⭐⭐ |
+| **ChatGPT (Web)** | ❌ No | ❌ Manual | START.md (copy-paste) | ⚠️ Basic | ⭐⭐⭐ |
+| **GitHub Copilot** | ⚠️ Limited | ⚠️ Partial | AGENTS.md (limited context) | ❌ None | ⭐⭐ |
+| **Gemini (Web)** | ❌ No | ❌ Manual | START.md (copy-paste) | ⚠️ Basic | ⭐⭐⭐ |
+
+**✨ New in v7.1:** AGENTS.md universal standard support = automatic rule loading in 90%+ AI coding tools!
+
+---
+
+## What is AGENTS.md?
+
+**AGENTS.md** is an open, universal format for guiding AI coding agents, supported by 60,000+ open-source projects.
+
+**Key Benefits:**
+- ✅ **Auto-loaded** by most modern AI coding tools
+- ✅ **Markdown-based** - human-readable, easy to edit
+- ✅ **Cross-platform** - works with Claude, Cursor, Windsurf, Aider, Continue, Codex, etc.
+- ✅ **Standardized** - collaborative effort by OpenAI, Sourcegraph, Google, Anthropic
+
+**How It Works:**
+1. Place `AGENTS.md` in project root
+2. AI tool automatically reads it at session start
+3. Rules applied automatically - no manual action needed
+
+**Fallback:**
+- `START.md` - Manual trigger for old versions or web-based AI (ChatGPT, Gemini)
+
+**Learn More:**
+- [AGENTS.md Official Site](https://agents.md/)
+- [GitHub Spec](https://github.com/agentsmd/agents.md)
 
 ---
 
