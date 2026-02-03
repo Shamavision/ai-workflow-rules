@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="400">
+<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="500">
 
 ### **Open Source Security Framework for Ukrainian Developers**
 
@@ -1030,7 +1030,7 @@ This framework solves **our** problems. We hope it helps you too.
 
 ---
 
-<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="250">
+<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="312">
 
 **AI Workflow Rules Framework v8.0**
 *Open Source • GPL v3 • Made in Ukraine 🇺🇦*
