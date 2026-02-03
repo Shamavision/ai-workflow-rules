@@ -703,12 +703,15 @@ git push origin main
 ## 7. COMMUNICATION PROTOCOL
 
 ### 7.1. LANGUAGE RULES
-*   **Internal dialogue (You ↔ AI):** Russian — наше рабочее правило
+*   **Internal dialogue (You ↔ AI):** Adaptive - match user's language (Ukrainian, Russian, or English)
+    - Session starts with Ukrainian greeting: "Чим я можу вам допомогти?"
+    - Then AI adapts to user's language choice
+    - Respectful to all users regardless of language preference
 *   **Code comments:** English only
 *   **Commit messages:** English only
 *   **Variable names:** English, camelCase/PascalCase
 *   **Branch names:** English (`feat/user-auth`)
-*   **RULES entries:** Russian/English mix OK
+*   **RULES entries:** Ukrainian/Russian/English mix OK
 
 ### 7.2. QUERY TEMPLATE
 ````markdown

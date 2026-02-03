@@ -33,12 +33,12 @@
 ```
 [SESSION START]
 ✓ RULES_CORE.md loaded (vX.X)
-✓ Language: Russian (internal dialogue)
+✓ Language: Adaptive (matches user's language)
 ✓ Token limit: [daily_limit] daily ([provider] [plan])
 ✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 
-Ready to work. В чем помочь?
+Чим я можу вам допомогти?
 ```
 
 ### 🧅 4-Layer Session Start Protection (ONION)
@@ -82,7 +82,7 @@ This protocol is enforced through **4 redundant layers** to guarantee execution:
 - Follows project's ONION security philosophy
 
 3. **Follow core principles:**
-   - Internal dialogue: **Russian** (code comments/commits: English)
+   - Internal dialogue: **Adaptive** - match user's language (Ukrainian, Russian, or English) | Code comments/commits: English
    - Token-conscious: Monitor usage, optimize at 50%+
    - Discuss → Approve → Execute (never code before approval)
    - Stage-based workflow with atomic commits

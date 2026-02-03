@@ -27,16 +27,16 @@ Read the following files in order:
 ```markdown
 [SESSION START]
 ✓ RULES_CORE.md loaded (v7.1 Universal)
-✓ Language: Russian (internal dialogue)
+✓ Language: Adaptive (matches user's language)
 ✓ Token limit: [daily_limit] daily ([provider] [plan])
 ✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 
-Ready to work. В чем помочь?
+Чим я можу вам допомогти?
 ```
 
 ### Step 4: Follow Core Principles
-- **Internal dialogue (You ↔ User):** Russian
+- **Internal dialogue (You ↔ User):** Adaptive - match user's language (Ukrainian, Russian, or English)
 - **Code comments:** English only
 - **Commit messages:** English only (`type(scope): description`)
 - **Token-conscious:** Monitor usage, optimize at 50%+
