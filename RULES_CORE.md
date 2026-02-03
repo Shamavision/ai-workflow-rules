@@ -1,4 +1,4 @@
-# AI WORKFLOW & RULES CORE v6.1
+# AI WORKFLOW & RULES CORE v8.0
 
 ## 0. RULES SECURITY & LOCATION
 
@@ -533,6 +533,634 @@ Don't spend on waste: repetition, fluff, obvious.
 This creates respect: for user, for craft, for ecosystem.
 ````
 
+### 2.14. PRE-FLIGHT TOKEN APPROVAL v3.0 (MANDATORY)
+
+**CRITICAL CHANGE:** All tasks >5k tokens MUST show estimate BEFORE execution.
+
+**Philosophy:** Control without dictatorship. Inform, don't restrict.
+
+#### Approval Flow
+
+````
+User request
+    ↓
+[ANALYZE] Complexity, scope, risk factors
+    ↓
+[ESTIMATE] Calculate tokens + confidence level
+    ↓
+[PRESENT] Show cost breakdown to user
+    ↓
+[WAIT] User approval (unless auto-approve threshold)
+    ↓
+[EXECUTE] Track actual vs estimate
+    ↓
+[LEARN] Update variance history
+````
+
+#### Task Size Gates
+
+**MICRO (<5k tokens):**
+- ✅ Auto-approve, silent execution
+- No estimate shown (unless `//VERBOSE`)
+- Example: "Fix typo in line 42"
+
+**SMALL (5-15k tokens):**
+- ✅ Brief estimate, auto-approve in Green zone
+- Format: `[QUICK ESTIMATE] ~12k tokens (6%) • Proceeding...`
+- Example: "Update auth function"
+
+**MEDIUM (15-40k tokens):**
+- 🟡 **MANDATORY full breakdown**
+- 🟡 **Explicit user approval required**
+- Show: cost breakdown, confidence, budget impact
+- Example: "Refactor authentication middleware"
+
+**LARGE (40-80k tokens):**
+- 🟠 **Detailed breakdown + alternatives**
+- 🟠 **Suggest splitting into stages**
+- Show: risks, zone transition, staging options
+- Example: "Implement user dashboard"
+
+**CRITICAL (>80k or zone → Red):**
+- 🔴 **MANDATORY discussion**
+- 🔴 **Multi-session plan required**
+- Show: risk analysis, recommended split
+- Example: "Complete system refactor"
+
+#### Estimate Format (MEDIUM+ tasks)
+
+````markdown
+[TOKEN ESTIMATE]
+Request: "[brief user request]"
+
+Cost breakdown:
+┌─ Analysis phase
+│  ├─ Reading files (list): ~Xk
+│  ├─ Code analysis: ~Yk
+│  └─ Subtotal: ~Zk
+│
+├─ Execution phase
+│  ├─ Implementation: ~Xk
+│  ├─ Testing: ~Yk
+│  ├─ Documentation: ~Zk
+│  └─ Subtotal: ~Nk
+│
+└─ Safety buffer (15%): ~Mk
+   ═══════════════════════════════
+   TOTAL ESTIMATE: ~Tk tokens
+
+Confidence: [HIGH/MEDIUM/LOW] (±X%)
+Based on: [historical context or "no similar tasks"]
+
+Budget impact:
+• Currently available: Xk
+• After this task: Yk (Z% remaining)
+• Status: [current] → [after] (zone change if any)
+
+[APPROVE SPEND?] YES / ADJUST / DECLINE
+````
+
+#### Auto-Approve Thresholds
+
+Configurable in `.ai/token-limits.json`:
+
+````json
+{
+  "auto_approve_thresholds": {
+    "green_zone": 15000,      // 0-50% used
+    "moderate_zone": 8000,    // 50-70% used
+    "caution_zone": 3000,     // 70-90% used
+    "critical_zone": 0        // 90%+ used (NO auto-approve)
+  }
+}
+````
+
+**Behavior:**
+- If task estimate ≤ threshold for current zone → auto-approve with brief notice
+- If task estimate > threshold → require explicit user approval
+- User can adjust thresholds: `//CONFIG auto_approve 20000`
+
+#### Approval Keywords
+
+User responses:
+- `YES` / `Y` / `✓` / `go` / `proceed` / `давай` → Execute
+- `ADJUST` / `reduce` / `modify` → Discuss scope reduction
+- `DECLINE` / `NO` / `stop` / `wait` → Cancel, don't execute
+
+### 2.15. CONFIDENCE-BASED ESTIMATION
+
+**Innovation:** Not all estimates are equal. Be honest about accuracy.
+
+#### Confidence Levels
+
+**HIGH (±15%):**
+- Known task type with history
+- Clear scope, files identified
+- No external dependencies
+- Similar tasks: 5+ in variance_history
+- **Example:** "Fix bug in auth.ts line 123"
+
+**MEDIUM (±30%):**
+- Moderate task type with some history
+- Scope mostly clear, some unknowns
+- Few external dependencies
+- Similar tasks: 1-4 in variance_history
+- **Example:** "Refactor authentication flow"
+
+**LOW (±50%):**
+- Unknown or complex task type
+- Vague scope, many unknowns
+- External dependencies unclear
+- Similar tasks: 0 in variance_history
+- **Example:** "Optimize system performance"
+
+#### Confidence Scoring Algorithm
+
+````python
+# Pseudocode for AI understanding
+def calculate_confidence(request, history):
+    score = 100
+
+    # DEDUCTIONS (unknowns, risks)
+    if "refactor" in request: score -= 20  # Scope uncertainty
+    if "system" in request: score -= 15   # Multiple files
+    if not history.similar_tasks: score -= 25  # No learning data
+    if request.words < 5: score -= 20     # Vague requirement
+    if "optimize" in request: score -= 20  # Broad scope
+
+    # BONUSES (clarity, history)
+    if history.similar_tasks > 5: score += 15  # Good data
+    if "fix typo" in request: score += 20      # Very specific
+    if files_known and files == 1: score += 10 # Limited scope
+    if "line X" in request: score += 15        # Exact location
+
+    # MAP to levels
+    if score >= 85: return "HIGH", "±15%"
+    if score >= 65: return "MEDIUM", "±30%"
+    return "LOW", "±50%"
+````
+
+#### Adaptive Checkpoints (by confidence, not size)
+
+**HIGH confidence:**
+- No checkpoints → execute fully
+- "I know exactly what to do"
+
+**MEDIUM confidence:**
+- 1 checkpoint at 50% progress
+- "Let me validate mid-way"
+- Format: `[CHECKPOINT] 50% done, used Xk of Yk estimate. Continue? [YES/ADJUST]`
+
+**LOW confidence:**
+- 2 checkpoints at 33% and 66%
+- "Complex task, frequent validation"
+- Allow course correction
+
+**UNKNOWN task:**
+- Checkpoint after analysis phase
+- "Let me analyze first, then provide detailed estimate"
+
+### 2.16. LEARNING ENGINE & VARIANCE TRACKING
+
+**Purpose:** Improve estimate accuracy over time through variance analysis.
+
+#### Variance Recording
+
+After EVERY completed task, record:
+
+````json
+{
+  "task_id": "uuid-generated",
+  "date": "2026-02-03T14:30:00Z",
+  "request_brief": "Refactor auth middleware",
+  "task_type": "refactor",
+  "scope": "medium",
+  "complexity": "moderate",
+  "estimated_tokens": 40000,
+  "actual_tokens": 45000,
+  "variance_tokens": 5000,
+  "variance_percent": 12.5,
+  "confidence_level": "medium",
+  "confidence_range": "±30%",
+  "within_range": true,
+  "reason": "Additional type definitions needed",
+  "files_estimated": 3,
+  "files_actual": 4,
+  "user_approved_as_is": true
+}
+````
+
+**Storage:** `.ai/token-limits.json` → `variance_history` array
+
+#### Pattern Recognition
+
+After 10+ tasks, AI learns patterns:
+
+````markdown
+[LEARNING APPLIED]
+
+Historical pattern detected:
+• Task type: "refactor"
+• Historical variance: +35% average (from 8 similar tasks)
+• Reason: Scope creep, additional files discovered
+
+Base estimate: 30k
+Adjusted estimate: 40k (30k × 1.35)
+Confidence: MEDIUM (±30%)
+
+This estimate is more accurate due to learning.
+````
+
+**Common Patterns:**
+
+| Task Type | Typical Variance | Reason |
+|-----------|------------------|--------|
+| "Fix typo" | +5% | Usually accurate |
+| "Refactor X" | +35% | Scope creep common |
+| "Implement feature" | +40% | Requirements clarify mid-work |
+| "Optimize" | +50% | Broad scope, iterative |
+| "Quick fix" | +15% | Sometimes not so quick |
+| User says "simple" | +40% | Ironic but true |
+
+#### Accuracy Improvement Tracking
+
+System monitors its own accuracy:
+
+````markdown
+[VARIANCE ANALYSIS]
+
+Last 30 days performance:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Tasks completed: 34
+Total tokens: 1.2M
+
+Estimate accuracy:
+• Week 1: ±45% average variance (learning)
+• Week 2: ±35% (improving)
+• Week 3: ±28% (good)
+• Week 4: ±22% (excellent) ✓
+
+Best estimates: "fix bug" tasks (±8%)
+Worst estimates: "system refactor" (±52%)
+
+Confidence distribution:
+• HIGH: 24 tasks (71%)
+• MEDIUM: 8 tasks (23%)
+• LOW: 2 tasks (6%)
+
+System is learning effectively ✓
+````
+
+#### Self-Calibration (Month 1 analysis)
+
+After 30 days, system proposes optimizations:
+
+````markdown
+[SYSTEM SELF-ANALYSIS] Month 1 Complete
+
+Your work patterns detected:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Tasks/month: 47
+• Avg task size: 38k tokens (above typical 25k)
+• Approval rate: 89% as-is (rarely adjust)
+• Work style: 2-3 focused sessions/day
+• Peak hours: Morning (68% of tokens)
+
+Variance accuracy:
+• Month start: ±45% (learning phase)
+• Month end: ±22% (improved 51%!) ✓
+
+Optimization recommendations:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. RAISE auto-approve threshold
+   Current: 15k → Suggested: 25k
+   Reason: You trust estimates, rarely adjust
+   Impact: ~15 fewer approval prompts/month
+
+2. ENABLE batch mode by default
+   Reason: You prefer larger combined tasks
+   Impact: ~12% token savings potential
+
+3. LOWER checkpoint frequency
+   Reason: 95% of checkpoints you say "continue"
+   Impact: Smoother workflow, less interruption
+
+Apply these suggestions? [YES/REVIEW/NO]
+````
+
+### 2.17. EMERGENCY RESERVE MANAGEMENT
+
+**Philosophy:** Always keep 10-15% available for unexpected issues.
+
+#### Reserve Protection
+
+````markdown
+[BUDGET WARNING]
+
+Request: Large implementation (~70k tokens)
+
+Current situation:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Daily limit: 200k
+Used today: 135k (67%)
+Available: 65k (33%)
+Emergency reserve: 20k (10% protected)
+Safe available: 45k
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ Task (70k) exceeds safe available (45k)
+Would leave only 25k (<15% reserve)
+
+Why reserves matter:
+• Bug fixes during implementation
+• User clarifications that expand scope
+• Testing reveals unexpected issues
+• Documentation updates
+• Rollback scenarios
+• Emergency hot fixes
+
+Recommended options:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. REDUCE SCOPE (~40k)
+   Fit essential features within safe budget
+   Keep 25k reserve (12%)
+
+2. SPLIT ACROSS SESSIONS (~35k today, ~35k tomorrow)
+   Each session has adequate reserve
+   Safer approach, predictable budget
+
+3. PROCEED ANYWAY (RISKY)
+   Use reserve, no safety net remains
+   Only if urgent and willing to accept risk
+
+4. DEFER TO TOMORROW
+   Start fresh with full 200k limit
+   Full reserve protection
+
+Recommendation: Option 2 (SPLIT)
+
+Your choice? [1/2/3/4]
+````
+
+#### Reserve Calculation
+
+````python
+# Reserve policy
+daily_limit = 200000
+reserve_percent = 10  # Can be 10-15% user preference
+
+reserve_tokens = daily_limit * (reserve_percent / 100)
+safe_available = available_tokens - reserve_tokens
+
+if task_estimate > safe_available:
+    TRIGGER_RESERVE_WARNING()
+````
+
+#### Zone Transition Warnings
+
+````markdown
+[ZONE TRANSITION ALERT]
+
+Current zone: 🟢 Green (48% used)
+After this task: 🟡 Moderate (63% used)
+
+What changes in Moderate zone:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Auto-approve threshold: 15k → 8k
+• Response verbosity: Normal → Brief
+• Code display: Full files → Diff-only
+• Context compression: Standard → Aggressive
+• Explanation detail: Full → Essential only
+
+This is normal progression as budget is consumed.
+All functionality remains available.
+
+Continue with task? [YES/NO]
+````
+
+### 2.18. OPTIMIZATION STRATEGIES (The 10-15% Rule)
+
+**Goal:** Save 10-15% tokens per session by eliminating waste, not cutting quality.
+
+#### Types of Waste & Fixes
+
+**1. Redundant Reads (save ~40%)**
+
+````markdown
+❌ WASTEFUL:
+User: "Update function X in file.ts"
+AI: Reads file.ts (3k)
+[... makes edit ...]
+User: "Now update function Y in same file"
+AI: Reads file.ts AGAIN (3k) ← WASTE!
+
+✅ OPTIMIZED:
+AI maintains session cache of recently read files
+Second request: Uses cached content, saves 3k
+````
+
+**2. Exploratory Reads (save ~60%)**
+
+````markdown
+❌ WASTEFUL:
+User: "Fix typo in README.md"
+AI: "Let me read package.json to understand project structure"
+AI: "Let me check tsconfig.json too"
+AI: "Now checking dependencies..."
+AI: "OK, fixing typo..." (spent 8k on unnecessary context)
+
+✅ OPTIMIZED:
+AI: Reads only README.md (1k)
+AI: Fixes typo directly
+Saves: 7k tokens (87%)
+````
+
+**3. Over-Explanation (save ~30%)**
+
+````markdown
+❌ WASTEFUL:
+AI: "I'm going to fix the typo 'teh' to 'the'. A typo is a
+typographical error. In this case, the word 'teh' should be
+'the'. This is important because typos reduce readability
+and professionalism..." (2k tokens of obvious explanation)
+
+✅ OPTIMIZED:
+AI: "Fixed typo: 'teh' → 'the' in line 42"
+Saves: 1.8k tokens
+````
+
+**4. Premature Execution (save 100% on wrong path!)**
+
+````markdown
+❌ WASTEFUL:
+User: "Add authentication"
+AI: [immediately implements OAuth with Google/Facebook/GitHub]
+(30k tokens spent)
+User: "I meant simple password auth..."
+Result: 30k wasted, need to redo
+
+✅ OPTIMIZED:
+User: "Add authentication"
+AI: [DISCUSSION]
+Options:
+1. OAuth (Google/FB/GitHub) ~30k
+2. Password-based (bcrypt) ~15k
+3. JWT tokens ~20k
+Which approach?
+
+User: "Option 2"
+AI: Implements correctly the first time
+Saves: 30k wasted tokens + redo time
+````
+
+**5. Sequential Operations (save ~35%)**
+
+````markdown
+❌ WASTEFUL (sequential):
+User: "Update files A, B, C related to auth"
+AI: Reads A (3k) → edits A → commits
+AI: Reads B (3k) → edits B → commits
+AI: Reads C (2k) → edits C → commits
+Total: 25k tokens
+
+✅ OPTIMIZED (batched):
+AI: [OPTIMIZATION OPPORTUNITY]
+"Detected 3 related files, batch them?"
+User: "Yes"
+AI: Reads A, B, C together (7k)
+AI: Plans all edits (3k)
+AI: Executes batch (8k)
+AI: Single commit
+Total: 18k tokens
+Saves: 7k (28%)
+````
+
+#### Smart Batch Detection
+
+AI proactively detects batch opportunities:
+
+````markdown
+[OPTIMIZATION OPPORTUNITY]
+
+Detected pattern: Multiple related file updates
+
+You asked:
+├─ "Update auth.ts"
+├─ "Update middleware.ts"
+└─ "Update types.ts" (all auth-related)
+
+Cost analysis:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sequential: 15k + 12k + 8k = 35k
+Batched: 7k (read) + 4k (plan) + 12k (execute) = 23k
+
+💰 SAVE 12k tokens (34%)
+
+Batch them? [YES] / [NO, keep separate]
+````
+
+#### Deferred Execution Queue
+
+Not everything needs to happen NOW:
+
+````markdown
+[STAGE COMPLETE] Core implementation done
+Used: 28k tokens (estimate: 25k, +12% variance)
+
+Next in queue:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┌─ Unit tests (~8k)
+├─ Integration tests (~12k)
+├─ Documentation (~5k)
+└─ Total remaining: ~25k
+
+Your budget:
+• Used today: 78k (39%)
+• Available: 122k (61%)
+• After queue: ~97k (48%) 🟢 Green
+
+Options:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. CONTINUE ALL: Execute full queue (~25k)
+   Complete everything today
+
+2. TESTS ONLY: Unit + integration, defer docs (~20k)
+   Documentation can wait
+
+3. ESSENTIAL: Unit tests only (~8k)
+   Defer integration + docs
+
+4. DEFER ALL: Commit current work
+   Queue for tomorrow with fresh budget
+
+Recommendation: Option 1 (good budget remaining)
+
+Your choice? [1/2/3/4]
+````
+
+#### Compression Triggers (from v2.0, still valid)
+
+Auto-compress context at:
+- Every 3 completed tasks
+- 50% token usage
+- After `git push` (post-push compression)
+- Manual: `//COMPACT` command
+
+Saves: 40-60% of context tokens
+
+#### Multi-Session Forecasting
+
+````markdown
+[SESSION FORECAST]
+
+Today's queue:
+├─ Task A: ~35k (approved, in progress)
+├─ Task B: ~28k (in queue)
+└─ Task C: ~40k (proposed)
+
+Budget projection:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Current: 52k used (26%)
+After A: ~87k (43%) 🟢 Green
+After B: ~115k (57%) 🟡 Moderate ← Zone change
+After C: ~155k (77%) 🟠 Caution
+
+Recommendation:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Complete A + B today (~115k, stay Moderate)
+• Defer C to tomorrow (fresh 200k budget)
+• Maintains comfortable reserve
+
+Alternative:
+• Do all three (~155k, enter Caution zone)
+• Risky: only 45k reserve (22%)
+
+Your decision? [A+B / ALL / CUSTOM]
+````
+
+#### Optimization Checklist (AI internal)
+
+Before each response >5k tokens, AI checks:
+- [ ] Can I use Edit instead of Write? (saves read)
+- [ ] Can I show diff instead of full file? (saves 80%)
+- [ ] Is this explanation necessary or obvious? (brevity)
+- [ ] Am I repeating context from earlier? (reference it)
+- [ ] Can I batch multiple operations? (savings 30-40%)
+- [ ] Should I compress context now? (after 3 tasks)
+- [ ] Is this task actually needed NOW? (defer option)
+
+#### Success Metrics
+
+**Week 1:**
+- ✅ At least 8% tokens saved vs baseline
+- ✅ Zero redundant file reads detected
+- ✅ Batching suggestions shown ≥3 times
+
+**Month 1:**
+- ✅ 10-15% tokens saved consistently
+- ✅ User adopts batching ≥50% when suggested
+- ✅ Deferred execution used ≥20% of opportunities
+
 ---
 
 ## 3. ITERATIVE WORKFLOW (The Sacred Process)
@@ -915,6 +1543,7 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
+*   **v8.0** [2026-02-03] – **TOKEN CONTROL v3.0: INTELLIGENT BUDGET MANAGEMENT**. Major upgrade from reactive monitoring to proactive control. New: Pre-flight token approval (mandatory estimates BEFORE execution), confidence-based estimation (HIGH/MEDIUM/LOW ±%), learning engine with variance tracking, emergency reserve protection (10-15%), smart batch detection, deferred execution queue, self-calibrating thresholds. Philosophy: "Control without dictatorship — inform, don't restrict." Target: 10-15% token savings without quality loss. Added Sections 2.14-2.18. Full spec: `.ai/token-control-v3-spec.md`.
 *   **v7.1** [2026-02-02] – Universal AGENTS.md support added. Framework now works with 90%+ AI coding tools (Claude Code, Cursor, Windsurf, Aider, Continue, OpenAI Codex, Google Jules, etc.) through AGENTS.md universal standard. Auto-loading in most tools. BUG-005 fixed (Session Start Protocol not applied automatically).
 *   **v6.1** [2026-02-01] – Added POST-PUSH COMPRESSION (mandatory workflow after git push) and FOCUS OPTIMIZATION (Quality > Speed philosophy). Philosophy: "We don't save tokens, we concentrate attention on critical tasks."
 *   **v6.0** [2026-01-31] – Token Management v2.0: context compression, lazy loading, verbosity auto-scaling, session checkpoints, graduated warnings, monthly tracking. Added SESSION START PROTOCOL (Section 0) for mandatory RULES reading.
@@ -926,4 +1555,4 @@ Before proposing solution:
 
 ---
 
-*This document is living. Update with approval. Last updated: 2026-02-02 (v7.1 Universal)*
+*This document is living. Update with approval. Last updated: 2026-02-03 (v8.0 Token Control v3.0)*
