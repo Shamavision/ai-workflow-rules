@@ -149,6 +149,6 @@ Verify at session start:
 
 ---
 
-**Last Updated:** 2026-02-02
-**Framework Version:** 7.1 Universal
+**Last Updated:** 2026-02-03
+**Framework Version:** 8.0 (Token Control v3.0)
 **Made in Ukraine 🇺🇦**

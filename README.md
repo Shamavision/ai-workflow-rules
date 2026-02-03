@@ -7,7 +7,7 @@
 ### **Open Source Security Framework for Ukrainian Developers**
 
 <p>
-  <img src="https://img.shields.io/badge/version-7.1%20Universal-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
+  <img src="https://img.shields.io/badge/version-8.0%20Token%20Control%20v3.0-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square&labelColor=1D1D1B" alt="License">
   <img src="https://img.shields.io/badge/status-Production%20Ready-success?style=flat-square&labelColor=1D1D1B" alt="Status">
   <img src="https://img.shields.io/badge/AGENTS.md-Universal-blue?style=flat-square&labelColor=1D1D1B" alt="AGENTS.md">
@@ -16,7 +16,7 @@
 
 **3-layer protection framework for AI-assisted development.**
 **Built for security, compliance, and Ukrainian market requirements.**
-**✨ NEW in v7.1: Universal AGENTS.md support for ALL AI coding tools!**
+**✨ NEW in v8.0: Token Control v3.0 — Intelligent budget management with pre-flight approval!**
 
 ---
 
@@ -47,7 +47,7 @@
 |---------|-------------|----------------|
 | 🛡️ **Security Protection** | Automatic scanning for secrets, API keys, and vulnerabilities | Prevent costly data leaks before they happen |
 | 🇺🇦 **Ukrainian Compliance** | Zero tolerance for russian tracking services | GDPR-ready, ethical code by default |
-| 🤖 **AI Budget Management** | Token tracking, compression, optimization | Save 40-60% tokens, work smarter |
+| 🤖 **Token Control v3.0** | Pre-flight approval, confidence estimation, learning engine | 10-15% savings without quality loss |
 | ⚡ **Pre-Deploy Checks** | 9 automated audits (SEO, security, dependencies) | Ship clean code every time |
 | 🌍 **Universal AI Support** | AGENTS.md standard: Claude, Cursor, Windsurf, Aider, OpenAI + 60k projects | Auto-loaded in 90%+ AI tools |
 | 🚀 **Session Start Protocol** | 3-layer enforcement (ONION): file directive + hook + manual fallback | AI loads rules automatically, guaranteed |

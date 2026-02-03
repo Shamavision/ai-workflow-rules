@@ -32,15 +32,25 @@ One-page guide to AI Workflow Rules Framework. Print this or keep it open while 
 
 Type these in conversation with your AI assistant:
 
+### Core Commands
 | Command | What It Does |
 |---------|--------------|
 | `//START` | Initialize session (load RULES, auto-configure) |
-| `//TOKENS` | Show token usage status |
+| `//TOKENS` | Show detailed token usage & budget status |
 | `//CHECK:SECURITY` | Security audit (secrets, XSS, injection) |
 | `//CHECK:LANG` | Russian content detection |
 | `//CHECK:ALL` | Full audit (security + performance + i18n) |
-| `//COMPACT` | Compress context (saves tokens) |
+| `//COMPACT` | Compress context (saves 40-60% tokens) |
 | `//THINK` | Show AI reasoning in `<thinking>` tags |
+
+### Token Control v3.0 Commands (NEW)
+| Command | What It Does | Example |
+|---------|--------------|---------|
+| `//ESTIMATE <task>` | Get cost estimate without executing | `//ESTIMATE "refactor auth"` |
+| `//VARIANCE` | Show learning statistics & accuracy | Shows estimate accuracy trends |
+| `//BATCH` | Suggest batch optimization for pending tasks | Detects related file updates |
+| `//CONFIG <setting> <value>` | Adjust thresholds | `//CONFIG auto_approve 25000` |
+| `//EXPORT <file>` | Export token analytics | `//EXPORT tokens-report.json` |
 
 ---
 
@@ -174,20 +184,43 @@ Full list: `.ai/forbidden-trackers.json`
 
 ---
 
-## 📊 Token Management
+## 📊 Token Management v3.0
 
-| Status | % Used | Action |
-|--------|--------|--------|
-| 🟢 Green | 0-50% | Normal mode |
-| 🟡 Moderate | 50-70% | Brief mode, optimize |
-| 🟠 Caution | 70-90% | Silent mode, compress |
-| 🔴 Critical | 90-95% | Finalize only |
-| ⛔ Emergency | 95-100% | Commit & stop |
+### Budget Zones
 
-**Save tokens:**
-- Use `//COMPACT` at 50% usage
-- Delete optional files after reading
-- Use diff-only mode for edits
+| Status | % Used | Auto-Approve | Action |
+|--------|--------|--------------|--------|
+| 🟢 Green | 0-50% | Up to 15k | Normal mode, full capacity |
+| 🟡 Moderate | 50-70% | Up to 8k | Brief mode, optimizations active |
+| 🟠 Caution | 70-90% | Up to 3k | Silent mode, aggressive compression |
+| 🔴 Critical | 90-95% | None | Finalize only, commit + stop |
+| ⛔ Emergency | 95-100% | None | Commit immediately & hard stop |
+
+### Pre-Flight Approval (NEW in v3.0)
+
+Tasks >5k tokens show estimate BEFORE execution:
+
+```
+[TOKEN ESTIMATE]
+Task: "Refactor auth middleware"
+Cost: ~42k tokens
+Confidence: MEDIUM (±30%)
+
+[APPROVE SPEND?] YES / ADJUST / DECLINE
+```
+
+### Save Tokens (10-15% savings)
+
+**Automatic optimizations:**
+- ✅ Smart batching (batch related file updates)
+- ✅ Deferred execution (postpone non-critical tasks)
+- ✅ Context compression (at 50%, after git push)
+- ✅ Emergency reserves (10-15% protected)
+
+**Manual commands:**
+- `//COMPACT` - Compress context now
+- `//ESTIMATE` - Check cost before executing
+- `//BATCH` - See batch opportunities
 
 ---
 
@@ -230,6 +263,6 @@ git commit --no-verify -m "docs: legitimate exception"
 
 Questions? [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
 
-**AI Workflow Rules Framework v7.1 Universal** • Made in Ukraine 🇺🇦
+**AI Workflow Rules Framework v8.0** • Token Control v3.0 • Made in Ukraine 🇺🇦
 
 </div>

@@ -247,6 +247,7 @@ git commit --no-verify
 
 ## 📝 Version History
 
+- **v8.0** [2026-02-03] - **TOKEN CONTROL v3.0: INTELLIGENT BUDGET MANAGEMENT**. Major upgrade from reactive monitoring to proactive control. Pre-flight token approval, confidence-based estimation (HIGH/MEDIUM/LOW ±%), learning engine with variance tracking, emergency reserve protection (10-15%), smart batch detection, deferred execution queue, self-calibrating thresholds. Philosophy: "Control without dictatorship — inform, don't restrict." Target: 10-15% token savings without quality loss. See [RULES_CORE.md](RULES_CORE.md) Sections 2.14-2.18.
 - **v7.2.1** [2026-02-02] - Repository made public. GitHub branch protection configured (onion_protect ruleset).
 - **v7.2** [2026-02-02] - Added Layer 0: CLAUDE.md for universal VSCode Extension support. Now 4-layer protection system. Solves VSCode auto-load limitation.
 - **v7.1** [2026-02-02] - Universal AGENTS.md support added
@@ -266,5 +267,5 @@ This is an open-source framework. See [README.md](README.md) for contribution gu
 
 ---
 
-**Last Updated:** 2026-02-02
-**Framework Version:** 7.2 Universal
+**Last Updated:** 2026-02-03
+**Framework Version:** 8.0 (Token Control v3.0)
