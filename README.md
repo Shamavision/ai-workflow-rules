@@ -535,9 +535,27 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rule
 
 ### AS-IS, NO WARRANTY
 
-This framework is provided **"AS-IS"** without warranty of any kind, express or implied.
+This framework is provided **"AS-IS"** under **GPL v3 License** without warranty of any kind, express or implied.
 
 **YOU USE IT AT YOUR OWN RISK.**
+
+### License & Distribution
+
+This framework is licensed under **GNU General Public License v3.0**:
+
+**✅ You CAN:**
+- Use commercially (free for all business use)
+- Modify privately (no obligation to share)
+- Distribute as-is (keep attribution)
+
+**⚠️ You MUST (if distributing modified framework):**
+- Share modifications under GPL v3
+- Keep source code available
+- Maintain copyright notices
+
+**📖 See [NOTICE.md](NOTICE.md) for full GPL v3 explanation.**
+
+**YOUR application code remains private** - GPL v3 only applies to framework itself.
 
 ### What We Are NOT Responsible For
 
@@ -883,15 +901,93 @@ We welcome contributions from the community!
 
 ## 📜 License
 
-**MIT License** - See [LICENSE](LICENSE) for full terms.
+**GPL v3 License** - See [LICENSE](LICENSE) for full terms.
 
 ```
-Copyright (c) 2025 Wellme™(Ukraine)
+GNU General Public License v3.0
+Copyright (c) 2025 Wellme™ (Ukraine)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy...
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License v3.
 ```
 
-**TL;DR:** Free to use, modify, distribute. No warranty. Attribution appreciated.
+**TL;DR:** Free for commercial use. Can't resell framework itself. Your code stays private.
+
+**📖 Read [NOTICE.md](NOTICE.md) for detailed explanation.**
+
+---
+
+## ❓ GPL v3 FAQ
+
+<details>
+<summary><b>🔓 Click to understand GPL v3 licensing</b></summary>
+
+### Q: Can I use this for commercial projects?
+
+**A: YES!** 100% free for commercial use:
+- ✅ Startups and enterprises
+- ✅ Client projects (agencies)
+- ✅ SaaS products
+- ✅ Any commercial application
+
+### Q: Do I need to open-source my project?
+
+**A: NO!** Your code stays private.
+
+**Framework = Tool** (like Git, which is also GPL)
+- Git is GPL v2 → companies don't open-source because they use Git
+- Same here → use the framework, keep your code private
+
+### Q: When must I share code?
+
+**A: Only if you:**
+1. Modify the framework itself (hooks, scripts, rules)
+2. AND distribute modified version (sell, publish, share)
+
+**If you use as-is:** Zero obligations.
+
+### Q: Why GPL v3 instead of MIT?
+
+**A: Protection from exploitation.**
+
+Without GPL:
+```
+❌ Someone takes our work → adds small change → sells for $99
+❌ Ukrainian community loses free access
+```
+
+With GPL v3:
+```
+✅ Ukrainian businesses use freely
+✅ Reselling becomes impractical (code must stay open)
+✅ Community benefits forever
+```
+
+**We're not against making money. We're against locking community tools behind paywalls.**
+
+### Q: What if my company fears GPL?
+
+**A: Common misconception.**
+
+GPL v3 applies to **framework code**, not to projects using it.
+
+**Still concerned?** Contact: opensource@wellme.ua
+
+### Real Example
+
+```
+Your Company "Laba" builds e-commerce:
+1. Uses ai-workflow-rules framework ✅
+2. Develops React/Node.js app ✅
+3. Keeps app code private ✅
+4. Sells product to users ✅
+
+GPL v3 obligations: ZERO
+```
+
+**📖 Full details:** [NOTICE.md](NOTICE.md)
+
+</details>
 
 ---
 
