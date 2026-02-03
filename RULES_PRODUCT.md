@@ -2658,6 +2658,7 @@ TOTAL (Enterprise):             $830+/month
 ---
 
 ## CHANGELOG
+*   **v1.4** [2026-02-03] – **SECURITY CRITICAL:** Added Section 9: CYBER DEFENSE (Ukrainian Market Security). Comprehensive threat model (DDoS, data breaches, reputation attacks), 3-layer protection (infrastructure, application, monitoring), 4 incident response scenarios, business continuity planning. Added pre-commit audit trail logging (legal protection evidence). Total: 900+ lines of real-world security guidance for Ukrainian companies under active cyber threat.
 *   **v1.3** [2026-01-31] – Enhanced Section 8: forbidden-trackers.json v2.0 with npmPackages support, category-based structure, improved seo-check.sh with package.json scanning
 *   **v1.2** [2025-01-27] – Added Section 8: FORBIDDEN TRACKING (Russian Services Protection)
 *   **v1.1** [2025-01-27] – Added Section 7: SEO/GEO Strategy (Ukrainian market)
@@ -2665,4 +2666,4 @@ TOTAL (Enterprise):             $830+/month
 
 ---
 
-*Stored in private repo with RULES_CORE.md. Last updated: 2026-01-31*
+*Stored in public repo (open source). Last updated: 2026-02-03*
