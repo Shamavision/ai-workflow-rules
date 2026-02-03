@@ -37,6 +37,91 @@
 
 ---
 
+## 🎯 AI Workflow Manifesto
+
+> **Five principles that actually work in production.**
+
+### 1. **Discuss → Approve → Execute**
+
+**What it means:** AI proposes, you decide. Never code before alignment.
+
+**Example:**
+```
+❌ BAD: "Add auth" → AI codes OAuth immediately → wrong approach, redo
+✅ GOOD: "Add auth" → AI shows 3 options + costs → you pick → done right
+```
+
+**Why:** One 2-minute discussion saves hours of rework.
+
+---
+
+### 2. **Code is Consequence, Not Goal**
+
+**What it means:** Solve problems, don't chase lines of code. Best code is code you don't write.
+
+**Example:**
+```
+❌ BAD: "Write custom caching system" (200 lines, 3 days, bugs)
+✅ GOOD: "Use Redis" (10 lines, 1 hour, battle-tested)
+```
+
+**Why:** Simple solutions beat clever abstractions 99% of the time.
+
+---
+
+### 3. **Token-Conscious by Design**
+
+**What it means:** AI time costs money. Budget awareness = efficiency. Monitor, optimize, never waste.
+
+**Example:**
+```
+❌ BAD: "Let me read 15 files to understand..." (35k tokens wasted)
+✅ GOOD: "Which files should I read?" (5k tokens, targeted)
+```
+
+**Why:** 50% token savings = 2x more work per day. [See real metrics →](examples/dialog-token-optimization.md)
+
+---
+
+### 4. **Security & Ukraine First**
+
+**What it means:** Zero tolerance for secrets leaks, russian services, compliance violations.
+
+**Example:**
+```
+🚨 BLOCKED: API key in code → pre-commit hook stops you
+🚨 BLOCKED: Yandex tracker → pre-commit hook stops you
+✅ PASSED: process.env secrets → safe to commit
+```
+
+**Why:** One breach destroys your business. Prevention is cheaper than recovery. [See security audit →](examples/dialog-security-review.md)
+
+---
+
+### 5. **Simple Tools > Complex Frameworks**
+
+**What it means:** Don't solve imaginary future problems. YAGNI (You Aren't Gonna Need It).
+
+**Example:**
+```
+❌ BAD: "Add microservices" (nobody asked, small app, overkill)
+✅ GOOD: "10 lines solve it" (works today, maintainable tomorrow)
+```
+
+**Why:** Complexity is a debt. Simple code survives turnover, rewrites, and time.
+
+---
+
+<div align="center">
+
+**These aren't theories. These are patterns from 100+ real projects.**
+
+**[See them in action →](examples/)** • **[Start using now →](#-quick-start)**
+
+</div>
+
+---
+
 ## 💡 What Is This?
 
 **AI Workflow Rules Framework** is a production-ready template for developers working with AI coding assistants (Claude Code, GitHub Copilot, Cursor, ChatGPT). Think of it as **security guardrails + best practices** for AI-powered development.
