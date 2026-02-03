@@ -528,6 +528,101 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rule
 
 ---
 
+## ⚠️ Legal Disclaimer & Liability
+
+<details>
+<summary><b>⚖️ Click to read full disclaimer (IMPORTANT)</b></summary>
+
+### AS-IS, NO WARRANTY
+
+This framework is provided **"AS-IS"** without warranty of any kind, express or implied.
+
+**YOU USE IT AT YOUR OWN RISK.**
+
+### What We Are NOT Responsible For
+
+Wellme™ and framework contributors are **NOT liable** for:
+
+- ❌ Legal consequences of using this framework
+- ❌ Compliance violations in your projects
+- ❌ Data breaches or security incidents
+- ❌ Financial losses or business damages
+- ❌ Regulatory fines or penalties
+- ❌ Reputational damage
+- ❌ Any direct, indirect, incidental, or consequential damages
+
+### Your Responsibilities
+
+By using this framework, YOU are responsible for:
+
+- ✅ Verifying framework meets YOUR legal requirements
+- ✅ Consulting YOUR legal advisors before production use
+- ✅ Testing thoroughly in YOUR environment
+- ✅ Implementing YOUR own additional security measures
+- ✅ Keeping framework updated (we don't guarantee updates)
+- ✅ Compliance with YOUR jurisdiction's laws
+
+### Ukrainian Market Policy
+
+**Russian Content Zero Tolerance:**
+
+This framework implements **ZERO TOLERANCE** for russian services/content as:
+1. Security measure (data protection from hostile state)
+2. Compliance guideline (sanctions, GDPR, Ukrainian law)
+3. Best practice recommendation (Ukrainian market safety)
+
+**HOWEVER:**
+- We do NOT provide legal advice
+- We do NOT guarantee legal compliance
+- We do NOT guarantee this is sufficient for YOUR specific case
+- **Consult YOUR legal team** before relying on this policy
+
+### No Support Obligation
+
+We provide this open-source for community benefit:
+
+- ❌ We are NOT obligated to provide support
+- ❌ We are NOT obligated to fix issues
+- ❌ We are NOT obligated to update framework
+- ❌ We are NOT obligated to respond to requests
+
+Community contributions welcome, but **NO guarantees**.
+
+### Limitation of Liability
+
+**Maximum liability:** USD $0 (ZERO)
+
+Under no circumstances shall Wellme™ or contributors be liable for any amount.
+
+### Indemnification
+
+By using this framework, you agree to:
+- Indemnify Wellme™ from any claims arising from your use
+- Hold Wellme™ harmless from any damages
+- Not sue Wellme™ for any reason related to framework use
+
+### Governing Law
+
+This disclaimer is governed by laws of Ukraine.
+
+Disputes shall be resolved in courts of Kyiv, Ukraine.
+
+### Acceptance
+
+By downloading, installing, or using this framework, you acknowledge that you have read, understood, and agree to be bound by this disclaimer.
+
+**If you do not agree, DO NOT use this framework.**
+
+---
+
+**Last Updated:** 2026-02-03
+
+**TL;DR:** Use at your own risk. We help Ukrainian community. Don't sue us. Consult your lawyers. 🇺🇦
+
+</details>
+
+---
+
 ## 🤖 Supported AI Assistants
 
 <details>

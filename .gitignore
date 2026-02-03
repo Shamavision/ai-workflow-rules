@@ -19,6 +19,9 @@
 # Session markers (temporary, per-session)
 .ai/.session-started
 
+# Audit trail (local only, legal protection evidence)
+.ai/audit-trail.log
+
 # ==============================================================================
 # LAYER 2: LICENSE & ACTIVATION
 # ==============================================================================

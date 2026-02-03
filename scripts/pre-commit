@@ -67,6 +67,34 @@ print_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
 }
 
+# Log security events to audit trail (legal protection)
+log_to_audit_trail() {
+    local event_type="$1"
+    local details="$2"
+    local audit_file=".ai/audit-trail.log"
+
+    # Create .ai directory if doesn't exist
+    mkdir -p .ai
+
+    # Append to audit trail
+    cat >> "$audit_file" << EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[$(date '+%Y-%m-%d %H:%M:%S %Z')] COMMIT BLOCKED
+Event: $event_type
+Details: $details
+Framework: ai-workflow-rules v8.0
+Policy: RULES_PRODUCT.md Section 3 (Zero Tolerance)
+User: $(git config user.name) <$(git config user.email)>
+Branch: $(git branch --show-current)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+
+    echo -e "${BLUE}📝 Security event logged to audit trail${NC}"
+    echo -e "${BLUE}   Location: $audit_file${NC}"
+    echo ""
+}
+
 # ==============================================================================
 # PATTERNS TO DETECT
 # ==============================================================================
@@ -478,6 +506,9 @@ if [ "$SECRETS_FOUND" == "true" ]; then
     echo "⚠️  Only use if you're ABSOLUTELY SURE files are safe!"
     echo ""
 
+    # Log to audit trail (legal protection)
+    log_to_audit_trail "SECRETS_DETECTED" "Staged files: $STAGED_FILES"
+
     exit 1
 fi
 
@@ -505,6 +536,9 @@ if [ "$TRACKERS_FOUND" == "true" ]; then
     echo "Bypass (emergency only): git commit --no-verify"
     echo "⚠️  Only use if tracker is for testing/demo purposes!"
     echo ""
+
+    # Log to audit trail (legal protection)
+    log_to_audit_trail "RUSSIAN_TRACKERS_DETECTED" "Staged files: $STAGED_FILES"
 
     exit 1
 fi
