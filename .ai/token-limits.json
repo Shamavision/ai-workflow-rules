@@ -1,7 +1,10 @@
 {
-  "_comment": "🤖 Universal AI Token Tracker v3.0 - Just Works™",
+  "_comment": "🤖 Universal AI Token Tracker v3.0 - Intelligent Budget Management",
   "_disclaimer": "Limits are CONSERVATIVE (intentionally 10-20% lower). You'll get early warnings, not surprises.",
   "_howto": "1. Set 'provider' below  2. Set 'plan'  3. Copy limits from PRESETS (or leave defaults)  4. Done!",
+  "_version": "3.0.0",
+  "_updated": "2026-02-03",
+  "_changelog": "v3.0: Pre-flight approval, confidence-based estimation, variance learning, emergency reserves, smart batching",
 
   "provider": "anthropic",
   "plan": "pro",
@@ -89,11 +92,91 @@
     "lazy_loading_prevented_reads": 0
   },
 
+  "v3_features": {
+    "_comment": "Token Control v3.0 - Intelligent Budget Management",
+
+    "auto_approve_thresholds": {
+      "_comment": "Tasks below threshold auto-approve (based on current zone)",
+      "green_zone": 15000,
+      "moderate_zone": 8000,
+      "caution_zone": 3000,
+      "critical_zone": 0
+    },
+
+    "session_tracking": {
+      "_comment": "Real-time session budget tracking",
+      "used": 0,
+      "committed": 0,
+      "available": 150000,
+      "reserve_percent": 10,
+      "reserve_tokens": 15000,
+      "safe_available": 135000
+    },
+
+    "variance_history": {
+      "_comment": "Learning data for estimate accuracy improvement",
+      "_max_records": 100,
+      "_current_count": 0,
+      "_example_record": {
+        "task_id": "uuid-here",
+        "date": "2026-02-03T14:30:00Z",
+        "request_brief": "Refactor auth middleware",
+        "task_type": "refactor",
+        "scope": "medium",
+        "complexity": "moderate",
+        "estimated_tokens": 40000,
+        "actual_tokens": 45000,
+        "variance_tokens": 5000,
+        "variance_percent": 12.5,
+        "confidence_level": "medium",
+        "confidence_range": "±30%",
+        "within_range": true,
+        "reason": "Additional type definitions needed",
+        "files_estimated": 3,
+        "files_actual": 4,
+        "user_approved_as_is": true
+      },
+      "tasks": []
+    },
+
+    "learning_stats": {
+      "_comment": "Accuracy metrics for self-improvement",
+      "total_tasks": 0,
+      "avg_variance_percent": 0,
+      "high_confidence_tasks": 0,
+      "medium_confidence_tasks": 0,
+      "low_confidence_tasks": 0,
+      "accuracy_trend": "improving",
+      "last_calibration": null
+    },
+
+    "batch_opportunities": {
+      "_comment": "Track detected batch optimizations",
+      "detected": 0,
+      "accepted": 0,
+      "tokens_saved": 0
+    },
+
+    "deferred_tasks": {
+      "_comment": "Queue of tasks user chose to defer",
+      "queue": []
+    },
+
+    "learning_enabled": true,
+    "self_calibration_enabled": true,
+    "batch_detection_enabled": true
+  },
+
   "notes": [
+    "v3.0: Intelligent budget management with pre-flight approval",
     "Limits are CONSERVATIVE (10-20% lower) for early warnings",
     "Check PRESETS above for your provider and plan",
+    "Pre-flight estimates shown BEFORE execution (tasks >5k)",
+    "Confidence levels: HIGH (±15%), MEDIUM (±30%), LOW (±50%)",
+    "System learns from variance to improve estimates over time",
+    "Emergency reserve (10-15%) always protected",
+    "Smart batching suggests optimizations automatically",
     "Context compression auto-triggers at 50% (saves 40-60% tokens)",
-    "Session checkpoints created at 80% tokens",
     "AI automatically updates this file - no manual tracking needed"
   ],
 
