@@ -1,14 +1,12 @@
 <div align="center">
 
-<img src="public/wellme-logo.svg" alt="Wellme™ - AI Workflow Rules" width="500">
-
-# AI Workflow Rules Framework
+<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="400">
 
 ### **Open Source Security Framework for Ukrainian Developers**
 
 <p>
   <img src="https://img.shields.io/badge/version-8.0%20Token%20Control%20v3.0-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
-  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square&labelColor=1D1D1B" alt="License">
+  <img src="https://img.shields.io/badge/license-GPL%20v3-blue?style=flat-square&labelColor=1D1D1B" alt="License">
   <img src="https://img.shields.io/badge/status-Production%20Ready-success?style=flat-square&labelColor=1D1D1B" alt="Status">
   <img src="https://img.shields.io/badge/AGENTS.md-Universal-blue?style=flat-square&labelColor=1D1D1B" alt="AGENTS.md">
   <img src="https://img.shields.io/badge/Made%20in-Ukraine%20🇺🇦-0099CC?style=flat-square&labelColor=1D1D1B" alt="Made in Ukraine">
@@ -1032,10 +1030,10 @@ This framework solves **our** problems. We hope it helps you too.
 
 ---
 
-<img src="public/wellme-logo.svg" alt="Wellme™" width="300">
+<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="250">
 
-**AI Workflow Rules Framework v7.1 Universal**
-*Open Source • Made in Ukraine 🇺🇦*
+**AI Workflow Rules Framework v8.0**
+*Open Source • GPL v3 • Made in Ukraine 🇺🇦*
 
 [wellme.ua](https://wellme.ua) • © 2025 Wellme™
 
