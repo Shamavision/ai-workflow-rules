@@ -138,9 +138,19 @@ npx github:Shamavision/ai-workflow-rules init
 ⚠️ **Important:** Open terminal in your **project's root directory** (not in `/Downloads` or temp folders)!
 
 **Mac / Linux / WSL:**
+
+**Option 1 (Recommended):**
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/scripts/install.sh)
 ```
+
+**Option 2 (Alternative - pipe):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/scripts/install.sh | bash
+```
+
+> **⚠️ Important:** Make sure to include `bash <(...)` or `| bash` at the end!
+> Without it, the command will only **display** the script instead of **executing** it.
 
 **Windows PowerShell:**
 ```powershell
