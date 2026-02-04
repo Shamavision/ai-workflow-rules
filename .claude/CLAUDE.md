@@ -14,11 +14,20 @@ If ANY of these conditions apply:
 
 → **STOP and execute Session Start Protocol immediately**
 
-### Step 2: Load Project Rules
-Read the following files in order:
-1. `AGENTS.md` - Project overview and core principles
-2. `RULES_CORE.md` (Sections 0, 2, 7) - Workflow rules, token management, language rules
-3. `.ai/token-limits.json` - Token budget tracking
+### Step 2: Load Project Rules (Smart Context Loading)
+
+**NEW (v8.1 Modular):** Context-based loading for token efficiency
+
+1. **Read config:** `.ai/config.json` to determine context preset
+2. **Load context:**
+   - If `config.context = "minimal"` → Read `.ai/contexts/minimal.context.md` (~13k tokens)
+   - If `config.context = "standard"` → Read `.ai/contexts/standard.context.md` (~18k tokens)
+   - If `config.context = "ukraine-full"` → Read `.ai/contexts/ukraine-full.context.md` (~25k tokens)
+   - If `config.context = "enterprise"` → Read `.ai/contexts/enterprise.context.md` (~30k tokens)
+   - **Fallback:** If no config or contexts → Read `RULES_CORE.md` (legacy mode)
+3. **Token budget:** Read `.ai/token-limits.json` for tracking
+
+**Why this matters:** Selective loading saves 40-70% tokens for specific users.
 
 ### Step 3: Display SESSION START Confirmation
 
@@ -26,13 +35,18 @@ Read the following files in order:
 
 ```markdown
 [SESSION START]
-✓ RULES_CORE.md loaded (v7.1 Universal)
+✓ Context loaded: [context_name] (v8.1 Modular)
+✓ Token budget: ~[context_tokens]k for rules ([percentage]% of daily)
 ✓ Language: Adaptive (matches user's language)
 ✓ Token limit: [daily_limit] daily ([provider] [plan])
 ✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 
 Чим я можу вам допомогти?
+
+**Examples:**
+- Minimal: "✓ Context: minimal (~13k, 6.5% of daily)"
+- Ukraine-full: "✓ Context: ukraine-full (~25k, 12.5% of daily)"
 ```
 
 ### Step 4: Follow Core Principles
@@ -111,9 +125,16 @@ When user sends these commands:
 ```
 .
 ├── AGENTS.md              # Project overview (auto-loaded by CLI)
-├── RULES_CORE.md          # Full AI workflow rules (v7.1)
+├── RULES_CORE.md          # Full AI workflow rules (v8.0, source of truth)
 ├── RULES_PRODUCT.md       # Ukrainian market specifics
 ├── .ai/
+│   ├── config.json        # 🆕 Context selection (minimal/standard/ukraine-full/enterprise)
+│   ├── registry.json      # 🆕 Context & module metadata
+│   ├── contexts/          # 🆕 Pre-bundled context files
+│   │   ├── minimal.context.md (~13k tokens)
+│   │   ├── standard.context.md (~18k tokens)
+│   │   ├── ukraine-full.context.md (~25k tokens)
+│   │   └── enterprise.context.md (~30k tokens)
 │   ├── token-limits.json  # Token budget tracking
 │   ├── locale-context.json
 │   └── forbidden-trackers.json
@@ -149,6 +170,19 @@ Verify at session start:
 
 ---
 
-**Last Updated:** 2026-02-03
-**Framework Version:** 8.0 (Token Control v3.0)
+**Last Updated:** 2026-02-04
+**Framework Version:** 8.1 (Modular Contexts v1.0)
 **Made in Ukraine 🇺🇦**
+
+---
+
+## 🆕 What's New in v8.1 Modular
+
+**Token Efficiency via Selective Loading:**
+- ✅ 4 pre-bundled contexts (minimal/standard/ukraine-full/enterprise)
+- ✅ Smart context selection via `.ai/config.json`
+- ✅ Token savings: 40-70% for international users (13k vs 25k)
+- ✅ Progressive enhancement: start minimal, upgrade as needed
+- ✅ Zero vendor lock-in: source RULES_CORE.md always available
+
+**Migration:** Existing projects work unchanged (fallback to RULES_CORE.md). New projects use npx installer with context selection wizard.

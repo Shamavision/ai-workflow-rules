@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "description": "AI Workflow Rules - Context Registry",
+  "updated": "2026-02-04",
+
+  "contexts": {
+    "minimal": {
+      "path": "contexts/minimal.context.md",
+      "description": "Startups, MVP, international developers",
+      "priority": "core",
+      "tokens": 13000,
+      "includes": [
+        "Session Start Protocol",
+        "Core Principles",
+        "Token Management (basics)",
+        "Iterative Workflow",
+        "Git Discipline",
+        "Communication Protocol",
+        "Security Basics"
+      ],
+      "target_audience": [
+        "startups",
+        "mvp",
+        "international",
+        "simple-projects"
+      ]
+    },
+
+    "standard": {
+      "path": "contexts/standard.context.md",
+      "description": "Production projects, growing teams",
+      "priority": "core",
+      "tokens": 18000,
+      "includes": [
+        "All from minimal",
+        "Full Workflow (roadmaps, stages)",
+        "Discussion Protocol",
+        "Token Management (advanced)",
+        "Workflow Triggers",
+        "Anti-Overengineering",
+        "Session Checkpoints"
+      ],
+      "target_audience": [
+        "production",
+        "growing-teams",
+        "medium-projects"
+      ]
+    },
+
+    "ukraine-full": {
+      "path": "contexts/ukraine-full.context.md",
+      "description": "Ukrainian businesses, full compliance",
+      "priority": "core",
+      "tokens": 25000,
+      "includes": [
+        "All from standard",
+        "Ukrainian Market Policy",
+        "Cyber Defense Protocols",
+        "LANG-CRITICAL checks",
+        "Forbidden Trackers",
+        "Full Token Management v2.0"
+      ],
+      "target_audience": [
+        "ukraine",
+        "ukrainian-business",
+        "compliance",
+        "full-features"
+      ],
+      "dependencies": [
+        ".ai/forbidden-trackers.json",
+        ".ai/locale-context.json"
+      ]
+    },
+
+    "enterprise": {
+      "path": "contexts/enterprise.context.md",
+      "description": "Large teams, enterprise projects, maximum control",
+      "priority": "optional",
+      "tokens": 30000,
+      "includes": [
+        "Everything from RULES_CORE.md",
+        "Full Token Control v3.0",
+        "Pre-flight Approval",
+        "Confidence-based Estimation",
+        "Learning Engine",
+        "Emergency Reserve Management",
+        "Smart Batch Detection",
+        "All Security Protocols"
+      ],
+      "target_audience": [
+        "enterprise",
+        "large-teams",
+        "complex-projects",
+        "strict-budgets"
+      ],
+      "dependencies": [
+        ".ai/token-limits.json",
+        ".ai/token-control-v3-spec.md"
+      ]
+    }
+  },
+
+  "presets": {
+    "minimal": {
+      "context": "minimal",
+      "description": "Quick start, essential workflow",
+      "tokens": 13000,
+      "recommended_for": "New projects, MVPs, international teams"
+    },
+
+    "standard": {
+      "context": "standard",
+      "description": "Production-ready, balanced features",
+      "tokens": 18000,
+      "recommended_for": "Most production projects"
+    },
+
+    "ukraine-full": {
+      "context": "ukraine-full",
+      "description": "Ukrainian market, full compliance",
+      "tokens": 25000,
+      "recommended_for": "Ukrainian businesses, government projects"
+    },
+
+    "enterprise": {
+      "context": "enterprise",
+      "description": "Maximum control, all features",
+      "tokens": 30000,
+      "recommended_for": "Large teams, strict token budgets"
+    },
+
+    "custom": {
+      "context": null,
+      "description": "Advanced: select specific modules",
+      "tokens": "variable",
+      "recommended_for": "Power users with specific needs"
+    }
+  },
+
+  "modules": {
+    "core-workflow": {
+      "path": "modules/core-workflow.module.md",
+      "tokens": 8000,
+      "priority": "required",
+      "description": "Core principles, roadmaps, stage execution",
+      "status": "planned"
+    },
+
+    "security-essentials": {
+      "path": "modules/security-essentials.module.md",
+      "tokens": 5000,
+      "priority": "required",
+      "description": "Basic security guards, no hardcoded secrets",
+      "status": "planned"
+    },
+
+    "token-management": {
+      "path": "modules/token-management.module.md",
+      "tokens": 5000,
+      "priority": "optional",
+      "description": "Advanced token optimization strategies",
+      "status": "planned"
+    },
+
+    "ukraine-localization": {
+      "path": "modules/ukraine-localization.module.md",
+      "tokens": 12000,
+      "priority": "optional",
+      "description": "Ukrainian market policy, cyber defense, LANG-CRITICAL",
+      "dependencies": [
+        ".ai/forbidden-trackers.json",
+        ".ai/locale-context.json"
+      ],
+      "status": "planned"
+    }
+  },
+
+  "detection_rules": {
+    "auto_detect_ukraine": {
+      "triggers": [
+        "package.json contains 'ua-UA'",
+        "README.md contains 'Ukraine' or 'Україна'",
+        ".ai/locale-context.json exists",
+        "User language is Ukrainian/Russian"
+      ],
+      "action": "suggest ukraine-full preset"
+    },
+
+    "auto_detect_minimal": {
+      "triggers": [
+        "Small project (<50 files)",
+        "No package.json",
+        "Simple structure"
+      ],
+      "action": "suggest minimal preset"
+    },
+
+    "auto_detect_enterprise": {
+      "triggers": [
+        "Large codebase (>500 files)",
+        "Multiple team members",
+        "Strict token budget configured"
+      ],
+      "action": "suggest enterprise preset"
+    }
+  },
+
+  "token_savings": {
+    "minimal_vs_full": {
+      "saving": "12k tokens (48%)",
+      "context": "Minimal (13k) vs Full RULES_CORE.md (25k)"
+    },
+
+    "standard_vs_full": {
+      "saving": "7k tokens (28%)",
+      "context": "Standard (18k) vs Full RULES_CORE.md (25k)"
+    },
+
+    "ukraine_vs_minimal": {
+      "overhead": "12k tokens (92%)",
+      "context": "Ukraine-full (25k) vs Minimal (13k)",
+      "justification": "Full compliance, cyber defense, Ukrainian market specifics"
+    }
+  },
+
+  "migration": {
+    "from_monolithic": {
+      "steps": [
+        "1. Run npx @wellme/ai-workflow init",
+        "2. Select preset based on project type",
+        "3. Wizard creates .ai/config.json",
+        "4. CLAUDE.md updated to load context",
+        "5. Next session: AI loads selected context automatically"
+      ]
+    },
+
+    "to_custom_modules": {
+      "status": "Phase 2 (not implemented yet)",
+      "description": "Future: select individual modules for custom configurations"
+    }
+  }
+}

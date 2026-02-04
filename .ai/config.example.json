@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "framework": "ai-workflow-rules",
+  "version": "8.0",
+  "config_version": "1.0",
+
+  "_comment": "Copy this file to config.json and customize for your project",
+
+  "context": "minimal",
+  "_context_options": ["minimal", "standard", "ukraine-full", "enterprise", "custom"],
+  "_context_description": {
+    "minimal": "Quick start, essential workflow (13k tokens)",
+    "standard": "Production-ready, balanced (18k tokens)",
+    "ukraine-full": "Ukrainian market, full compliance (25k tokens)",
+    "enterprise": "Maximum control, all features (30k tokens)",
+    "custom": "Select specific modules (advanced users)"
+  },
+
+  "modules": [],
+  "_modules_note": "Only used when context='custom'. Leave empty for presets.",
+  "_modules_available": [
+    "core-workflow",
+    "security-essentials",
+    "token-management",
+    "ukraine-localization"
+  ],
+
+  "market": "international",
+  "_market_options": ["international", "ukraine", "custom"],
+
+  "language": {
+    "internal_dialogue": "adaptive",
+    "_internal_dialogue_note": "AI adapts to your language (Ukrainian/Russian/English)",
+    "code_comments": "en",
+    "commit_messages": "en",
+    "variable_names": "en"
+  },
+
+  "token_budget": {
+    "daily_limit": 200000,
+    "monthly_limit": 6000000,
+    "_limits_note": "Verify limits with your AI provider plan",
+
+    "auto_approve_thresholds": {
+      "green_zone": 15000,
+      "moderate_zone": 8000,
+      "caution_zone": 3000,
+      "critical_zone": 0
+    },
+    "_thresholds_note": "Tasks below threshold auto-approve in each zone"
+  },
+
+  "optimizations": {
+    "auto_compress": true,
+    "_auto_compress_note": "Compress context after 3 tasks or at 50% tokens",
+
+    "post_push_compress": true,
+    "_post_push_note": "Mandatory compression after git push",
+
+    "lazy_loading": true,
+    "_lazy_loading_note": "Read only files being modified",
+
+    "diff_only_mode": true,
+    "_diff_only_note": "Show diffs instead of full files at 50%+ tokens"
+  },
+
+  "workflow": {
+    "roadmap_required": true,
+    "stage_based_commits": true,
+    "discuss_before_execute": true,
+    "_workflow_note": "Core workflow principles, recommended to keep enabled"
+  },
+
+  "security": {
+    "check_forbidden_trackers": true,
+    "no_hardcoded_secrets": true,
+    "api_key_protection": true,
+    "_security_note": "Security guards always active, cannot be disabled"
+  },
+
+  "detection": {
+    "auto_detect_market": true,
+    "_auto_detect_note": "Detect Ukrainian market from package.json, README, locale files",
+
+    "smart_preset_suggestion": true,
+    "_smart_preset_note": "AI suggests optimal preset based on project structure"
+  },
+
+  "project_metadata": {
+    "name": "",
+    "description": "",
+    "team_size": "solo",
+    "_team_size_options": ["solo", "small (2-5)", "medium (6-20)", "large (20+)"],
+
+    "stage": "development",
+    "_stage_options": ["development", "production", "maintenance"]
+  }
+}
