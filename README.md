@@ -95,6 +95,8 @@ iwr -useb https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/s
 
 AI loads all rules and shows confirmation. Ready to work! 🎉
 
+> **💡 Important:** Use `//START` each time you open a new chat window or start a new task. This ensures the AI maintains project-specific rules and doesn't revert to default behavior. Think of it as "loading your project settings" for each session.
+
 ---
 
 **Need help?** See [Installation Guide](INSTALL.md) or [Troubleshooting](#-troubleshooting)
@@ -402,7 +404,8 @@ npx github:Shamavision/ai-workflow-rules init
 
 ---
 
-## 📜 License: GPL v3
+<details>
+<summary><b>📜 License: GPL v3</b></summary>
 
 **TL;DR:** Free for everyone. Can't resell framework. Your code stays private.
 
@@ -465,6 +468,8 @@ With GPL v3:
 ```
 
 We're not against making money. We're against locking community tools behind paywalls.
+
+</details>
 
 </details>
 
