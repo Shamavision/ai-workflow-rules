@@ -271,6 +271,61 @@ if (Test-Path $TokenLimitsPath) {
 }
 
 # ========================================
+# Context Selection (v8.1 Modular)
+# ========================================
+
+Print-Step "Selecting project context..."
+
+Write-Host ""
+Write-Host "Which context fits your project best?"
+Write-Host ""
+Write-Host "  1) " -NoNewline
+Write-Host "Minimal" -ForegroundColor Green -NoNewline
+Write-Host " - Startups, MVP, quick projects"
+Write-Host "     (~13k tokens, 6.5% daily budget)"
+Write-Host "     Core workflow + essential security"
+Write-Host ""
+Write-Host "  2) " -NoNewline
+Write-Host "Standard" -ForegroundColor Green -NoNewline
+Write-Host " - Most international projects (RECOMMENDED)"
+Write-Host "     (~18k tokens, 9% daily budget)"
+Write-Host "     Full workflow + token management + git discipline"
+Write-Host ""
+Write-Host "  3) " -NoNewline
+Write-Host "Ukraine-Full" -ForegroundColor Yellow -NoNewline
+Write-Host " - Ukrainian businesses"
+Write-Host "     (~25k tokens, 12.5% daily budget)"
+Write-Host "     Everything + Ukrainian compliance + cyber defense"
+Write-Host ""
+Write-Host "  4) " -NoNewline
+Write-Host "Enterprise" -ForegroundColor Blue -NoNewline
+Write-Host " - Large teams, complex projects"
+Write-Host "     (~30k tokens, 15% daily budget)"
+Write-Host "     Maximum features + team collaboration"
+Write-Host ""
+
+$ContextChoice = Read-Host "Enter number (1-4, default: 2)"
+
+$Context = switch ($ContextChoice) {
+    "1" { "minimal" }
+    "2" { "standard" }
+    "3" { "ukraine-full" }
+    "4" { "enterprise" }
+    default { "standard" }
+}
+
+# Update config.json with selected context
+$ConfigPath = "$TargetDir\.ai\config.json"
+if (Test-Path $ConfigPath) {
+    $ConfigContent = Get-Content $ConfigPath -Raw
+    $ConfigContent = $ConfigContent -replace '"context":\s*"[^"]*"', "`"context`": `"$Context`""
+    Set-Content -Path $ConfigPath -Value $ConfigContent -NoNewline
+    Print-Success "Context configured: $Context"
+} else {
+    Print-Warning "config.json not found"
+}
+
+# ========================================
 # Create .env if needed
 # ========================================
 
@@ -299,6 +354,11 @@ $FilesToCheck = @(
     "RULES_CORE.md",
     "RULES_PRODUCT.md",
     "AGENTS.md",
+    ".ai\config.json",
+    ".ai\contexts\minimal.context.md",
+    ".ai\contexts\standard.context.md",
+    ".ai\contexts\ukraine-full.context.md",
+    ".ai\contexts\enterprise.context.md",
     ".ai\token-limits.json",
     ".ai\forbidden-trackers.json",
     "scripts\seo-check.sh"
@@ -347,7 +407,9 @@ if ($Issues -eq 0) {
 Write-Host "╚════════════════════════════════════════════╝" -ForegroundColor Blue
 Write-Host ""
 
-Write-Host "✓ AI Workflow Rules Framework installed" -ForegroundColor Green
+Write-Host "✓ AI Workflow Rules Framework v8.1 installed" -ForegroundColor Green
+Write-Host "   Context: " -NoNewline -ForegroundColor Blue
+Write-Host $Context -ForegroundColor Blue
 Write-Host ""
 Write-Host "📚 Next Steps:"
 Write-Host ""
@@ -358,6 +420,8 @@ Write-Host ""
 Write-Host "  2. Start AI session (Claude Code, Cursor, etc.):"
 Write-Host "     " -NoNewline
 Write-Host "//START" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "     AI will load $Context context automatically."
 Write-Host ""
 Write-Host "  3. Read quick start guide:"
 Write-Host "     " -NoNewline

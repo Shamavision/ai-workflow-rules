@@ -26,10 +26,12 @@ AI coding assistants are powerful but dangerous:
 
 ### The Solution
 
-**3-layer protection that works automatically:**
+**🛡️ Silent Guardian Architecture — 3-layer protection that works automatically:**
 - ✅ **Pre-commit hooks** block secrets before git commit
 - ✅ **Token optimization** saves 40-60% budget (proven)
 - ✅ **Ukrainian market compliance** (zero russian services, GDPR-ready)
+
+> **Philosophy:** Protect without interfering. Monitor critical points, not every action. Zero overengineering.
 
 **Install in 30 seconds. Works with Claude, Cursor, Windsurf, Aider, and 60k+ projects.**
 

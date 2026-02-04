@@ -151,6 +151,74 @@ Today's session started with me speaking English, forgetting Russian language ru
 ---
 
 ## 1. CORE PRINCIPLES (Non-negotiable)
+
+### 1.0. SILENT GUARDIAN PHILOSOPHY
+
+> **"We protect without interfering. We emerge only when there's a threat."**
+
+**The Framework's Mission:**
+
+This framework operates as a **Silent Guardian** — three layers of protection that work quietly in the background, activating only when your project, user, or business faces risk.
+
+#### The Three Shields
+
+**🛡️ Shield 1: Client Protection**
+- Block malicious code (trojans, phishing, backdoors)
+- Detect suspicious patterns before execution
+- Prevent zero-day vulnerabilities from reaching production
+
+**🛡️ Shield 2: User Protection**
+- Token monitoring prevents budget exhaustion
+- Smart resource allocation for maximum productivity
+- Context compression keeps work flowing efficiently
+
+**🛡️ Shield 3: Business Protection**
+- Pre-commit hooks block secrets before git
+- Compliance checks (Ukrainian market, GDPR)
+- Audit trails for enterprise accountability
+
+#### How It Works (Zero Overengineering)
+
+````
+🟢 Normal Work    → Silent (no interruptions, system doesn't hang)
+🟡 Resource Check → Brief status (30%+ tokens, non-intrusive)
+🟠 Suspicious     → Warning (potential threat detected)
+🔴 Critical Threat → BLOCK + Notification (shield activates)
+````
+
+**Protection Points (Token-Efficient):**
+
+1. **Pre-Commit Hooks** (0 tokens, local bash)
+   - Scan for secrets, API keys, credentials
+   - Check forbidden services (russian trackers)
+   - LANG-CRITICAL violations
+
+2. **Token Monitoring** (minimal tokens)
+   - Display at 30%+ automatically
+   - Show after major operations
+   - Protect budget from exhaustion
+
+3. **Pre-Deploy Checks** (0 tokens, local scripts)
+   - `scripts/seo-check.sh` — 9 automated audits
+   - Security validation
+   - Compliance verification
+
+**The Balance:**
+- ✅ Maximum protection
+- ✅ Minimum interference
+- ✅ Zero token waste
+- ✅ Comfortable workspace (your "safe harbor")
+
+**Best Practice 2026:**
+> Don't monitor everything constantly (expensive, slow).
+> Monitor at critical points (efficient, safe).
+
+This is not overengineering. This is **strategic defense**.
+
+---
+
+### 1.1. CORE WORKFLOW PRINCIPLES
+
 *   **No Bullshit Mode:** If you're less than 90% sure, flag it with `[ASSUMPTION]` or ask. Never present a guess as a fact.
 *   **Discuss → Approve → Execute:** NEVER start coding/editing before getting explicit approval of the PLAN.
 *   **Rules are Living Document:** RULES evolve with projects. New patterns added during work with approval.

@@ -298,6 +298,56 @@ else
 fi
 
 # ========================================
+# Context Selection (v8.1 Modular)
+# ========================================
+
+print_step "Selecting project context..."
+
+echo ""
+echo "Which context fits your project best?"
+echo ""
+echo "  1) ${GREEN}Minimal${NC} - Startups, MVP, quick projects"
+echo "     (~13k tokens, 6.5% daily budget)"
+echo "     Core workflow + essential security"
+echo ""
+echo "  2) ${GREEN}Standard${NC} - Most international projects (RECOMMENDED)"
+echo "     (~18k tokens, 9% daily budget)"
+echo "     Full workflow + token management + git discipline"
+echo ""
+echo "  3) ${YELLOW}Ukraine-Full${NC} - Ukrainian businesses"
+echo "     (~25k tokens, 12.5% daily budget)"
+echo "     Everything + Ukrainian compliance + cyber defense"
+echo ""
+echo "  4) ${BLUE}Enterprise${NC} - Large teams, complex projects"
+echo "     (~30k tokens, 15% daily budget)"
+echo "     Maximum features + team collaboration"
+echo ""
+read -p "Enter number (1-4, default: 2): " CONTEXT_CHOICE
+
+case $CONTEXT_CHOICE in
+    1) CONTEXT="minimal" ;;
+    2) CONTEXT="standard" ;;
+    3) CONTEXT="ukraine-full" ;;
+    4) CONTEXT="enterprise" ;;
+    *) CONTEXT="standard" ;;
+esac
+
+# Update config.json with selected context
+if [ -f "$TARGET_DIR/.ai/config.json" ]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        sed -i '' "s/\"context\": \"[^\"]*\"/\"context\": \"$CONTEXT\"/" "$TARGET_DIR/.ai/config.json"
+    else
+        # Linux
+        sed -i "s/\"context\": \"[^\"]*\"/\"context\": \"$CONTEXT\"/" "$TARGET_DIR/.ai/config.json"
+    fi
+
+    print_success "Context configured: $CONTEXT"
+else
+    print_warning "config.json not found"
+fi
+
+# ========================================
 # Create .env if needed
 # ========================================
 
@@ -326,6 +376,11 @@ FILES_TO_CHECK=(
     "RULES_CORE.md"
     "RULES_PRODUCT.md"
     "AGENTS.md"
+    ".ai/config.json"
+    ".ai/contexts/minimal.context.md"
+    ".ai/contexts/standard.context.md"
+    ".ai/contexts/ukraine-full.context.md"
+    ".ai/contexts/enterprise.context.md"
     ".ai/token-limits.json"
     ".ai/forbidden-trackers.json"
     ".claude/CLAUDE.md"
@@ -366,7 +421,8 @@ fi
 echo -e "${BLUE}╚════════════════════════════════════════════╝${NC}"
 echo ""
 
-echo -e "${GREEN}✓ AI Workflow Rules Framework installed${NC}"
+echo -e "${GREEN}✓ AI Workflow Rules Framework v8.1 installed${NC}"
+echo -e "${BLUE}   Context: ${CONTEXT}${NC}"
 echo ""
 echo "📚 Next Steps:"
 echo ""
@@ -375,6 +431,8 @@ echo "     ${YELLOW}nano .env${NC}"
 echo ""
 echo "  2. Start AI session (Claude Code, Cursor, etc.):"
 echo "     ${YELLOW}//START${NC}"
+echo ""
+echo "     AI will load ${CONTEXT} context automatically."
 echo ""
 echo "  3. Read quick start guide:"
 echo "     ${YELLOW}cat QUICKSTART.md${NC}"

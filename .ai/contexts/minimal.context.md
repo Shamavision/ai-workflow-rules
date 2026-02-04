@@ -51,7 +51,41 @@
 - 🔴 **90-95% (CRITICAL):** Finalization only. Commit + stop.
 - ⛔ **95-100% (EMERGENCY):** Commit only. Hard stop.
 
-### 2.2. CONTEXT COMPRESSION (saves 40-60%)
+### 2.2. TOKEN STATUS DISPLAY (MANDATORY)
+
+**AI MUST display token status in these situations:**
+
+1. **Automatically at 30%+ usage:**
+   ```
+   [TOKEN STATUS] Session: 92k/200k (46%) | Remaining: ~108k | 🟢 Green
+   ```
+
+2. **After major operations:**
+   - git commit/push
+   - Large file reads (>5k tokens)
+   - Context compression
+   - Every 3 completed tasks
+
+3. **When user requests:**
+   - `//TOKENS` command
+   - During task approval if >5k tokens estimated
+
+4. **CRITICAL threshold (90%+):**
+   - Display EVERY response
+   - Show remaining budget
+   - Suggest stop or compress
+
+**Format (consistent):**
+```
+[TOKEN STATUS]
+Session: Xk/Yk (Z%)
+Remaining: ~Wk
+Status: 🟢/🟡/🟠/🔴 [Zone]
+```
+
+**This is MANDATORY for Silent Guardian protection.**
+
+### 2.3. CONTEXT COMPRESSION (saves 40-60%)
 
 **Auto-triggers:**
 - Every 3 completed tasks
@@ -68,7 +102,7 @@
 - ❌ Current task context
 - ❌ User preferences
 
-### 2.3. LAZY LOADING (read only what's needed)
+### 2.4. LAZY LOADING (read only what's needed)
 
 **DO NOT:**
 - ❌ Read files "for context"
