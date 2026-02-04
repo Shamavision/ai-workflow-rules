@@ -2,8 +2,6 @@
 
 <img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="500">
 
-# AI Workflow Rules
-
 ### **Your AI assistant will commit secrets. We stop it.**
 
 Production-ready security framework for AI-assisted development.
@@ -44,42 +42,6 @@ AI coding assistants are powerful but dangerous:
 
 ---
 
-## 🎯 See It Work
-
-> **⚠️ Visual Demo Coming Soon**
->
-> We're recording a 30-second GIF showing:
-> 1. Installation (one command)
-> 2. AI loads rules automatically
-> 3. Try to commit API key → **BLOCKED** by pre-commit hook
-> 4. Token status shown in real-time
->
-> **Want to help?** If you install the framework, record a quick screen capture and submit PR!
-
-**What you'll see when it's ready:**
-```
-┌─────────────────────────────────────────┐
-│ $ npx @shamavision/ai-workflow-rules    │  ← Install (5 sec)
-│ ✓ Files copied                           │
-│ ✓ Hooks configured                       │
-│                                          │
-│ $ claude code                            │  ← Start AI (5 sec)
-│ [SESSION START]                          │
-│ ✓ Context loaded: ukraine-full          │
-│ ✓ Token limit: 150k                      │
-│                                          │
-│ $ git add .env                           │  ← Try commit secret (5 sec)
-│ ❌ BLOCKED: API key detected             │  ← PROTECTION WORKS!
-│    Line 3: SECRET_KEY=xxx (example)     │
-│                                          │
-│ [TOKEN STATUS] 15k/150k (10%) | 🟢      │  ← Budget tracking (5 sec)
-└─────────────────────────────────────────┘
-
-Total: 30 seconds. Protected forever.
-```
-
----
-
 ## 🆚 Why This Framework?
 
 | Security | ❌ Manual Setup | ⚠️ Default AI | ✅ This Framework |
@@ -92,110 +54,6 @@ Total: 30 seconds. Protected forever.
 | **Works with** | One AI tool | One AI tool | **All major AIs** |
 
 **Bottom line:** Same work, zero risk, half the cost.
-
----
-
-## 💡 What Is This?
-
-**AI Workflow Rules** is a production-ready template for developers working with AI coding assistants (Claude Code, GitHub Copilot, Cursor, ChatGPT, Windsurf, Aider).
-
-Think of it as **security guardrails + best practices** for AI-powered development.
-
-### Core Features
-
-| Feature | What It Does | Why It Matters |
-|---------|-------------|----------------|
-| 🛡️ **Security Protection** | Scans for secrets, API keys, vulnerabilities | Prevent $50k+ data leak fines |
-| 🇺🇦 **Ukrainian Compliance** | Blocks russian tracking services | GDPR-ready, ethical code |
-| 🤖 **Token Control v3.0** | Pre-flight approval, learning engine | 10-15% savings without quality loss |
-| ⚡ **Pre-Deploy Checks** | 9 automated audits (SEO, security) | Ship clean code every time |
-| 🌍 **Universal AI Support** | AGENTS.md standard (auto-loaded) | Works in 90%+ AI tools |
-| 📚 **Production Examples** | React i18n, API security, env setup | Copy-paste patterns |
-
-### Perfect For
-
-- ✅ **Ukrainian businesses** - Built-in market compliance
-- ✅ **EU projects** - GDPR-compliant by default
-- ✅ **Security-conscious teams** - Multi-layer leak protection
-- ✅ **AI-powered development** - Optimize token usage
-
----
-
-## 🎯 Manifesto: Five Principles That Work
-
-> **Based on 100+ real projects. Not theories.**
-
-### 1. **Discuss → Approve → Execute**
-
-AI proposes, you decide. Never code before alignment.
-
-```
-❌ BAD: "Add auth" → AI codes OAuth immediately → wrong approach, redo
-✅ GOOD: "Add auth" → AI shows 3 options + costs → you pick → done right
-```
-
-**Why:** One 2-minute discussion saves hours of rework.
-
----
-
-### 2. **Code is Consequence, Not Goal**
-
-Best code is code you don't write.
-
-```
-❌ BAD: "Write custom caching" (200 lines, 3 days, bugs)
-✅ GOOD: "Use Redis" (10 lines, 1 hour, battle-tested)
-```
-
-**Why:** Simple solutions beat clever abstractions 99% of the time.
-
----
-
-### 3. **Token-Conscious by Design**
-
-AI time costs money. Monitor, optimize, never waste.
-
-```
-❌ BAD: "Let me read 15 files..." (35k tokens wasted)
-✅ GOOD: "Which files should I read?" (5k tokens, targeted)
-```
-
-**Why:** 50% token savings = 2x more work per day.
-
----
-
-### 4. **Security & Ukraine First**
-
-Zero tolerance for secrets leaks, russian services, compliance violations.
-
-```
-🚨 BLOCKED: API key in code → pre-commit hook stops you
-🚨 BLOCKED: Yandex tracker → pre-commit hook stops you
-✅ PASSED: process.env secrets → safe to commit
-```
-
-**Why:** One breach destroys your business. Prevention is cheaper than recovery.
-
----
-
-### 5. **Simple Tools > Complex Frameworks**
-
-Don't solve imaginary future problems. YAGNI.
-
-```
-❌ BAD: "Add microservices" (nobody asked, overkill)
-✅ GOOD: "10 lines solve it" (works today, maintainable tomorrow)
-```
-
-**Why:** Complexity is debt. Simple code survives time.
-
----
-
-<div align="center">
-
-**[See manifesto in action →](examples/)** • **[Start using now →](#-quick-start)**
-
-</div>
 
 ---
 
@@ -271,7 +129,150 @@ AI: [SESSION START]
 
 ---
 
-## 🌍 Supported AI Assistants
+## 🎯 See It Work
+
+> **⚠️ Visual Demo Coming Soon**
+>
+> We're recording a 30-second GIF showing:
+> 1. Installation (one command)
+> 2. AI loads rules automatically
+> 3. Try to commit API key → **BLOCKED** by pre-commit hook
+> 4. Token status shown in real-time
+>
+> **Want to help?** If you install the framework, record a quick screen capture and submit PR!
+
+**What you'll see when it's ready:**
+```
+┌─────────────────────────────────────────┐
+│ $ npx @shamavision/ai-workflow-rules    │  ← Install (5 sec)
+│ ✓ Files copied                           │
+│ ✓ Hooks configured                       │
+│                                          │
+│ $ claude code                            │  ← Start AI (5 sec)
+│ [SESSION START]                          │
+│ ✓ Context loaded: ukraine-full          │
+│ ✓ Token limit: 150k                      │
+│                                          │
+│ $ git add .env                           │  ← Try commit secret (5 sec)
+│ ❌ BLOCKED: API key detected             │  ← PROTECTION WORKS!
+│    Line 3: SECRET_KEY=xxx (example)     │
+│                                          │
+│ [TOKEN STATUS] 15k/150k (10%) | 🟢      │  ← Budget tracking (5 sec)
+└─────────────────────────────────────────┘
+
+Total: 30 seconds. Protected forever.
+```
+
+---
+
+<details>
+<summary><b>💡 What Is This?</b></summary>
+
+**AI Workflow Rules** is a production-ready template for developers working with AI coding assistants (Claude Code, GitHub Copilot, Cursor, ChatGPT, Windsurf, Aider).
+
+Think of it as **security guardrails + best practices** for AI-powered development.
+
+### Core Features
+
+| Feature | What It Does | Why It Matters |
+|---------|-------------|----------------|
+| 🛡️ **Security Protection** | Scans for secrets, API keys, vulnerabilities | Prevent $50k+ data leak fines |
+| 🇺🇦 **Ukrainian Compliance** | Blocks russian tracking services | GDPR-ready, ethical code |
+| 🤖 **Token Control v3.0** | Pre-flight approval, learning engine | 10-15% savings without quality loss |
+| ⚡ **Pre-Deploy Checks** | 9 automated audits (SEO, security) | Ship clean code every time |
+| 🌍 **Universal AI Support** | AGENTS.md standard (auto-loaded) | Works in 90%+ AI tools |
+| 📚 **Production Examples** | React i18n, API security, env setup | Copy-paste patterns |
+
+### Perfect For
+
+- ✅ **Ukrainian businesses** - Built-in market compliance
+- ✅ **EU projects** - GDPR-compliant by default
+- ✅ **Security-conscious teams** - Multi-layer leak protection
+- ✅ **AI-powered development** - Optimize token usage
+
+</details>
+
+---
+
+<details>
+<summary><b>🎯 Manifesto: Five Principles That Work</b></summary>
+
+> **Based on 100+ real projects. Not theories.**
+
+### 1. **Discuss → Approve → Execute**
+
+AI proposes, you decide. Never code before alignment.
+
+```
+❌ BAD: "Add auth" → AI codes OAuth immediately → wrong approach, redo
+✅ GOOD: "Add auth" → AI shows 3 options + costs → you pick → done right
+```
+
+**Why:** One 2-minute discussion saves hours of rework.
+
+---
+
+### 2. **Code is Consequence, Not Goal**
+
+Best code is code you don't write.
+
+```
+❌ BAD: "Write custom caching" (200 lines, 3 days, bugs)
+✅ GOOD: "Use Redis" (10 lines, 1 hour, battle-tested)
+```
+
+**Why:** Simple solutions beat clever abstractions 99% of the time.
+
+---
+
+### 3. **Token-Conscious by Design**
+
+AI time costs money. Monitor, optimize, never waste.
+
+```
+❌ BAD: "Let me read 15 files..." (35k tokens wasted)
+✅ GOOD: "Which files should I read?" (5k tokens, targeted)
+```
+
+**Why:** 50% token savings = 2x more work per day.
+
+---
+
+### 4. **Security & Ukraine First**
+
+Zero tolerance for secrets leaks, russian services, compliance violations.
+
+```
+🚨 BLOCKED: API key in code → pre-commit hook stops you
+🚨 BLOCKED: Yandex tracker → pre-commit hook stops you
+✅ PASSED: process.env secrets → safe to commit
+```
+
+**Why:** One breach destroys your business. Prevention is cheaper than recovery.
+
+---
+
+### 5. **Simple Tools > Complex Frameworks**
+
+Don't solve imaginary future problems. YAGNI.
+
+```
+❌ BAD: "Add microservices" (nobody asked, overkill)
+✅ GOOD: "10 lines solve it" (works today, maintainable tomorrow)
+```
+
+**Why:** Complexity is debt. Simple code survives time.
+
+---
+
+**[See manifesto in action →](examples/)** • **[Start using now →](#-quick-start)**
+
+</details>
+
+---
+
+<details>
+<summary><b>🌍 Supported AI Assistants</b></summary>
 
 Works with **90%+ of AI coding tools** through AGENTS.md universal standard:
 
@@ -290,9 +291,12 @@ Works with **90%+ of AI coding tools** through AGENTS.md universal standard:
 
 📖 **Full compatibility details:** [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md)
 
+</details>
+
 ---
 
-## 📖 Documentation
+<details>
+<summary><b>📖 Documentation</b></summary>
 
 **Quick Guides:**
 - [QUICKSTART.md](QUICKSTART.md) - 5-minute setup
@@ -311,12 +315,12 @@ Works with **90%+ of AI coding tools** through AGENTS.md universal standard:
 **Examples:**
 - [examples/](examples/) - 5 real-world dialog examples
 
+</details>
+
 ---
 
-## 🆘 Troubleshooting
-
 <details>
-<summary><b>Click to expand common problems and solutions</b></summary>
+<summary><b>🆘 Troubleshooting</b></summary>
 
 ### Problem: "curl: command not found" (Windows)
 
@@ -376,7 +380,8 @@ npx github:Shamavision/ai-workflow-rules init
 
 ---
 
-## ⚠️ Important: Token Usage
+<details>
+<summary><b>⚠️ Important: Token Usage</b></summary>
 
 **First-time setup cost:** ~25k tokens (ukraine-full context) or ~13k (minimal)
 
@@ -392,6 +397,8 @@ npx github:Shamavision/ai-workflow-rules init
 - 🟡 **Free plan (~8k daily):** Use minimal context or delete optional files after reading
 
 📖 **Full breakdown:** [TOKEN_USAGE.md](TOKEN_USAGE.md)
+
+</details>
 
 ---
 
@@ -463,7 +470,8 @@ We're not against making money. We're against locking community tools behind pay
 
 ---
 
-## 🤝 Contributing
+<details>
+<summary><b>🤝 Contributing</b></summary>
 
 We welcome contributions!
 
@@ -480,6 +488,8 @@ We welcome contributions!
 4. Push: `git push origin feature/amazing-feature`
 5. Open Pull Request
 
+</details>
+
 ---
 
 ## 🌟 Why We Built This
@@ -493,30 +503,3 @@ As a **Ukrainian IT company**, we face unique challenges:
 This framework solves **our** problems. We hope it helps you too.
 
 **Made with ❤️ in Ukraine 🇺🇦**
-
----
-
-<div align="center">
-
-## Ready to Protect Your Project?
-
-**1. Install** → **2. Type //START** → **3. Work Safely**
-
-<p>
-  <a href="#-quick-start"><img src="https://img.shields.io/badge/Get%20Started%20→-30%20seconds-FAAF0D?style=for-the-badge&labelColor=1D1D1B" alt="Get Started"></a>
-  <a href="RULES_CORE.md"><img src="https://img.shields.io/badge/Read%20Docs%20→-Full%20Rules-0099CC?style=for-the-badge&labelColor=1D1D1B" alt="Docs"></a>
-  <a href="https://github.com/Shamavision/ai-workflow-rules/issues"><img src="https://img.shields.io/badge/Report%20Issue%20→-GitHub-FAAF0D?style=for-the-badge&labelColor=1D1D1B" alt="Issues"></a>
-</p>
-
----
-
-<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="312">
-
-**AI Workflow Rules Framework v8.1**
-*Open Source • GPL v3 • Made in Ukraine 🇺🇦*
-
-[wellme.ua](https://wellme.ua) • [GitHub](https://github.com/Shamavision/ai-workflow-rules) • [Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
-
-© 2025 Wellme™ (Ukraine)
-
-</div>
