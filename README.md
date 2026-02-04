@@ -44,6 +44,77 @@ AI coding assistants are powerful but dangerous:
 
 ---
 
+<details>
+<summary><b>🛡️ How Silent Guardian Works (Click to expand)</b></summary>
+
+### Real-Time Protection — Zero Token Cost
+
+**Pre-Commit Hook (Local Bash, 0 tokens):**
+```bash
+$ git commit -m "add feature"
+🔒 Scanning for secrets...
+❌ BLOCKED: API key detected in config.js
+   Line 42: const KEY = "sk-abc123..."
+   Fix: Use process.env.API_KEY
+```
+
+**Token Monitoring (Automatic):**
+```bash
+[TOKEN STATUS] 95k/150k (63%) | Remaining: ~55k | 🟡 Moderate
+→ Context compression suggested (saves 40-60%)
+```
+
+**Pre-Deploy Validation (Optional, 0 tokens):**
+```bash
+$ ./scripts/seo-check.sh
+✓ No secrets in code
+✓ No russian trackers
+✓ SEO meta tags valid
+✓ All compliance checks passed
+```
+
+### When It Activates
+
+- 🟢 **Normal work:** Silent (no interruptions, system stays responsive)
+- 🟡 **30%+ tokens:** Brief status (non-intrusive, informative)
+- 🟠 **Suspicious code:** Warning (potential threat detected)
+- 🔴 **Critical threat:** BLOCK + Notification (shield activates immediately)
+
+### Does It Slow Down Work?
+
+**NO.** Checks run:
+- Pre-commit: 2-3 seconds (local bash script)
+- Token display: Instant (just text output)
+- Pre-deploy: 5 seconds (optional, before production)
+
+**Your IDE remains fully responsive.** No background processes eating resources. No constant monitoring. Protection happens at **critical points only** — this is the zero overengineering philosophy in action.
+
+### Protection Coverage
+
+**What Gets Blocked:**
+- API keys, tokens, passwords
+- SSH keys, certificates
+- AWS credentials, OAuth secrets
+- Russian tracking services (Yandex, VK, Mail.ru)
+- `.ru` domains in production
+- Hardcoded database credentials
+
+**What Gets Monitored:**
+- Token usage (30%+ automatic display)
+- Budget exhaustion risk
+- Context size (compression triggers at 50%)
+- Session health
+
+**What Gets Validated:**
+- Code quality before deploy
+- Ukrainian market compliance
+- GDPR readiness
+- SEO fundamentals
+
+</details>
+
+---
+
 ## 🆚 Why This Framework?
 
 | Security | ❌ Manual Setup | ⚠️ Default AI | ✅ This Framework |

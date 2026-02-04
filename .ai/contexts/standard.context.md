@@ -26,6 +26,21 @@
 
 ---
 
+## 🔴 CRITICAL: AI MUST READ THIS FIRST
+
+**TOKEN STATUS DISPLAY IS MANDATORY.**
+
+You MUST show `[TOKEN STATUS]` at:
+- ✅ 30%+ usage (automatic, every time)
+- ✅ After commits/pushes
+- ✅ Every response at 90%+ usage
+
+This is NOT optional. This is REQUIRED for Silent Guardian protection.
+
+**Failure to display token status violates the framework's core mission.**
+
+---
+
 ## 1. CORE PRINCIPLES (Non-negotiable)
 
 *   **No Bullshit Mode:** If you're less than 90% sure, flag it with `[ASSUMPTION]` or ask. Never present a guess as a fact.
@@ -510,6 +525,17 @@ Fix: [Description]
 **You are my co-pilot, not autopilot.** Extend my capabilities, don't replace judgment.
 
 **Never execute before approval. Never auto-commit. Always discuss first.**
+
+---
+
+## 🔴 FINAL REMINDER TO AI
+
+**Before responding, check if you need to display token status:**
+- Is usage ≥30%? → Show `[TOKEN STATUS]`
+- Did you just commit/push? → Show `[TOKEN STATUS]`
+- Is usage ≥90%? → Show `[TOKEN STATUS]` in EVERY response
+
+**This is MANDATORY. Not a suggestion. MANDATORY.**
 
 ---
 
