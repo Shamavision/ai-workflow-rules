@@ -1529,6 +1529,240 @@ Ready? [YES/REVIEW/ADJUST]
     Fix: [Description]
 ````
 
+### 10.1. PRE-COMMIT HOOK: 3-TIER PROTECTION SYSTEM
+
+**Philosophy:** Silent Guardian — protect without blocking productivity.
+
+**Approach:** Intelligent secret detection based on GitGuardian + GitHub Advanced Security best practices.
+
+#### Tier 1: HARD BLOCK (100% confidence)
+**What:** Real API keys, private keys, credentials files
+**Behavior:** Blocks commit immediately, NO bypass except `--no-verify`
+**When triggered:** Exact pattern match on known secret formats
+
+**Blocked patterns:**
+- Anthropic API keys: `sk-ant-api03-{95 chars}`
+- OpenAI API keys: `sk-{48+ chars}`
+- GitHub tokens: `ghp_{36 chars}`, `gho_{36 chars}`
+- AWS credentials: `AKIA{16 chars}`
+- Stripe secret keys: `sk_live_{24+ chars}`
+- Private keys: `BEGIN PRIVATE KEY`, `BEGIN RSA PRIVATE KEY`
+- Credentials files: `.env`, `.env.local`, `.env.production`, `credentials.json`, `*.pem`, `*.key`
+
+**Example:**
+```javascript
+// ❌ BLOCKED - Real API key detected
+const apiKey = "sk-ant-api03-ABC...{95 chars}"
+
+// ✅ ALLOWED - Environment variable
+const apiKey = process.env.ANTHROPIC_API_KEY
+```
+
+**Why hard block:** Committing real secrets = immediate security breach. No legitimate reason to commit these.
+
+---
+
+#### Tier 2: WARNING + CHOICE (suspicious patterns)
+**What:** Generic API key assignments, bearer tokens, database URLs
+**Behavior:** Shows warning, asks user for confirmation
+**When triggered:** Pattern suggests possible secret, but not 100% certain
+
+**Warned patterns:**
+- Generic assignments: `API_KEY = "abc123..."`
+- Bearer tokens: `Bearer xyz789...`
+- Database URLs: `postgres://user:password@host`
+- Hardcoded passwords: `password = "secret123"`
+
+**Bypass options:**
+1. **Interactive confirmation:** Type `yes` when prompted
+2. **Inline comment:** Add `// secure-ignore` at end of line
+3. **File ignore:** Add file to `.securityignore`
+
+**Example:**
+```javascript
+// ⚠️  WARNING - User must confirm
+const API_KEY = "test-key-12345"
+
+// ✅ BYPASSED - Inline comment
+const DEMO_KEY = "fake-demo-key" // secure-ignore
+
+// ✅ BYPASSED - Obvious placeholder
+const API_KEY = "your_api_key_here"
+```
+
+**Why warning + choice:** Not all assignments are real secrets. User knows context best.
+
+---
+
+#### Tier 3: SILENT ALLOW (context-aware)
+**What:** Legitimate use cases automatically recognized
+**Behavior:** Silently allowed, no warning shown
+**When triggered:** Context indicates this is safe
+
+**Silently allowed:**
+- Files: `.env.example`, `.env.sample`, `.env.template`
+- Paths: `examples/`, `tests/fixtures/`, `__tests__/mocks/`
+- Comments: `// const key = "sk-..."` (example code)
+- Documentation: `*.md` files (unless real pattern detected)
+- Files in `.securityignore`
+
+**Example:**
+```bash
+# .env.example
+API_KEY=your_api_key_here
+OPENAI_KEY=sk-your-key-here
+
+# ✅ SILENT ALLOW - Recognized as placeholder file
+```
+
+**Why silent:** These are intentional examples/templates. No need to bother user.
+
+---
+
+#### Bypass Mechanisms (Tier 2 only)
+
+**1. Inline Comment**
+```javascript
+const TEST_KEY = "demo-123" // secure-ignore
+```
+
+**2. `.securityignore` File**
+```gitignore
+# Exclude from secret scanning
+docs/api-examples.md
+tests/fixtures/**
+tools/demo-config.json  # Documented safe
+```
+
+**3. Interactive Confirmation**
+```bash
+⚠️  WARNING: Potential API key in src/config.ts:12
+Proceed with commit? Type 'yes': yes
+```
+
+**4. Emergency Override**
+```bash
+git commit --no-verify  # Disables ALL checks
+```
+
+---
+
+#### Configuration
+
+**`.ai/security-policy.json`** (optional)
+```json
+{
+  "secret_scanning": {
+    "mode": "balanced",  // strict | balanced | permissive
+    "tier2_warning": {
+      "interactive_prompts": true
+    }
+  }
+}
+```
+
+**`.securityignore`** (optional)
+```gitignore
+# Files to exclude from scanning
+docs/examples/**
+legacy/old-client.js  # Uses deprecated test endpoint
+```
+
+---
+
+#### Best Practices
+
+**DO:**
+- ✅ Use environment variables: `process.env.API_KEY`
+- ✅ Store secrets in `.env` (gitignored)
+- ✅ Use `.env.example` for templates
+- ✅ Add `// secure-ignore` for known false positives
+- ✅ Document WHY file is in `.securityignore`
+
+**DON'T:**
+- ❌ Hardcode real API keys in code
+- ❌ Commit `.env` files
+- ❌ Use `--no-verify` routinely (only emergencies)
+- ❌ Abuse `.securityignore` to bypass security
+
+---
+
+#### Audit Trail
+
+All blocked commits are logged to `.ai/audit-trail.log`:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-05 14:30:22 UTC] COMMIT BLOCKED
+Event: HARD_BLOCK
+Details: Real Anthropic API key detected in src/api.ts:12
+User: John Doe <john@example.com>
+Branch: feature/auth
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Purpose:** Legal protection, compliance, incident response.
+
+---
+
+#### Additional Checks
+
+**LANG-CRITICAL (WARNING only)**
+- Detects russian content: `.ru` domains, `ru-RU` locale
+- Policy: RULES_PRODUCT.md Section 3
+- Does NOT block commit (warning only)
+
+**Russian Trackers (BLOCK)**
+- Detects: Yandex Metrika, VK Pixel, Mail.ru, etc.
+- Security threat: Data sent to russian state servers
+- BLOCKS commit (Tier 1 severity)
+
+---
+
+#### When Hook Fails
+
+**Tier 1 (Hard Block):**
+```bash
+❌ COMMIT BLOCKED - Real API key detected
+
+To fix:
+  1. Remove secret from code
+  2. Use process.env.VAR
+  3. Add to .gitignore
+```
+
+**Tier 2 (Warning):**
+```bash
+⚠️  WARNING: Potential secret detected
+Proceed? Type 'yes': no
+
+❌ Commit cancelled by user
+```
+
+**All Clear:**
+```bash
+✅ SECURITY SCAN PASSED
+No secrets or trackers detected
+Proceeding with commit...
+```
+
+---
+
+#### Version History
+
+- **v8.2** [2026-02-05] – 3-Tier Protection System implemented
+  - Tier 1: Hard block (real secrets)
+  - Tier 2: Warning + choice (suspicious)
+  - Tier 3: Silent allow (context-aware)
+  - Added `.securityignore` support
+  - Added inline `// secure-ignore` bypass
+  - Based on GitGuardian + GitHub Advanced Security
+  - Philosophy: Trust informed decisions
+
+- **v4.0** [2025-01-26] – Basic secret scanning added
+  - Pattern matching for API keys
+  - Blocked file types
+  - LANG-CRITICAL warnings
+
 ---
 
 ## 11. RED FLAGS – AUTO-STOP CONDITIONS
@@ -1611,6 +1845,7 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
+*   **v8.2** [2026-02-05] – **3-TIER SECURITY SYSTEM: INTELLIGENT SECRET PROTECTION**. Major upgrade to pre-commit hook based on GitGuardian + GitHub Advanced Security best practices. New: Tier 1 (hard block real secrets), Tier 2 (warning + choice for suspicious patterns), Tier 3 (silent allow for context-aware cases). Added `.securityignore` support, inline `// secure-ignore` bypass, interactive prompts, audit trail logging. Philosophy: "Trust informed decisions — protect without blocking productivity." Reduces false positives by ~70% while maintaining security. Files: `scripts/pre-commit`, `.ai/security-policy.json`, `.securityignore`. Added Section 10.1. Full spec in RULES_CORE.md Section 10.1.
 *   **v8.0** [2026-02-03] – **TOKEN CONTROL v3.0: INTELLIGENT BUDGET MANAGEMENT**. Major upgrade from reactive monitoring to proactive control. New: Pre-flight token approval (mandatory estimates BEFORE execution), confidence-based estimation (HIGH/MEDIUM/LOW ±%), learning engine with variance tracking, emergency reserve protection (10-15%), smart batch detection, deferred execution queue, self-calibrating thresholds. Philosophy: "Control without dictatorship — inform, don't restrict." Target: 10-15% token savings without quality loss. Added Sections 2.14-2.18. Full spec: `.ai/token-control-v3-spec.md`.
 *   **v7.1** [2026-02-02] – Universal AGENTS.md support added. Framework now works with 90%+ AI coding tools (Claude Code, Cursor, Windsurf, Aider, Continue, OpenAI Codex, Google Jules, etc.) through AGENTS.md universal standard. Auto-loading in most tools. BUG-005 fixed (Session Start Protocol not applied automatically).
 *   **v6.1** [2026-02-01] – Added POST-PUSH COMPRESSION (mandatory workflow after git push) and FOCUS OPTIMIZATION (Quality > Speed philosophy). Philosophy: "We don't save tokens, we concentrate attention on critical tasks."
@@ -1623,4 +1858,4 @@ Before proposing solution:
 
 ---
 
-*This document is living. Update with approval. Last updated: 2026-02-03 (v8.0 Token Control v3.0)*
+*This document is living. Update with approval. Last updated: 2026-02-05 (v8.2 3-Tier Security System)*

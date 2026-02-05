@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "8.2.0",
+  "description": "Security policy for pre-commit hook - 3-tier protection system",
+
+  "secret_scanning": {
+    "enabled": true,
+    "mode": "balanced",
+
+    "_mode_options": {
+      "strict": "Block everything suspicious (high false positives)",
+      "balanced": "3-tier approach (RECOMMENDED)",
+      "permissive": "Only block 100% confirmed secrets"
+    },
+
+    "tier1_hard_block": {
+      "description": "100% confidence - real API keys, no bypass allowed",
+      "patterns": [
+        {
+          "name": "Anthropic API Key",
+          "regex": "sk-ant-api03-[A-Za-z0-9_-]{95}",
+          "severity": "critical",
+          "message": "Real Anthropic API key detected. Use process.env.ANTHROPIC_API_KEY"
+        },
+        {
+          "name": "OpenAI API Key",
+          "regex": "sk-[a-zA-Z0-9]{48,}",
+          "severity": "critical",
+          "message": "Real OpenAI API key detected. Use process.env.OPENAI_API_KEY"
+        },
+        {
+          "name": "GitHub Personal Access Token",
+          "regex": "ghp_[A-Za-z0-9]{36}",
+          "severity": "critical",
+          "message": "Real GitHub token detected. Use process.env.GITHUB_TOKEN"
+        },
+        {
+          "name": "GitHub OAuth Token",
+          "regex": "gho_[A-Za-z0-9]{36}",
+          "severity": "critical"
+        },
+        {
+          "name": "AWS Access Key",
+          "regex": "AKIA[A-Z0-9]{16}",
+          "severity": "critical",
+          "message": "Real AWS credentials detected. Use process.env.AWS_ACCESS_KEY_ID"
+        },
+        {
+          "name": "Stripe Secret Key",
+          "regex": "sk_live_[A-Za-z0-9]{24,}",
+          "severity": "critical",
+          "message": "Real Stripe secret key detected. Use process.env.STRIPE_SECRET_KEY"
+        },
+        {
+          "name": "Private Key (PEM)",
+          "regex": "BEGIN (RSA )?PRIVATE KEY",
+          "severity": "critical",
+          "message": "Private cryptographic key detected"
+        }
+      ],
+      "blocked_files": [
+        ".env",
+        ".env.local",
+        ".env.production",
+        ".env.development",
+        "*.pem",
+        "*.key",
+        "*.p12",
+        "*.pfx",
+        "credentials.json",
+        "secrets.json"
+      ]
+    },
+
+    "tier2_warning": {
+      "description": "Suspicious patterns - ask user for confirmation",
+      "interactive_prompts": true,
+      "patterns": [
+        {
+          "name": "Generic API Key Assignment",
+          "regex": "API_?KEY\\s*[=:]\\s*[\"'][A-Za-z0-9_-]{16,}[\"']",
+          "severity": "medium",
+          "exclude_if_contains": ["your", "key", "example", "placeholder", "xxx", "test", "demo", "fake", "sample"]
+        },
+        {
+          "name": "Bearer Token",
+          "regex": "Bearer [A-Za-z0-9_-]{20,}",
+          "severity": "medium",
+          "exclude_if_contains": ["example", "your", "token", "xxx"]
+        },
+        {
+          "name": "Database Connection String",
+          "regex": "(postgres|mysql|mongodb)://[^:]+:[^@]{8,}@",
+          "severity": "medium",
+          "exclude_if_contains": ["example", "localhost", "127.0.0.1", "password", "user"]
+        },
+        {
+          "name": "Hardcoded Password",
+          "regex": "password\\s*[=:]\\s*[\"'][^\"']{8,}[\"']",
+          "severity": "medium",
+          "exclude_if_contains": ["your", "password", "example", "xxx"]
+        }
+      ]
+    },
+
+    "tier3_silent": {
+      "description": "Legitimate cases - silently allowed (context-aware)",
+      "allowed_patterns": [
+        "Files ending with .example or .sample (placeholders)",
+        "Comments (// or # or /* */)",
+        "Documentation files (*.md)",
+        "Test fixtures and mocks",
+        "Files in .securityignore"
+      ],
+      "built_in_whitelist": [
+        "**/.env.example",
+        "**/.env.sample",
+        "**/.env.template",
+        "**/examples/**",
+        "**/tests/fixtures/**",
+        "**/__tests__/mocks/**",
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/build/**",
+        "scripts/pre-commit",
+        ".ai/security-policy.json",
+        ".ai/forbidden-trackers.json"
+      ]
+    },
+
+    "bypass_mechanisms": {
+      "inline_comment": {
+        "enabled": true,
+        "keywords": ["secure-ignore", "security:ignore", "nosecret"],
+        "example": "const KEY = 'demo-key-123' // secure-ignore"
+      },
+      "securityignore_file": {
+        "enabled": true,
+        "path": ".securityignore",
+        "syntax": "gitignore-style glob patterns"
+      },
+      "interactive_confirmation": {
+        "enabled": true,
+        "applies_to": ["tier2_warning"],
+        "prompt": "Type 'yes' to proceed"
+      },
+      "no_verify_flag": {
+        "enabled": true,
+        "command": "git commit --no-verify",
+        "warning": "Disables ALL security checks - use only in emergencies"
+      }
+    }
+  },
+
+  "lang_critical": {
+    "enabled": true,
+    "severity": "warning",
+    "blocks_commit": false,
+    "description": "Ukrainian market policy - detect russian content",
+    "patterns": [
+      "\\.ru[^a-z]",
+      "ru-RU",
+      "ru_RU",
+      "\"ru\""
+    ],
+    "whitelist": [
+      "scripts/pre-commit",
+      "scripts/seo-check.sh",
+      ".ai/forbidden-trackers.json",
+      ".ai/contexts/*.context.md",
+      "RULES_PRODUCT.md",
+      "RULES_CORE.md",
+      "README.md"
+    ]
+  },
+
+  "russian_trackers": {
+    "enabled": true,
+    "severity": "critical",
+    "blocks_commit": true,
+    "description": "Zero tolerance for russian tracking services",
+    "patterns": [
+      "metrika\\.yandex",
+      "mc\\.yandex",
+      "top\\.mail\\.ru",
+      "vk\\.com/js/api",
+      "vk\\.com/pixel",
+      "VK\\.Retargeting",
+      "yookassa",
+      "kassa\\.yandex",
+      "api-maps\\.yandex",
+      "2gis",
+      "wildberries",
+      "ozon\\.ru"
+    ],
+    "safe_alternatives": {
+      "analytics": ["Google Analytics", "Plausible", "Matomo"],
+      "payments": ["Stripe", "PayPal", "WayForPay (UA)", "LiqPay (UA)"],
+      "maps": ["Google Maps", "OpenStreetMap", "Mapbox"],
+      "cdn": ["Cloudflare", "jsDelivr", "unpkg"]
+    }
+  },
+
+  "audit_trail": {
+    "enabled": true,
+    "path": ".ai/audit-trail.log",
+    "description": "Legal protection - log all blocked commits",
+    "includes": [
+      "Timestamp",
+      "Event type",
+      "User details",
+      "Branch name",
+      "Framework version"
+    ]
+  },
+
+  "metadata": {
+    "framework": "ai-workflow-rules",
+    "version": "8.2.0",
+    "philosophy": "Silent Guardian - Protect without blocking productivity",
+    "approach": "3-tier: Hard Block / Warning + Choice / Silent Allow",
+    "best_practices_based_on": ["GitGuardian", "GitHub Advanced Security", "TruffleHog"],
+    "created": "2026-02-05",
+    "last_updated": "2026-02-05"
+  }
+}

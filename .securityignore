@@ -1,0 +1,105 @@
+# ==============================================================================
+# .securityignore - Security Scanner Ignore Rules
+# ==============================================================================
+#
+# PURPOSE:
+#   Exclude files/patterns from pre-commit secret scanning
+#   Use for known false positives or legitimate use cases
+#
+# SYNTAX:
+#   - Same as .gitignore (glob patterns)
+#   - Lines starting with # are comments
+#   - Blank lines are ignored
+#
+# EXAMPLES:
+#   docs/api-examples.md              # Specific file
+#   tests/fixtures/**                 # Directory and subdirectories
+#   **/*.test.ts                      # All test files
+#   **/example-*.js                   # Files matching pattern
+#
+# WHEN TO USE:
+#   ✅ Documentation with API key examples
+#   ✅ Test fixtures with fake credentials
+#   ✅ Mock data for unit tests
+#   ✅ Code examples in tutorials
+#   ✅ Legacy code (acknowledged risk, documented)
+#
+# WHEN NOT TO USE:
+#   ❌ Real secrets in production code
+#   ❌ To bypass security for convenience
+#   ❌ Actual API keys or credentials
+#
+# SECURITY NOTE:
+#   This file does NOT bypass Tier 1 (hard block) patterns.
+#   Real API keys (sk-ant-api03-*, ghp_*, AKIA*) are ALWAYS blocked.
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Documentation
+# ------------------------------------------------------------------------------
+
+# API documentation with example keys
+# docs/api-guide.md
+# docs/authentication.md
+
+# Tutorial files with sample code
+# tutorials/**/*.md
+
+# ------------------------------------------------------------------------------
+# Tests & Fixtures
+# ------------------------------------------------------------------------------
+
+# Test fixtures with fake credentials (already built-in, but can add custom)
+# tests/fixtures/**
+# __tests__/mocks/**
+# **/*.test.ts
+# **/*.spec.js
+
+# E2E tests with test accounts
+# e2e/test-credentials.json
+
+# ------------------------------------------------------------------------------
+# Examples & Samples
+# ------------------------------------------------------------------------------
+
+# Example configurations (already built-in for .env.example)
+# config/example-config.json
+
+# Sample data files
+# samples/**
+
+# Code examples
+# examples/**
+
+# ------------------------------------------------------------------------------
+# Legacy Code (use with caution)
+# ------------------------------------------------------------------------------
+
+# Legacy integrations (document WHY these are safe)
+# legacy/old-api-client.js  # Uses deprecated test endpoint, no real keys
+
+# Third-party vendor code (not maintained by us)
+# vendor/external-sdk/**
+
+# ------------------------------------------------------------------------------
+# Build & Generated Files
+# ------------------------------------------------------------------------------
+
+# Generated files (usually auto-ignored, but can specify)
+# dist/**
+# build/**
+# .next/**
+# coverage/**
+
+# ------------------------------------------------------------------------------
+# Custom Patterns
+# ------------------------------------------------------------------------------
+
+# Add your project-specific patterns below:
+
+# Example: Internal tools with hardcoded demo credentials
+# tools/demo-account.json  # Demo account for internal testing only
+
+# Example: Whitelabel client configs (explain why safe)
+# clients/acme-corp/config.js  # ACME Corp test environment, no production keys
