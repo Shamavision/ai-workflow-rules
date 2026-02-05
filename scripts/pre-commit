@@ -1,47 +1,81 @@
 #!/bin/bash
 # ==============================================================================
-# PRE-COMMIT HOOK - INTELLIGENT SECRETS SCANNER
-# AI Workflow Rules Framework v8.2
+# PRE-COMMIT HOOK - UNIVERSAL INTELLIGENT SECRETS SCANNER
+# AI Workflow Rules Framework v8.3
 # ==============================================================================
 #
 # PHILOSOPHY: Silent Guardian Architecture
 #   Protect without blocking productivity
 #   Trust informed decisions
+#   Universal compatibility (all IDEs, all AI providers, all platforms)
 #
 # SECURITY APPROACH: 3-Tier Protection
 #   Tier 1: HARD BLOCK - Real secrets (100% confidence)
 #   Tier 2: WARNING + CHOICE - Suspicious patterns (let user decide)
 #   Tier 3: SILENT - Legitimate cases (context-aware)
 #
-# WHAT IT CHECKS:
-#   1. Real API keys (Anthropic, OpenAI, GitHub, AWS, Stripe)
-#   2. Private keys and certificates
-#   3. High-entropy strings (likely secrets)
-#   4. Hardcoded credentials (with bypass option)
-#   5. LANG-CRITICAL violations (russian content) - WARNING
-#   6. Russian tracking services - BLOCK
+# SUPPORTED AI PROVIDERS:
+#   Anthropic (Claude), OpenAI (GPT), Google (Gemini), Hugging Face,
+#   Cohere, Azure OpenAI, Replicate, GitHub Copilot, AWS Bedrock
+#
+# PLATFORM COMPATIBILITY:
+#   - Linux/macOS: Native bash
+#   - Windows: Git Bash (auto-installed with Git for Windows)
+#   - CI/CD: Auto-detects non-interactive mode
+#
+# IDE COMPATIBILITY:
+#   VS Code, Cursor, Windsurf, WebStorm, Sublime, Vim, all git-based IDEs
 #
 # BYPASS MECHANISMS:
 #   - Comment: // secure-ignore or # secure-ignore
 #   - File: .securityignore (gitignore syntax)
-#   - Interactive: Type 'yes' for tier 2 warnings
+#   - Interactive: Type 'yes' for tier 2 warnings (auto-skip in CI/CD)
 #   - Emergency: git commit --no-verify (disables ALL checks)
-#
-# CONFIGURATION:
-#   - .ai/security-policy.json (optional, for custom rules)
-#   - .securityignore (optional, for known false positives)
+#   - Env var: SECURITY_HOOK_MODE=permissive (for CI/CD)
 #
 # ==============================================================================
 
 set -e
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-NC='\033[0m'
+# Colors (disabled in non-TTY environments like CI/CD)
+if [ -t 1 ]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    CYAN='\033[0;36m'
+    NC='\033[0m'
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    CYAN=''
+    NC=''
+fi
+
+# Detect environment
+IS_INTERACTIVE=false
+IS_CI=false
+
+# Check if running in interactive terminal
+if [ -t 0 ] && [ -t 1 ]; then
+    IS_INTERACTIVE=true
+fi
+
+# Detect CI/CD environment
+if [ "$CI" == "true" ] || \
+   [ "$GITHUB_ACTIONS" == "true" ] || \
+   [ "$GITLAB_CI" == "true" ] || \
+   [ "$JENKINS_HOME" != "" ] || \
+   [ "$CIRCLECI" == "true" ] || \
+   [ "$TRAVIS" == "true" ]; then
+    IS_CI=true
+    IS_INTERACTIVE=false
+fi
+
+# Environment-based mode
+HOOK_MODE="${SECURITY_HOOK_MODE:-balanced}"  # strict | balanced | permissive
 
 # Flags
 HARD_BLOCKED=false
@@ -60,6 +94,9 @@ AUDIT_TRAIL=".ai/audit-trail.log"
 
 print_header() {
     echo -e "${BLUE}🔒 Pre-Commit Security Scan${NC}"
+    if [ "$IS_CI" == "true" ]; then
+        echo -e "${CYAN}   Environment: CI/CD (non-interactive mode)${NC}"
+    fi
     echo ""
 }
 
@@ -79,32 +116,44 @@ print_info() {
     echo -e "${CYAN}ℹ️  $1${NC}"
 }
 
-# Calculate Shannon entropy (detect random strings likely to be secrets)
+# Calculate Shannon entropy (detect high-randomness strings likely to be secrets)
 calculate_entropy() {
     local string="$1"
     local length=${#string}
 
-    if [ $length -lt 16 ]; then
+    # Skip short strings
+    if [ $length -lt 20 ]; then
         echo "0"
         return
     fi
 
-    # Count character frequencies
-    declare -A freq
-    for (( i=0; i<$length; i++ )); do
-        char="${string:$i:1}"
-        ((freq[$char]++))
-    done
+    # Use Python if available (more accurate)
+    if command -v python3 &> /dev/null; then
+        entropy=$(python3 -c "
+import math
+from collections import Counter
+s = '$string'
+p = [c/len(s) for c in Counter(s).values()]
+entropy = -sum(pi * math.log2(pi) for pi in p)
+print(f'{entropy:.2f}')
+" 2>/dev/null)
+        echo "${entropy:-0}"
+        return
+    fi
 
-    # Calculate Shannon entropy
-    local entropy=0
-    for count in "${freq[@]}"; do
-        local p=$(echo "scale=4; $count / $length" | bc)
-        local log_p=$(echo "scale=4; l($p) / l(2)" | bc -l)
-        entropy=$(echo "scale=4; $entropy - ($p * $log_p)" | bc)
-    done
+    # Fallback: Simple approximation
+    # High entropy = many unique characters
+    unique_chars=$(echo "$string" | grep -o . | sort -u | wc -l)
+    ratio=$(echo "scale=2; $unique_chars / $length" | bc 2>/dev/null || echo "0")
 
-    echo "$entropy"
+    # Rough entropy estimate (0-5 scale)
+    if (( $(echo "$ratio > 0.7" | bc -l 2>/dev/null || echo 0) )); then
+        echo "4.5"
+    elif (( $(echo "$ratio > 0.5" | bc -l 2>/dev/null || echo 0) )); then
+        echo "3.5"
+    else
+        echo "2.0"
+    fi
 }
 
 # Check if file should be ignored
@@ -112,12 +161,14 @@ is_ignored() {
     local file="$1"
     local filename=$(basename "$file")
 
-    # Built-in whitelist (always allowed)
+    # Built-in whitelist
     local BUILT_IN_IGNORE=(
         ".env.example"
         ".env.sample"
         ".env.template"
         "scripts/pre-commit"
+        "scripts/pre-commit.js"
+        "scripts/pre-commit.ps1"
         ".git/hooks/pre-commit"
         "scripts/seo-check.sh"
         ".ai/security-policy.json"
@@ -136,25 +187,23 @@ is_ignored() {
 
     for pattern in "${BUILT_IN_IGNORE[@]}"; do
         if [[ "$file" == *"$pattern"* ]]; then
-            return 0  # ignored
+            return 0
         fi
     done
 
     # Check .securityignore file
     if [ -f "$SECURITY_IGNORE" ]; then
         while IFS= read -r pattern || [ -n "$pattern" ]; do
-            # Skip comments and empty lines
             [[ "$pattern" =~ ^[[:space:]]*# ]] && continue
             [[ -z "$pattern" ]] && continue
 
-            # Simple glob matching
             if [[ "$file" == $pattern ]]; then
-                return 0  # ignored
+                return 0
             fi
         done < "$SECURITY_IGNORE"
     fi
 
-    return 1  # not ignored
+    return 1
 }
 
 # Check if line has bypass comment
@@ -164,13 +213,13 @@ has_bypass_comment() {
     if [[ "$line" == *"secure-ignore"* ]] || \
        [[ "$line" == *"security:ignore"* ]] || \
        [[ "$line" == *"nosecret"* ]]; then
-        return 0  # has bypass
+        return 0
     fi
 
-    return 1  # no bypass
+    return 1
 }
 
-# Log security events (audit trail for legal protection)
+# Log security events
 log_to_audit_trail() {
     local event_type="$1"
     local details="$2"
@@ -182,17 +231,30 @@ log_to_audit_trail() {
 [$(date '+%Y-%m-%d %H:%M:%S %Z')] COMMIT BLOCKED
 Event: $event_type
 Details: $details
-Framework: ai-workflow-rules v8.2
+Framework: ai-workflow-rules v8.3
 User: $(git config user.name) <$(git config user.email)>
 Branch: $(git branch --show-current)
+Environment: $([ "$IS_CI" == "true" ] && echo "CI/CD" || echo "Interactive")
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
 }
 
-# Interactive prompt for tier 2 warnings
+# Interactive prompt (auto-skip in CI/CD)
 ask_user_confirmation() {
     local message="$1"
+
+    # In CI/CD or non-interactive mode: auto-block tier 2
+    if [ "$IS_INTERACTIVE" == "false" ]; then
+        print_warning "Non-interactive mode: Auto-blocking suspicious pattern"
+        return 1
+    fi
+
+    # In permissive mode: auto-allow tier 2
+    if [ "$HOOK_MODE" == "permissive" ]; then
+        print_warning "Permissive mode: Auto-allowing (set SECURITY_HOOK_MODE=balanced)"
+        return 0
+    fi
 
     echo ""
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -235,134 +297,229 @@ echo "Scanning $(echo "$STAGED_FILES" | wc -l) staged file(s)..."
 echo ""
 
 # ==============================================================================
-# TIER 1: HARD BLOCK - Real Secrets (100% confidence)
+# TIER 1: HARD BLOCK - Real Secrets (ALL AI Providers)
 # ==============================================================================
 
-echo "━━━ Checking for real API keys and secrets..."
+echo "━━━ Checking for real API keys (all AI providers)..."
 
 TIER1_BLOCKED=false
 
 for file in $STAGED_FILES; do
-    # Skip if file should be ignored
     if is_ignored "$file"; then
         continue
     fi
 
-    # Skip binary files
     if file "$file" 2>/dev/null | grep -q "binary"; then
         continue
     fi
 
-    # Skip if file doesn't exist (deleted)
     if [ ! -f "$file" ]; then
         continue
     fi
 
-    # Read file line by line
     line_num=0
     while IFS= read -r line || [ -n "$line" ]; do
         ((line_num++))
 
-        # Skip if line has bypass comment
         if has_bypass_comment "$line"; then
             continue
         fi
 
-        # Tier 1 Patterns: Real API Keys (exact formats)
+        # ============================================================
+        # ANTHROPIC (Claude)
+        # ============================================================
 
-        # Anthropic API key (real format: sk-ant-api03-{95 chars})
+        # Real Anthropic API key: sk-ant-api03-{95 chars}
         if echo "$line" | grep -qE 'sk-ant-api03-[A-Za-z0-9_-]{95}'; then
             print_error "BLOCKED: Real Anthropic API key in $file:$line_num"
-            echo "   Pattern: sk-ant-api03-***"
-            echo "   This is a REAL API key and cannot be committed"
+            echo "   Provider: Anthropic (Claude)"
             echo "   Fix: Use process.env.ANTHROPIC_API_KEY"
             TIER1_BLOCKED=true
         fi
 
-        # OpenAI API key (real format: sk-{48+ chars})
-        if echo "$line" | grep -qE 'sk-[a-zA-Z0-9]{48,}'; then
+        # ============================================================
+        # OPENAI (GPT, ChatGPT, DALL-E)
+        # ============================================================
+
+        # Real OpenAI API key: sk-{48-51 chars}
+        if echo "$line" | grep -qE 'sk-[a-zA-Z0-9]{48,51}' && ! echo "$line" | grep -qE 'sk-ant-'; then
             print_error "BLOCKED: Real OpenAI API key in $file:$line_num"
-            echo "   Pattern: sk-***"
-            echo "   This is a REAL API key and cannot be committed"
+            echo "   Provider: OpenAI (GPT)"
             echo "   Fix: Use process.env.OPENAI_API_KEY"
             TIER1_BLOCKED=true
         fi
 
-        # GitHub Personal Access Token (real format: ghp_{36 chars})
+        # ============================================================
+        # GOOGLE (Gemini, PaLM, Vertex AI)
+        # ============================================================
+
+        # Google API key: AIza{39 chars}
+        if echo "$line" | grep -qE 'AIza[A-Za-z0-9_-]{35}'; then
+            print_error "BLOCKED: Real Google AI API key in $file:$line_num"
+            echo "   Provider: Google (Gemini, PaLM)"
+            echo "   Fix: Use process.env.GOOGLE_API_KEY"
+            TIER1_BLOCKED=true
+        fi
+
+        # ============================================================
+        # HUGGING FACE
+        # ============================================================
+
+        # Hugging Face token: hf_{32+ chars}
+        if echo "$line" | grep -qE 'hf_[A-Za-z0-9]{32,}'; then
+            print_error "BLOCKED: Real Hugging Face token in $file:$line_num"
+            echo "   Provider: Hugging Face"
+            echo "   Fix: Use process.env.HUGGINGFACE_TOKEN"
+            TIER1_BLOCKED=true
+        fi
+
+        # ============================================================
+        # COHERE
+        # ============================================================
+
+        # Cohere API key: {40 alphanum after 'cohere'}
+        if echo "$line" | grep -qiE 'cohere.*[A-Za-z0-9]{40}'; then
+            print_error "BLOCKED: Potential Cohere API key in $file:$line_num"
+            echo "   Provider: Cohere"
+            echo "   Fix: Use process.env.COHERE_API_KEY"
+            TIER1_BLOCKED=true
+        fi
+
+        # ============================================================
+        # REPLICATE
+        # ============================================================
+
+        # Replicate token: r8_{40 chars}
+        if echo "$line" | grep -qE 'r8_[A-Za-z0-9]{40}'; then
+            print_error "BLOCKED: Real Replicate token in $file:$line_num"
+            echo "   Provider: Replicate"
+            echo "   Fix: Use process.env.REPLICATE_API_TOKEN"
+            TIER1_BLOCKED=true
+        fi
+
+        # ============================================================
+        # GITHUB (Copilot, Actions)
+        # ============================================================
+
+        # GitHub Personal Access Token: ghp_{36 chars}
         if echo "$line" | grep -qE 'ghp_[A-Za-z0-9]{36}'; then
             print_error "BLOCKED: Real GitHub token in $file:$line_num"
-            echo "   Pattern: ghp_***"
-            echo "   This is a REAL GitHub token and cannot be committed"
+            echo "   Provider: GitHub"
             echo "   Fix: Use process.env.GITHUB_TOKEN"
             TIER1_BLOCKED=true
         fi
 
-        # GitHub OAuth token (gho_)
+        # GitHub OAuth: gho_{36 chars}
         if echo "$line" | grep -qE 'gho_[A-Za-z0-9]{36}'; then
             print_error "BLOCKED: Real GitHub OAuth token in $file:$line_num"
-            echo "   Pattern: gho_***"
+            echo "   Provider: GitHub OAuth"
             TIER1_BLOCKED=true
         fi
 
-        # AWS Access Key (real format: AKIA{16 chars})
+        # ============================================================
+        # AWS (Bedrock, SageMaker)
+        # ============================================================
+
+        # AWS Access Key: AKIA{16 chars}
         if echo "$line" | grep -qE 'AKIA[A-Z0-9]{16}'; then
             print_error "BLOCKED: Real AWS access key in $file:$line_num"
-            echo "   Pattern: AKIA***"
-            echo "   This is a REAL AWS credential and cannot be committed"
+            echo "   Provider: AWS"
             echo "   Fix: Use process.env.AWS_ACCESS_KEY_ID"
             TIER1_BLOCKED=true
         fi
 
-        # Stripe Secret Key (real format: sk_live_{24+ chars})
+        # ============================================================
+        # STRIPE
+        # ============================================================
+
+        # Stripe Secret Key: sk_live_{24+ chars}
         if echo "$line" | grep -qE 'sk_live_[A-Za-z0-9]{24,}'; then
             print_error "BLOCKED: Real Stripe secret key in $file:$line_num"
-            echo "   Pattern: sk_live_***"
-            echo "   This is a REAL Stripe secret key and cannot be committed"
+            echo "   Provider: Stripe"
             echo "   Fix: Use process.env.STRIPE_SECRET_KEY"
             TIER1_BLOCKED=true
         fi
 
-        # Private keys (PEM format)
+        # ============================================================
+        # AZURE OPENAI
+        # ============================================================
+
+        # Azure OpenAI key pattern (32 hex chars)
+        if echo "$line" | grep -qiE 'azure.*[a-f0-9]{32}' && echo "$line" | grep -qiE 'openai|cognitive'; then
+            print_error "BLOCKED: Potential Azure OpenAI key in $file:$line_num"
+            echo "   Provider: Azure OpenAI"
+            echo "   Fix: Use process.env.AZURE_OPENAI_KEY"
+            TIER1_BLOCKED=true
+        fi
+
+        # ============================================================
+        # PRIVATE KEYS
+        # ============================================================
+
         if echo "$line" | grep -q "BEGIN PRIVATE KEY"; then
             print_error "BLOCKED: Private key detected in $file:$line_num"
-            echo "   This is a REAL private key and cannot be committed"
-            echo "   Fix: Remove from code, store securely"
+            echo "   Type: Cryptographic private key"
             TIER1_BLOCKED=true
         fi
 
         if echo "$line" | grep -q "BEGIN RSA PRIVATE KEY"; then
             print_error "BLOCKED: RSA private key detected in $file:$line_num"
+            echo "   Type: RSA private key"
             TIER1_BLOCKED=true
         fi
+
+        # ============================================================
+        # HIGH ENTROPY STRINGS (Generic Secret Detection)
+        # ============================================================
+
+        # Extract quoted strings longer than 20 chars
+        for quoted_string in $(echo "$line" | grep -oE '["\x27][A-Za-z0-9+/=_-]{20,}["\x27]'); do
+            # Remove quotes
+            clean_string=$(echo "$quoted_string" | tr -d '"' | tr -d "'")
+
+            # Skip known safe patterns
+            if echo "$clean_string" | grep -qiE 'example|test|demo|placeholder|your.?key|xxx|sample|fake'; then
+                continue
+            fi
+
+            # Calculate entropy
+            entropy=$(calculate_entropy "$clean_string")
+
+            # High entropy threshold (likely random secret)
+            if (( $(echo "$entropy > 4.5" | bc -l 2>/dev/null || echo 0) )); then
+                print_error "BLOCKED: High-entropy string (likely secret) in $file:$line_num"
+                echo "   Entropy: $entropy (threshold: 4.5)"
+                echo "   Pattern: Random string with ${#clean_string} chars"
+                echo "   Fix: Move to environment variable"
+                TIER1_BLOCKED=true
+            fi
+        done
 
     done < "$file"
 done
 
-# Check for blocked file types
+# Check blocked file types
 for file in $STAGED_FILES; do
     filename=$(basename "$file")
 
-    # Block real .env files (not .env.example)
+    # Real .env files
     if [[ "$filename" == ".env" ]] || \
        [[ "$filename" == ".env.local" ]] || \
        [[ "$filename" == ".env.production" ]] || \
        [[ "$filename" == ".env.development" ]]; then
         print_error "BLOCKED: Environment file detected: $file"
         echo "   Reason: Contains secrets"
-        echo "   Fix: Unstage (git reset HEAD $file)"
         TIER1_BLOCKED=true
     fi
 
-    # Block private key files
+    # Private key files
     if [[ "$file" =~ \.(pem|key|p12|pfx)$ ]]; then
         print_error "BLOCKED: Private key file: $file"
-        echo "   Reason: Cryptographic keys must not be committed"
         TIER1_BLOCKED=true
     fi
 
-    # Block credentials files
-    if [[ "$filename" == "credentials.json" ]] || \
-       [[ "$filename" == "secrets.json" ]]; then
+    # Credentials files
+    if [[ "$filename" == "credentials.json" ]] || [[ "$filename" == "secrets.json" ]]; then
         print_error "BLOCKED: Credentials file: $file"
         TIER1_BLOCKED=true
     fi
@@ -379,23 +536,20 @@ fi
 echo "━━━ Checking for suspicious patterns..."
 
 for file in $STAGED_FILES; do
-    # Skip if ignored
     if is_ignored "$file"; then
         continue
     fi
 
-    # Skip binary
     if file "$file" 2>/dev/null | grep -q "binary"; then
         continue
     fi
 
-    # Skip if doesn't exist
     if [ ! -f "$file" ]; then
         continue
     fi
 
-    # Only check source files for tier 2
-    if [[ ! "$file" =~ \.(js|ts|jsx|tsx|py|go|rb|java|cs|php|sh)$ ]]; then
+    # Only check source files
+    if [[ ! "$file" =~ \.(js|ts|jsx|tsx|py|go|rb|java|cs|php|sh|yml|yaml|json)$ ]]; then
         continue
     fi
 
@@ -403,32 +557,27 @@ for file in $STAGED_FILES; do
     while IFS= read -r line || [ -n "$line" ]; do
         ((line_num++))
 
-        # Skip if has bypass comment
         if has_bypass_comment "$line"; then
             continue
         fi
 
-        # Skip comments (likely examples)
+        # Skip comments
         if [[ "$line" =~ ^[[:space:]]*// ]] || \
            [[ "$line" =~ ^[[:space:]]*# ]] || \
            [[ "$line" =~ ^[[:space:]]*\* ]]; then
             continue
         fi
 
-        # Tier 2 Patterns: Generic secrets (need user confirmation)
-
-        # Generic API_KEY assignment with quotes
+        # Generic API_KEY assignment
         if echo "$line" | grep -qiE '[^a-z_]API_?KEY["\x27]\s*:\s*["\x27][A-Za-z0-9_-]{16,}["\x27]' || \
            echo "$line" | grep -qiE '[^a-z_]API_?KEY\s*=\s*["\x27][A-Za-z0-9_-]{16,}["\x27]'; then
 
-            # Exclude obvious placeholders
             if echo "$line" | grep -qiE 'your.?key|example|placeholder|xxx|test|demo|fake|sample'; then
                 continue
             fi
 
             print_warning "Suspicious API key assignment in $file:$line_num"
             echo "   Pattern: API_KEY = \"...\""
-            echo "   Context: $(echo "$line" | sed 's/^[[:space:]]*//' | cut -c1-60)..."
             ((WARNINGS_COUNT++))
 
             if ! ask_user_confirmation "Possible hardcoded API key detected"; then
@@ -452,7 +601,7 @@ for file in $STAGED_FILES; do
             fi
         fi
 
-        # Database connection strings with credentials
+        # Database connection strings
         if echo "$line" | grep -qE '(postgres|mysql|mongodb)://[^:]+:[^@]{8,}@'; then
             if echo "$line" | grep -qiE 'example|localhost|127\.0\.0\.1|password|user'; then
                 continue
@@ -469,35 +618,26 @@ for file in $STAGED_FILES; do
 
     done < "$file"
 
-    # Break outer loop if user cancelled
     if [ "$HARD_BLOCKED" == "true" ]; then
         break
     fi
 done
 
 # ==============================================================================
-# TIER 3: SILENT - Legitimate Cases (context-aware)
-# ==============================================================================
-
-# Tier 3 is handled by is_ignored() function
-# These files are silently allowed:
-# - .env.example (placeholders)
-# - Documentation (*.md)
-# - Test fixtures (tests/fixtures/)
-# - Comments (detected inline)
-
-# ==============================================================================
-# CHECK: LANG-CRITICAL VIOLATIONS (WARNING only)
+# LANG-CRITICAL & RUSSIAN TRACKERS (unchanged)
 # ==============================================================================
 
 echo "━━━ Checking for LANG-CRITICAL violations..."
 
 LANG_WHITELIST=(
     "scripts/pre-commit"
+    "scripts/pre-commit.js"
+    "scripts/pre-commit.ps1"
     ".git/hooks/pre-commit"
     "scripts/seo-check.sh"
     ".ai/forbidden-trackers.json"
     ".ai/contexts/"
+    ".ai/security-policy.json"
     "RULES_PRODUCT.md"
     "RULES_CORE.md"
     "README.md"
@@ -511,12 +651,10 @@ LANG_PATTERNS=(
 )
 
 for file in $STAGED_FILES; do
-    # Skip binary
     if file "$file" 2>/dev/null | grep -q "binary"; then
         continue
     fi
 
-    # Skip whitelisted
     skip=false
     for whitelist_file in "${LANG_WHITELIST[@]}"; do
         if [[ "$file" == *"$whitelist_file"* ]]; then
@@ -525,39 +663,29 @@ for file in $STAGED_FILES; do
         fi
     done
 
-    if [ "$skip" == "true" ]; then
-        continue
-    fi
-
-    # Skip if doesn't exist
-    if [ ! -f "$file" ]; then
+    if [ "$skip" == "true" ] || [ ! -f "$file" ]; then
         continue
     fi
 
     for pattern in "${LANG_PATTERNS[@]}"; do
         if grep -qE "$pattern" "$file" 2>/dev/null; then
             line_number=$(grep -nE "$pattern" "$file" | head -n 1 | cut -d: -f1)
-
             print_error "LANG-CRITICAL violation in: $file:$line_number"
-            echo "   Pattern: $pattern (Russian content detected)"
-            echo "   Fix: Remove russian content (see RULES_PRODUCT.md Section 3)"
-
+            echo "   Pattern: $pattern"
             VIOLATIONS_FOUND=true
         fi
     done
 done
 
-# ==============================================================================
-# CHECK: RUSSIAN TRACKING SERVICES (BLOCK)
-# ==============================================================================
-
 echo "━━━ Checking for russian tracking services..."
 
 TRACKER_WHITELIST=(
     ".ai/forbidden-trackers.json"
+    ".ai/security-policy.json"
     "scripts/seo-check.sh"
     "scripts/pre-commit"
-    ".git/hooks/pre-commit"
+    "scripts/pre-commit.js"
+    "scripts/pre-commit.ps1"
     "RULES_PRODUCT.md"
     "README.md"
 )
@@ -578,12 +706,10 @@ TRACKER_PATTERNS=(
 )
 
 for file in $STAGED_FILES; do
-    # Skip binary
     if file "$file" 2>/dev/null | grep -q "binary"; then
         continue
     fi
 
-    # Skip whitelisted
     skip=false
     for whitelist_file in "${TRACKER_WHITELIST[@]}"; do
         if [[ "$file" == *"$whitelist_file"* ]]; then
@@ -592,28 +718,15 @@ for file in $STAGED_FILES; do
         fi
     done
 
-    if [ "$skip" == "true" ]; then
-        continue
-    fi
-
-    # Skip if doesn't exist
-    if [ ! -f "$file" ]; then
+    if [ "$skip" == "true" ] || [ ! -f "$file" ]; then
         continue
     fi
 
     for pattern in "${TRACKER_PATTERNS[@]}"; do
         if grep -qiE "$pattern" "$file" 2>/dev/null; then
             line_number=$(grep -inE "$pattern" "$file" | head -n 1 | cut -d: -f1)
-
             print_error "RUSSIAN TRACKER detected in: $file:$line_number"
             echo "   Pattern: $pattern"
-            echo "   Threat: Data sent to russian servers"
-            echo ""
-            echo "   Safe alternatives:"
-            echo "     Analytics: Google Analytics, Plausible"
-            echo "     Payments: Stripe, PayPal, WayForPay (UA)"
-            echo ""
-
             TRACKERS_FOUND=true
         fi
     done
@@ -626,66 +739,36 @@ done
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# LANG-CRITICAL = WARNING (doesn't block)
 if [ "$VIOLATIONS_FOUND" == "true" ]; then
     echo -e "${YELLOW}⚠️  LANG-CRITICAL WARNINGS DETECTED${NC}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     echo "Russian content patterns detected."
-    echo ""
-    echo "Review findings above:"
-    echo "  • If legitimate (examples, patterns): proceed"
-    echo "  • If actual violation: fix before commit"
-    echo ""
     echo -e "${YELLOW}Commit will PROCEED (this is a warning)${NC}"
     echo ""
 fi
 
-# TIER 1 HARD BLOCK or USER CANCELLED
 if [ "$HARD_BLOCKED" == "true" ]; then
     echo -e "${RED}❌ COMMIT BLOCKED${NC}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     echo "🚨 Your commit contains sensitive data or was cancelled."
     echo ""
-    echo "To fix:"
-    echo "  1. Remove secrets from files"
-    echo "  2. Use environment variables (process.env.VAR)"
-    echo "  3. Add to .gitignore if needed"
+    if [ "$IS_CI" == "true" ]; then
+        echo "Running in CI/CD: Set SECURITY_HOOK_MODE=permissive to bypass tier 2"
+    fi
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-
-    log_to_audit_trail "HARD_BLOCK" "Secrets or user cancellation"
-
+    log_to_audit_trail "HARD_BLOCK" "Secrets detected or user cancellation"
     exit 1
 fi
 
-# RUSSIAN TRACKERS = BLOCK
 if [ "$TRACKERS_FOUND" == "true" ]; then
     echo -e "${RED}❌ COMMIT BLOCKED - RUSSIAN TRACKERS${NC}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "🚨 Russian tracking services detected."
-    echo ""
-    echo "Security threat:"
-    echo "  • User data sent to russian state servers"
-    echo "  • GDPR violations"
-    echo "  • Legal liability"
-    echo ""
-    echo "To fix:"
-    echo "  1. Remove russian trackers (see errors above)"
-    echo "  2. Replace with safe alternatives"
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-
-    log_to_audit_trail "RUSSIAN_TRACKERS" "Staging files contain trackers"
-
+    log_to_audit_trail "RUSSIAN_TRACKERS" "Trackers detected"
     exit 1
 fi
 
-# ALL CLEAR
 if [ "$HARD_BLOCKED" == "false" ] && [ "$TRACKERS_FOUND" == "false" ]; then
     echo -e "${GREEN}✅ SECURITY SCAN PASSED${NC}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

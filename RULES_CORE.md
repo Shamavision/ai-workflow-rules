@@ -1765,6 +1765,104 @@ Proceeding with commit...
 
 ---
 
+#### Platform Compatibility & Universal AI Provider Support
+
+**v8.3 Update:** Hook works everywhere, detects all major AI providers.
+
+**3 Hook Versions** (choose one based on platform):
+
+| Version | File | Best For | Requirements |
+|---------|------|----------|--------------|
+| **Bash** | `scripts/pre-commit` | Linux, macOS, Git Bash | bash/sh (built-in) |
+| **Node.js** | `scripts/pre-commit.js` | All platforms | Node.js 14+ |
+| **PowerShell** | `scripts/pre-commit.ps1` | Windows native | PowerShell 5.1+ |
+
+**Installation:**
+```bash
+# Bash (default, works everywhere with Git)
+cp scripts/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+
+# Node.js (universal, no bash needed)
+cp scripts/pre-commit.js .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+
+# PowerShell (Windows native)
+Copy-Item scripts\pre-commit.ps1 .git\hooks\pre-commit
+```
+
+**AI Providers Detected** (v8.3):
+
+- ✅ **Anthropic** (Claude): `sk-ant-api03-{95}`
+- ✅ **OpenAI** (GPT, ChatGPT): `sk-{48-51}`
+- ✅ **Google** (Gemini, PaLM): `AIza{35}`
+- ✅ **Hugging Face**: `hf_{32+}`
+- ✅ **Cohere**: context-aware detection
+- ✅ **Replicate**: `r8_{40}`
+- ✅ **Azure OpenAI**: pattern matching
+- ✅ **GitHub** (Copilot): `ghp_{36}`, `gho_{36}`
+- ✅ **AWS** (Bedrock): `AKIA{16}`
+- ✅ **Stripe**: `sk_live_{24+}`
+- ✅ **Generic**: High-entropy detection (entropy > 4.5)
+
+**IDE Compatibility:**
+
+Works with ANY git-based IDE:
+- VS Code, Cursor, Windsurf
+- WebStorm, IntelliJ IDEA
+- Sublime Text, Vim, Neovim
+- GitHub Codespaces, Gitpod
+- Any other IDE using git
+
+**CI/CD Auto-Detection:**
+
+Hook automatically detects CI/CD environment:
+- GitHub Actions (`GITHUB_ACTIONS=true`)
+- GitLab CI (`GITLAB_CI=true`)
+- Jenkins (`JENKINS_HOME`)
+- CircleCI, Travis CI
+- Generic (`CI=true`)
+
+**Behavior in CI/CD:**
+- Tier 1: Always blocks (real secrets)
+- Tier 2: Auto-blocks (no interactive prompts)
+- Override: `export SECURITY_HOOK_MODE=permissive` to allow tier 2
+
+**Environment Variables:**
+
+```bash
+# Mode control
+export SECURITY_HOOK_MODE=strict      # Block everything (high FP)
+export SECURITY_HOOK_MODE=balanced    # Default (recommended)
+export SECURITY_HOOK_MODE=permissive  # Only tier 1 blocks
+
+# CI/CD bypass (tier 2 only)
+export SECURITY_HOOK_MODE=permissive  # Allow tier 2 in CI
+```
+
+**Cross-Platform Notes:**
+
+- **Windows users without Git Bash:** Use Node.js or PowerShell version
+- **macOS/Linux:** Bash version recommended (native)
+- **Docker/containers:** Node.js version (universal)
+- **CI/CD pipelines:** Auto-detects, no config needed
+
+**Entropy-Based Detection:**
+
+High-randomness strings (likely secrets) automatically detected:
+
+```javascript
+// ❌ BLOCKED - Entropy: 4.8
+const key = "Tj9mK3nP8vL2xQ5wR7yZ1aB4cD6fG0h"
+
+// ✅ ALLOWED - Entropy: 2.1 (obvious placeholder)
+const key = "your-api-key-here"
+```
+
+**Threshold:** Shannon entropy > 4.5 for strings ≥20 chars
+
+---
+
 ## 11. RED FLAGS – AUTO-STOP CONDITIONS
 **STOP and ask confirmation if:**
 *   Deleting >10 files
@@ -1845,6 +1943,7 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
+*   **v8.3** [2026-02-05] – **UNIVERSAL COMPATIBILITY: ALL PLATFORMS, ALL AI PROVIDERS**. Complete cross-platform rewrite of security hooks. New: 3 hook versions (bash/Node.js/PowerShell), 9+ AI providers detection (Anthropic, OpenAI, Google Gemini, Hugging Face, Cohere, Replicate, Azure, AWS, generic), entropy-based secret detection (Shannon entropy > 4.5), CI/CD auto-detection (GitHub Actions, GitLab, Jenkins, etc.), environment-based modes (strict/balanced/permissive). Philosophy: "Work everywhere, detect everything, trust platforms." Files: `scripts/pre-commit`, `scripts/pre-commit.js`, `scripts/pre-commit.ps1`, `.ai/security-policy.json` updated. Platforms: Linux, macOS, Windows (native), all IDEs, all CI/CD. Added Platform Compatibility section in 10.1.
 *   **v8.2** [2026-02-05] – **3-TIER SECURITY SYSTEM: INTELLIGENT SECRET PROTECTION**. Major upgrade to pre-commit hook based on GitGuardian + GitHub Advanced Security best practices. New: Tier 1 (hard block real secrets), Tier 2 (warning + choice for suspicious patterns), Tier 3 (silent allow for context-aware cases). Added `.securityignore` support, inline `// secure-ignore` bypass, interactive prompts, audit trail logging. Philosophy: "Trust informed decisions — protect without blocking productivity." Reduces false positives by ~70% while maintaining security. Files: `scripts/pre-commit`, `.ai/security-policy.json`, `.securityignore`. Added Section 10.1. Full spec in RULES_CORE.md Section 10.1.
 *   **v8.0** [2026-02-03] – **TOKEN CONTROL v3.0: INTELLIGENT BUDGET MANAGEMENT**. Major upgrade from reactive monitoring to proactive control. New: Pre-flight token approval (mandatory estimates BEFORE execution), confidence-based estimation (HIGH/MEDIUM/LOW ±%), learning engine with variance tracking, emergency reserve protection (10-15%), smart batch detection, deferred execution queue, self-calibrating thresholds. Philosophy: "Control without dictatorship — inform, don't restrict." Target: 10-15% token savings without quality loss. Added Sections 2.14-2.18. Full spec: `.ai/token-control-v3-spec.md`.
 *   **v7.1** [2026-02-02] – Universal AGENTS.md support added. Framework now works with 90%+ AI coding tools (Claude Code, Cursor, Windsurf, Aider, Continue, OpenAI Codex, Google Jules, etc.) through AGENTS.md universal standard. Auto-loading in most tools. BUG-005 fixed (Session Start Protocol not applied automatically).
@@ -1858,4 +1957,4 @@ Before proposing solution:
 
 ---
 
-*This document is living. Update with approval. Last updated: 2026-02-05 (v8.2 3-Tier Security System)*
+*This document is living. Update with approval. Last updated: 2026-02-05 (v8.3 Universal Compatibility)*

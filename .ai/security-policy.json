@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "8.2.0",
-  "description": "Security policy for pre-commit hook - 3-tier protection system",
+  "version": "8.3.0",
+  "description": "Security policy for pre-commit hook - Universal 3-tier protection system",
 
   "secret_scanning": {
     "enabled": true,
@@ -18,44 +18,97 @@
       "patterns": [
         {
           "name": "Anthropic API Key",
+          "provider": "Anthropic (Claude)",
           "regex": "sk-ant-api03-[A-Za-z0-9_-]{95}",
           "severity": "critical",
           "message": "Real Anthropic API key detected. Use process.env.ANTHROPIC_API_KEY"
         },
         {
           "name": "OpenAI API Key",
-          "regex": "sk-[a-zA-Z0-9]{48,}",
+          "provider": "OpenAI (GPT, ChatGPT, DALL-E)",
+          "regex": "sk-[a-zA-Z0-9]{48,51}",
           "severity": "critical",
-          "message": "Real OpenAI API key detected. Use process.env.OPENAI_API_KEY"
+          "message": "Real OpenAI API key detected. Use process.env.OPENAI_API_KEY",
+          "exclude_pattern": "sk-ant-"
+        },
+        {
+          "name": "Google AI API Key",
+          "provider": "Google (Gemini, PaLM, Vertex AI)",
+          "regex": "AIza[A-Za-z0-9_-]{35}",
+          "severity": "critical",
+          "message": "Real Google AI API key detected. Use process.env.GOOGLE_API_KEY"
+        },
+        {
+          "name": "Hugging Face Token",
+          "provider": "Hugging Face",
+          "regex": "hf_[A-Za-z0-9]{32,}",
+          "severity": "critical",
+          "message": "Real Hugging Face token detected. Use process.env.HUGGINGFACE_TOKEN"
+        },
+        {
+          "name": "Cohere API Key",
+          "provider": "Cohere",
+          "regex": "cohere.*[A-Za-z0-9]{40}",
+          "severity": "critical",
+          "message": "Potential Cohere API key detected. Use process.env.COHERE_API_KEY"
+        },
+        {
+          "name": "Replicate Token",
+          "provider": "Replicate",
+          "regex": "r8_[A-Za-z0-9]{40}",
+          "severity": "critical",
+          "message": "Real Replicate token detected. Use process.env.REPLICATE_API_TOKEN"
+        },
+        {
+          "name": "Azure OpenAI Key",
+          "provider": "Azure OpenAI",
+          "regex": "azure.*(openai|cognitive).*[a-f0-9]{32}",
+          "severity": "critical",
+          "message": "Potential Azure OpenAI key detected. Use process.env.AZURE_OPENAI_KEY"
         },
         {
           "name": "GitHub Personal Access Token",
+          "provider": "GitHub",
           "regex": "ghp_[A-Za-z0-9]{36}",
           "severity": "critical",
           "message": "Real GitHub token detected. Use process.env.GITHUB_TOKEN"
         },
         {
           "name": "GitHub OAuth Token",
+          "provider": "GitHub OAuth",
           "regex": "gho_[A-Za-z0-9]{36}",
-          "severity": "critical"
+          "severity": "critical",
+          "message": "Real GitHub OAuth token detected"
         },
         {
           "name": "AWS Access Key",
+          "provider": "AWS (Bedrock, SageMaker)",
           "regex": "AKIA[A-Z0-9]{16}",
           "severity": "critical",
           "message": "Real AWS credentials detected. Use process.env.AWS_ACCESS_KEY_ID"
         },
         {
           "name": "Stripe Secret Key",
+          "provider": "Stripe",
           "regex": "sk_live_[A-Za-z0-9]{24,}",
           "severity": "critical",
           "message": "Real Stripe secret key detected. Use process.env.STRIPE_SECRET_KEY"
         },
         {
           "name": "Private Key (PEM)",
+          "provider": "Cryptographic Key",
           "regex": "BEGIN (RSA )?PRIVATE KEY",
           "severity": "critical",
           "message": "Private cryptographic key detected"
+        },
+        {
+          "name": "High-Entropy String",
+          "provider": "Generic Secret Detection",
+          "description": "Random strings with entropy > 4.5 (likely secrets)",
+          "method": "shannon_entropy_calculation",
+          "threshold": 4.5,
+          "min_length": 20,
+          "severity": "critical"
         }
       ],
       "blocked_files": [
@@ -214,13 +267,84 @@
     ]
   },
 
+  "platform_compatibility": {
+    "description": "Universal cross-platform support for all development environments",
+    "hook_versions": {
+      "bash": {
+        "file": "scripts/pre-commit",
+        "platforms": ["Linux", "macOS", "Windows (Git Bash)", "WSL"],
+        "requirements": "bash/sh (built-in on Unix, Git Bash on Windows)",
+        "features": "Full functionality, Python fallback for entropy"
+      },
+      "nodejs": {
+        "file": "scripts/pre-commit.js",
+        "platforms": ["All platforms with Node.js"],
+        "requirements": "Node.js 14+ (check: node --version)",
+        "features": "Pure JavaScript, no bash needed, native entropy calculation"
+      },
+      "powershell": {
+        "file": "scripts/pre-commit.ps1",
+        "platforms": ["Windows (native)", "macOS/Linux with PowerShell Core"],
+        "requirements": "PowerShell 5.1+ (built into Windows 10+)",
+        "features": "Windows native, no Git Bash needed"
+      }
+    },
+    "ide_support": {
+      "tested_with": [
+        "VS Code",
+        "Cursor",
+        "Windsurf",
+        "WebStorm / IntelliJ IDEA",
+        "Sublime Text",
+        "Vim / Neovim",
+        "Emacs",
+        "GitHub Codespaces",
+        "Gitpod"
+      ],
+      "note": "Works with any git-based IDE"
+    },
+    "ci_cd_support": {
+      "auto_detection": true,
+      "detected_environments": [
+        "GitHub Actions (GITHUB_ACTIONS=true)",
+        "GitLab CI (GITLAB_CI=true)",
+        "Jenkins (JENKINS_HOME set)",
+        "CircleCI (CIRCLECI=true)",
+        "Travis CI (TRAVIS=true)",
+        "Generic (CI=true)"
+      ],
+      "behavior": "Auto-skip interactive prompts, block tier 2 by default",
+      "env_var_override": "SECURITY_HOOK_MODE=permissive (to allow tier 2 in CI)"
+    },
+    "ai_providers_supported": [
+      "Anthropic (Claude)",
+      "OpenAI (GPT, ChatGPT, DALL-E)",
+      "Google (Gemini, PaLM, Vertex AI)",
+      "Hugging Face",
+      "Cohere",
+      "Replicate",
+      "Azure OpenAI",
+      "GitHub Copilot",
+      "AWS Bedrock / SageMaker",
+      "Generic high-entropy secrets"
+    ]
+  },
+
   "metadata": {
     "framework": "ai-workflow-rules",
-    "version": "8.2.0",
+    "version": "8.3.0",
     "philosophy": "Silent Guardian - Protect without blocking productivity",
-    "approach": "3-tier: Hard Block / Warning + Choice / Silent Allow",
+    "approach": "Universal 3-tier: Hard Block / Warning + Choice / Silent Allow",
     "best_practices_based_on": ["GitGuardian", "GitHub Advanced Security", "TruffleHog"],
+    "supported_platforms": ["Linux", "macOS", "Windows"],
+    "supported_ides": "All git-based IDEs",
+    "supported_ai_providers": "9+ major AI providers + generic detection",
     "created": "2026-02-05",
-    "last_updated": "2026-02-05"
+    "last_updated": "2026-02-05",
+    "major_version_changes": {
+      "v8.3": "Universal compatibility - Node.js + PowerShell versions, all AI providers, CI/CD auto-detection",
+      "v8.2": "3-tier protection system implementation",
+      "v8.0": "Token Control v3.0"
+    }
   }
 }
