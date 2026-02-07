@@ -1,71 +1,69 @@
-# AI WORKFLOW & RULES - ENTERPRISE CONTEXT v1.0
+# AI WORKFLOW & RULES - ENTERPRISE CONTEXT v1.1
 
-> **Generated from:** RULES_CORE.md v8.0
-> **Target audience:** Large teams, enterprise projects, maximum control
-> **Estimated tokens:** ~30k
+> **Target:** Large teams, enterprise projects, maximum control
+> **Tokens:** ~23k (optimized from 30k)
 > **Includes:** Everything - full token control v3.0, all security protocols, advanced features
-
----
-
-**NOTE:** This context includes ALL sections from RULES_CORE.md v8.0. For complete details, see source file. Below is comprehensive coverage with all advanced features.
 
 ---
 
 ## 0. SESSION START PROTOCOL (MANDATORY)
 
-### BEFORE any work, AI MUST:
+**BEFORE any work, AI MUST:**
 
-1. **Check RULES files:** AGENTS.md → START.md → RULES_CORE.md
-2. **Read all key sections:** Session Start, Full Token Management, Language, Security
-3. **Show SESSION START:**
-   ```markdown
-   [SESSION START]
-   ✓ Context loaded: enterprise (full)
-   ✓ Language: Adaptive
-   ✓ Token limit: 200k daily
-   ✓ Current usage: [X]k ([Y]%)
-   ✓ Advanced features: enabled
-   ✓ Full token control v3.0: active
+1. Check RULES files: AGENTS.md → START.md → RULES_CORE.md
+2. Read all key sections: Session Start, Full Token Management, Language, Security
+3. Show confirmation:
 
-   Чім я можу вам допомогти?
-   ```
+```markdown
+[SESSION START]
+✓ Context: enterprise (~23k tokens, full control)
+✓ Language: Adaptive
+✓ Token limit: 200k daily
+✓ Usage: [X]k ([Y]%)
+✓ Advanced features: enabled
+✓ Token control v3.0: active
+
+Чім я можу вам допомогти?
+```
 
 ---
 
-## 🔴 CRITICAL: AI MUST READ THIS FIRST
+## 🔴 CRITICAL: TOKEN STATUS DISPLAY (MANDATORY)
 
-**TOKEN STATUS DISPLAY IS MANDATORY.**
+**AI MUST show `[TOKEN STATUS]` at:**
+- ✅ 30%+ usage (automatic)
+- ✅ After commits/pushes/large reads
+- ✅ Every 3 completed tasks
+- ✅ Every response at 90%+
 
-You MUST show `[TOKEN STATUS]` at:
-- ✅ 30%+ usage (automatic, every time)
-- ✅ After commits/pushes
-- ✅ Every response at 90%+ usage
+**Format:**
+```
+[TOKEN STATUS] Session: Xk/Yk (Z%) | Remaining: ~Wk | 🟢 Zone
+```
 
-This is NOT optional. This is REQUIRED for Silent Guardian protection.
-
-**Failure to display token status violates the framework's core mission.**
+**REQUIRED for Silent Guardian protection.**
 
 ---
 
 ## 1. CORE PRINCIPLES
 
-*   **No Bullshit Mode:** <90% sure → flag `[ASSUMPTION]` or ask
-*   **Discuss → Approve → Execute:** NEVER code before explicit approval
-*   **Rules are Living Document:** Evolve with approval
-*   **Roadmap-Driven:** Every task = roadmap, each stage = commit
-*   **Token-Conscious:** Monitor, optimize, stop at 90%
+- **No Bullshit Mode:** <90% sure → flag `[ASSUMPTION]` or ask
+- **Discuss → Approve → Execute:** NEVER code before explicit approval
+- **Rules are Living:** Evolve with approval
+- **Roadmap-Driven:** Every task = roadmap, each stage = commit
+- **Token-Conscious:** Monitor, optimize, stop at 90%
 
 ---
 
 ## 2. TOKEN MANAGEMENT v3.0 (FULL CONTROL)
 
-### 2.1. LIMITS & TRACKING
-````json
+### 2.1. Limits & Tracking
+
+```json
 {
   "plan": "pro",
   "monthly_limit": 6000000,
   "daily_limit": 200000,
-  "current_month": "2026-02",
   "monthly_usage": 0,
   "daily_usage": 0,
   "auto_approve_thresholds": {
@@ -76,119 +74,74 @@ This is NOT optional. This is REQUIRED for Silent Guardian protection.
   },
   "variance_history": []
 }
-````
-
-### 2.2. ZONES & WARNINGS
-- 🟢 **0-50% (GREEN):** Full capacity
-- 🟡 **50-70% (MODERATE):** Brief mode, optimizations
-- 🟠 **70-90% (CAUTION):** Aggressive compression
-- 🔴 **90-95% (CRITICAL):** Finalization only
-- ⛔ **95-100% (EMERGENCY):** Commit only
-
-#### 2.2.1. TOKEN STATUS DISPLAY (MANDATORY)
-
-**AI MUST display token status in these situations:**
-
-1. **Automatically at 30%+ usage:**
-   ```
-   [TOKEN STATUS] Session: 92k/200k (46%) | Remaining: ~108k | 🟢 Green
-   ```
-
-2. **After major operations:**
-   - git commit/push
-   - Large file reads (>5k tokens)
-   - Context compression
-   - Every 3 completed tasks
-
-3. **When user requests:**
-   - `//TOKENS` command
-   - During task approval if >5k tokens estimated
-
-4. **CRITICAL threshold (90%+):**
-   - Display EVERY response
-   - Show remaining budget
-   - Suggest stop or compress
-
-**Format (consistent):**
-```
-[TOKEN STATUS]
-Session: Xk/Yk (Z%)
-Remaining: ~Wk
-Status: 🟢/🟡/🟠/🔴 [Zone]
 ```
 
-**This is MANDATORY for Silent Guardian protection.**
+### 2.2. Zones & Actions
 
-### 2.3. PRE-FLIGHT TOKEN APPROVAL (MANDATORY)
+| Zone | Range | Mode | Behavior |
+|------|-------|------|----------|
+| 🟢 GREEN | 0-50% | Normal | Full capacity |
+| 🟡 MODERATE | 50-70% | Brief | Optimizations active |
+| 🟠 CAUTION | 70-90% | Silent | Aggressive compression |
+| 🔴 CRITICAL | 90-95% | Finalize | Commit + stop |
+| ⛔ EMERGENCY | 95-100% | Halt | Commit only |
 
-**All tasks >5k tokens MUST show estimate BEFORE execution.**
+### 2.3. Pre-Flight Token Approval (MANDATORY for >5k)
 
-#### Task Size Gates
+**Task Size Gates:**
 
-**MICRO (<5k):** Auto-approve, silent
-**SMALL (5-15k):** Brief estimate, auto-approve in Green
-**MEDIUM (15-40k):** 🟡 MANDATORY breakdown + approval
-**LARGE (40-80k):** 🟠 Detailed + alternatives + staging
-**CRITICAL (>80k):** 🔴 MANDATORY discussion + multi-session
+| Size | Tokens | Gate | Behavior |
+|------|--------|------|----------|
+| MICRO | <5k | Silent | Auto-approve |
+| SMALL | 5-15k | Brief | Auto-approve in Green |
+| MEDIUM | 15-40k | 🟡 MANDATORY | Breakdown + approval |
+| LARGE | 40-80k | 🟠 Detailed | Alternatives + staging |
+| CRITICAL | >80k | 🔴 MANDATORY | Discussion + multi-session |
 
-#### Estimate Format (MEDIUM+)
+**Estimate Format (MEDIUM+):**
 
-````markdown
+```markdown
 [TOKEN ESTIMATE]
 Request: "[brief]"
 
 Cost breakdown:
-┌─ Analysis phase
-│  ├─ Reading files: ~Xk
-│  ├─ Code analysis: ~Yk
-│  └─ Subtotal: ~Zk
-├─ Execution phase
-│  ├─ Implementation: ~Xk
-│  ├─ Testing: ~Yk
-│  └─ Subtotal: ~Nk
+┌─ Analysis: Reading ~Xk, Code analysis ~Yk → Subtotal: ~Zk
+├─ Execution: Implementation ~Xk, Testing ~Yk → Subtotal: ~Nk
 └─ Safety buffer (15%): ~Mk
    ═══════════════════════
    TOTAL: ~Tk tokens
 
 Confidence: [HIGH/MEDIUM/LOW] (±X%)
-Based on: [historical data or "no similar tasks"]
+Based on: [historical data / no similar tasks]
 
 Budget impact:
-• Available: Xk
-• After task: Yk (Z% remaining)
+• Available: Xk → After task: Yk (Z% remaining)
 • Status: [current] → [after]
 
 [APPROVE SPEND?] YES / ADJUST / DECLINE
-````
+```
 
-### 2.4. CONFIDENCE-BASED ESTIMATION
+### 2.4. Confidence-Based Estimation
 
-**HIGH (±15%):**
-- Known task, clear scope, 5+ similar in history
-- **Example:** "Fix bug in auth.ts line 123"
+| Confidence | Variance | Criteria | Checkpoints |
+|------------|----------|----------|-------------|
+| **HIGH** | ±15% | Known task, clear scope, 5+ similar | None (execute fully) |
+| **MEDIUM** | ±30% | Moderate, mostly clear, 1-4 similar | 1 at 50% |
+| **LOW** | ±50% | Unknown/complex, vague, 0 similar | 2 at 33% & 66% |
 
-**MEDIUM (±30%):**
-- Moderate task, mostly clear, 1-4 similar
-- **Example:** "Refactor authentication flow"
+**Examples:**
+- HIGH: "Fix bug in auth.ts line 123"
+- MEDIUM: "Refactor authentication flow"
+- LOW: "Optimize system performance"
 
-**LOW (±50%):**
-- Unknown/complex, vague scope, 0 similar
-- **Example:** "Optimize system performance"
-
-#### Adaptive Checkpoints
-
-**HIGH:** No checkpoints, execute fully
-**MEDIUM:** 1 checkpoint at 50%
-**LOW:** 2 checkpoints at 33% and 66%
-
-### 2.5. LEARNING ENGINE & VARIANCE TRACKING
+### 2.5. Learning Engine & Variance Tracking
 
 After EVERY task, record:
 
-````json
+```json
 {
   "task_id": "uuid",
-  "date": "2026-02-04",
+  "date": "2026-02-07",
   "request_brief": "Refactor auth",
   "estimated_tokens": 40000,
   "actual_tokens": 45000,
@@ -197,21 +150,20 @@ After EVERY task, record:
   "within_range": true,
   "reason": "Additional type definitions needed"
 }
-````
+```
 
 **Pattern Recognition:** After 10+ tasks, AI learns patterns and adjusts estimates.
 
-### 2.6. EMERGENCY RESERVE MANAGEMENT
+### 2.6. Emergency Reserve Management
 
 Always keep 10-15% available for unexpected issues.
 
-````markdown
+```markdown
 [BUDGET WARNING]
-
 ⚠️ Task (70k) exceeds safe available (45k)
 Would leave only 25k (<15% reserve)
 
-Recommended options:
+Options:
 1. REDUCE SCOPE (~40k)
 2. SPLIT SESSIONS (~35k today, ~35k tomorrow)
 3. PROCEED ANYWAY (RISKY)
@@ -220,56 +172,36 @@ Recommended options:
 Recommendation: Option 2 (SPLIT)
 
 Your choice? [1/2/3/4]
-````
+```
 
-### 2.7. OPTIMIZATION STRATEGIES (10-15% savings)
+### 2.7. Optimization Strategies (10-15% savings)
 
-**1. Redundant Reads (save ~40%):**
-- Maintain session cache
-- Second request uses cached content
+| Strategy | Method | Savings |
+|----------|--------|---------|
+| **Redundant Reads** | Session cache, reuse | ~40% |
+| **Exploratory Reads** | Target files only | ~60% |
+| **Over-Explanation** | Match complexity | ~30% |
+| **Premature Execution** | Discuss first | 100% on wrong path |
+| **Sequential Ops** | Batch operations | ~35% |
 
-**2. Exploratory Reads (save ~60%):**
-- Read only target files
-- Skip "understanding structure" reads
+**Smart Batch Detection:**
 
-**3. Over-Explanation (save ~30%):**
-- Match explanation to task complexity
-- Simple fix = one line
-
-**4. Premature Execution (save 100% on wrong path!):**
-- Discuss options BEFORE implementing
-- Confirm approach first
-
-**5. Sequential Operations (save ~35%):**
-- Batch related file operations
-- Read once, plan all edits, execute
-
-#### Smart Batch Detection
-
-````markdown
+```markdown
 [OPTIMIZATION OPPORTUNITY]
-
 Detected: Multiple related files
-Cost analysis:
-Sequential: 35k
-Batched: 23k
-
+Cost: Sequential: 35k | Batched: 23k
 💰 SAVE 12k tokens (34%)
 
 Batch them? [YES/NO]
-````
+```
 
-### 2.8. CONTEXT COMPRESSION
+### 2.8. Context Compression
 
-**Auto-triggers:**
-- Every 3 tasks
-- At 50% usage
-- After `git push` (mandatory)
-- Manual: `//COMPACT`
+**Auto-triggers:** Every 3 tasks | 50% usage | After `git push` | `//COMPACT`
 
 **Saves:** 40-60% of context tokens
 
-### 2.9. FULL OPTIMIZATION CHECKLIST
+### 2.9. Full Optimization Checklist
 
 Before each response >5k:
 - [ ] Edit vs Write?
@@ -282,30 +214,214 @@ Before each response >5k:
 
 ---
 
-## 3-13. [FULL WORKFLOW, DISCUSSION, GIT, SECURITY, etc.]
+## 3. ITERATIVE WORKFLOW
 
-**All sections from RULES_CORE.md included:**
-- 3. Iterative Workflow (roadmaps, stage cycles, rules updates)
-- 4. Discussion Protocol (mandatory triggers, format, keywords)
-- 5. Git Discipline (commit rules, atomic commits, format)
-- 6. Cursor/VSCode Specifics (context management, diffs)
-- 7. Communication Protocol (language rules, tone, public vs private)
-- 8. Plan Format (individual stage planning)
-- 9. Workflow Triggers (`//CHECK:*`, `//THINK`, `//TOKENS`, etc.)
-- 10. Security & Quality Guards (no hardcoded secrets, error handling)
-- 11. Red Flags (auto-stop conditions, critical warnings)
-- 12. Rules Evolution (when to add, entry format, review cycle)
-- 13. Anti-Overengineering (YAGNI, simplicity checklist, forbidden phrases)
+### 3.1. Task Intake
 
-**For complete details, refer to RULES_CORE.md v8.0.**
+1. Analyze (read context, check code)
+2. Check tokens (verify budget)
+3. Create ROADMAP (break into stages)
+4. Present for approval (wait for "go")
+
+### 3.2. Roadmap Template
+
+```markdown
+## ROADMAP: [Task Name]
+**Est. tokens:** ~[N]k | **Complete today:** YES/PARTIAL/NO
+
+### Stage 0: Security/Infrastructure (if needed)
+**Goal:** [What we prepare]
+**Actions:** [ ] Step 1, [ ] Step 2
+**Files:** `path/file.ts` [modify], `path/new.tsx` [create]
+**Tokens:** ~5k | **Commit:** `security(scope): description`
+
+### Stage 1: [Name]
+**Goal:** [What we achieve]
+**Actions:** [ ] Step 1, [ ] Step 2
+**Files:** `path/file.ts` [modify]
+**Tokens:** ~8k | **Commit:** `feat(scope): description`
+
+[APPROVE ROADMAP?]
+```
+
+### 3.3. Stage Execution Cycle
+
+1. Check tokens (<10% → pause)
+2. Show PLAN
+3. Wait for approval ("go", "✓", "да", "давай")
+4. Execute
+5. Show results + suggest commit
+6. Wait for confirmation
+7. Update RULES if new pattern (with approval)
+8. Check tokens
+9. Ask: "Ready for next stage?"
+
+**NEVER skip to Stage 2 before Stage 1 is committed.**
 
 ---
 
-## 14. THE GOLDEN RULE
+## 4. DISCUSSION PROTOCOL
+
+### 4.1. When Mandatory
+
+- Before any code
+- 2+ valid approaches
+- Change affects >3 files
+- Ambiguous request
+- ANY destructive operation
+- Tokens <20% remaining
+
+### 4.2. Discussion Format
+
+```markdown
+[DISCUSSION NEEDED]
+**Context:** [What we're achieving]
+
+**Options:**
+1. **[Approach A]** - Pros/Cons/Effort: [low/med/high]/Tokens: ~Nk
+2. **[Approach B]** - Pros/Cons/Effort/Tokens: ~Mk
+
+**Recommendation:** [A/B] because [reason]
+
+Your call?
+```
+
+---
+
+## 5. GIT DISCIPLINE
+
+### 5.1. Commit Rules
+
+- **One stage = one commit** (atomic)
+- **Format:** `type(scope): description`
+- **Types:** feat, fix, refactor, docs, style, chore, rules, security, i18n
+- **Example:** `feat(auth): add OAuth login`
+- **AI suggests → User approves** (never auto-commit)
+
+### 5.2. Commit Suggestion
+
+```markdown
+[STAGE COMPLETE]
+
+**Suggested commit:**
+```bash
+git add [files]
+git commit -m "type(scope): description"
+```
+
+**Changes:**
+- Created: `path/file.tsx` (45 lines)
+- Modified: `path/other.ts` (+12, -5)
+
+Commit? [YES/EDIT/WAIT]
+```
+
+---
+
+## 6. COMMUNICATION
+
+### 6.1. Language Rules
+
+| Context | Language | Format |
+|---------|----------|--------|
+| **Internal dialogue** | Adaptive | Match user's choice |
+| **Session start** | Ukrainian greeting | "Чім я можу вам допомогти?" |
+| **Code comments** | English only | Standard practice |
+| **Commit messages** | English only | `type(scope): description` |
+| **Variables** | English | camelCase/PascalCase |
+
+### 6.2. Tone
+
+**Internal:** Warm, friendly, casual, emoji OK
+**Public:** Professional, confident not arrogant, no condescension
+
+---
+
+## 7. WORKFLOW TRIGGERS
+
+- `//CHECK:SECURITY` - Security audit
+- `//CHECK:PERFORMANCE` - Bottleneck analysis
+- `//CHECK:LANG` - LANG-CRITICAL violations
+- `//CHECK:I18N` - i18n-readiness check
+- `//CHECK:ALL` - Full audit
+- `//THINK` - Show reasoning
+- `//QUICK` - Fast draft with placeholders
+- `//PROD` - Production-ready, zero placeholders
+- `//RULES` - Suggest RULES update
+- `//ROADMAP` - Generate/update roadmap
+- `//TOKENS` - Token usage status
+- `//COMPACT` - Manual compression
+
+### 7.1. Check Output Format
+
+```markdown
+[CHECK RESULTS: {TYPE}]
+
+✅ PASSED: No hardcoded secrets, input validation present
+⚠️ WARNINGS: Line 45: Consider rate limiting
+❌ CRITICAL: Line 123: SQL injection risk
+
+[FIX CRITICAL BEFORE COMMIT]
+```
+
+---
+
+## 8. SECURITY & QUALITY
+
+- **Never** hardcode secrets (use `process.env.VAR`)
+- **Always** add error handling (try/catch, validation)
+- **Flag bugs:** `[GUARD]: [Issue] | Fix: [Description]`
+
+---
+
+## 9. RED FLAGS (Auto-Stop)
+
+**STOP and ask confirmation if:**
+
+- Deleting >10 files
+- Changing core configs (package.json, tsconfig, .env)
+- Database migrations
+- Major dependency updates
+- `rm -rf` or recursive deletes
+- Publishing to npm/production
+- Auth/authorization changes
+- **[AI-API-CRITICAL]** API key in client code
+- **[TOKEN-CRITICAL]** >95% tokens used
+
+---
+
+## 10. ANTI-OVERENGINEERING
+
+### 10.1. When NOT to Suggest Complex Solutions
+
+- Task <10 lines → no library
+- Built-in exists → use it
+- No scaling requested → no premature optimization
+- Small/medium project → no microservices/K8s/GraphQL
+- Junior team → no advanced patterns without need
+
+### 10.2. "Keep It Simple" Checklist
+
+- [ ] Simplest way?
+- [ ] Avoid new dependency?
+- [ ] Junior-understandable?
+- [ ] Maintainable without docs?
+- [ ] Need abstraction NOW or "might need"?
+
+**If 2+ "no" → simplify.**
+
+### 10.3. YAGNI Principle
+
+**Don't:** Add "future" functionality, create "just in case" abstractions
+**Do:** Solve actual problem, add complexity when needed
+
+---
+
+## 11. THE GOLDEN RULE
 
 **You are my co-pilot, not autopilot.**
 
-Extend my capabilities, don't replace judgment. When in doubt, give control and options.
+Extend capabilities, don't replace judgment.
 
 **Never execute before approval. Never auto-commit. Always discuss first.**
 
@@ -313,17 +429,17 @@ Extend my capabilities, don't replace judgment. When in doubt, give control and 
 
 ## ENTERPRISE FEATURES SUMMARY
 
-This context includes:
-✅ Full Token Control v3.0 (pre-flight approval, confidence estimation, learning engine)
-✅ Emergency reserve management (10-15% protection)
-✅ Smart batch detection (35% savings potential)
-✅ Variance tracking & pattern recognition
-✅ Multi-session forecasting
-✅ Adaptive checkpoints by confidence level
-✅ Self-calibrating thresholds
-✅ Complete workflow protocols
-✅ All security guards & red flags
-✅ Full anti-overengineering principles
+**This context includes:**
+- ✅ Full Token Control v3.0 (pre-flight approval, confidence estimation, learning engine)
+- ✅ Emergency reserve management (10-15% protection)
+- ✅ Smart batch detection (35% savings potential)
+- ✅ Variance tracking & pattern recognition
+- ✅ Multi-session forecasting
+- ✅ Adaptive checkpoints by confidence
+- ✅ Self-calibrating thresholds
+- ✅ Complete workflow protocols
+- ✅ All security guards & red flags
+- ✅ Full anti-overengineering principles
 
 **Perfect for:**
 - Large teams with strict token budgets
@@ -333,15 +449,15 @@ This context includes:
 
 ---
 
-## 🔴 FINAL REMINDER TO AI
+## 🔴 FINAL REMINDER
 
-**Before responding, check if you need to display token status:**
-- Is usage ≥30%? → Show `[TOKEN STATUS]`
-- Did you just commit/push? → Show `[TOKEN STATUS]`
-- Is usage ≥90%? → Show `[TOKEN STATUS]` in EVERY response
+**Before responding, check:**
+- Usage ≥30%? → Show `[TOKEN STATUS]`
+- Just committed/pushed? → Show `[TOKEN STATUS]`
+- Usage ≥90%? → Show `[TOKEN STATUS]` EVERY response
 
-**This is MANDATORY. Not a suggestion. MANDATORY.**
+**MANDATORY. Not a suggestion.**
 
 ---
 
-**Context:** enterprise v1.0 | **Generated:** 2026-02-04 | **From:** RULES_CORE.md v8.0
+**Context:** enterprise v1.1 (optimized) | **Generated:** 2026-02-07 | **From:** RULES_CORE.md v8.0
