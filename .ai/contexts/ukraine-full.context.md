@@ -24,6 +24,18 @@
    - Section 2: Token Management
    - Section 7: Communication (language rules!)
    - RULES_PRODUCT.md (Ukrainian market specifics)
+   - **🆕 .ai/AI-ENFORCEMENT.md** (mandatory protocols v9.0)
+
+2.5. **Load AI Enforcement (v9.0 CRITICAL):**
+   ```bash
+   Read .ai/AI-ENFORCEMENT.md
+
+   Critical protocols:
+   ✅ Post-push compression (MANDATORY after git push)
+   ✅ Session start token check
+   ✅ Pre-commit checks
+   ✅ Large task pre-flight
+   ```
 
 3. **Show SESSION START confirmation:**
    ```markdown

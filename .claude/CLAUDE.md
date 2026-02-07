@@ -29,6 +29,18 @@ If ANY of these conditions apply:
 
 **Why this matters:** Selective loading saves 40-70% tokens for specific users.
 
+### Step 2.5: Load AI Enforcement (v9.0)
+
+**🆕 MANDATORY:** Read `.ai/AI-ENFORCEMENT.md` for automatic protocols
+
+**Critical protocols loaded:**
+- ✅ Post-push compression (MANDATORY after every git push)
+- ✅ Session start token check
+- ✅ Pre-commit checks
+- ✅ Large task pre-flight
+
+**Why this matters:** Prevents AI from forgetting mandatory workflows (compression, token checks, etc.)
+
 ### Step 3: Display SESSION START Confirmation
 
 **ALWAYS display this block at session start:**
