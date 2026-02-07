@@ -355,6 +355,18 @@ AI time costs money. Monitor, optimize, never waste.
 
 **Why:** 50% token savings = 2x more work per day.
 
+**💡 v9.1 Session Management:**
+```
+❌ BAD: Restart session after every commit (18k tokens wasted each time)
+✅ GOOD: Continue session, use //COMPACT when needed (0 tokens)
+```
+
+**Session restart costs 18-25k tokens. Don't restart unnecessarily!**
+- ✅ Continue: Bug fixes, same feature, after compression
+- 🔄 Restart: Pushed to main, >90% tokens, different feature
+
+📖 Full guide: [.ai/SESSION_MANAGEMENT.md](.ai/SESSION_MANAGEMENT.md)
+
 ---
 
 ### 4. **Security & Ukraine First**

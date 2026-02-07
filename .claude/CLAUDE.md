@@ -20,10 +20,10 @@ If ANY of these conditions apply:
 
 1. **Read config:** `.ai/config.json` to determine context preset
 2. **Load context:**
-   - If `config.context = "minimal"` → Read `.ai/contexts/minimal.context.md` (~13k tokens)
-   - If `config.context = "standard"` → Read `.ai/contexts/standard.context.md` (~18k tokens)
-   - If `config.context = "ukraine-full"` → Read `.ai/contexts/ukraine-full.context.md` (~25k tokens)
-   - If `config.context = "enterprise"` → Read `.ai/contexts/enterprise.context.md` (~30k tokens)
+   - If `config.context = "minimal"` → Read `.ai/contexts/minimal.context.md` (~10k tokens, v9.1 optimized)
+   - If `config.context = "standard"` → Read `.ai/contexts/standard.context.md` (~14k tokens, v9.1 optimized)
+   - If `config.context = "ukraine-full"` → Read `.ai/contexts/ukraine-full.context.md` (~18k tokens, v9.1 optimized)
+   - If `config.context = "enterprise"` → Read `.ai/contexts/enterprise.context.md` (~23k tokens, v9.1 optimized)
    - **Fallback:** If no config or contexts → Read `RULES_CORE.md` (legacy mode)
 3. **Token budget:** Read `.ai/token-limits.json` for tracking
 
@@ -57,8 +57,10 @@ If ANY of these conditions apply:
 Чим я можу вам допомогти?
 
 **Examples:**
-- Minimal: "✓ Context: minimal (~13k, 6.5% of daily)"
-- Ukraine-full: "✓ Context: ukraine-full (~25k, 12.5% of daily)"
+- Minimal: "✓ Context: minimal (~10k, 5% of daily)"
+- Standard: "✓ Context: standard (~14k, 7% of daily)"
+- Ukraine-full: "✓ Context: ukraine-full (~18k, 9% of daily)"
+- Enterprise: "✓ Context: enterprise (~23k, 11.5% of daily)"
 ```
 
 ### Step 4: Follow Core Principles
@@ -116,6 +118,36 @@ When user sends these commands:
 
 ---
 
+## 💡 Session Management Tips (v9.1)
+
+**Before restarting session, consider:**
+
+| Question | If YES | If NO |
+|----------|--------|-------|
+| Working on same feature? | ✅ **CONTINUE** | 🔄 Consider restart |
+| Tokens <90%? | ✅ **CONTINUE** | 🔄 Restart needed |
+| Can use `//COMPACT`? | ✅ **COMPRESS, then continue** | 🔄 Restart |
+
+**Session restart costs 18-25k tokens. Don't restart unnecessarily!**
+
+**When to CONTINUE:**
+- ✅ Minor code changes, bug fixes
+- ✅ Working through roadmap stages
+- ✅ After using `//COMPACT`
+- ✅ Tokens <90% and task ongoing
+
+**When to RESTART:**
+- 🔄 Pushed to main (major milestone)
+- 🔄 Tokens >90% (budget critical)
+- 🔄 Switching to different feature
+- 🔄 Next day, different context
+
+**💰 Token savings: Continue instead of restart = save 18-25k per avoided restart**
+
+**📖 Full guide:** [.ai/SESSION_MANAGEMENT.md](.ai/SESSION_MANAGEMENT.md)
+
+---
+
 ## 🛑 Red Flags - Auto-Stop Conditions
 
 **STOP and ask confirmation if:**
@@ -140,13 +172,14 @@ When user sends these commands:
 ├── RULES_CORE.md          # Full AI workflow rules (v8.0, source of truth)
 ├── RULES_PRODUCT.md       # Ukrainian market specifics
 ├── .ai/
-│   ├── config.json        # 🆕 Context selection (minimal/standard/ukraine-full/enterprise)
-│   ├── registry.json      # 🆕 Context & module metadata
-│   ├── contexts/          # 🆕 Pre-bundled context files
-│   │   ├── minimal.context.md (~13k tokens)
-│   │   ├── standard.context.md (~18k tokens)
-│   │   ├── ukraine-full.context.md (~25k tokens)
-│   │   └── enterprise.context.md (~30k tokens)
+│   ├── config.json        # Context selection (minimal/standard/ukraine-full/enterprise)
+│   ├── registry.json      # Context & module metadata
+│   ├── contexts/          # Pre-bundled context files (v9.1 optimized)
+│   │   ├── minimal.context.md (~10k tokens)
+│   │   ├── standard.context.md (~14k tokens)
+│   │   ├── ukraine-full.context.md (~18k tokens)
+│   │   └── enterprise.context.md (~23k tokens)
+│   ├── SESSION_MANAGEMENT.md  # 🆕 v9.1 Session best practices guide
 │   ├── token-limits.json  # Token budget tracking
 │   ├── locale-context.json
 │   └── forbidden-trackers.json
@@ -182,19 +215,26 @@ Verify at session start:
 
 ---
 
-**Last Updated:** 2026-02-04
-**Framework Version:** 8.1 (Modular Contexts v1.0)
+**Last Updated:** 2026-02-07
+**Framework Version:** 9.1 (Optimization Release)
 **Made in Ukraine 🇺🇦**
 
 ---
 
-## 🆕 What's New in v8.1 Modular
+## 🆕 What's New in v9.1 Optimization
 
-**Token Efficiency via Selective Loading:**
-- ✅ 4 pre-bundled contexts (minimal/standard/ukraine-full/enterprise)
-- ✅ Smart context selection via `.ai/config.json`
-- ✅ Token savings: 40-70% for international users (13k vs 25k)
-- ✅ Progressive enhancement: start minimal, upgrade as needed
-- ✅ Zero vendor lock-in: source RULES_CORE.md always available
+**Content Optimization (15-35% token reduction):**
+- ✅ Minimal: 13k → 10k (-23%)
+- ✅ Standard: 18k → 14k (-22%)
+- ✅ Ukraine-full: 25k → 18k (-28%)
+- ✅ Enterprise: Now self-contained (~23k)
 
-**Migration:** Existing projects work unchanged (fallback to RULES_CORE.md). New projects use npx installer with context selection wizard.
+**Session Management Best Practices:**
+- ✅ New guide: `.ai/SESSION_MANAGEMENT.md`
+- ✅ Continue vs restart decision guide
+- ✅ Platform-specific tips (VSCode, Cursor, Windsurf)
+- ✅ Expected savings: 50% fewer restarts = ~35-50k tokens/day
+
+**Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
+
+**Migration:** Automatic - contexts updated in place. Read SESSION_MANAGEMENT.md for best practices.
