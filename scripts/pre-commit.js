@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 /**
  * ==============================================================================
- * PRE-COMMIT HOOK - UNIVERSAL INTELLIGENT SECRETS SCANNER (Node.js)
- * AI Workflow Rules Framework v8.3
+ * PRE-COMMIT HOOK - UNIVERSAL SECRETS SCANNER + AI PROTECTION (Node.js)
+ * AI Workflow Rules Framework v9.0
  * ==============================================================================
  *
  * PHILOSOPHY: Silent Guardian Architecture
  *   - Protect without blocking productivity
  *   - Trust informed decisions
  *   - Universal compatibility (Windows/Mac/Linux, all IDEs)
+ *   - 🆕 AI Protection: Prompt injection + PII detection
  *
  * USAGE:
  *   This is a Node.js alternative to the bash version
@@ -494,6 +495,28 @@ async function main() {
     // Run scan
     const result = await scanFiles(stagedFiles);
 
+    // AI Protection (v9.0+)
+    let aiProtectionFailed = false;
+
+    if (fs.existsSync('.ai/ai-protection-policy.json')) {
+      console.log('━━━ AI Protection: Checking for threats...');
+
+      if (fs.existsSync('scripts/ai-protection.js')) {
+        try {
+          // Run AI protection checks
+          require('./ai-protection.js');
+          print('✓ AI Protection passed', colors.green);
+        } catch (error) {
+          aiProtectionFailed = true;
+          print('✗ AI Protection detected threats', colors.red);
+        }
+      } else {
+        // Script missing - warn but don't block
+        print('⚠  AI Protection script not found (scripts/ai-protection.js)', colors.yellow);
+        console.log('   Run installer to add AI Protection: npx @shamavision/ai-workflow-rules@9.0.0 init');
+      }
+    }
+
     // Final verdict
     console.log('');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -510,6 +533,21 @@ async function main() {
       }
 
       logToAuditTrail('HARD_BLOCK', 'Secrets detected or user cancellation');
+      process.exit(1);
+    }
+
+    if (aiProtectionFailed) {
+      print('❌ COMMIT BLOCKED - AI PROTECTION', colors.red);
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('');
+      console.log('🤖 AI Protection detected threats:');
+      console.log('   - Prompt injection attempts');
+      console.log('   - PII in AI logs');
+      console.log('   - .ai/ directory violations');
+      console.log('');
+      console.log('See details above for specific issues.');
+      console.log('');
+      logToAuditTrail('AI_PROTECTION', 'AI threats detected');
       process.exit(1);
     }
 

@@ -22,6 +22,11 @@
 # Audit trail (local only, legal protection evidence)
 .ai/audit-trail.log
 
+# AI Protection v9.0 (cache, backups, scan results)
+.ai/.ai-protection-cache/
+.ai/.backups/
+.ai/.pii-scan-summary.json
+
 # ==============================================================================
 # LAYER 2: LICENSE & ACTIVATION
 # ==============================================================================

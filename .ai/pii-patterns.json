@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "9.0.0",
+  "description": "PII Detection for AI Logs Protection - Ukrainian market focus",
+  "updated": "2026-02-05",
+
+  "enabled": true,
+  "auto_redact": true,
+  "backup_before_redact": true,
+
+  "scan_paths": {
+    "description": "Paths that contain AI logs and session data",
+    "paths": [
+      ".ai/token-limits.json",
+      ".ai/audit-trail.log",
+      ".ai/.ai-protection-cache/**",
+      "ai-logs/**",
+      ".claude/cache/**"
+    ],
+    "exclude": [
+      ".ai/pii-patterns.json",
+      ".ai/prompt-injection-patterns.json",
+      ".ai/ai-protection-policy.json",
+      ".ai/security-policy.json"
+    ]
+  },
+
+  "patterns": {
+    "contact_information": [
+      {
+        "id": "email",
+        "name": "Email Address",
+        "regex": "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}",
+        "severity": "high",
+        "gdpr_category": "Personal Data",
+        "redact_to": "<EMAIL_REDACTED>",
+        "examples": [
+          "user@example.com",
+          "john.doe@company.ua",
+          "support@wellme.ua"
+        ],
+        "recommendation": "Email addresses are PII under GDPR. Redact before logging."
+      },
+      {
+        "id": "phone_ukraine",
+        "name": "Ukrainian Phone Number",
+        "regex": "(\\+380|0)(39|50|63|66|67|68|73|91|92|93|94|95|96|97|98|99)\\d{7}",
+        "severity": "high",
+        "gdpr_category": "Personal Data",
+        "redact_to": "<PHONE_UA_REDACTED>",
+        "examples": [
+          "+380501234567",
+          "0671234567",
+          "+380931234567"
+        ],
+        "recommendation": "Ukrainian phone numbers are PII. Redact."
+      },
+      {
+        "id": "phone_international",
+        "name": "International Phone Number",
+        "regex": "\\+\\d{1,3}[\\s\\-]?\\(?\\d{1,4}\\)?[\\s\\-]?\\d{1,4}[\\s\\-]?\\d{1,9}",
+        "severity": "medium",
+        "gdpr_category": "Personal Data",
+        "redact_to": "<PHONE_INTL_REDACTED>",
+        "examples": [
+          "+1 (555) 123-4567",
+          "+44 20 1234 5678"
+        ]
+      }
+    ],
+
+    "ukrainian_identifiers": [
+      {
+        "id": "ipn_ukraine",
+        "name": "Ukrainian IPN (Tax ID)",
+        "regex": "\\b\\d{10}\\b",
+        "severity": "critical",
+        "gdpr_category": "Sensitive Personal Data",
+        "redact_to": "<IPN_UA_REDACTED>",
+        "context_required": true,
+        "context_keywords": ["ІПН", "IPN", "РНОКПП", "податковий", "tax ID"],
+        "examples": [
+          "1234567890"
+        ],
+        "recommendation": "Ukrainian IPN is highly sensitive. Must be redacted.",
+        "note": "10-digit numbers are common, use context awareness to avoid false positives"
+      },
+      {
+        "id": "passport_ukraine",
+        "name": "Ukrainian Passport Number",
+        "regex": "[А-ЯІЇЄҐ]{2}\\d{6}",
+        "severity": "critical",
+        "gdpr_category": "Sensitive Personal Data",
+        "redact_to": "<PASSPORT_UA_REDACTED>",
+        "examples": [
+          "АА123456",
+          "ВК987654"
+        ],
+        "recommendation": "Passport numbers are highly sensitive. Always redact."
+      }
+    ],
+
+    "financial_data": [
+      {
+        "id": "credit_card",
+        "name": "Credit Card Number",
+        "regex": "\\b\\d{4}[\\s\\-]?\\d{4}[\\s\\-]?\\d{4}[\\s\\-]?\\d{4}\\b",
+        "severity": "critical",
+        "gdpr_category": "Financial Data",
+        "pci_dss": true,
+        "redact_to": "<CARD_REDACTED>",
+        "examples": [
+          "4111 1111 1111 1111",
+          "5500-0000-0000-0004"
+        ],
+        "recommendation": "CRITICAL: Credit cards are PCI-DSS regulated. Must redact."
+      },
+      {
+        "id": "iban_ukraine",
+        "name": "Ukrainian IBAN",
+        "regex": "UA\\d{2}\\s?\\d{6}\\s?\\d{19}",
+        "severity": "critical",
+        "gdpr_category": "Financial Data",
+        "redact_to": "<IBAN_UA_REDACTED>",
+        "examples": [
+          "UA21 3223 1300 0002 6007 2335 6600 1",
+          "UA213223130000026007233566001"
+        ],
+        "recommendation": "Bank account numbers are highly sensitive."
+      },
+      {
+        "id": "iban_international",
+        "name": "International IBAN",
+        "regex": "[A-Z]{2}\\d{2}[A-Z0-9]{10,30}",
+        "severity": "high",
+        "gdpr_category": "Financial Data",
+        "redact_to": "<IBAN_REDACTED>",
+        "examples": [
+          "GB29NWBK60161331926819",
+          "DE89370400440532013000"
+        ]
+      }
+    ],
+
+    "authentication_data": [
+      {
+        "id": "url_with_token",
+        "name": "URL with Authentication Token",
+        "regex": "https?://[^\\s]+[?&](token|key|secret|auth|access_token|api_key)=[A-Za-z0-9_\\-]{8,}",
+        "severity": "critical",
+        "gdpr_category": "Authentication Data",
+        "redact_to": "<URL_WITH_TOKEN_REDACTED>",
+        "examples": [
+          "https://api.example.com/data?token=abc123xyz",
+          "https://service.com/endpoint?api_key=sk-1234567890"
+        ],
+        "recommendation": "URLs with tokens leak credentials. Redact."
+      },
+      {
+        "id": "jwt_token",
+        "name": "JWT Token",
+        "regex": "eyJ[A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-]+",
+        "severity": "critical",
+        "redact_to": "<JWT_REDACTED>",
+        "examples": [
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123"
+        ],
+        "recommendation": "JWT tokens contain sensitive session data."
+      },
+      {
+        "id": "session_cookie",
+        "name": "Session Cookie",
+        "regex": "(session|sessionid|sid|PHPSESSID)=[A-Za-z0-9]{20,}",
+        "severity": "high",
+        "redact_to": "<SESSION_REDACTED>",
+        "examples": [
+          "session=abc123def456ghi789",
+          "PHPSESSID=1234567890abcdef"
+        ]
+      }
+    ],
+
+    "internal_infrastructure": [
+      {
+        "id": "internal_ip",
+        "name": "Internal IP Address",
+        "regex": "(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|172\\.(1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3}|192\\.168\\.\\d{1,3}\\.\\d{1,3})",
+        "severity": "medium",
+        "redact_to": "<INTERNAL_IP_REDACTED>",
+        "examples": [
+          "192.168.1.1",
+          "10.0.0.5",
+          "172.16.0.10"
+        ],
+        "recommendation": "Internal IPs expose network topology."
+      },
+      {
+        "id": "internal_hostname",
+        "name": "Internal Hostname",
+        "regex": "(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0|\\b[a-z0-9\\-]+\\.(local|internal|intranet|corp|lan)\\b)",
+        "severity": "low",
+        "redact_to": "<INTERNAL_HOST_REDACTED>",
+        "examples": [
+          "server.local",
+          "db.internal",
+          "api.corp"
+        ]
+      },
+      {
+        "id": "database_connection",
+        "name": "Database Connection String",
+        "regex": "(postgres|mysql|mongodb|redis)://[^:]+:[^@]+@[^/]+",
+        "severity": "critical",
+        "redact_to": "<DB_CONNECTION_REDACTED>",
+        "examples": [
+          "postgres://user:password@localhost:5432/dbname",
+          "mongodb://admin:secret@db.local:27017"
+        ],
+        "recommendation": "DB connection strings contain credentials."
+      }
+    ],
+
+    "user_identifiers": [
+      {
+        "id": "username_pattern",
+        "name": "Username in Path/URL",
+        "regex": "/users/[a-zA-Z0-9_\\-]{3,20}",
+        "severity": "low",
+        "redact_to": "/users/<USER_REDACTED>",
+        "examples": [
+          "/users/john_doe",
+          "/users/admin123"
+        ],
+        "recommendation": "Usernames may be PII in some contexts."
+      },
+      {
+        "id": "user_id_uuid",
+        "name": "User ID (UUID)",
+        "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        "severity": "low",
+        "redact_to": "<UUID_REDACTED>",
+        "context_keywords": ["user", "userId", "user_id"],
+        "examples": [
+          "550e8400-e29b-41d4-a716-446655440000"
+        ]
+      }
+    ]
+  },
+
+  "context_aware_detection": {
+    "enabled": true,
+    "description": "Use context to reduce false positives",
+
+    "keyword_proximity": {
+      "enabled": true,
+      "distance_chars": 50,
+      "description": "Check if PII-related keywords appear near matches"
+    },
+
+    "json_field_names": {
+      "enabled": true,
+      "sensitive_fields": [
+        "email",
+        "phone",
+        "phoneNumber",
+        "ipn",
+        "passport",
+        "creditCard",
+        "iban",
+        "password",
+        "secret",
+        "token",
+        "apiKey"
+      ],
+      "description": "Flag data if JSON field name suggests PII"
+    }
+  },
+
+  "redaction_strategy": {
+    "mode": "auto",
+    "modes": {
+      "auto": "Automatically redact all PII",
+      "prompt": "Ask user before redacting",
+      "report_only": "Report but don't modify files"
+    },
+
+    "backup": {
+      "enabled": true,
+      "path": ".ai/.backups/",
+      "max_backups": 10,
+      "description": "Backup files before redaction (excluded from git)"
+    },
+
+    "redaction_format": {
+      "preserve_length": false,
+      "preserve_format": true,
+      "examples": {
+        "email": "user@example.com → <EMAIL_REDACTED>",
+        "phone": "+380501234567 → <PHONE_UA_REDACTED>",
+        "with_context": "Email: user@test.com → Email: <EMAIL_REDACTED>"
+      }
+    }
+  },
+
+  "whitelist": {
+    "description": "Patterns that look like PII but aren't",
+    "enabled": true,
+
+    "domains": [
+      "example.com",
+      "test.com",
+      "localhost",
+      "127.0.0.1",
+      "0.0.0.0"
+    ],
+
+    "emails": [
+      "noreply@",
+      "no-reply@",
+      "admin@example",
+      "test@test",
+      "user@localhost"
+    ],
+
+    "placeholder_patterns": [
+      "xxx",
+      "placeholder",
+      "example",
+      "test",
+      "demo",
+      "sample",
+      "your-",
+      "user@"
+    ]
+  },
+
+  "reporting": {
+    "terminal_output": {
+      "enabled": true,
+      "format": "📊 PII Scan Results:\n   Found: X items\n   Redacted: Y items\n   Files modified: Z"
+    },
+
+    "audit_trail": {
+      "enabled": true,
+      "path": ".ai/audit-trail.log",
+      "format": "timestamp | PII_DETECTED | file | type | severity | action",
+      "example": "2026-02-05T14:30:00Z | PII_DETECTED | .ai/audit-trail.log | email | high | REDACTED"
+    },
+
+    "summary_file": {
+      "enabled": true,
+      "path": ".ai/.pii-scan-summary.json",
+      "include_stats": true
+    }
+  },
+
+  "gdpr_compliance": {
+    "enabled": true,
+    "description": "GDPR compliance helpers (not certification)",
+
+    "data_categories": {
+      "personal_data": ["email", "phone", "username"],
+      "sensitive_personal_data": ["ipn_ukraine", "passport_ukraine"],
+      "financial_data": ["credit_card", "iban_ukraine", "iban_international"],
+      "authentication_data": ["url_with_token", "jwt_token", "session_cookie"]
+    },
+
+    "retention_policy": {
+      "recommendation": "Delete PII from logs after 30 days",
+      "auto_cleanup": false,
+      "note": "User must implement cleanup policy"
+    },
+
+    "data_minimization": {
+      "principle": "Collect only necessary PII",
+      "recommendation": "Avoid logging user emails/phones in AI sessions"
+    }
+  },
+
+  "performance": {
+    "cache_scan_results": true,
+    "cache_duration_minutes": 15,
+    "max_file_size_mb": 10,
+    "skip_binary_files": true,
+    "parallel_scanning": false,
+    "note": "PII scanning is slower than prompt injection, cache results"
+  },
+
+  "metadata": {
+    "framework": "ai-workflow-rules",
+    "version": "9.0.0",
+    "component": "AI Protection - PII Detection",
+    "based_on": [
+      "GDPR Article 4 (Personal Data Definition)",
+      "PCI-DSS (Payment Card Industry)",
+      "Ukrainian Law on Personal Data Protection"
+    ],
+    "created": "2026-02-05",
+    "last_updated": "2026-02-05",
+    "maintainer": "Shamavision <shamavision@wellme.ua>",
+    "license": "GPL-3.0",
+    "made_in": "Ukraine 🇺🇦"
+  }
+}

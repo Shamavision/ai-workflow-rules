@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "8.3.0",
-  "description": "Security policy for pre-commit hook - Universal 3-tier protection system",
+  "version": "9.0.0",
+  "description": "Security policy for pre-commit hook - Universal 3-tier protection system + AI Protection",
 
   "secret_scanning": {
     "enabled": true,
@@ -332,16 +332,17 @@
 
   "metadata": {
     "framework": "ai-workflow-rules",
-    "version": "8.3.0",
+    "version": "9.0.0",
     "philosophy": "Silent Guardian - Protect without blocking productivity",
-    "approach": "Universal 3-tier: Hard Block / Warning + Choice / Silent Allow",
-    "best_practices_based_on": ["GitGuardian", "GitHub Advanced Security", "TruffleHog"],
+    "approach": "Universal 3-tier: Hard Block / Warning + Choice / Silent Allow + AI Protection",
+    "best_practices_based_on": ["GitGuardian", "GitHub Advanced Security", "TruffleHog", "OWASP LLM Top 10"],
     "supported_platforms": ["Linux", "macOS", "Windows"],
     "supported_ides": "All git-based IDEs",
     "supported_ai_providers": "9+ major AI providers + generic detection",
     "created": "2026-02-05",
     "last_updated": "2026-02-05",
     "major_version_changes": {
+      "v9.0": "AI Protection - Prompt injection detection + PII scanning + Fail-closed hooks",
       "v8.3": "Universal compatibility - Node.js + PowerShell versions, all AI providers, CI/CD auto-detection",
       "v8.2": "3-tier protection system implementation",
       "v8.0": "Token Control v3.0"

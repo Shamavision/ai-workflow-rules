@@ -1,7 +1,7 @@
 {
   "framework": "ai-workflow-rules",
-  "version": "8.0",
-  "config_version": "1.0",
+  "version": "9.0",
+  "config_version": "2.0",
 
   "context": "ukraine-full",
   "modules": [],

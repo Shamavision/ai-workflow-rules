@@ -1,12 +1,13 @@
 # ==============================================================================
-# PRE-COMMIT HOOK - UNIVERSAL INTELLIGENT SECRETS SCANNER (PowerShell)
-# AI Workflow Rules Framework v8.3
+# PRE-COMMIT HOOK - UNIVERSAL SECRETS SCANNER + AI PROTECTION (PowerShell)
+# AI Workflow Rules Framework v9.0
 # ==============================================================================
 #
 # PHILOSOPHY: Silent Guardian Architecture
 #   - Protect without blocking productivity
 #   - Trust informed decisions
 #   - Universal compatibility (Windows native, no Git Bash needed)
+#   - 🆕 AI Protection: Prompt injection + PII detection
 #
 # USAGE:
 #   This is a PowerShell alternative to the bash version
@@ -390,6 +391,33 @@ try {
     # Run scan
     Invoke-SecurityScan -Files $stagedFiles
 
+    # AI Protection (v9.0+)
+    $script:AIProtectionFailed = $false
+
+    if (Test-Path ".ai\ai-protection-policy.json") {
+        Write-Host "━━━ AI Protection: Checking for threats..."
+
+        if (Test-Path "scripts\ai-protection.ps1") {
+            try {
+                # Run AI protection checks
+                & ".\scripts\ai-protection.ps1"
+                if ($LASTEXITCODE -ne 0) {
+                    $script:AIProtectionFailed = $true
+                    Write-Host "✗ AI Protection detected threats" -ForegroundColor Red
+                } else {
+                    Write-Host "✓ AI Protection passed" -ForegroundColor Green
+                }
+            } catch {
+                $script:AIProtectionFailed = $true
+                Write-Host "✗ AI Protection failed: $_" -ForegroundColor Red
+            }
+        } else {
+            # Script missing - warn but don't block
+            Write-Host "⚠  AI Protection script not found (scripts\ai-protection.ps1)" -ForegroundColor Yellow
+            Write-Host "   Run installer to add AI Protection: npx @shamavision/ai-workflow-rules@9.0.0 init"
+        }
+    }
+
     # Final verdict
     Write-Host ""
     Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -406,6 +434,21 @@ try {
         }
 
         Write-AuditTrail -EventType "HARD_BLOCK" -Details "Secrets detected or user cancellation"
+        exit 1
+    }
+
+    if ($script:AIProtectionFailed) {
+        Write-Host "❌ COMMIT BLOCKED - AI PROTECTION" -ForegroundColor Red
+        Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        Write-Host ""
+        Write-Host "🤖 AI Protection detected threats:"
+        Write-Host "   - Prompt injection attempts"
+        Write-Host "   - PII in AI logs"
+        Write-Host "   - .ai/ directory violations"
+        Write-Host ""
+        Write-Host "See details above for specific issues."
+        Write-Host ""
+        Write-AuditTrail -EventType "AI_PROTECTION" -Details "AI threats detected"
         exit 1
     }
 

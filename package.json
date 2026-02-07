@@ -1,7 +1,7 @@
 {
   "name": "@shamavision/ai-workflow-rules",
-  "version": "7.1.0",
-  "description": "Universal AI workflow rules framework for Claude, Cursor, Windsurf, and other AI coding assistants. Session management, token optimization, security guards, and best practices.",
+  "version": "9.0.0",
+  "description": "Universal AI workflow rules framework for Claude, Cursor, Windsurf, and other AI coding assistants. Session management, token optimization, security guards, AI protection (prompt injection + PII detection), and best practices. Made in Ukraine.",
   "keywords": [
     "ai",
     "workflow",
