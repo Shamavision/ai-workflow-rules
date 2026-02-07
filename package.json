@@ -25,7 +25,10 @@
     "npm-templates/"
   ],
   "scripts": {
-    "test": "node bin/cli.js --help"
+    "test": "node bin/cli.js --help",
+    "token-status": "bash scripts/token-status.sh || pwsh scripts/token-status.ps1 || powershell scripts/token-status.ps1",
+    "estimate-tokens": "bash scripts/estimate-tokens.sh",
+    "providers": "cat .ai/docs/provider-comparison.md"
   },
   "repository": {
     "type": "git",

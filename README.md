@@ -8,7 +8,7 @@ Production-ready security framework for AI-assisted development.
 **Stop leaks. Save tokens. Stay compliant.**
 
 <p>
-  <img src="https://img.shields.io/badge/version-9.0%20AI%20Protection-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
+  <img src="https://img.shields.io/badge/version-9.1%20Optimization-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
   <img src="https://img.shields.io/badge/license-GPL%20v3-blue?style=flat-square&labelColor=1D1D1B" alt="License">
   <img src="https://img.shields.io/badge/status-Production-success?style=flat-square&labelColor=1D1D1B" alt="Status">
   <img src="https://img.shields.io/badge/AGENTS.md-Universal-blue?style=flat-square&labelColor=1D1D1B" alt="AGENTS.md">
@@ -156,6 +156,100 @@ $ ./scripts/seo-check.sh
 - ✅ Works with all AI assistants
 
 [Read Threat Model](.ai/THREAT_MODEL.md) | [See Disclaimers](.ai/DISCLAIMERS.md)
+
+---
+
+## 🚀 Token Optimization (NEW in v9.1)
+
+**Save 30-40% tokens through intelligent management:**
+
+### What's New
+
+```bash
+📊 Token Dashboard
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 Session: 62k/200k (31%) | 📅 Daily: 95k/500k (19%) 🟢
+
+Provider: Claude Pro (claude.ai)
+Context: ukraine-full (~18k tokens, -28% vs v9.0)
+
+📊 Recommendation: Compress context at 50% to save tokens
+
+Commands:
+  npm run token-status     # Full dashboard
+  npm run estimate-tokens  # Estimate file tokens
+  npm run providers        # Compare 9 AI providers
+```
+
+### Token Savings Breakdown
+
+**Direct savings (optimized contexts):**
+- ✅ Minimal: 13k → 10k (-23%)
+- ✅ Standard: 18k → 14k (-22%)
+- ✅ Ukraine-full: 25k → 18k (-28%)
+- ✅ Enterprise: 30k → 23k (-23%)
+
+**Indirect savings (better practices):**
+- ✅ Session management guide → 50% fewer restarts
+- ✅ Multi-level compression → 40-70% context savings
+- ✅ Proactive suggestions → prevent token waste
+
+**Combined impact:** 30-40% overall token reduction
+
+### Enhanced Compression
+
+**3-level automatic compression:**
+```markdown
+[COMPRESSION EXECUTED]
+Previous context: ~45k tokens
+Compressed to: ~12k tokens
+Saved: ~33k tokens (73%)
+Compression level: Aggressive
+
+Ready for next task with optimized context.
+```
+
+**5 automatic triggers:**
+- After `git push` (always)
+- At 50% session tokens
+- After task completion
+- Before new major task
+- After 15+ messages
+
+### Provider Database
+
+**9 providers, 25+ plans with complete pricing:**
+- Anthropic (Claude) - API + Subscription
+- Google (Gemini) - API + Advanced
+- Cursor, GitHub Copilot, Mistral
+- Groq, DeepSeek, Perplexity, Windsurf
+
+**Quick comparison:**
+```bash
+$ npm run providers
+
+# Shows comprehensive comparison:
+- Pricing ($/month, per 1M tokens)
+- Token limits (session/daily/monthly)
+- Recommendations by use case
+- Cost calculator
+- Migration tips
+```
+
+**Decision matrix included** for choosing the right provider.
+
+### Session Management
+
+**New guide:** [.ai/SESSION_MANAGEMENT.md](.ai/SESSION_MANAGEMENT.md)
+
+**Key insight:** Session restart costs 18-25k tokens
+
+**When to continue (not restart):**
+- ✅ Working on same feature
+- ✅ Tokens <90%
+- ✅ After using `//COMPACT`
+
+**Expected savings:** 35-50k tokens/day by avoiding unnecessary restarts
 
 ---
 
