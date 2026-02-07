@@ -65,8 +65,86 @@ const LANGUAGES = [
   { name: 'Russian (ru-RU)', value: 'ru-RU' }
 ];
 
+const CONTEXTS = [
+  { name: 'Minimal - Startups, MVP (~13k tokens)', value: 'minimal' },
+  { name: 'Standard - Most projects (RECOMMENDED, ~18k tokens)', value: 'standard' },
+  { name: 'Ukraine-Full - Ukrainian businesses (~25k tokens)', value: 'ukraine-full' },
+  { name: 'Enterprise - Large teams (~30k tokens)', value: 'enterprise' }
+];
+
+// Function: Generate rules files for AI tools
+async function generateRulesFiles(targetDir, context) {
+  console.log(chalk.cyan('\n🤖 Generating rules for AI tools...\n'));
+
+  const sourceRules = path.join(targetDir, '.ai', 'contexts', `${context}.context.md`);
+
+  if (!await fs.pathExists(sourceRules)) {
+    console.log(chalk.yellow('⚠️  Source rules not found, skipping'));
+    return;
+  }
+
+  const sourceContent = await fs.readFile(sourceRules, 'utf8');
+
+  // Detect AI tools
+  const tools = [
+    { name: 'Claude VSCode Extension', file: '.claude/CLAUDE.md' },
+    { name: 'Universal (all AI tools)', file: 'AGENTS.md' }
+  ];
+
+  // Check for Cursor
+  if (await fs.pathExists(path.join(targetDir, '.cursorrules'))) {
+    tools.push({ name: 'Cursor', file: '.cursorrules' });
+  }
+
+  // Check for Windsurf
+  if (await fs.pathExists(path.join(targetDir, '.windsurfrules'))) {
+    tools.push({ name: 'Windsurf', file: '.windsurfrules' });
+  }
+
+  console.log(chalk.gray(`Found: ${tools.length} tool(s)\n`));
+
+  // Generate files
+  for (const tool of tools) {
+    const targetFile = path.join(targetDir, tool.file);
+    const targetDir_file = path.dirname(targetFile);
+
+    // Ensure directory exists
+    await fs.ensureDir(targetDir_file);
+
+    console.log(chalk.gray(`  → Generating ${tool.file} for ${tool.name}...`));
+
+    const header = `# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI WORKFLOW RULES FRAMEWORK v9.0
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Tool: ${tool.name}
+# Context: ${context}
+# Auto-generated from: .ai/contexts/${context}.context.md
+#
+# To update rules: npm run sync-rules
+# Framework: https://github.com/Shamavision/ai-workflow-rules
+#
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+`;
+
+    const footer = `
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# END OF AUTO-GENERATED RULES
+# Made in Ukraine 🇺🇦
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+
+    await fs.writeFile(targetFile, header + sourceContent + footer, 'utf8');
+    console.log(chalk.green(`  ✓ ${tool.file} created`));
+  }
+
+  console.log(chalk.green(`\n✓ Rules generated for ${tools.length} AI tool(s)\n`));
+}
+
 async function main() {
-  console.log(chalk.bold.cyan('\n🤖 AI Workflow Rules Setup v7.1\n'));
+  console.log(chalk.bold.cyan('\n🤖 AI Workflow Rules Setup v9.0\n'));
   console.log(chalk.gray('Universal framework for AI coding assistants\n'));
   console.log(chalk.gray('━'.repeat(50)) + '\n');
 
@@ -103,6 +181,13 @@ async function main() {
         name: 'updateGitignore',
         message: 'Add AI files to .gitignore? (Recommended)',
         default: true
+      },
+      {
+        type: 'list',
+        name: 'context',
+        message: 'Which context fits your project best?',
+        choices: CONTEXTS,
+        default: 'standard'
       },
       {
         type: 'confirm',
@@ -168,6 +253,9 @@ async function main() {
       await updateGitignore(currentDir);
     }
 
+    // Generate rules for AI tools
+    await generateRulesFiles(currentDir, answers.context);
+
     // Success message
     console.log('\n' + chalk.gray('━'.repeat(50)));
     console.log(chalk.bold.green('\n🎉 Setup complete!\n'));
@@ -175,6 +263,10 @@ async function main() {
     console.log(chalk.gray('  1. Open your project in your AI assistant'));
     console.log(chalk.gray('  2. Type ') + chalk.cyan('//START') + chalk.gray(' in the chat'));
     console.log(chalk.gray('  3. AI will load rules and start working\n'));
+    console.log(chalk.bold.blue('🛡️  AI Protection v9.0 enabled:'));
+    console.log(chalk.gray('  ✓ Prompt injection detection'));
+    console.log(chalk.gray('  ✓ PII protection (GDPR-ready)'));
+    console.log(chalk.gray('  ✓ Auto-runs in pre-commit hook\n'));
     console.log(chalk.gray('Need help? https://github.com/Shamavision/ai-workflow-rules/issues\n'));
     console.log(chalk.gray('Made with ❤️  in Ukraine 🇺🇦\n'));
 

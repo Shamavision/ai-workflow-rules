@@ -342,6 +342,115 @@ if (Test-Path "$TargetDir\.env") {
 }
 
 # ========================================
+# Generate Rules for AI Tools (v9.0 Universal)
+# ========================================
+
+Print-Step "Generating rules for AI tools..."
+
+$SourceRules = "$TargetDir\.ai\contexts\$Context.context.md"
+
+if (-Not (Test-Path $SourceRules)) {
+    Print-Warning "Source rules not found: $SourceRules"
+} else {
+    Write-Host ""
+    Write-Host "Detecting AI tools..." -ForegroundColor Cyan
+    Write-Host ""
+
+    # Detect AI tools (Windows typically uses VSCode)
+    $AITools = @()
+
+    # Always create for Claude VSCode Extension
+    $AITools += @{Name="Claude VSCode Extension"; File=".claude\CLAUDE.md"}
+
+    # Always create AGENTS.md (universal)
+    $AITools += @{Name="Universal (all AI tools)"; File="AGENTS.md"}
+
+    # Check for Cursor
+    if ((Test-Path "$TargetDir\.cursorrules") -or (Test-Path "$env:LOCALAPPDATA\Cursor")) {
+        $AITools += @{Name="Cursor"; File=".cursorrules"}
+    }
+
+    # Check for Windsurf
+    if (Test-Path "$TargetDir\.windsurfrules") {
+        $AITools += @{Name="Windsurf"; File=".windsurfrules"}
+    }
+
+    Write-Host "Found: $($AITools.Count) tool(s)" -ForegroundColor Cyan
+    Write-Host ""
+
+    # Function to generate rules file
+    function Generate-RulesFile {
+        param($ToolName, $TargetFile)
+
+        $FullPath = "$TargetDir\$TargetFile"
+        $TargetDir_File = Split-Path $FullPath -Parent
+
+        # Create directory if needed
+        if (-Not (Test-Path $TargetDir_File)) {
+            New-Item -ItemType Directory -Path $TargetDir_File -Force | Out-Null
+        }
+
+        Write-Host "  → Generating $TargetFile for $ToolName..." -ForegroundColor Cyan
+
+        # Header
+        $Header = @"
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI WORKFLOW RULES FRAMEWORK v9.0
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Tool: $ToolName
+# Context: $Context
+# Auto-generated from: .ai/contexts/$Context.context.md
+#
+# To update rules: npm run sync-rules
+# Framework: https://github.com/Shamavision/ai-workflow-rules
+#
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"@
+
+        # Footer
+        $Footer = @"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# END OF AUTO-GENERATED RULES
+# Made in Ukraine 🇺🇦
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"@
+
+        # Read source content
+        $SourceContent = Get-Content $SourceRules -Raw
+
+        # Write combined file
+        Set-Content -Path $FullPath -Value ($Header + $SourceContent + $Footer) -NoNewline
+
+        Print-Success "$TargetFile created"
+    }
+
+    # Generate files for each tool
+    foreach ($Tool in $AITools) {
+        $ToolFile = $Tool.File
+        $ToolName = $Tool.Name
+
+        # Check if file exists and has user content
+        if (Test-Path "$TargetDir\$ToolFile") {
+            $Content = Get-Content "$TargetDir\$ToolFile" -Raw
+            if ($Content -notmatch "AI-WORKFLOW-RULES") {
+                # User's existing file - backup and append
+                Write-Host "  ⚠️  $ToolFile exists - backing up..." -ForegroundColor Yellow
+                Copy-Item "$TargetDir\$ToolFile" "$TargetDir\$ToolFile.backup" -Force
+            }
+        }
+
+        Generate-RulesFile -ToolName $ToolName -TargetFile $ToolFile
+    }
+
+    Write-Host ""
+    Print-Success "Rules generated for $($AITools.Count) AI tool(s)"
+    Write-Host ""
+}
+
+# ========================================
 # Verification
 # ========================================
 
@@ -407,7 +516,7 @@ if ($Issues -eq 0) {
 Write-Host "╚════════════════════════════════════════════╝" -ForegroundColor Blue
 Write-Host ""
 
-Write-Host "✓ AI Workflow Rules Framework v8.1 installed" -ForegroundColor Green
+Write-Host "✓ AI Workflow Rules Framework v9.0 installed" -ForegroundColor Green
 Write-Host "   Context: " -NoNewline -ForegroundColor Blue
 Write-Host $Context -ForegroundColor Blue
 Write-Host ""
@@ -434,6 +543,11 @@ Write-Host ""
 Write-Host "🤖 Universal AI Support:" -ForegroundColor Blue
 Write-Host "   - Claude Code, Cursor, Windsurf: Auto-loads AGENTS.md ✓"
 Write-Host "   - ChatGPT, Gemini (web): Use //START command"
+Write-Host ""
+Write-Host "🛡️  AI Protection v9.0:" -ForegroundColor Blue
+Write-Host "   - Prompt injection detection"
+Write-Host "   - PII protection (GDPR-ready)"
+Write-Host "   - Auto-runs in pre-commit hook"
 Write-Host ""
 Write-Host "Happy coding! 🚀" -ForegroundColor Green
 Write-Host ""

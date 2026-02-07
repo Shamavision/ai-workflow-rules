@@ -364,6 +364,193 @@ else
 fi
 
 # ========================================
+# Generate Rules for AI Tools (v9.0 Universal)
+# ========================================
+
+print_step "Generating rules for AI tools..."
+
+# Source of truth
+SOURCE_RULES="$TARGET_DIR/.ai/contexts/$CONTEXT.context.md"
+
+# Function: Detect installed AI tools
+detect_ai_tools() {
+    local tools=()
+
+    # Claude Code CLI
+    if command -v claude &> /dev/null; then
+        tools+=("claude-cli")
+    fi
+
+    # Cursor
+    if command -v cursor &> /dev/null || [ -d "$HOME/.cursor" ] || [ -f "$TARGET_DIR/.cursorrules" ]; then
+        tools+=("cursor")
+    fi
+
+    # Windsurf
+    if command -v windsurf &> /dev/null || [ -f "$TARGET_DIR/.windsurfrules" ]; then
+        tools+=("windsurf")
+    fi
+
+    # Continue.dev
+    if [ -f "$TARGET_DIR/.continuerules" ] || [ -f "$TARGET_DIR/continue.config.json" ]; then
+        tools+=("continue")
+    fi
+
+    # Always include Claude VSCode Extension (hard to detect, common)
+    tools+=("claude-vscode")
+
+    # Always include AGENTS.md (universal fallback)
+    tools+=("agents-md")
+
+    echo "${tools[@]}"
+}
+
+# Function: Generate rules file for specific tool
+generate_rules_file() {
+    local tool=$1
+    local target=$2
+    local tool_name=$3
+
+    echo -e "  ${CYAN}→${NC} Generating $target for $tool_name..."
+
+    # Create target directory if needed
+    mkdir -p "$(dirname "$TARGET_DIR/$target")"
+
+    # Generate file with header
+    cat > "$TARGET_DIR/$target" << EOF
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI WORKFLOW RULES FRAMEWORK v9.0
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Tool: $tool_name
+# Context: $CONTEXT
+# Auto-generated from: .ai/contexts/$CONTEXT.context.md
+#
+# To update rules: npm run sync-rules (or bash scripts/sync-rules.sh)
+# Framework: https://github.com/Shamavision/ai-workflow-rules
+#
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+
+    # Append source rules
+    if [ -f "$SOURCE_RULES" ]; then
+        cat "$SOURCE_RULES" >> "$TARGET_DIR/$target"
+    else
+        echo "⚠️  Source rules not found: $SOURCE_RULES" >> "$TARGET_DIR/$target"
+    fi
+
+    # Footer
+    cat >> "$TARGET_DIR/$target" << EOF
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# END OF AUTO-GENERATED RULES
+# Made in Ukraine 🇺🇦
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+
+    print_success "$target created"
+}
+
+# Function: Append rules to existing file (with markers)
+append_to_existing() {
+    local target=$1
+    local tool_name=$2
+
+    echo -e "  ${YELLOW}⚠${NC}  $target exists - appending with markers..."
+
+    # Backup
+    cp "$TARGET_DIR/$target" "$TARGET_DIR/$target.backup"
+
+    # Check if already has our markers
+    if grep -q "AI-WORKFLOW-RULES-START" "$TARGET_DIR/$target"; then
+        echo -e "  ${CYAN}→${NC} Already integrated, skipping"
+        return
+    fi
+
+    # Append with markers
+    cat >> "$TARGET_DIR/$target" << EOF
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI-WORKFLOW-RULES-START v9.0.0
+# Auto-managed section. Edit at your own risk.
+# To update: npm run sync-rules
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+
+    cat "$SOURCE_RULES" >> "$TARGET_DIR/$target"
+
+    cat >> "$TARGET_DIR/$target" << EOF
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI-WORKFLOW-RULES-END v9.0.0
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+
+    print_success "Appended to $target (backup: $target.backup)"
+}
+
+# Detect AI tools
+echo ""
+echo "Detecting installed AI coding tools..."
+AI_TOOLS=($(detect_ai_tools))
+
+if [ ${#AI_TOOLS[@]} -eq 0 ]; then
+    print_warning "No AI tools detected, creating default files"
+    AI_TOOLS=("claude-vscode" "agents-md")
+fi
+
+echo -e "${CYAN}Found: ${AI_TOOLS[*]}${NC}"
+echo ""
+
+# Generate files for each detected tool
+for tool in "${AI_TOOLS[@]}"; do
+    case $tool in
+        claude-cli)
+            generate_rules_file "$tool" "AGENTS.md" "Claude Code CLI"
+            ;;
+
+        claude-vscode)
+            generate_rules_file "$tool" ".claude/CLAUDE.md" "Claude VSCode Extension"
+            ;;
+
+        cursor)
+            if [ -f "$TARGET_DIR/.cursorrules" ]; then
+                append_to_existing ".cursorrules" "Cursor"
+            else
+                generate_rules_file "$tool" ".cursorrules" "Cursor"
+            fi
+            ;;
+
+        windsurf)
+            if [ -f "$TARGET_DIR/.windsurfrules" ]; then
+                append_to_existing ".windsurfrules" "Windsurf"
+            else
+                generate_rules_file "$tool" ".windsurfrules" "Windsurf"
+            fi
+            ;;
+
+        continue)
+            if [ -f "$TARGET_DIR/.continuerules" ]; then
+                append_to_existing ".continuerules" "Continue.dev"
+            else
+                generate_rules_file "$tool" ".continuerules" "Continue.dev"
+            fi
+            ;;
+
+        agents-md)
+            # Always create AGENTS.md as universal fallback
+            generate_rules_file "$tool" "AGENTS.md" "Universal (all AI tools)"
+            ;;
+    esac
+done
+
+echo ""
+print_success "Rules generated for ${#AI_TOOLS[@]} AI tool(s)"
+echo ""
+
+# ========================================
 # Verification
 # ========================================
 
@@ -421,7 +608,7 @@ fi
 echo -e "${BLUE}╚════════════════════════════════════════════╝${NC}"
 echo ""
 
-echo -e "${GREEN}✓ AI Workflow Rules Framework v8.1 installed${NC}"
+echo -e "${GREEN}✓ AI Workflow Rules Framework v9.0 installed${NC}"
 echo -e "${BLUE}   Context: ${CONTEXT}${NC}"
 echo ""
 echo "📚 Next Steps:"
@@ -443,6 +630,11 @@ echo ""
 echo -e "${BLUE}🤖 Universal AI Support:${NC}"
 echo "   - Claude Code, Cursor, Windsurf: Auto-loads AGENTS.md ✓"
 echo "   - ChatGPT, Gemini (web): Use //START command"
+echo ""
+echo -e "${BLUE}🛡️  AI Protection v9.0:${NC}"
+echo "   - Prompt injection detection"
+echo "   - PII protection (GDPR-ready)"
+echo "   - Auto-runs in pre-commit hook"
 echo ""
 echo -e "${GREEN}Happy coding! 🚀${NC}"
 echo ""
