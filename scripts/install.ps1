@@ -271,47 +271,106 @@ if (Test-Path $TokenLimitsPath) {
 }
 
 # ========================================
-# Context Selection (v8.1 Modular)
+# Context Selection (v9.1 Smart Selection)
 # ========================================
 
-Print-Step "Selecting project context..."
+Print-Step "Context Selection Wizard (v9.1)..."
 
 Write-Host ""
-Write-Host "Which context fits your project best?"
-Write-Host ""
-Write-Host "  1) " -NoNewline
-Write-Host "Minimal" -ForegroundColor Green -NoNewline
-Write-Host " - Startups, MVP, quick projects"
-Write-Host "     (~13k tokens, 6.5% daily budget)"
-Write-Host "     Core workflow + essential security"
-Write-Host ""
-Write-Host "  2) " -NoNewline
-Write-Host "Standard" -ForegroundColor Green -NoNewline
-Write-Host " - Most international projects (RECOMMENDED)"
-Write-Host "     (~18k tokens, 9% daily budget)"
-Write-Host "     Full workflow + token management + git discipline"
-Write-Host ""
-Write-Host "  3) " -NoNewline
-Write-Host "Ukraine-Full" -ForegroundColor Yellow -NoNewline
-Write-Host " - Ukrainian businesses"
-Write-Host "     (~25k tokens, 12.5% daily budget)"
-Write-Host "     Everything + Ukrainian compliance + cyber defense"
-Write-Host ""
-Write-Host "  4) " -NoNewline
-Write-Host "Enterprise" -ForegroundColor Blue -NoNewline
-Write-Host " - Large teams, complex projects"
-Write-Host "     (~30k tokens, 15% daily budget)"
-Write-Host "     Maximum features + team collaboration"
+Write-Host "📊 Answer a few questions for personalized recommendation" -ForegroundColor Cyan
 Write-Host ""
 
-$ContextChoice = Read-Host "Enter number (1-4, default: 2)"
+# Question 1: Team size
+Write-Host "1. How many team members?"
+Write-Host "   1) 1-2 developers (solo/small)"
+Write-Host "   2) 3-5 developers (team)"
+Write-Host "   3) 6+ developers (large team)"
+Write-Host ""
+$TeamSize = Read-Host "Enter number (1-3)"
+Write-Host ""
 
-$Context = switch ($ContextChoice) {
-    "1" { "minimal" }
-    "2" { "standard" }
-    "3" { "ukraine-full" }
-    "4" { "enterprise" }
-    default { "standard" }
+# Question 2: Market
+Write-Host "2. Primary market?"
+Write-Host "   1) Ukrainian market (compliance, language rules)"
+Write-Host "   2) International (English-focused)"
+Write-Host ""
+$Market = Read-Host "Enter number (1-2)"
+Write-Host ""
+
+# Question 3: Token priority
+Write-Host "3. Token budget priority?"
+Write-Host "   1) High priority (minimize token usage)"
+Write-Host "   2) Medium (balanced)"
+Write-Host "   3) Low (prefer full features)"
+Write-Host ""
+$TokenPriority = Read-Host "Enter number (1-3)"
+Write-Host ""
+
+# Recommendation logic
+$Recommended = ""
+$Reason = ""
+
+if ($Market -eq "1") {
+    $Recommended = "ukraine-full"
+    $Reason = "Ukrainian market needs full compliance features"
+} elseif ($TokenPriority -eq "1") {
+    $Recommended = "minimal"
+    $Reason = "Token efficiency prioritized"
+} elseif ($TeamSize -eq "3" -or $TokenPriority -eq "3") {
+    $Recommended = "enterprise"
+    if ($TeamSize -eq "3") {
+        $Reason = "Large team benefits from enterprise workflows"
+    } else {
+        $Reason = "Full features prioritized"
+    }
+} else {
+    $Recommended = "standard"
+    $Reason = "Balanced approach for most projects"
+}
+
+# Show comparison table
+Write-Host ""
+Write-Host "📊 Context Comparison (v9.1 optimized)" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "┌─────────────────┬────────────┬─────────────┬──────────────────────┐"
+Write-Host "│ Context         │ Tokens     │ Daily %     │ Best For             │"
+Write-Host "├─────────────────┼────────────┼─────────────┼──────────────────────┤"
+Write-Host "│ Minimal         │ ~10k       │ 5%          │ Startups, MVP        │"
+Write-Host "│ Standard        │ ~14k       │ 7%          │ Most projects        │"
+Write-Host "│ Ukraine-Full    │ ~18k       │ 9%          │ Ukrainian market     │"
+Write-Host "│ Enterprise      │ ~23k       │ 11.5%       │ Large teams          │"
+Write-Host "└─────────────────┴────────────┴─────────────┴──────────────────────┘"
+Write-Host ""
+
+# Show recommendation
+Write-Host "✅ Recommended: " -NoNewline -ForegroundColor Green
+Write-Host $Recommended -ForegroundColor Green
+Write-Host "   Reasoning: $Reason" -ForegroundColor Gray
+Write-Host ""
+
+# Confirm or choose manually
+$ConfirmChoice = Read-Host "Use $Recommended? (Y/n)"
+
+if ([string]::IsNullOrEmpty($ConfirmChoice) -or $ConfirmChoice -match "^[Yy]") {
+    $Context = $Recommended
+} else {
+    # Manual selection
+    Write-Host ""
+    Write-Host "Choose context manually:"
+    Write-Host "  1) Minimal (~10k tokens)"
+    Write-Host "  2) Standard (~14k tokens)"
+    Write-Host "  3) Ukraine-Full (~18k tokens)"
+    Write-Host "  4) Enterprise (~23k tokens)"
+    Write-Host ""
+    $ManualChoice = Read-Host "Enter number (1-4)"
+
+    $Context = switch ($ManualChoice) {
+        "1" { "minimal" }
+        "2" { "standard" }
+        "3" { "ukraine-full" }
+        "4" { "enterprise" }
+        default { $Recommended }
+    }
 }
 
 # Update config.json with selected context

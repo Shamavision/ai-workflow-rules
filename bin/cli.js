@@ -66,10 +66,10 @@ const LANGUAGES = [
 ];
 
 const CONTEXTS = [
-  { name: 'Minimal - Startups, MVP (~13k tokens)', value: 'minimal' },
-  { name: 'Standard - Most projects (RECOMMENDED, ~18k tokens)', value: 'standard' },
-  { name: 'Ukraine-Full - Ukrainian businesses (~25k tokens)', value: 'ukraine-full' },
-  { name: 'Enterprise - Large teams (~30k tokens)', value: 'enterprise' }
+  { name: 'Minimal - Startups, MVP (~10k tokens, v9.1)', value: 'minimal', tokens: 10000 },
+  { name: 'Standard - Most projects (~14k tokens, v9.1)', value: 'standard', tokens: 14000 },
+  { name: 'Ukraine-Full - Ukrainian businesses (~18k tokens, v9.1)', value: 'ukraine-full', tokens: 18000 },
+  { name: 'Enterprise - Large teams (~23k tokens, v9.1)', value: 'enterprise', tokens: 23000 }
 ];
 
 // Function: Generate rules files for AI tools
@@ -143,6 +143,106 @@ async function generateRulesFiles(targetDir, context) {
   console.log(chalk.green(`\n✓ Rules generated for ${tools.length} AI tool(s)\n`));
 }
 
+// Function: Smart context selection with recommendations
+async function selectContextWithRecommendation() {
+  console.log(chalk.bold.cyan('\n📊 Context Selection Wizard\n'));
+  console.log(chalk.gray('Answer a few questions to get the best recommendation\n'));
+
+  const answers = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'teamSize',
+      message: 'How many team members?',
+      choices: [
+        { name: '1-2 developers (solo/small)', value: 'small' },
+        { name: '3-5 developers (team)', value: 'medium' },
+        { name: '6+ developers (large team)', value: 'large' }
+      ]
+    },
+    {
+      type: 'list',
+      name: 'market',
+      message: 'Primary market?',
+      choices: [
+        { name: 'Ukrainian market (compliance, language rules)', value: 'ukraine' },
+        { name: 'International (English-focused)', value: 'international' }
+      ]
+    },
+    {
+      type: 'list',
+      name: 'tokenPriority',
+      message: 'Token budget priority?',
+      choices: [
+        { name: 'High priority (minimize token usage)', value: 'high' },
+        { name: 'Medium (balanced)', value: 'medium' },
+        { name: 'Low (prefer full features)', value: 'low' }
+      ]
+    }
+  ]);
+
+  // Recommendation logic
+  let recommended;
+  const reasons = [];
+
+  if (answers.market === 'ukraine') {
+    recommended = 'ukraine-full';
+    reasons.push('Ukrainian market needs full compliance features');
+  } else if (answers.tokenPriority === 'high') {
+    recommended = 'minimal';
+    reasons.push('Token efficiency prioritized');
+  } else if (answers.teamSize === 'large' || answers.tokenPriority === 'low') {
+    recommended = 'enterprise';
+    reasons.push(answers.teamSize === 'large' ? 'Large team benefits from enterprise workflows' : 'Full features prioritized');
+  } else {
+    recommended = 'standard';
+    reasons.push('Balanced approach for most projects');
+  }
+
+  // Show comparison table
+  console.log(chalk.bold.cyan('\n📊 Context Comparison\n'));
+  console.log('┌─────────────────┬────────────┬─────────────┬──────────────────────┐');
+  console.log('│ Context         │ Tokens     │ Daily %     │ Best For             │');
+  console.log('├─────────────────┼────────────┼─────────────┼──────────────────────┤');
+  console.log('│ Minimal         │ ~10k       │ 5%          │ Startups, MVP        │');
+  console.log('│ Standard        │ ~14k       │ 7%          │ Most projects        │');
+  console.log('│ Ukraine-Full    │ ~18k       │ 9%          │ Ukrainian market     │');
+  console.log('│ Enterprise      │ ~23k       │ 11.5%       │ Large teams          │');
+  console.log('└─────────────────┴────────────┴─────────────┴──────────────────────┘\n');
+
+  // Show recommendation
+  console.log(chalk.bold.green(`✅ Recommended: ${recommended}\n`));
+  console.log(chalk.gray('Reasoning:'));
+  reasons.forEach(reason => console.log(chalk.gray(`  • ${reason}`)));
+  console.log();
+
+  // Confirm or choose manually
+  const confirmation = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'useRecommended',
+      message: `Use ${recommended} context?`,
+      default: true
+    }
+  ]);
+
+  if (confirmation.useRecommended) {
+    return recommended;
+  }
+
+  // Manual selection
+  const manual = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'context',
+      message: 'Choose context manually:',
+      choices: CONTEXTS,
+      default: recommended
+    }
+  ]);
+
+  return manual.context;
+}
+
 async function main() {
   console.log(chalk.bold.cyan('\n🤖 AI Workflow Rules Setup v9.0\n'));
   console.log(chalk.gray('Universal framework for AI coding assistants\n'));
@@ -183,19 +283,16 @@ async function main() {
         default: true
       },
       {
-        type: 'list',
-        name: 'context',
-        message: 'Which context fits your project best?',
-        choices: CONTEXTS,
-        default: 'standard'
-      },
-      {
         type: 'confirm',
         name: 'installProductRules',
         message: 'Install RULES_PRODUCT.md? (Ukrainian market specifics)',
         default: false
       }
     ]);
+
+    // Smart context selection (v9.1)
+    const selectedContext = await selectContextWithRecommendation();
+    answers.context = selectedContext;
 
     console.log('\n' + chalk.gray('━'.repeat(50)));
     console.log(chalk.bold('\n📦 Installing files...\n'));

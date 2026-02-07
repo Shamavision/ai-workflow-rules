@@ -298,39 +298,106 @@ else
 fi
 
 # ========================================
-# Context Selection (v8.1 Modular)
+# Context Selection (v9.1 Smart Selection)
 # ========================================
 
-print_step "Selecting project context..."
+print_step "Context Selection Wizard (v9.1)..."
 
 echo ""
-echo "Which context fits your project best?"
+echo -e "${CYAN}📊 Answer a few questions for personalized recommendation${NC}"
 echo ""
-echo -e "  1) ${GREEN}Minimal${NC} - Startups, MVP, quick projects"
-echo "     (~13k tokens, 6.5% daily budget)"
-echo "     Core workflow + essential security"
-echo ""
-echo -e "  2) ${GREEN}Standard${NC} - Most international projects (RECOMMENDED)"
-echo "     (~18k tokens, 9% daily budget)"
-echo "     Full workflow + token management + git discipline"
-echo ""
-echo -e "  3) ${YELLOW}Ukraine-Full${NC} - Ukrainian businesses"
-echo "     (~25k tokens, 12.5% daily budget)"
-echo "     Everything + Ukrainian compliance + cyber defense"
-echo ""
-echo -e "  4) ${BLUE}Enterprise${NC} - Large teams, complex projects"
-echo "     (~30k tokens, 15% daily budget)"
-echo "     Maximum features + team collaboration"
-echo ""
-read -p "Enter number (1-4, default: 2): " CONTEXT_CHOICE
 
-case $CONTEXT_CHOICE in
-    1) CONTEXT="minimal" ;;
-    2) CONTEXT="standard" ;;
-    3) CONTEXT="ukraine-full" ;;
-    4) CONTEXT="enterprise" ;;
-    *) CONTEXT="standard" ;;
-esac
+# Question 1: Team size
+echo "1. How many team members?"
+echo "   1) 1-2 developers (solo/small)"
+echo "   2) 3-5 developers (team)"
+echo "   3) 6+ developers (large team)"
+echo ""
+read -p "Enter number (1-3): " TEAM_SIZE
+echo ""
+
+# Question 2: Market
+echo "2. Primary market?"
+echo "   1) Ukrainian market (compliance, language rules)"
+echo "   2) International (English-focused)"
+echo ""
+read -p "Enter number (1-2): " MARKET
+echo ""
+
+# Question 3: Token priority
+echo "3. Token budget priority?"
+echo "   1) High priority (minimize token usage)"
+echo "   2) Medium (balanced)"
+echo "   3) Low (prefer full features)"
+echo ""
+read -p "Enter number (1-3): " TOKEN_PRIORITY
+echo ""
+
+# Recommendation logic
+RECOMMENDED=""
+REASON=""
+
+if [ "$MARKET" = "1" ]; then
+    RECOMMENDED="ukraine-full"
+    REASON="Ukrainian market needs full compliance features"
+elif [ "$TOKEN_PRIORITY" = "1" ]; then
+    RECOMMENDED="minimal"
+    REASON="Token efficiency prioritized"
+elif [ "$TEAM_SIZE" = "3" ] || [ "$TOKEN_PRIORITY" = "3" ]; then
+    RECOMMENDED="enterprise"
+    if [ "$TEAM_SIZE" = "3" ]; then
+        REASON="Large team benefits from enterprise workflows"
+    else
+        REASON="Full features prioritized"
+    fi
+else
+    RECOMMENDED="standard"
+    REASON="Balanced approach for most projects"
+fi
+
+# Show comparison table
+echo ""
+echo -e "${CYAN}📊 Context Comparison (v9.1 optimized)${NC}"
+echo ""
+echo "┌─────────────────┬────────────┬─────────────┬──────────────────────┐"
+echo "│ Context         │ Tokens     │ Daily %     │ Best For             │"
+echo "├─────────────────┼────────────┼─────────────┼──────────────────────┤"
+echo "│ Minimal         │ ~10k       │ 5%          │ Startups, MVP        │"
+echo "│ Standard        │ ~14k       │ 7%          │ Most projects        │"
+echo "│ Ukraine-Full    │ ~18k       │ 9%          │ Ukrainian market     │"
+echo "│ Enterprise      │ ~23k       │ 11.5%       │ Large teams          │"
+echo "└─────────────────┴────────────┴─────────────┴──────────────────────┘"
+echo ""
+
+# Show recommendation
+echo -e "${GREEN}✅ Recommended: ${RECOMMENDED}${NC}"
+echo -e "${GRAY}   Reasoning: ${REASON}${NC}"
+echo ""
+
+# Confirm or choose manually
+read -p "Use ${RECOMMENDED}? (Y/n): " CONFIRM_CHOICE
+
+if [[ "$CONFIRM_CHOICE" =~ ^[Yy]$ ]] || [ -z "$CONFIRM_CHOICE" ]; then
+    CONTEXT="$RECOMMENDED"
+else
+    # Manual selection
+    echo ""
+    echo "Choose context manually:"
+    echo "  1) Minimal (~10k tokens)"
+    echo "  2) Standard (~14k tokens)"
+    echo "  3) Ukraine-Full (~18k tokens)"
+    echo "  4) Enterprise (~23k tokens)"
+    echo ""
+    read -p "Enter number (1-4): " MANUAL_CHOICE
+
+    case $MANUAL_CHOICE in
+        1) CONTEXT="minimal" ;;
+        2) CONTEXT="standard" ;;
+        3) CONTEXT="ukraine-full" ;;
+        4) CONTEXT="enterprise" ;;
+        *) CONTEXT="$RECOMMENDED" ;;
+    esac
+fi
 
 # Update config.json with selected context
 if [ -f "$TARGET_DIR/.ai/config.json" ]; then
