@@ -60,6 +60,14 @@ licenses.csv
 !.claude/hooks/  # Exception: commit hooks (part of framework)
 !.claude/CLAUDE.md  # Exception: session instructions (part of framework)
 !.claude/settings.json  # Exception: project settings (if exists)
+
+# IDE integration files (auto-generated from contexts)
+# Note: Committed to repository as templates, but users can regenerate
+# via: npm run sync-rules or bash scripts/sync-rules.sh
+.cursorrules     # Cursor IDE rules (auto-generated)
+.windsurfrules   # Windsurf IDE rules (auto-generated)
+!.cursorrules    # Exception: commit template
+!.windsurfrules  # Exception: commit template
 ai-logs/
 ai-costs.db
 .ai-cache/

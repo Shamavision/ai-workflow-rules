@@ -524,16 +524,16 @@ Works with **90%+ of AI coding tools** through AGENTS.md universal standard:
 <summary><b>📖 Documentation</b></summary>
 
 **Quick Guides:**
-- [QUICKSTART.md](QUICKSTART.md) - 5-minute setup
-- [CHEATSHEET.md](CHEATSHEET.md) - One-page reference
+- [Quick Start](.ai/docs/quickstart.md) - 5-minute setup
+- [Cheatsheet](.ai/docs/cheatsheet.md) - One-page reference
 - [QUICK_CONTEXT.md](QUICK_CONTEXT.md) - 30 essential rules (80/20)
 
 **Full Rules:**
-- [RULES_CORE.md](RULES_CORE.md) - Complete workflow, token management
-- [RULES_PRODUCT.md](RULES_PRODUCT.md) - Ukrainian market, i18n, SEO
+- [Core Rules](.ai/rules/core.md) - Complete workflow, token management
+- [Product Rules](.ai/rules/product.md) - Ukrainian market, i18n, SEO
 
 **Technical:**
-- [TOKEN_USAGE.md](TOKEN_USAGE.md) - Token cost transparency
+- [Token Usage](.ai/docs/token-usage.md) - Token cost transparency
 - [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md) - Tested AI assistants matrix
 - [INSTALL.md](INSTALL.md) - Detailed installation guide
 
@@ -581,7 +581,7 @@ npx github:Shamavision/ai-workflow-rules init
    ```
    //START
    ```
-4. AI should show: `[SESSION START] ✓ RULES_CORE.md loaded`
+4. AI should show: `[SESSION START] ✓ Context loaded: [context_name]`
 
 ---
 
@@ -621,7 +621,7 @@ npx github:Shamavision/ai-workflow-rules init
 - 🟢 **Pro plan (150k daily):** Full installation (~125k left for work)
 - 🟡 **Free plan (~8k daily):** Use minimal context or delete optional files after reading
 
-📖 **Full breakdown:** [TOKEN_USAGE.md](TOKEN_USAGE.md)
+📖 **Full breakdown:** [Token Usage](.ai/docs/token-usage.md)
 
 </details>
 

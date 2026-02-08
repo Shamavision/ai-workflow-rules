@@ -1,0 +1,142 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI WORKFLOW RULES FRAMEWORK v9.1
+# Tool: Cursor IDE
+# Auto-generated - DO NOT EDIT MANUALLY
+# Update via: npm run sync-rules (or bash scripts/sync-rules.sh)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚀 SESSION START PROTOCOL (MANDATORY)
+
+**BEFORE any work in this project, you MUST:**
+
+1. **Load project context:**
+   - Read `.ai/config.json` to get selected context
+   - Load appropriate context from `.ai/contexts/[context].context.md`
+   - Context options: minimal, standard, ukraine-full, enterprise
+
+2. **Load enforcement protocols:**
+   - Read `.ai/AI-ENFORCEMENT.md` for mandatory workflows
+   - Includes: post-push compression, lint checks, token management
+
+3. **Display SESSION START confirmation:**
+
+```markdown
+[SESSION START]
+✓ Context loaded: [context_name] (~Xk tokens, v9.1 optimized)
+✓ Token budget: ~Xk for rules (Y% of daily)
+✓ Language: Adaptive (matches user's language)
+✓ Token limit: Zk daily
+✓ Current usage: Ak (B%) | Remaining: ~Ck
+✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
+
+Чім я можу вам допомогти? (or adapt to user's language)
+```
+
+4. **Follow core principles from loaded context**
+
+---
+
+## 📁 PROJECT STRUCTURE
+
+```
+.ai/                        # AI Framework Hub (v9.1)
+├── contexts/               # Context presets (load at session start)
+│   ├── minimal.context.md     (~10k tokens)
+│   ├── standard.context.md    (~14k tokens)
+│   ├── ukraine-full.context.md (~18k tokens)
+│   └── enterprise.context.md   (~23k tokens)
+├── docs/                   # Documentation
+│   ├── quickstart.md
+│   ├── cheatsheet.md
+│   ├── session-mgmt.md
+│   ├── code-quality.md
+│   └── ...
+├── rules/                  # Full rules reference
+│   ├── core.md             # Complete workflow rules
+│   └── product.md          # Ukrainian market specifics
+├── config.json             # Your configuration
+├── token-limits.json       # Token budget tracking
+└── AI-ENFORCEMENT.md       # Mandatory protocols
+```
+
+---
+
+## 🎯 KEY COMMANDS
+
+```bash
+//START    - Execute session start protocol
+//TOKENS   - Show token usage status
+//COMPACT  - Compress context (save 40-60% tokens)
+//THINK    - Show AI reasoning
+//CHECK:SECURITY  - Security audit
+//CHECK:LANG      - Language compliance check
+//CHECK:ALL       - Full audit
+```
+
+---
+
+## 🔒 SECURITY (Zero Tolerance)
+
+**NEVER:**
+- ❌ Hardcode secrets (API keys, passwords)
+- ❌ Use russian tracking services (Yandex, VK, Mail.ru)
+- ❌ Commit secrets to git
+- ❌ Skip pre-commit hooks
+
+**ALWAYS:**
+- ✅ Use `process.env.VAR` for secrets
+- ✅ Add error handling (try/catch, null checks)
+- ✅ Follow Ukrainian market policy (if ukraine-full context)
+
+---
+
+## 💡 WORKFLOW
+
+1. **Discuss → Approve → Execute** (never code before approval)
+2. **One stage = one commit** (atomic commits)
+3. **Token-conscious** (monitor usage, optimize at 50%+)
+4. **Post-push compression** (mandatory after git push)
+
+---
+
+## 📊 TOKEN ZONES
+
+- 🟢 **0-50% (GREEN):** Full capacity, normal mode
+- 🟡 **50-70% (MODERATE):** Brief mode, optimizations active
+- 🟠 **70-90% (CAUTION):** Silent mode, aggressive compression
+- 🔴 **90-95% (CRITICAL):** Finalization only, commit + stop
+
+---
+
+## 🆘 NAVIGATION
+
+- **Entry point:** [AGENTS.md](AGENTS.md) - Navigation hub
+- **Quick start:** [.ai/docs/quickstart.md](.ai/docs/quickstart.md)
+- **Full rules:** [.ai/rules/core.md](.ai/rules/core.md)
+- **Session management:** [.ai/docs/session-mgmt.md](.ai/docs/session-mgmt.md)
+- **Code quality:** [.ai/docs/code-quality.md](.ai/docs/code-quality.md)
+
+---
+
+## ⚠️ RED FLAGS - Auto-Stop
+
+**STOP and ask confirmation before:**
+- Deleting >10 files
+- Changing core configs (`package.json`, `tsconfig`)
+- Database migrations
+- `rm -rf` or recursive deletes
+- Publishing to production
+- **[LANG-CRITICAL]** Russian content detected
+- **[TOKEN-CRITICAL]** >95% tokens used
+
+---
+
+**Framework:** AI Workflow Rules v9.1 (Optimization Release)
+**Made in Ukraine 🇺🇦**
+**GitHub:** https://github.com/Shamavision/ai-workflow-rules
+
+---
+
+**NOTE:** This file is auto-generated from selected context.
+To update: Run `npm run sync-rules` or `bash scripts/sync-rules.sh`
+To change context: Edit `.ai/config.json` → Run sync-rules

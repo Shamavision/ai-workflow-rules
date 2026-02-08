@@ -167,6 +167,9 @@ for file in "$TEMP_DIR"/RULES_*.md; do
 done
 
 # Copy documentation files
+# ⚠️ v9.1 WARNING: This installer needs update for new .ai/ hub structure
+# Recommended: Use npx @shamavision/ai-workflow-rules instead (bin/cli.js)
+
 DOCS=("AGENTS.md" "START.md" "CHEATSHEET.md" "QUICKSTART.md" "TOKEN_USAGE.md" "AI_COMPATIBILITY.md" "INSTALL.md")
 for doc in "${DOCS[@]}"; do
     if [ -f "$TEMP_DIR/$doc" ]; then

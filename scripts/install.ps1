@@ -138,6 +138,9 @@ Get-ChildItem -Path "$TempDir\RULES_*.md" -ErrorAction SilentlyContinue | ForEac
 }
 
 # Copy documentation files
+# ⚠️ v9.1 WARNING: This installer needs update for new .ai/ hub structure
+# Recommended: Use npx @shamavision/ai-workflow-rules instead (bin/cli.js)
+
 $Docs = @("AGENTS.md", "START.md", "CHEATSHEET.md", "QUICKSTART.md", "TOKEN_USAGE.md", "AI_COMPATIBILITY.md", "INSTALL.md")
 foreach ($Doc in $Docs) {
     if (Test-Path "$TempDir\$Doc") {

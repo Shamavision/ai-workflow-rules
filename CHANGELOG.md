@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [9.1.0] - 2026-02-07
+## [9.1.0] - 2026-02-08
 
-### 🚀 Changed - Token Optimization (Evolution, Not Revolution)
+### 🚀 Changed - Token Optimization + .ai/ Hub Restructure
 
 **Major Release:** 30-40% overall token savings through intelligent management and optimization.
 
@@ -337,3 +337,50 @@ See git history for versions < 8.0
 ---
 
 **Made in Ukraine 🇺🇦**
+
+#### Phase 7: .ai/ Hub Restructure (2026-02-08)
+
+**BREAKING CHANGE:** File locations restructured for cleaner repository.
+
+**Moved Files:**
+- Documentation → `.ai/docs/` (7 files: quickstart, cheatsheet, token-usage, etc.)
+- Rules → `.ai/rules/` (core.md, product.md)  
+- Root cleaned: Only AGENTS.md remains as entry point
+
+**Updated:**
+- AGENTS.md: Rewritten as navigation hub
+- All 4 contexts: Updated paths
+- All installers: bin/cli.js ✓, install.sh ⚠️ deprecated, install.ps1 ⚠️ deprecated
+- npm-templates/: Reorganized to match new structure
+
+**New:**
+- `scripts/migrate-to-hub.sh`: Migration script for existing users
+- Migration guide in documentation
+
+#### Phase 7.1: Code Quality Lint Hook (2026-02-08)
+
+**Added optional pre-commit lint check (warnings only, non-blocking):**
+- Auto-detects: JS/TS, Python, Go, Shell, Markdown
+- Shows warnings but never blocks commits
+- Skip via: `AI_SKIP_LINT=1 git commit`
+
+**New Files:**
+- `scripts/pre-commit-lint.sh`: Lint hook with auto-detection
+- `scripts/setup-lint.sh`: Auto-install linters
+- `.ai/docs/code-quality.md`: Complete documentation
+- AI Protocol #5 in AI-ENFORCEMENT.md
+
+#### Phase 7.2: Critical Fixes (2026-02-08)
+
+**Fixed critical issues from Phase 7 audit:**
+- ✅ Created `.cursorrules` and `.windsurfrules` for IDE integration
+- ✅ Updated README.md links to new file locations  
+- ✅ Updated .gitignore for auto-generated IDE files
+- ⚠️ Added deprecation warnings to install.sh/install.ps1 (use bin/cli.js instead)
+
+**IDE Support:**
+- Cursor IDE: .cursorrules template
+- Windsurf IDE: .windsurfrules template  
+- Claude Code: .claude/CLAUDE.md (existing)
+- All: AGENTS.md universal support
+
