@@ -1199,7 +1199,7 @@ shellcheck scripts/*.sh  # ShellCheck for bash
     "copilot"
   ],
   "author": "Shamavision (wellme.ua)",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Shamavision/ai-workflow-rules.git"
@@ -1219,7 +1219,7 @@ shellcheck scripts/*.sh  # ShellCheck for bash
 - [ ] Scripts актуальні (включно з check-links, setup-lint)
 - [ ] Keywords relevant
 - [ ] Repository URL correct
-- [ ] License MIT
+- [ ] License GPL-3.0 (NOT MIT!)
 - [ ] Author wellme.ua mentioned
 
 ### 7.2. .npmignore Validation
@@ -1298,6 +1298,147 @@ npm unlink
 - [ ] --help flag works
 - [ ] --version flag works
 - [ ] npx @shamavision/ai-workflow-rules works
+
+### 7.4. User Acceptance & Legal Protection
+
+**Мета:** Захист від юридичних проблем через interactive disclaimer
+
+**Problem:**
+- Користувачі можуть стверджувати "ми не знали про disclaimer"
+- GPL v3 має disclaimer, але user може не читати LICENSE
+- Потрібен explicit acknowledgment перед встановленням
+
+**Solution: Комбо A + C (Interactive Prompt + Post-install Notice)**
+
+#### A) Pre-Install Interactive Prompt
+
+**Додати в `bin/cli.js` на початку:**
+
+```javascript
+// Display legal notice BEFORE installation
+function displayLegalNotice() {
+  console.log('\n╔════════════════════════════════════════════╗');
+  console.log('║   AI Workflow Rules v9.1.1                 ║');
+  console.log('║   GPL v3 Open Source License               ║');
+  console.log('╚════════════════════════════════════════════╝\n');
+
+  console.log('⚠️  IMPORTANT LEGAL NOTICE:\n');
+  console.log('This framework is provided WITHOUT WARRANTY.');
+  console.log('You are responsible for your own security.\n');
+
+  console.log('By installing, you acknowledge:');
+  console.log('  ✓ You accept GPL v3 License terms');
+  console.log('  ✓ No warranty or liability guarantees');
+  console.log('  ✓ You are responsible for secure usage');
+  console.log('  ✓ Read full terms: .ai/DISCLAIMERS.md\n');
+
+  console.log('Full license: LICENSE | Disclaimers: .ai/DISCLAIMERS.md\n');
+}
+
+async function getUserAcknowledgment() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return new Promise((resolve) => {
+    rl.question('Continue with installation? (Y/n) ', (answer) => {
+      rl.close();
+      if (answer.toLowerCase() === 'n' || answer.toLowerCase() === 'no') {
+        console.log('\nInstallation cancelled by user.');
+        console.log('You can read the license and disclaimers, then try again.\n');
+        process.exit(0);
+      }
+      console.log('\n✓ User acknowledged terms. Proceeding with installation...\n');
+      resolve(true);
+    });
+  });
+}
+
+// Usage in main():
+async function main() {
+  displayLegalNotice();
+  await getUserAcknowledgment();
+
+  // ... rest of wizard
+}
+```
+
+**Features:**
+- ✅ User MUST see disclaimer before install
+- ✅ Explicit action required (press Y)
+- ✅ Can cancel with 'n'
+- ✅ Non-blocking for automation (default Y)
+- ✅ Logs acknowledgment
+
+#### C) Post-Install Notice
+
+**Додати в `bin/cli.js` наприкінці:**
+
+```javascript
+function displayPostInstallNotice() {
+  console.log('\n' + '='.repeat(60));
+  console.log('✅ Installation Complete!');
+  console.log('='.repeat(60) + '\n');
+
+  console.log('⚠️  IMPORTANT REMINDERS:\n');
+  console.log('1. Read security disclaimers:');
+  console.log('   → .ai/DISCLAIMERS.md\n');
+
+  console.log('2. Review threat model:');
+  console.log('   → .ai/THREAT_MODEL.md\n');
+
+  console.log('3. This framework is provided WITHOUT WARRANTY.');
+  console.log('   Full license: LICENSE (GPL v3)\n');
+
+  console.log('🚀 Next steps:');
+  console.log('   → Read: .ai/docs/quickstart.md');
+  console.log('   → Start your AI session with: //START\n');
+
+  console.log('Made with ❤️ in Ukraine 🇺🇦\n');
+}
+
+// Call at end of installation
+displayPostInstallNotice();
+```
+
+#### Additional: README Warning
+
+**Додати на початку README.md (Phase 8):**
+
+```markdown
+## ⚠️ Important Legal Notice
+
+**This framework is provided AS IS under GPL v3 License.**
+
+By using this software you acknowledge:
+- ✓ No warranty or liability guarantees
+- ✓ You are responsible for your own security
+- ✓ Read full terms: [.ai/DISCLAIMERS.md](.ai/DISCLAIMERS.md)
+
+📄 [Full License](LICENSE) | 🔒 [Security Disclaimers](.ai/DISCLAIMERS.md) | 🛡️ [Threat Model](.ai/THREAT_MODEL.md)
+```
+
+**Benefits:**
+- ✅ Triple protection (pre-install + post-install + docs)
+- ✅ Explicit user acknowledgment (pressed Y)
+- ✅ Documented acceptance (CLI logs)
+- ✅ Industry standard approach
+- ✅ Юридичний захист від "didn't know" claims
+- ✅ Non-intrusive (doesn't break automation)
+
+**Checklist:**
+- [ ] Add displayLegalNotice() to bin/cli.js
+- [ ] Add getUserAcknowledgment() with prompt
+- [ ] Add displayPostInstallNotice() at end
+- [ ] Test interactive flow: user can accept/decline
+- [ ] Test automation: default Y doesn't break CI/CD
+- [ ] Add README warning (defer to Phase 8)
+- [ ] Verify .ai/DISCLAIMERS.md is up-to-date
+- [ ] Test with: npx @shamavision/ai-workflow-rules
+- [ ] Update CHANGELOG with legal protection feature
+
+**Priority:** 🟡 MEDIUM (before npm publish)
 
 ---
 
@@ -1788,6 +1929,140 @@ grep -o -E '\w+\s+\w+\s+\w+\s+\w+' .ai/contexts/*.context.md | sort | uniq -c | 
 # - Show before/after tokens
 # - Show savings %
 ```
+
+### 10.5. Token Display Strategy (Smart Display)
+
+**Мета:** Універсальний та чесний підхід до показу token usage
+
+**Problem:**
+- Session tracking доступний (200k limit)
+- Daily tracking НЕ доступний через VSCode Extension
+- Різні провайдери мають різні limits
+- Точні цифри неможливі для estimates
+
+**Solution: Smart Display з "≈" символом**
+
+#### Принципи:
+
+**1. Завжди використовувати "≈" для будь-яких цифр:**
+```markdown
+✓ Context: ukraine-full (≈18k tokens)
+✓ Session: ≈72k/200k (≈36%)
+✓ Daily estimate: ≈72k/≈500k (≈14%)
+✓ Task estimate: ≈15-20k tokens
+```
+
+**Чому:**
+- Чесно показує що це estimate, не exact
+- Зменшує liability якщо оцінка неточна
+- Industry standard (npm, yarn використовують "~")
+- Психологічно правильно
+
+**2. Session Tracking (точний з API):**
+```markdown
+✓ Session: ≈72k/200k (≈36%)
+```
+- Отримую з system warnings (accurate)
+- Показую з ≈ (бо майбутнє використання - estimate)
+
+**3. Daily Tracking (smart estimate з disclaimer):**
+```markdown
+✓ Daily estimate: ≈72k/≈500k (≈14%) ⓘ
+
+ⓘ Daily: Estimated from session (first session today assumed).
+  VSCode Extension doesn't provide real daily metrics.
+```
+
+**Логіка:**
+- Припускаю що session = daily (якщо перша сесія)
+- Беру limits з .ai/token-limits.json PRESETS
+- Показую disclaimer про estimate
+
+**4. Provider-Aware Display:**
+
+**Claude Pro (VSCode Extension):**
+```markdown
+[SESSION START]
+✓ Context: ukraine-full (≈18k, 9% of daily budget)
+✓ Session: ≈72k/200k (≈36%)
+✓ Daily estimate: ≈72k/≈500k (≈14%) ⓘ
+✓ Status: 🟢 GREEN Zone
+
+ⓘ Daily: Session-based estimate. VSCode Extension doesn't track actual daily usage.
+```
+
+**Claude API (pay-as-you-go):**
+```markdown
+[SESSION START]
+✓ Context: ukraine-full (≈18k)
+✓ Session: ≈72k/200k (≈36%)
+✓ Daily: Unlimited (pay-as-you-go)
+✓ Status: 🟢 GREEN
+```
+
+**Cursor Pro:**
+```markdown
+[SESSION START]
+✓ Context: standard (≈14k)
+✓ Session: ≈45k/≈80k (≈56%)
+✓ Daily: Not tracked (Cursor limitations)
+✓ Status: 🟡 MODERATE Zone
+```
+
+#### Short Format (коли все OK):
+
+```markdown
+[SESSION START]
+✓ ukraine-full (≈18k) | Session: ≈15k/200k (≈7%)
+✓ Daily: ≈15k/≈500k (≈3%) 🟢
+
+Чим я можу вам допомогти?
+```
+
+#### Warning Format (коли >50% session):
+
+```markdown
+[SESSION START]
+✓ Session: ≈120k/200k (≈60%) 🟡
+✓ Daily estimate: ≈120k/≈500k (≈24%)
+
+⚠️  MODERATE Zone: Consider compression at ≈150k
+```
+
+#### Critical Format (коли >90% session):
+
+```markdown
+[SESSION START]
+✓ Session: ≈185k/200k (≈92%) 🔴
+✓ Daily estimate: ≈185k/≈500k (≈37%)
+
+🚨 CRITICAL: Recommend finishing task and restarting session.
+   Reserve: ≈15k tokens for commit + push + compression.
+```
+
+#### Implementation Checklist:
+
+- [ ] Add "≈" symbol to ALL token estimates in framework
+- [ ] Update SESSION START protocol in .claude/CLAUDE.md
+- [ ] Update AI-ENFORCEMENT.md with Smart Display format
+- [ ] Add disclaimers for daily tracking limitations
+- [ ] Create provider detection logic (from .ai/token-limits.json)
+- [ ] Add short/full format variations
+- [ ] Add warning thresholds (50%, 70%, 90%)
+- [ ] Update MEMORY.md with Smart Display protocol
+- [ ] Test with different providers (Claude, Cursor, API)
+- [ ] Document in .ai/docs/token-usage.md
+
+#### Benefits:
+
+- ✅ Чесний підхід (показуємо що estimate)
+- ✅ Універсальний (працює для всіх провайдерів)
+- ✅ Зменшена liability ("≈" = approximate)
+- ✅ User-friendly (short format коли OK, detailed коли warning)
+- ✅ Educational (disclaimers пояснюють limitations)
+- ✅ Proactive (warnings перед critical zones)
+
+**Priority:** 🟡 MEDIUM (покращує UX, зменшує плутанину)
 
 ---
 
