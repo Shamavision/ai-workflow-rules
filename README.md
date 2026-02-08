@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/logo-aiwr-wellme.svg" alt="AI Workflow Rules" width="500">
+<img src="public/AWR.svg" alt="AI Workflow Rules" width="500">
 
 ### **Your AI assistant will commit secrets. We stop it.**
 
