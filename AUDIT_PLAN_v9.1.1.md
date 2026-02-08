@@ -1463,6 +1463,50 @@ Made with ❤️ in Ukraine 🇺🇦
 - Можливо перенести в .ai/docs/ ?
 - Або залишити в root (OK)
 
+### 8.5. .ai/token-limits.json Misleading Notes
+
+**Мета:** Виправити misleading documentation в token-limits.json
+
+**Current issue:**
+- ❌ File contains: `"AI automatically updates this file - no manual tracking needed"` (line 403)
+- ❌ File contains: `daily_usage: 0` (never updates automatically)
+- ❌ Users expect automatic tracking but it doesn't work via VSCode Extension
+
+**Reality:**
+- Token tracking **does NOT work** automatically in Claude Code (VSCode Extension)
+- File serves only as reference/template, not live tracker
+- Users must manually track or ignore tracking entirely
+
+**Options:**
+
+**A) Remove misleading notes (recommended):**
+```json
+"notes": [
+  "v3.0: Token budget reference for manual tracking",
+  "Limits are CONSERVATIVE (10-20% lower) for early warnings",
+  "Check PRESETS above for your provider and plan",
+  "Context compression auto-triggers at 50% (saves 40-60% tokens)",
+  "Set 'tracking_enabled: false' to disable tracking features"
+]
+```
+
+**B) Add disclaimer:**
+```json
+"_auto_tracking": "ONLY works with custom API integration - NOT with Claude Code VSCode Extension",
+```
+
+**C) Implement actual tracking (out of scope for this audit):**
+- Requires VSCode Extension hooks (not available)
+- Would need custom MCP server or middleware
+- Defer to future version
+
+**Checklist:**
+- [ ] Read full .ai/token-limits.json
+- [ ] Choose option A (remove) or B (disclaimer)
+- [ ] Update notes section
+- [ ] Test that file still serves as useful reference
+- [ ] Update any docs referencing auto-tracking
+
 ---
 
 ## 👤 PHASE 9: USER EXPERIENCE FLOW
