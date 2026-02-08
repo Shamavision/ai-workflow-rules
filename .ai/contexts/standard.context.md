@@ -10,7 +10,7 @@
 
 **BEFORE any work, AI MUST:**
 
-1. Check RULES files (Priority: AGENTS.md → START.md → RULES_CORE.md)
+1. Check RULES files (Priority: AGENTS.md → .ai/docs/start.md → .ai/rules/core.md)
 2. Read key sections (Session Start, Token Management, Language)
 3. Show confirmation:
 
@@ -452,4 +452,4 @@ Extend capabilities, don't replace judgment. Never execute before approval. Neve
 
 ---
 
-**Context:** standard v1.1 (optimized) | **Generated:** 2026-02-07 | **From:** RULES_CORE.md v8.0
+**Context:** standard v1.1 (optimized) | **Generated:** 2026-02-08 | **From:** .ai/rules/core.md v8.0

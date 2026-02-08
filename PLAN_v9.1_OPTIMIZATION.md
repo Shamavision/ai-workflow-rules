@@ -816,6 +816,377 @@ v9.1:
 
 ---
 
+## 📋 Phase 7: .ai/ Hub Restructure (Week 4-5, ~20-25k tokens)
+
+**Goal:** Clean root directory, centralized .ai/ hub, auto-generated tool files
+
+**BREAKING CHANGE:** This phase restructures file locations. Existing users need migration.
+
+### 7.1. Current Problem
+
+**Before restructure:**
+```
+user-project/
+├── AGENTS.md              # Root file
+├── RULES_CORE.md          # Root file
+├── RULES_PRODUCT.md       # Root file
+├── START.md               # Root file
+├── QUICKSTART.md          # Root file
+├── CHEATSHEET.md          # Root file
+├── TOKEN_USAGE.md         # Root file
+├── AI_COMPATIBILITY.md    # Root file
+├── .ai/
+├── .claude/
+└── ... (user's files)
+
+Problem: 8+ MD files clutter user's root directory
+```
+
+### 7.2. Target Structure
+
+**After restructure:**
+```
+user-project/
+├── AGENTS.md                    # ONLY entry point at root
+│
+├── .ai/                         # AI Framework Hub
+│   ├── contexts/
+│   │   ├── minimal.context.md
+│   │   ├── standard.context.md
+│   │   ├── ukraine-full.context.md
+│   │   └── enterprise.context.md
+│   ├── docs/                    # 🆕 Documentation hub
+│   │   ├── quickstart.md        # Was root/QUICKSTART.md
+│   │   ├── cheatsheet.md        # Was root/CHEATSHEET.md
+│   │   ├── token-usage.md       # Was root/TOKEN_USAGE.md
+│   │   ├── compatibility.md     # Was root/AI_COMPATIBILITY.md
+│   │   └── session-mgmt.md      # Was root/.ai/SESSION_MANAGEMENT.md
+│   ├── rules/                   # 🆕 Rules hub
+│   │   ├── core.md              # Was root/RULES_CORE.md
+│   │   └── product.md           # Was root/RULES_PRODUCT.md (optional)
+│   ├── config.json
+│   ├── token-limits.json
+│   └── forbidden-trackers.json
+│
+├── .claude/                     # Auto-generated from .ai/contexts/
+│   └── CLAUDE.md
+├── .cursorrules                 # Auto-generated
+├── .windsurfrules               # Auto-generated
+│
+├── scripts/
+│   └── pre-commit
+│
+└── ... (user's project files - clean root!)
+```
+
+### 7.3. Implementation Tasks
+
+#### Task 7.1: Create new directory structure
+
+**Create directories:**
+```bash
+mkdir -p .ai/docs
+mkdir -p .ai/rules
+```
+
+#### Task 7.2: Move documentation files
+
+**Moves:**
+```
+QUICKSTART.md           → .ai/docs/quickstart.md
+CHEATSHEET.md           → .ai/docs/cheatsheet.md
+TOKEN_USAGE.md          → .ai/docs/token-usage.md
+AI_COMPATIBILITY.md     → .ai/docs/compatibility.md
+.ai/SESSION_MANAGEMENT.md → .ai/docs/session-mgmt.md
+```
+
+#### Task 7.3: Move rules files
+
+**Moves:**
+```
+RULES_CORE.md           → .ai/rules/core.md
+RULES_PRODUCT.md        → .ai/rules/product.md (if exists)
+START.md                → .ai/docs/start.md (or deprecate)
+```
+
+#### Task 7.4: Update AGENTS.md
+
+**New AGENTS.md (entry point with navigation):**
+
+```markdown
+# AI Workflow Rules Framework
+
+> **🚪 Entry point for all AI assistants**
+> **Framework:** v9.1 Optimization | **Made in Ukraine 🇺🇦**
+
+---
+
+## 🚀 Quick Start
+
+**New to the framework?** → [Quick Start Guide](.ai/docs/quickstart.md)
+
+**Your AI will automatically load:**
+- Context from: `.ai/contexts/[your-selection].context.md`
+- Current selection: **standard** (see `.ai/config.json`)
+
+---
+
+## 📚 Documentation
+
+| Guide | Description |
+|-------|-------------|
+| [Quick Start](.ai/docs/quickstart.md) | Get started in 5 minutes |
+| [Cheatsheet](.ai/docs/cheatsheet.md) | Commands & shortcuts reference |
+| [Token Usage](.ai/docs/token-usage.md) | Understanding token costs |
+| [Session Management](.ai/docs/session-mgmt.md) | When to restart vs continue |
+| [Compatibility](.ai/docs/compatibility.md) | Supported AI tools & models |
+
+---
+
+## 📖 Full Rules
+
+| Document | Description |
+|----------|-------------|
+| [Core Rules](.ai/rules/core.md) | Complete workflow rules |
+| [Product Rules](.ai/rules/product.md) | Ukrainian market specifics (optional) |
+
+---
+
+## 🎯 Key Commands
+
+```bash
+//START    - Session start protocol
+//TOKENS   - Show token usage
+//COMPACT  - Compress context
+//THINK    - Show AI reasoning
+
+# Security checks
+//CHECK:SECURITY  - Scan for vulnerabilities
+//CHECK:LANG      - Language compliance check
+//CHECK:ALL       - Full audit
+```
+
+---
+
+## 🏗️ Framework Structure
+
+```
+.ai/
+├── contexts/     # AI context presets (minimal/standard/ukraine-full/enterprise)
+├── docs/         # All documentation
+├── rules/        # Complete rules reference
+└── config.json   # Your configuration
+```
+
+**Tool-specific files** (`.claude/CLAUDE.md`, `.cursorrules`, etc.) are **auto-generated** from your selected context. Don't edit them directly.
+
+---
+
+## 💡 Philosophy
+
+**Quality > Speed** | **No Overengineering** | **Token-Conscious**
+
+- Discuss → Approve → Execute
+- One stage = one commit (atomic)
+- Security-first (no secrets, no russian trackers)
+- Token zones (Green → Moderate → Caution → Critical)
+
+---
+
+## 📊 Context Comparison
+
+| Context | Tokens | Daily % | Best For |
+|---------|--------|---------|----------|
+| Minimal | ~10k | 5% | Startups, MVP |
+| Standard | ~14k | 7% | Most projects |
+| Ukraine-Full | ~18k | 9% | Ukrainian market |
+| Enterprise | ~23k | 11.5% | Large teams |
+
+**Change context:** Edit `.ai/config.json` → Run `npm run sync-rules`
+
+---
+
+## 🆘 Need Help?
+
+- **Documentation:** Browse `.ai/docs/`
+- **Issues:** https://github.com/Shamavision/ai-workflow-rules/issues
+- **Updates:** `npm run sync-rules` regenerates tool files
+
+---
+
+**Made in Ukraine 🇺🇦** | **v9.1 Optimization**
+```
+
+#### Task 7.5: Update installers
+
+**Changes needed:**
+
+**bin/cli.js:**
+```javascript
+const filesToCopy = [
+  // Root (only entry point)
+  { from: 'AGENTS.md', to: 'AGENTS.md' },
+
+  // .ai/docs/ directory
+  { from: 'docs/quickstart.md', to: '.ai/docs/quickstart.md' },
+  { from: 'docs/cheatsheet.md', to: '.ai/docs/cheatsheet.md' },
+  { from: 'docs/token-usage.md', to: '.ai/docs/token-usage.md' },
+  { from: 'docs/compatibility.md', to: '.ai/docs/compatibility.md' },
+  { from: 'docs/session-mgmt.md', to: '.ai/docs/session-mgmt.md' },
+
+  // .ai/rules/ directory
+  { from: 'rules/core.md', to: '.ai/rules/core.md' },
+  { from: 'rules/product.md', to: '.ai/rules/product.md' }, // if selected
+
+  // .ai/ config files (as before)
+  // ... contexts, config.json, etc.
+];
+```
+
+**scripts/install.sh & install.ps1:** Similar updates
+
+#### Task 7.6: Update sync-rules.sh
+
+**Update paths:**
+```bash
+# Read source
+SOURCE_CONTEXT=".ai/contexts/$CONTEXT.context.md"
+
+# Generate tool files (as before)
+generate_tool_file() {
+    local tool_file=$1
+    local header="# Generated from: $SOURCE_CONTEXT"
+
+    cat <<EOF > "$tool_file"
+$header
+
+$(cat "$SOURCE_CONTEXT")
+EOF
+}
+
+# Generate for each tool
+generate_tool_file ".claude/CLAUDE.md"
+generate_tool_file ".cursorrules"
+generate_tool_file ".windsurfrules"
+```
+
+#### Task 7.7: Create migration script
+
+**Create:** `scripts/migrate-to-hub.sh`
+
+```bash
+#!/bin/bash
+# Migration script for existing users
+
+echo "🔄 Migrating to .ai/ hub structure..."
+
+# Create new directories
+mkdir -p .ai/docs
+mkdir -p .ai/rules
+
+# Move docs
+[ -f "QUICKSTART.md" ] && mv QUICKSTART.md .ai/docs/quickstart.md
+[ -f "CHEATSHEET.md" ] && mv CHEATSHEET.md .ai/docs/cheatsheet.md
+[ -f "TOKEN_USAGE.md" ] && mv TOKEN_USAGE.md .ai/docs/token-usage.md
+[ -f "AI_COMPATIBILITY.md" ] && mv AI_COMPATIBILITY.md .ai/docs/compatibility.md
+[ -f ".ai/SESSION_MANAGEMENT.md" ] && mv .ai/SESSION_MANAGEMENT.md .ai/docs/session-mgmt.md
+
+# Move rules
+[ -f "RULES_CORE.md" ] && mv RULES_CORE.md .ai/rules/core.md
+[ -f "RULES_PRODUCT.md" ] && mv RULES_PRODUCT.md .ai/rules/product.md
+[ -f "START.md" ] && mv START.md .ai/docs/start.md
+
+echo "✅ Migration complete!"
+echo "   Documentation: .ai/docs/"
+echo "   Rules: .ai/rules/"
+echo ""
+echo "Run: npm run sync-rules to regenerate tool files"
+```
+
+#### Task 7.8: Update .gitignore recommendations
+
+**Add to documentation:**
+```gitignore
+# AI Framework (keep source, ignore generated)
+.ai/contexts/       # Keep (user might customize)
+.ai/docs/           # Keep (reference)
+.ai/rules/          # Keep (reference)
+.ai/config.json     # Keep (user config)
+.ai/token-limits.json  # Keep (tracking)
+
+# Auto-generated (disposable)
+.claude/            # Ignore (regenerate from .ai/contexts/)
+.cursorrules        # Ignore (regenerate)
+.windsurfrules      # Ignore (regenerate)
+```
+
+#### Task 7.9: Update npm-templates/
+
+**Reorganize npm package structure:**
+```
+npm-templates/
+├── AGENTS.md (new entry point)
+├── docs/
+│   ├── quickstart.md
+│   ├── cheatsheet.md
+│   ├── token-usage.md
+│   ├── compatibility.md
+│   └── session-mgmt.md
+├── rules/
+│   ├── core.md
+│   └── product.md
+├── .ai/
+│   ├── contexts/
+│   └── config.json (template)
+└── scripts/
+    └── pre-commit
+```
+
+#### Task 7.10: Test all AI tools
+
+**Verify compatibility:**
+- [ ] Claude VSCode Extension loads from new structure
+- [ ] Cursor reads .cursorrules (generated from .ai/contexts/)
+- [ ] Windsurf reads .windsurfrules (generated)
+- [ ] Continue.dev works with new paths
+- [ ] AGENTS.md links all work
+- [ ] npm run sync-rules regenerates correctly
+
+### 7.4. Breaking Changes & Migration
+
+**For existing users:**
+
+1. **Automatic migration:** Run `bash scripts/migrate-to-hub.sh`
+2. **Manual migration:** Follow guide in `.ai/docs/migration.md`
+3. **Regenerate tool files:** `npm run sync-rules`
+
+**Breaking changes:**
+- Files moved from root → .ai/docs/ and .ai/rules/
+- Direct edits to tool files (.cursorrules, etc.) will be lost (now auto-generated)
+- Links in custom docs may need updating
+
+**Migration support:**
+- Backward compatibility: Keep checking root files as fallback for 1 version
+- Clear migration guide
+- Automated migration script
+
+### 7.5. Success Criteria
+
+- [ ] Root directory clean (only AGENTS.md)
+- [ ] All docs in .ai/docs/
+- [ ] All rules in .ai/rules/
+- [ ] Tool files auto-generated correctly
+- [ ] All links in AGENTS.md work
+- [ ] Migration script tested
+- [ ] All AI tools load correctly
+- [ ] Documentation updated
+- [ ] Zero feature loss
+- [ ] Users can migrate smoothly
+
+**Estimated tokens:** ~20-25k tokens
+
+---
+
 ## 📊 Expected Results
 
 ### Token Savings Breakdown

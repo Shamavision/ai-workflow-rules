@@ -519,8 +519,8 @@ $Issues = 0
 
 # Check essential files
 $FilesToCheck = @(
-    "RULES_CORE.md",
-    "RULES_PRODUCT.md",
+    ".ai/rules/core.md",
+    ".ai/rules/product.md",
     "AGENTS.md",
     ".ai\config.json",
     ".ai\contexts\minimal.context.md",

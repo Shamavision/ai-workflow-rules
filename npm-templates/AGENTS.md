@@ -1,193 +1,212 @@
 # AI Workflow Rules Framework
 
-> **🚨 AI ASSISTANT: READ THIS FIRST!**
->
-> **MANDATORY SESSION START CHECK:**
-> - If this is your **FIRST message** in this session
-> - AND you have NOT yet displayed `[SESSION START]` confirmation
-> - **STOP immediately** and execute Session Start Protocol (Section 🚀 below)
->
-> **USER COMMAND TRIGGER:**
-> - If user sends `//START` command → execute Session Start Protocol immediately
-> - This is the universal session initialization trigger
->
-> **DO NOT skip this step.** Session Start Protocol is MANDATORY before any other work.
+> **🚪 Entry point for all AI assistants**
+> **Framework:** v9.1 Optimization | **Made in Ukraine 🇺🇦**
 
 ---
 
-> **Universal AI Agent Configuration**
-> This file is automatically loaded by Claude Code, Cursor, Windsurf, Aider, Continue.dev, and other AI coding assistants supporting the AGENTS.md standard.
+## 🚀 Quick Start
+
+**New to the framework?** → [Quick Start Guide](.ai/docs/quickstart.md)
+
+**Your AI will automatically load:**
+- Context from: `.ai/contexts/[your-selection].context.md`
+- Current selection: Check `.ai/config.json`
+- Session Start Protocol: See [.claude/CLAUDE.md](.claude/CLAUDE.md)
 
 ---
 
-## 🚀 Session Start Protocol (MANDATORY)
+## 🚨 AI ASSISTANT: SESSION START PROTOCOL
 
-**BEFORE any work in this session, AI MUST:**
+**MANDATORY before any work:**
 
-1. **Load project rules:**
-   - Read `RULES_CORE.md` (Sections 0, 2, 7)
-   - Read `.ai/token-limits.json` for budget tracking
+1. **Load context:** Read `.ai/config.json` → Load appropriate `.ai/contexts/[context].context.md`
+2. **Load enforcement:** Read `.ai/AI-ENFORCEMENT.md` for mandatory protocols
+3. **Display confirmation:**
 
-2. **Display SESSION START confirmation:**
-
-```
+```markdown
 [SESSION START]
-✓ RULES_CORE.md loaded (vX.X)
-✓ Language: Russian (internal dialogue)
-✓ Token limit: [daily_limit] daily ([provider] [plan])
-✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
+✓ Context loaded: [context_name] (~Xk tokens, v9.1 optimized)
+✓ Token budget: ~Xk for rules (Y% of daily)
+✓ Language: Adaptive (matches user's language)
+✓ Token limit: Zk daily ([provider] [plan])
+✓ Current usage: Ak (B%) | Remaining: ~Ck
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 
-Ready to work. В чем помочь?
+Чім я можу вам допомогти?
 ```
 
-### 🧅 3-Layer Session Start Protection (ONION)
+4. **Follow core principles:** Discuss → Approve → Execute | Token-conscious | Atomic commits
 
-This protocol is enforced through **3 redundant layers** to guarantee execution:
+**User command trigger:** `//START` or `//start` → Execute this protocol immediately
 
-**Layer 1: File Directive** (This file, lines 3-10)
-- Prominent warning at top of AGENTS.md
-- **⚠️ CLI/Cursor ONLY:** VSCode Extension doesn't auto-load AGENTS.md
-- For VSCode: Use snippet `session-start` (type it in new chat) or manual script (Layer 3)
-
-**Layer 2: User Prompt Hook** (`.claude/hooks/user-prompt-submit.sh`)
-- Automatically injects Session Start instruction on first message
-- Creates `.ai/.session-started` marker after execution
-- **⚠️ CLI ONLY:** Works in Claude Code CLI, but NOT in VSCode Extension ([bug #16114](https://github.com/anthropics/claude-code/issues/16114))
-
-**Layer 3: Manual Fallback** (`scripts/session-init.sh`)
-- Generate Session Start message manually
-- Universal solution for ChatGPT Web, Gemini, VSCode Extension, etc.
-- Usage: `./scripts/session-init.sh | clip` (copy to clipboard)
-
-**🎯 VSCode Extension Users:**
-1. Just type `//START` in new chat and send it
-2. Or: Type `//start` → Tab (snippet expands with details)
-3. Or: Run `./scripts/session-init.sh | clip` → paste into chat
-4. **Reminder:** VSCode Extension doesn't support Layers 1-2 yet
-
-**Why 3 layers?**
-- Guarantees Session Start across all AI tools
-- No single point of failure
-- Follows project's ONION security philosophy
-
-3. **Follow core principles:**
-   - Internal dialogue: **Russian** (code comments/commits: English)
-   - Token-conscious: Monitor usage, optimize at 50%+
-   - Discuss → Approve → Execute (never code before approval)
-   - Stage-based workflow with atomic commits
+**Details:** See [.claude/CLAUDE.md](.claude/CLAUDE.md) Section "Session Start Protocol"
 
 ---
 
-## 📁 Project Structure
+## 📚 Documentation
+
+| Guide | Description | Tokens |
+|-------|-------------|--------|
+| [Quick Start](.ai/docs/quickstart.md) | Get started in 5 minutes | ~2k |
+| [Cheatsheet](.ai/docs/cheatsheet.md) | Commands & shortcuts reference | ~3k |
+| [Token Usage](.ai/docs/token-usage.md) | Understanding token costs | ~3k |
+| [Session Management](.ai/docs/session-mgmt.md) | When to restart vs continue | ~4k |
+| [Compatibility](.ai/docs/compatibility.md) | Supported AI tools & models | ~3k |
+| [Getting Started](.ai/docs/start.md) | Onboarding guide | ~2k |
+| [Provider Comparison](.ai/docs/provider-comparison.md) | AI provider comparison | ~3k |
+
+---
+
+## 📖 Full Rules
+
+| Document | Description | Size |
+|----------|-------------|------|
+| [Core Rules](.ai/rules/core.md) | Complete workflow rules (v8.0) | ~56k |
+| [Product Rules](.ai/rules/product.md) | Ukrainian market specifics | ~76k |
+
+**Note:** AI loads context files (`.ai/contexts/*.context.md`) at session start, not these full rules. Full rules are reference documentation.
+
+---
+
+## 🎯 Key Commands
+
+```bash
+# Session management
+//START    - Session start protocol (mandatory first command)
+//TOKENS   - Show token usage status
+//COMPACT  - Compress context (save 40-60% tokens)
+//THINK    - Show AI reasoning
+
+# Security checks
+//CHECK:SECURITY  - Scan for vulnerabilities, secrets, API leaks
+//CHECK:LANG      - Language compliance check (LANG-CRITICAL)
+//CHECK:ALL       - Full audit (security + performance + lang + i18n)
+```
+
+---
+
+## 🏗️ Framework Structure
+
+```
+.ai/                          # AI Framework Hub (v9.1)
+├── contexts/                 # Context presets (loaded at session start)
+│   ├── minimal.context.md    # ~10k tokens (startups, MVP)
+│   ├── standard.context.md   # ~14k tokens (most projects)
+│   ├── ukraine-full.context.md  # ~18k tokens (Ukrainian market)
+│   └── enterprise.context.md    # ~23k tokens (large teams)
+├── docs/                     # Documentation
+│   ├── quickstart.md
+│   ├── cheatsheet.md
+│   ├── token-usage.md
+│   ├── session-mgmt.md
+│   ├── compatibility.md
+│   ├── start.md
+│   └── provider-comparison.md
+├── rules/                    # Full rules reference
+│   ├── core.md               # Complete workflow rules
+│   └── product.md            # Ukrainian market rules
+├── config.json               # Your configuration
+├── token-limits.json         # Token budget tracking
+├── AI-ENFORCEMENT.md         # Mandatory protocols for AI
+└── forbidden-trackers.json   # Blocked tracking services
+```
+
+**Tool-specific files** (`.claude/CLAUDE.md`, `.cursorrules`, `.windsurfrules`) are **auto-generated** from your selected context.
+
+**Don't edit them directly.** Use `npm run sync-rules` to regenerate.
+
+---
+
+## 💡 Core Principles
+
+**Philosophy:** Quality > Speed | No Overengineering | Token-Conscious
+
+- **Discuss → Approve → Execute** - Never code before approval
+- **One stage = one commit** - Atomic commits
+- **Security-first** - No secrets, no russian trackers
+- **Token zones** - 🟢 Green → 🟡 Moderate → 🟠 Caution → 🔴 Critical
+
+---
+
+## 📊 Context Comparison (v9.1 Optimized)
+
+| Context | Tokens | Daily % | Best For | Includes |
+|---------|--------|---------|----------|----------|
+| **Minimal** | ~10k | 5% | Startups, MVP, simple projects | Core workflow, basic security |
+| **Standard** | ~14k | 7% | Most projects (recommended) | + Git discipline, token management |
+| **Ukraine-Full** | ~18k | 9% | Ukrainian market compliance | + Language rules, market policy, i18n |
+| **Enterprise** | ~23k | 11.5% | Large teams, complex workflows | + Advanced patterns, enterprise features |
+
+**Token savings (v9.1 optimization):**
+- minimal: -23% (13k → 10k)
+- standard: -22% (18k → 14k)
+- ukraine-full: -28% (25k → 18k)
+- enterprise: -23% (30k → 23k)
+
+**Change context:**
+1. Edit `.ai/config.json` → Set `"context": "standard"` (or minimal/ukraine-full/enterprise)
+2. Run `npm run sync-rules` to regenerate tool files
+3. Restart AI session
+
+---
+
+## 🔒 Security & Compliance
+
+**Zero tolerance:**
+- ❌ Hardcoded secrets (API keys, passwords)
+- ❌ Russian tracking services (Yandex, VK, Mail.ru)
+- ❌ `.ru` domains in production
+- ❌ Committing `.env`, credentials, private keys
+
+**Automatic protection:**
+- ✅ Pre-commit hook scans for secrets/trackers
+- ✅ AI Protection checks prompts for injection/PII
+- ✅ Token budget monitoring prevents overuse
+
+**Check compliance:** Run `//CHECK:ALL` command
+
+---
+
+## 🆘 Need Help?
+
+- **Quick reference:** [Cheatsheet](.ai/docs/cheatsheet.md)
+- **Getting started:** [Quick Start](.ai/docs/quickstart.md)
+- **Token efficiency:** [Session Management](.ai/docs/session-mgmt.md)
+- **Issues/Support:** [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
+- **Updates:** Run `npm run sync-rules` to regenerate tool files
+
+---
+
+## 📁 Project Structure Reference
 
 ```
 .
-├── AGENTS.md              ← You are here (universal config)
-├── RULES_CORE.md          ← Full AI workflow rules (v6.1)
-├── RULES_PRODUCT.md       ← Ukrainian market specifics
-├── .ai/
-│   ├── token-limits.json  ← Token budget tracking
-│   ├── locale-context.json
-│   ├── forbidden-trackers.json
-│   └── .session-started   ← Session marker (auto-generated, gitignored)
-├── .claude/
-│   └── hooks/
-│       └── user-prompt-submit.sh  ← Layer 2: Auto Session Start
+├── AGENTS.md              # ← YOU ARE HERE (entry point)
+├── .ai/                   # AI Framework Hub
+│   ├── contexts/          # Context presets
+│   ├── docs/              # Documentation
+│   ├── rules/             # Full rules reference
+│   └── *.json            # Configuration files
+├── .claude/               # Claude Code configuration
+│   ├── CLAUDE.md          # Auto-generated (from .ai/contexts/)
+│   └── hooks/             # CLI hooks
+├── .cursorrules           # Auto-generated (Cursor IDE)
+├── .windsurfrules         # Auto-generated (Windsurf IDE)
 ├── scripts/
-│   ├── pre-commit         ← Security checks (secrets, trackers)
-│   ├── seo-check.sh       ← Pre-deploy validation
-│   └── session-init.sh    ← Layer 3: Manual Session Start
-└── examples/              ← Production code examples
+│   ├── pre-commit         # Security checks
+│   └── sync-rules.sh      # Regenerate tool files
+└── examples/              # Production code examples
 ```
-
----
-
-## 🎯 Core Principles
-
-### 1. Token Management v2.0
-- **Track usage** - Show status at 30%+ consumption
-- **Auto-optimize** at 50%+ (diff-only, brief mode)
-- **Compress context** after major commits (saves 40-60%)
-- **Emergency mode** at 90%+ (commit only, hard stop)
-
-**Token Status Zones:**
-- 🟢 **0-50% (GREEN):** Full capacity, normal mode
-- 🟡 **50-70% (MODERATE):** Brief mode, optimizations active
-- 🟠 **70-90% (CAUTION):** Silent mode, aggressive compression
-- 🔴 **90-95% (CRITICAL):** Finalization only, commit + stop
-
-### 2. Language Rules
-- **Internal dialogue (You ↔ AI):** Russian
-- **Code comments:** English only
-- **Commit messages:** English only (`type(scope): description`)
-- **Variable/function names:** English, camelCase/PascalCase
-
-### 3. Workflow Triggers
-- `//START` - Execute Session Start Protocol (first message in new session)
-- `//TOKENS` - Show current token status
-- `//CHECK:SECURITY` - Security audit (secrets, XSS, injection)
-- `//CHECK:LANG` - LANG-CRITICAL violations scan
-- `//CHECK:ALL` - Full audit (security + performance + lang + i18n)
-- `//COMPACT` - Manual context compression
-- `//THINK` - Show reasoning in `<thinking>` tags
-
-### 4. Git Discipline
-- **One stage = one commit** (atomic)
-- **Format:** `type(scope): description`
-  - Types: `feat`, `fix`, `refactor`, `docs`, `security`, `i18n`, `rules`
-- **AI suggests → I approve** - Never auto-commit
-- **Post-push compression** - Mandatory after successful push
-
-### 5. Security Guards
-- ❌ Never hardcode secrets (use `process.env.VAR`)
-- ❌ Never commit `.env`, `credentials.json`, private keys
-- ❌ Never use russian tracking services (Yandex, VK, Mail.ru)
-- ✅ Pre-commit hook scans for secrets/trackers automatically
-
----
-
-## 📖 Detailed Documentation
-
-**Full rules:**
-- [RULES_CORE.md](RULES_CORE.md) - Complete workflow, token management, iterative process
-- [RULES_PRODUCT.md](RULES_PRODUCT.md) - Ukrainian market, i18n, SEO, compliance
-
-**Quick guides:**
-- [QUICKSTART.md](QUICKSTART.md) - 5-minute setup
-- [CHEATSHEET.md](CHEATSHEET.md) - One-page reference
-- [TOKEN_USAGE.md](TOKEN_USAGE.md) - Token cost transparency
-
-**Compatibility:**
-- [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md) - Tested AI assistants matrix
-- [START.md](START.md) - Onboarding for new AI sessions
-
----
-
-## 🔧 Project-Specific Notes
-
-**Ukrainian Market Focus:**
-- Zero tolerance for russian services (legal + security risk)
-- GDPR-compliant by default
-- i18n-ready architecture (uk-UA primary, multi-language support)
-
-**Testing & Validation:**
-- Pre-commit hooks: `scripts/pre-commit` (secrets, trackers, LANG-CRITICAL)
-- Pre-deploy: `scripts/seo-check.sh` (9 automated checks)
-- Git hooks installed: `.git/hooks/pre-commit`
-
-**Tech Stack:**
-- Node.js / React / Next.js (typical projects)
-- TypeScript preferred
-- Bash scripts for automation
 
 ---
 
 ## ⚠️ Red Flags - Auto-Stop Conditions
 
-**STOP and ask confirmation if:**
+**AI MUST stop and ask confirmation before:**
+
 - Deleting >10 files
-- Changing core configs (`package.json`, `tsconfig`)
+- Changing core configs (`package.json`, `tsconfig`, `.env` template)
 - Database migrations
 - Major dependency updates
 - `rm -rf` or recursive deletes
@@ -199,58 +218,43 @@ This protocol is enforced through **3 redundant layers** to guarantee execution:
 
 ---
 
-## 📊 Success Metrics
-
-**Session quality indicators:**
-- ✅ Session Start Protocol executed
-- ✅ Token status displayed at 30%+ usage
-- ✅ Russian used for dialogue (English for code)
-- ✅ Atomic commits with clear messages
-- ✅ No secrets/trackers committed
-- ✅ Context compressed after pushes
-
----
-
-## 🆘 Emergency Commands
-
-```bash
-# Reset to safe state
-git reset --soft HEAD~1
-
-# Check what's staged
-git status
-git diff --cached
-
-# Bypass hooks (emergency only!)
-git commit --no-verify
-
-# Check token usage
-# AI should display automatically at 30%+
-
-# Compress context manually
-# Use: //COMPACT command
-```
-
----
-
 ## 📝 Version History
 
-- **v7.1** [2026-02-02] - Universal AGENTS.md support added
-- **v7.0** [2026-02-01] - Production release with 3-layer protection
-- **v6.1** [2026-02-01] - Post-push compression, focus optimization
-- **v6.0** [2026-01-31] - Token Management v2.0, Session Start Protocol
+- **v9.1** [2026-02-08] - **OPTIMIZATION RELEASE**. Phase 7: .ai/ hub restructure. Clean root directory (only AGENTS.md). All docs → .ai/docs/, rules → .ai/rules/. Token optimization: 20-30% smaller contexts. Session management best practices. Enhanced compression. Zero feature loss.
+- **v9.0** [2026-02-05] - **AI ENFORCEMENT**. Mandatory protocols auto-loaded. Post-push compression. Multi-level compression (Light/Aggressive/Maximum). Proactive token suggestions.
+- **v8.1** [2026-02-04] - **MODULAR CONTEXTS**. Smart context loading system (minimal/standard/ukraine-full/enterprise). Token savings: 40-70% for international users.
+- **v8.0** [2026-02-03] - **TOKEN CONTROL v3.0**. Intelligent budget management. Pre-flight approval, variance learning, emergency reserves.
+- **v7.2** [2026-02-02] - Layer 0: CLAUDE.md for universal VSCode support. 4-layer protection system.
 
 ---
 
-## 🤝 Contributing
+## 🎉 What's New in v9.1 Optimization
 
-This is an open-source framework. See [README.md](README.md) for contribution guidelines.
+**Token Optimization (30-40% savings):**
+- ✅ Optimized contexts: 20-28% smaller, same features
+- ✅ Session management best practices (50% fewer restarts)
+- ✅ Smart context selection wizard
+- ✅ Enhanced auto-compression (3 levels)
+- ✅ Token usage dashboard
+
+**Clean Repository Structure:**
+- ✅ Root: Only AGENTS.md (entry point)
+- ✅ All documentation: .ai/docs/
+- ✅ All rules: .ai/rules/
+- ✅ Tool files: Auto-generated from contexts
+
+**Migration:** Existing users run `scripts/migrate-to-hub.sh`
+
+**Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
+
+---
 
 **Made with ❤️ in Ukraine 🇺🇦**
 **License:** MIT
 **Website:** [wellme.ua](https://wellme.ua)
+**GitHub:** [Shamavision/ai-workflow-rules](https://github.com/Shamavision/ai-workflow-rules)
 
 ---
 
-**Last Updated:** 2026-02-02
-**Framework Version:** 7.1 Universal
+**Last Updated:** 2026-02-08
+**Framework Version:** 9.1 (Optimization Release)

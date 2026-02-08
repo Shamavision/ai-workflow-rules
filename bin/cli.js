@@ -285,7 +285,7 @@ async function main() {
       {
         type: 'confirm',
         name: 'installProductRules',
-        message: 'Install RULES_PRODUCT.md? (Ukrainian market specifics)',
+        message: 'Install product rules? (Ukrainian market specifics → .ai/rules/product.md)',
         default: false
       }
     ]);
@@ -300,25 +300,62 @@ async function main() {
     const templatesDir = path.join(__dirname, '../npm-templates');
     const currentDir = process.cwd();
 
-    // Copy core files
+    // Copy entry point
     await copyFile(templatesDir, currentDir, 'AGENTS.md');
-    await copyFile(templatesDir, currentDir, 'RULES_CORE.md');
-    await copyFile(templatesDir, currentDir, 'START.md');
-
-    // Copy documentation files
-    await copyFile(templatesDir, currentDir, 'CHEATSHEET.md');
-    await copyFile(templatesDir, currentDir, 'QUICKSTART.md');
-    await copyFile(templatesDir, currentDir, 'TOKEN_USAGE.md');
-    await copyFile(templatesDir, currentDir, 'AI_COMPATIBILITY.md');
     await copyFile(templatesDir, currentDir, 'LICENSE');
 
-    // Copy RULES_PRODUCT.md if requested
-    if (answers.installProductRules) {
-      await copyFile(templatesDir, currentDir, 'RULES_PRODUCT.md');
-    }
-
-    // Create .ai directory
+    // Create .ai directory structure
     await fs.ensureDir(path.join(currentDir, '.ai'));
+    await fs.ensureDir(path.join(currentDir, '.ai/docs'));
+    await fs.ensureDir(path.join(currentDir, '.ai/rules'));
+
+    // Copy documentation files to .ai/docs/
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'quickstart.md'
+    );
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'cheatsheet.md'
+    );
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'token-usage.md'
+    );
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'compatibility.md'
+    );
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'start.md'
+    );
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'session-mgmt.md'
+    );
+
+    // Copy rules files to .ai/rules/
+    await copyFile(
+      path.join(templatesDir, '.ai/rules'),
+      path.join(currentDir, '.ai/rules'),
+      'core.md'
+    );
+
+    // Copy product rules if requested
+    if (answers.installProductRules) {
+      await copyFile(
+        path.join(templatesDir, '.ai/rules'),
+        path.join(currentDir, '.ai/rules'),
+        'product.md'
+      );
+    }
 
     // Copy forbidden trackers
     await copyFile(

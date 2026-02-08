@@ -144,7 +144,7 @@ When user sends these commands:
 
 **💰 Token savings: Continue instead of restart = save 18-25k per avoided restart**
 
-**📖 Full guide:** [.ai/SESSION_MANAGEMENT.md](.ai/SESSION_MANAGEMENT.md)
+**📖 Full guide:** [.ai/docs/session-mgmt.md](.ai/docs/session-mgmt.md)
 
 ---
 
@@ -168,18 +168,26 @@ When user sends these commands:
 
 ```
 .
-├── AGENTS.md              # Project overview (auto-loaded by CLI)
-├── RULES_CORE.md          # Full AI workflow rules (v8.0, source of truth)
-├── RULES_PRODUCT.md       # Ukrainian market specifics
-├── .ai/
-│   ├── config.json        # Context selection (minimal/standard/ukraine-full/enterprise)
-│   ├── registry.json      # Context & module metadata
+├── AGENTS.md              # Project overview (auto-loaded, entry point)
+├── .ai/                   # AI Framework Hub (v9.1 restructured)
 │   ├── contexts/          # Pre-bundled context files (v9.1 optimized)
 │   │   ├── minimal.context.md (~10k tokens)
 │   │   ├── standard.context.md (~14k tokens)
 │   │   ├── ukraine-full.context.md (~18k tokens)
 │   │   └── enterprise.context.md (~23k tokens)
-│   ├── SESSION_MANAGEMENT.md  # 🆕 v9.1 Session best practices guide
+│   ├── docs/              # 🆕 Documentation hub
+│   │   ├── quickstart.md
+│   │   ├── cheatsheet.md
+│   │   ├── token-usage.md
+│   │   ├── session-mgmt.md  # v9.1 Session best practices
+│   │   ├── compatibility.md
+│   │   ├── start.md
+│   │   └── provider-comparison.md
+│   ├── rules/             # 🆕 Rules hub
+│   │   ├── core.md        # Full AI workflow rules (v8.0, source of truth)
+│   │   └── product.md     # Ukrainian market specifics
+│   ├── config.json        # Context selection (minimal/standard/ukraine-full/enterprise)
+│   ├── registry.json      # Context & module metadata
 │   ├── token-limits.json  # Token budget tracking
 │   ├── locale-context.json
 │   └── forbidden-trackers.json
