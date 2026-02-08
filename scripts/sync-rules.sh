@@ -1,13 +1,16 @@
 #!/bin/bash
 # ==============================================================================
 # SYNC RULES - Update AI tool rules from source context
-# AI Workflow Rules Framework v9.0
+# AI Workflow Rules Framework v9.1
 # ==============================================================================
 #
 # Usage:
 #   bash scripts/sync-rules.sh
 #
-# This script regenerates all AI tool rule files from the selected context.
+# This script regenerates IDE-specific rule files from the selected context.
+# Files regenerated: .cursorrules, .windsurfrules, .continuerules
+# Files NOT touched: AGENTS.md (navigation hub), .claude/CLAUDE.md (custom wrapper)
+#
 # Use this after:
 #   - Updating framework (npm update)
 #   - Changing context in .ai/config.json
@@ -71,8 +74,12 @@ echo ""
 RULE_FILES=()
 
 # Check for each tool's rule file
-[ -f "AGENTS.md" ] && RULE_FILES+=("AGENTS.md:Universal")
-[ -f ".claude/CLAUDE.md" ] && RULE_FILES+=(".claude/CLAUDE.md:Claude VSCode Extension")
+#
+# NOTE (v9.1): AGENTS.md and .claude/CLAUDE.md are now custom files (not auto-generated)
+# - AGENTS.md: Navigation hub with links to .ai/docs/ and .ai/rules/
+# - .claude/CLAUDE.md: Custom wrapper for Claude Code with smart context loading
+#
+# These files are synchronized from IDE templates (.cursorrules, .windsurfrules, etc.)
 [ -f ".cursorrules" ] && RULE_FILES+=(".cursorrules:Cursor")
 [ -f ".windsurfrules" ] && RULE_FILES+=(".windsurfrules:Windsurf")
 [ -f ".continuerules" ] && RULE_FILES+=(".continuerules:Continue.dev")

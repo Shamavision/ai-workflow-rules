@@ -158,25 +158,42 @@ if [ -d "$TEMP_DIR/.claude" ]; then
     fi
 fi
 
-# Copy RULES files
-for file in "$TEMP_DIR"/RULES_*.md; do
-    if [ -f "$file" ]; then
-        cp "$file" "$TARGET_DIR/"
-        print_success "Copied $(basename "$file")"
-    fi
-done
+# Copy AGENTS.md (navigation hub - v9.1 Phase 7)
+if [ -f "$TEMP_DIR/AGENTS.md" ]; then
+    cp "$TEMP_DIR/AGENTS.md" "$TARGET_DIR/"
+    print_success "Copied AGENTS.md (navigation hub)"
+fi
 
-# Copy documentation files
-# ⚠️ v9.1 WARNING: This installer needs update for new .ai/ hub structure
-# Recommended: Use npx @shamavision/ai-workflow-rules instead (bin/cli.js)
+# Copy documentation files from .ai/docs/ (v9.1 Phase 7 structure)
+if [ -d "$TEMP_DIR/.ai/docs" ]; then
+    mkdir -p "$TARGET_DIR/.ai/docs"
 
-DOCS=("AGENTS.md" "START.md" "CHEATSHEET.md" "QUICKSTART.md" "TOKEN_USAGE.md" "AI_COMPATIBILITY.md" "INSTALL.md")
-for doc in "${DOCS[@]}"; do
-    if [ -f "$TEMP_DIR/$doc" ]; then
-        cp "$TEMP_DIR/$doc" "$TARGET_DIR/"
-        print_success "Copied $doc"
+    # Copy all documentation files
+    DOCS=("quickstart.md" "cheatsheet.md" "token-usage.md" "compatibility.md" "start.md" "session-mgmt.md" "code-quality.md")
+    for doc in "${DOCS[@]}"; do
+        if [ -f "$TEMP_DIR/.ai/docs/$doc" ]; then
+            cp "$TEMP_DIR/.ai/docs/$doc" "$TARGET_DIR/.ai/docs/"
+            print_success "Copied .ai/docs/$doc"
+        fi
+    done
+fi
+
+# Copy rules files from .ai/rules/ (v9.1 Phase 7 structure)
+if [ -d "$TEMP_DIR/.ai/rules" ]; then
+    mkdir -p "$TARGET_DIR/.ai/rules"
+
+    # Copy core rules (always)
+    if [ -f "$TEMP_DIR/.ai/rules/core.md" ]; then
+        cp "$TEMP_DIR/.ai/rules/core.md" "$TARGET_DIR/.ai/rules/"
+        print_success "Copied .ai/rules/core.md"
     fi
-done
+
+    # Copy product rules (optional, will ask user later if needed)
+    if [ -f "$TEMP_DIR/.ai/rules/product.md" ]; then
+        cp "$TEMP_DIR/.ai/rules/product.md" "$TARGET_DIR/.ai/rules/"
+        print_success "Copied .ai/rules/product.md"
+    fi
+fi
 
 # Copy scripts directory
 if [ -d "$TEMP_DIR/scripts" ]; then
@@ -434,7 +451,7 @@ else
 fi
 
 # ========================================
-# Generate Rules for AI Tools (v9.0 Universal)
+# Generate Rules for AI Tools (v9.1 Universal)
 # ========================================
 
 print_step "Generating rules for AI tools..."
@@ -466,11 +483,8 @@ detect_ai_tools() {
         tools+=("continue")
     fi
 
-    # Always include Claude VSCode Extension (hard to detect, common)
-    tools+=("claude-vscode")
-
-    # Always include AGENTS.md (universal fallback)
-    tools+=("agents-md")
+    # Note (v9.1): AGENTS.md and .claude/CLAUDE.md are now static files (copied, not generated)
+    # Only generate IDE-specific rule files (.cursorrules, .windsurfrules, etc.)
 
     echo "${tools[@]}"
 }
@@ -489,7 +503,7 @@ generate_rules_file() {
     # Generate file with header
     cat > "$TARGET_DIR/$target" << EOF
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# AI WORKFLOW RULES FRAMEWORK v9.0
+# AI WORKFLOW RULES FRAMEWORK v9.1
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #
 # Tool: $tool_name
@@ -542,7 +556,7 @@ append_to_existing() {
     cat >> "$TARGET_DIR/$target" << EOF
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# AI-WORKFLOW-RULES-START v9.0.0
+# AI-WORKFLOW-RULES-START v9.1.0
 # Auto-managed section. Edit at your own risk.
 # To update: npm run sync-rules
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -554,7 +568,7 @@ EOF
     cat >> "$TARGET_DIR/$target" << EOF
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# AI-WORKFLOW-RULES-END v9.0.0
+# AI-WORKFLOW-RULES-END v9.1.0
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 
@@ -574,17 +588,10 @@ fi
 echo -e "${CYAN}Found: ${AI_TOOLS[*]}${NC}"
 echo ""
 
-# Generate files for each detected tool
+# Generate IDE-specific rules files (v9.1: Only .cursorrules, .windsurfrules, etc.)
+# Note: AGENTS.md and .claude/CLAUDE.md are static templates (already copied above)
 for tool in "${AI_TOOLS[@]}"; do
     case $tool in
-        claude-cli)
-            generate_rules_file "$tool" "AGENTS.md" "Claude Code CLI"
-            ;;
-
-        claude-vscode)
-            generate_rules_file "$tool" ".claude/CLAUDE.md" "Claude VSCode Extension"
-            ;;
-
         cursor)
             if [ -f "$TARGET_DIR/.cursorrules" ]; then
                 append_to_existing ".cursorrules" "Cursor"
@@ -609,9 +616,9 @@ for tool in "${AI_TOOLS[@]}"; do
             fi
             ;;
 
-        agents-md)
-            # Always create AGENTS.md as universal fallback
-            generate_rules_file "$tool" "AGENTS.md" "Universal (all AI tools)"
+        # Ignore other tools (AGENTS.md and .claude/CLAUDE.md are static)
+        *)
+            # Skip - not an IDE-specific file
             ;;
     esac
 done
@@ -678,7 +685,7 @@ fi
 echo -e "${BLUE}╚════════════════════════════════════════════╝${NC}"
 echo ""
 
-echo -e "${GREEN}✓ AI Workflow Rules Framework v9.0 installed${NC}"
+echo -e "${GREEN}✓ AI Workflow Rules Framework v9.1 installed${NC}"
 echo -e "${BLUE}   Context: ${CONTEXT}${NC}"
 echo ""
 echo "📚 Next Steps:"
@@ -692,16 +699,17 @@ echo ""
 echo "     AI will load ${CONTEXT} context automatically."
 echo ""
 echo "  3. Read quick start guide:"
-echo "     ${YELLOW}cat QUICKSTART.md${NC}"
+echo "     ${YELLOW}cat .ai/docs/quickstart.md${NC}"
 echo ""
-echo "  4. Verify your project (optional):"
-echo "     ${YELLOW}./scripts/seo-check.sh .${NC}"
+echo "  4. Browse documentation:"
+echo "     ${YELLOW}ls .ai/docs/${NC}  - All guides"
+echo "     ${YELLOW}ls .ai/rules/${NC} - Full rules"
 echo ""
 echo -e "${BLUE}🤖 Universal AI Support:${NC}"
 echo "   - Claude Code, Cursor, Windsurf: Auto-loads AGENTS.md ✓"
 echo "   - ChatGPT, Gemini (web): Use //START command"
 echo ""
-echo -e "${BLUE}🛡️  AI Protection v9.0:${NC}"
+echo -e "${BLUE}🛡️  AI Protection v9.1:${NC}"
 echo "   - Prompt injection detection"
 echo "   - PII protection (GDPR-ready)"
 echo "   - Auto-runs in pre-commit hook"

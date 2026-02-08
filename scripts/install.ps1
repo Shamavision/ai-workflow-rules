@@ -131,21 +131,44 @@ if (Test-Path "$TempDir\.ai") {
     Print-Success "Copied .ai/ configuration"
 }
 
-# Copy RULES files
-Get-ChildItem -Path "$TempDir\RULES_*.md" -ErrorAction SilentlyContinue | ForEach-Object {
-    Copy-Item -Path $_.FullName -Destination $TargetDir -Force
-    Print-Success "Copied $($_.Name)"
+# Copy AGENTS.md (navigation hub - v9.1 Phase 7)
+if (Test-Path "$TempDir\AGENTS.md") {
+    Copy-Item -Path "$TempDir\AGENTS.md" -Destination $TargetDir -Force
+    Print-Success "Copied AGENTS.md (navigation hub)"
 }
 
-# Copy documentation files
-# ⚠️ v9.1 WARNING: This installer needs update for new .ai/ hub structure
-# Recommended: Use npx @shamavision/ai-workflow-rules instead (bin/cli.js)
+# Copy documentation files from .ai/docs/ (v9.1 Phase 7 structure)
+if (Test-Path "$TempDir\.ai\docs") {
+    if (-not (Test-Path "$TargetDir\.ai\docs")) {
+        New-Item -Path "$TargetDir\.ai\docs" -ItemType Directory -Force | Out-Null
+    }
 
-$Docs = @("AGENTS.md", "START.md", "CHEATSHEET.md", "QUICKSTART.md", "TOKEN_USAGE.md", "AI_COMPATIBILITY.md", "INSTALL.md")
-foreach ($Doc in $Docs) {
-    if (Test-Path "$TempDir\$Doc") {
-        Copy-Item -Path "$TempDir\$Doc" -Destination $TargetDir -Force
-        Print-Success "Copied $Doc"
+    # Copy all documentation files
+    $Docs = @("quickstart.md", "cheatsheet.md", "token-usage.md", "compatibility.md", "start.md", "session-mgmt.md", "code-quality.md")
+    foreach ($Doc in $Docs) {
+        if (Test-Path "$TempDir\.ai\docs\$Doc") {
+            Copy-Item -Path "$TempDir\.ai\docs\$Doc" -Destination "$TargetDir\.ai\docs\" -Force
+            Print-Success "Copied .ai/docs/$Doc"
+        }
+    }
+}
+
+# Copy rules files from .ai/rules/ (v9.1 Phase 7 structure)
+if (Test-Path "$TempDir\.ai\rules") {
+    if (-not (Test-Path "$TargetDir\.ai\rules")) {
+        New-Item -Path "$TargetDir\.ai\rules" -ItemType Directory -Force | Out-Null
+    }
+
+    # Copy core rules (always)
+    if (Test-Path "$TempDir\.ai\rules\core.md") {
+        Copy-Item -Path "$TempDir\.ai\rules\core.md" -Destination "$TargetDir\.ai\rules\" -Force
+        Print-Success "Copied .ai/rules/core.md"
+    }
+
+    # Copy product rules (optional)
+    if (Test-Path "$TempDir\.ai\rules\product.md") {
+        Copy-Item -Path "$TempDir\.ai\rules\product.md" -Destination "$TargetDir\.ai\rules\" -Force
+        Print-Success "Copied .ai/rules/product.md"
     }
 }
 
@@ -404,7 +427,7 @@ if (Test-Path "$TargetDir\.env") {
 }
 
 # ========================================
-# Generate Rules for AI Tools (v9.0 Universal)
+# Generate Rules for AI Tools (v9.1 Universal)
 # ========================================
 
 Print-Step "Generating rules for AI tools..."
@@ -418,24 +441,13 @@ if (-Not (Test-Path $SourceRules)) {
     Write-Host "Detecting AI tools..." -ForegroundColor Cyan
     Write-Host ""
 
-    # Detect AI tools (Windows typically uses VSCode)
+    # Detect AI tools (v9.1: Only generate IDE-specific files)
+    # Note: AGENTS.md and .claude/CLAUDE.md are now static templates (copied, not generated)
     $AITools = @()
 
-    # Always create for Claude VSCode Extension
-    $AITools += @{Name="Claude VSCode Extension"; File=".claude\CLAUDE.md"}
-
-    # Always create AGENTS.md (universal)
-    $AITools += @{Name="Universal (all AI tools)"; File="AGENTS.md"}
-
-    # Check for Cursor
-    if ((Test-Path "$TargetDir\.cursorrules") -or (Test-Path "$env:LOCALAPPDATA\Cursor")) {
-        $AITools += @{Name="Cursor"; File=".cursorrules"}
-    }
-
-    # Check for Windsurf
-    if (Test-Path "$TargetDir\.windsurfrules") {
-        $AITools += @{Name="Windsurf"; File=".windsurfrules"}
-    }
+    # Always create .cursorrules and .windsurfrules (IDE-specific templates)
+    $AITools += @{Name="Cursor"; File=".cursorrules"}
+    $AITools += @{Name="Windsurf"; File=".windsurfrules"}
 
     Write-Host "Found: $($AITools.Count) tool(s)" -ForegroundColor Cyan
     Write-Host ""
@@ -457,7 +469,7 @@ if (-Not (Test-Path $SourceRules)) {
         # Header
         $Header = @"
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# AI WORKFLOW RULES FRAMEWORK v9.0
+# AI WORKFLOW RULES FRAMEWORK v9.1
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #
 # Tool: $ToolName
@@ -578,7 +590,7 @@ if ($Issues -eq 0) {
 Write-Host "╚════════════════════════════════════════════╝" -ForegroundColor Blue
 Write-Host ""
 
-Write-Host "✓ AI Workflow Rules Framework v9.0 installed" -ForegroundColor Green
+Write-Host "✓ AI Workflow Rules Framework v9.1 installed" -ForegroundColor Green
 Write-Host "   Context: " -NoNewline -ForegroundColor Blue
 Write-Host $Context -ForegroundColor Blue
 Write-Host ""
@@ -596,17 +608,21 @@ Write-Host "     AI will load $Context context automatically."
 Write-Host ""
 Write-Host "  3. Read quick start guide:"
 Write-Host "     " -NoNewline
-Write-Host "Get-Content QUICKSTART.md" -ForegroundColor Yellow
+Write-Host "Get-Content .ai\docs\quickstart.md" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "  4. Verify your project (optional):"
+Write-Host "  4. Browse documentation:"
 Write-Host "     " -NoNewline
-Write-Host "bash scripts/seo-check.sh ." -ForegroundColor Yellow
+Write-Host "dir .ai\docs\" -NoNewline -ForegroundColor Yellow
+Write-Host "  - All guides"
+Write-Host "     " -NoNewline
+Write-Host "dir .ai\rules\" -NoNewline -ForegroundColor Yellow
+Write-Host "  - Full rules"
 Write-Host ""
 Write-Host "🤖 Universal AI Support:" -ForegroundColor Blue
 Write-Host "   - Claude Code, Cursor, Windsurf: Auto-loads AGENTS.md ✓"
 Write-Host "   - ChatGPT, Gemini (web): Use //START command"
 Write-Host ""
-Write-Host "🛡️  AI Protection v9.0:" -ForegroundColor Blue
+Write-Host "🛡️  AI Protection v9.1:" -ForegroundColor Blue
 Write-Host "   - Prompt injection detection"
 Write-Host "   - PII protection (GDPR-ready)"
 Write-Host "   - Auto-runs in pre-commit hook"

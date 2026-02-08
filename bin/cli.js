@@ -85,21 +85,12 @@ async function generateRulesFiles(targetDir, context) {
 
   const sourceContent = await fs.readFile(sourceRules, 'utf8');
 
-  // Detect AI tools
+  // Detect AI tools (v9.1: Only generate IDE-specific files)
+  // Note: AGENTS.md and .claude/CLAUDE.md are now static templates (copied, not generated)
   const tools = [
-    { name: 'Claude VSCode Extension', file: '.claude/CLAUDE.md' },
-    { name: 'Universal (all AI tools)', file: 'AGENTS.md' }
+    { name: 'Cursor', file: '.cursorrules' },
+    { name: 'Windsurf', file: '.windsurfrules' }
   ];
-
-  // Check for Cursor
-  if (await fs.pathExists(path.join(targetDir, '.cursorrules'))) {
-    tools.push({ name: 'Cursor', file: '.cursorrules' });
-  }
-
-  // Check for Windsurf
-  if (await fs.pathExists(path.join(targetDir, '.windsurfrules'))) {
-    tools.push({ name: 'Windsurf', file: '.windsurfrules' });
-  }
 
   console.log(chalk.gray(`Found: ${tools.length} tool(s)\n`));
 
@@ -114,7 +105,7 @@ async function generateRulesFiles(targetDir, context) {
     console.log(chalk.gray(`  → Generating ${tool.file} for ${tool.name}...`));
 
     const header = `# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# AI WORKFLOW RULES FRAMEWORK v9.0
+# AI WORKFLOW RULES FRAMEWORK v9.1
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #
 # Tool: ${tool.name}
@@ -244,7 +235,7 @@ async function selectContextWithRecommendation() {
 }
 
 async function main() {
-  console.log(chalk.bold.cyan('\n🤖 AI Workflow Rules Setup v9.0\n'));
+  console.log(chalk.bold.cyan('\n🤖 AI Workflow Rules Setup v9.1\n'));
   console.log(chalk.gray('Universal framework for AI coding assistants\n'));
   console.log(chalk.gray('━'.repeat(50)) + '\n');
 
@@ -304,6 +295,14 @@ async function main() {
     await copyFile(templatesDir, currentDir, 'AGENTS.md');
     await copyFile(templatesDir, currentDir, 'LICENSE');
 
+    // Create .claude directory and copy Claude Code configuration
+    await fs.ensureDir(path.join(currentDir, '.claude'));
+    await copyFile(
+      path.join(templatesDir, '.claude'),
+      path.join(currentDir, '.claude'),
+      'CLAUDE.md'
+    );
+
     // Create .ai directory structure
     await fs.ensureDir(path.join(currentDir, '.ai'));
     await fs.ensureDir(path.join(currentDir, '.ai/docs'));
@@ -339,6 +338,11 @@ async function main() {
       path.join(templatesDir, '.ai/docs'),
       path.join(currentDir, '.ai/docs'),
       'session-mgmt.md'
+    );
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'code-quality.md'
     );
 
     // Copy rules files to .ai/rules/
@@ -397,7 +401,7 @@ async function main() {
     console.log(chalk.gray('  1. Open your project in your AI assistant'));
     console.log(chalk.gray('  2. Type ') + chalk.cyan('//START') + chalk.gray(' in the chat'));
     console.log(chalk.gray('  3. AI will load rules and start working\n'));
-    console.log(chalk.bold.blue('🛡️  AI Protection v9.0 enabled:'));
+    console.log(chalk.bold.blue('🛡️  AI Protection v9.1 enabled:'));
     console.log(chalk.gray('  ✓ Prompt injection detection'));
     console.log(chalk.gray('  ✓ PII protection (GDPR-ready)'));
     console.log(chalk.gray('  ✓ Auto-runs in pre-commit hook\n'));

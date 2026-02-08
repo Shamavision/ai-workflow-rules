@@ -380,7 +380,52 @@ See git history for versions < 8.0
 
 **IDE Support:**
 - Cursor IDE: .cursorrules template
-- Windsurf IDE: .windsurfrules template  
+- Windsurf IDE: .windsurfrules template
 - Claude Code: .claude/CLAUDE.md (existing)
 - All: AGENTS.md universal support
+
+#### Phase 7.3: Installer & Script Fixes (2026-02-08)
+
+**CRITICAL: Complete overhaul of all installers and scripts for Phase 7 compatibility.**
+
+**Fixed:** `scripts/sync-rules.sh` (CRITICAL bug)
+- ❌ **Before:** Overwrote AGENTS.md and .claude/CLAUDE.md with context content
+- ✅ **After:** Preserves AGENTS.md (navigation hub) and .claude/CLAUDE.md (custom wrapper)
+- ✅ Only regenerates IDE-specific files: .cursorrules, .windsurfrules, .continuerules
+- ✅ Updated header documentation explaining the change
+
+**Fixed:** `bin/cli.js` (NPM installer - 5 improvements)
+- ✅ Removed AGENTS.md from auto-generation (now static template)
+- ✅ Removed .claude/CLAUDE.md from auto-generation (now static template)
+- ✅ Added .claude/CLAUDE.md copy from npm-templates/.claude/
+- ✅ Added code-quality.md copy to .ai/docs/
+- ✅ Fixed Cursor/Windsurf detection logic (always generate templates)
+- ✅ Updated all version numbers to v9.1
+
+**Fixed:** `scripts/install.sh` (Bash installer - 7 improvements)
+- ✅ **COMPLETE REWRITE:** Now copies from new Phase 7 structure
+- ✅ Copies all docs from `.ai/docs/` (7 files including code-quality.md)
+- ✅ Copies rules from `.ai/rules/` (core.md, product.md)
+- ✅ Copies AGENTS.md as static file (no generation)
+- ✅ Removed AGENTS.md and .claude/CLAUDE.md from generation logic
+- ✅ Only generates IDE-specific: .cursorrules, .windsurfrules, .continuerules
+- ✅ Updated user instructions with new paths (.ai/docs/quickstart.md)
+- ✅ Updated all version numbers to v9.1
+
+**Fixed:** `scripts/install.ps1` (PowerShell installer - 6 improvements)
+- ✅ **COMPLETE REWRITE:** Identical fixes to install.sh for Windows
+- ✅ Copies all docs from `.ai\docs\` (PowerShell paths)
+- ✅ Copies rules from `.ai\rules\`
+- ✅ Copies AGENTS.md as static file
+- ✅ Removed AGENTS.md and .claude/CLAUDE.md from generation
+- ✅ Updated user instructions and version numbers to v9.1
+
+**Impact:**
+- ✅ All installers now fully compatible with Phase 7 structure
+- ✅ AGENTS.md will never be overwritten by sync-rules.sh again
+- ✅ .claude/CLAUDE.md preserved as custom wrapper
+- ✅ IDE templates (.cursorrules, .windsurfrules) correctly generated from context
+- ✅ Users can safely run `npm run sync-rules` without losing navigation hub
+
+**Testing:** All critical components verified for Phase 7 compatibility
 
