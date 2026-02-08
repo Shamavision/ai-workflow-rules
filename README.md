@@ -1,6 +1,7 @@
 <div align="center">
 
-<img src="public/AWR.svg" alt="AI Workflow Rules" width="500">
+<!-- Logo temporarily removed - will be replaced with proper version -->
+<!-- <img src="public/AWR.svg" alt="AI Workflow Rules" width="500"> -->
 
 ### **Your AI assistant will commit secrets. We stop it.**
 
