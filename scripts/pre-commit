@@ -850,6 +850,15 @@ if [ "$HARD_BLOCKED" == "false" ] && [ "$TRACKERS_FOUND" == "false" ] && [ "$AI_
     echo ""
 fi
 
+# ==============================================================================
+# CODE QUALITY CHECK (v9.1 - Non-blocking warnings)
+# ==============================================================================
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/pre-commit-lint.sh" ]; then
+    bash "$SCRIPT_DIR/pre-commit-lint.sh" || true  # Never fail commit
+fi
+
 echo "Proceeding with commit..."
 echo ""
 exit 0

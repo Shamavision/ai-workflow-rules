@@ -163,6 +163,55 @@ Your choice?
 
 ---
 
+### 5. PRE-COMMIT LINT CHECK (OPTIONAL but recommended - v9.1)
+
+**TRIGGER:** Before creating commit (after code changes)
+
+**REQUIRED ACTION:**
+
+```markdown
+AI should suggest:
+
+"💡 Run code quality check before commit?"
+
+Options:
+1. Yes → Run `npm run lint` (or appropriate linter)
+2. Skip → Proceed without lint
+3. Auto-fix → Run `npm run format` to fix issues
+```
+
+**What to check:**
+- JavaScript/TypeScript: `npm run lint`, `npm run format --check`
+- Python: `black --check .`, `flake8 .`
+- Go: `gofmt -l .`, `go vet ./...`
+- Shell: `shellcheck *.sh`
+
+**If warnings found:**
+```markdown
+⚠️ Found X linting warnings:
+- [Brief summary of issues]
+
+These won't block your commit.
+Proceed anyway? [YES/FIX/SKIP]
+```
+
+**AI behavior:**
+- ✅ Suggest lint check before commit
+- ✅ Show warnings if found
+- ✅ Offer to auto-fix if possible
+- ❌ Never block commit (warnings only)
+- ❌ Don't run lint if user skips
+
+**Why optional:**
+- Linting adds time to commit process
+- User may want to commit WIP code
+- Auto-runs in pre-commit hook anyway
+- AI should suggest, not force
+
+**Documentation:** See [.ai/docs/code-quality.md](.ai/docs/code-quality.md)
+
+---
+
 ## 📋 AUTOMATIC REMINDERS
 
 ### After git operations:
