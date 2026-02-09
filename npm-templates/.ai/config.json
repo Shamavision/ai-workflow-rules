@@ -1,0 +1,58 @@
+{
+  "framework": "ai-workflow-rules",
+  "version": "9.0",
+  "config_version": "2.0",
+
+  "context": "ukraine-full",
+  "modules": [],
+  "market": "ukraine",
+
+  "language": {
+    "internal_dialogue": "adaptive",
+    "code_comments": "en",
+    "commit_messages": "en",
+    "variable_names": "en"
+  },
+
+  "token_budget": {
+    "daily_limit": 200000,
+    "monthly_limit": 6000000,
+    "auto_approve_thresholds": {
+      "green_zone": 15000,
+      "moderate_zone": 8000,
+      "caution_zone": 3000,
+      "critical_zone": 0
+    }
+  },
+
+  "optimizations": {
+    "auto_compress": true,
+    "post_push_compress": true,
+    "lazy_loading": true,
+    "diff_only_mode": true
+  },
+
+  "workflow": {
+    "roadmap_required": true,
+    "stage_based_commits": true,
+    "discuss_before_execute": true
+  },
+
+  "security": {
+    "check_forbidden_trackers": true,
+    "no_hardcoded_secrets": true,
+    "api_key_protection": true
+  },
+
+  "detection": {
+    "auto_detect_market": true,
+    "smart_preset_suggestion": true
+  },
+
+  "project_metadata": {
+    "name": "ai-workflow-rules",
+    "description": "AI Workflow Rules Framework - Made in Ukraine",
+    "team_size": "small (2-5)",
+    "stage": "production"
+  }
+}

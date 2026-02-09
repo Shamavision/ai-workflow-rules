@@ -1,0 +1,8 @@
+{
+  "hooks": {
+    "user-prompt-submit": {
+      "enabled": true,
+      "command": ".claude/hooks/user-prompt-submit.sh"
+    }
+  }
+}

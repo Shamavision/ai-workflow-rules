@@ -1,4 +1,4 @@
-# AI WORKFLOW & RULES CORE v6.1
+# AI WORKFLOW & RULES CORE v8.0
 
 ## 0. RULES SECURITY & LOCATION
 
@@ -151,6 +151,74 @@ Today's session started with me speaking English, forgetting Russian language ru
 ---
 
 ## 1. CORE PRINCIPLES (Non-negotiable)
+
+### 1.0. SILENT GUARDIAN PHILOSOPHY
+
+> **"We protect without interfering. We emerge only when there's a threat."**
+
+**The Framework's Mission:**
+
+This framework operates as a **Silent Guardian** — three layers of protection that work quietly in the background, activating only when your project, user, or business faces risk.
+
+#### The Three Shields
+
+**🛡️ Shield 1: Client Protection**
+- Block malicious code (trojans, phishing, backdoors)
+- Detect suspicious patterns before execution
+- Prevent zero-day vulnerabilities from reaching production
+
+**🛡️ Shield 2: User Protection**
+- Token monitoring prevents budget exhaustion
+- Smart resource allocation for maximum productivity
+- Context compression keeps work flowing efficiently
+
+**🛡️ Shield 3: Business Protection**
+- Pre-commit hooks block secrets before git
+- Compliance checks (Ukrainian market, GDPR)
+- Audit trails for enterprise accountability
+
+#### How It Works (Zero Overengineering)
+
+````
+🟢 Normal Work    → Silent (no interruptions, system doesn't hang)
+🟡 Resource Check → Brief status (30%+ tokens, non-intrusive)
+🟠 Suspicious     → Warning (potential threat detected)
+🔴 Critical Threat → BLOCK + Notification (shield activates)
+````
+
+**Protection Points (Token-Efficient):**
+
+1. **Pre-Commit Hooks** (0 tokens, local bash)
+   - Scan for secrets, API keys, credentials
+   - Check forbidden services (russian trackers)
+   - LANG-CRITICAL violations
+
+2. **Token Monitoring** (minimal tokens)
+   - Display at 30%+ automatically
+   - Show after major operations
+   - Protect budget from exhaustion
+
+3. **Pre-Deploy Checks** (0 tokens, local scripts)
+   - `scripts/seo-check.sh` — 9 automated audits
+   - Security validation
+   - Compliance verification
+
+**The Balance:**
+- ✅ Maximum protection
+- ✅ Minimum interference
+- ✅ Zero token waste
+- ✅ Comfortable workspace (your "safe harbor")
+
+**Best Practice 2026:**
+> Don't monitor everything constantly (expensive, slow).
+> Monitor at critical points (efficient, safe).
+
+This is not overengineering. This is **strategic defense**.
+
+---
+
+### 1.1. CORE WORKFLOW PRINCIPLES
+
 *   **No Bullshit Mode:** If you're less than 90% sure, flag it with `[ASSUMPTION]` or ask. Never present a guess as a fact.
 *   **Discuss → Approve → Execute:** NEVER start coding/editing before getting explicit approval of the PLAN.
 *   **Rules are Living Document:** RULES evolve with projects. New patterns added during work with approval.
@@ -533,6 +601,634 @@ Don't spend on waste: repetition, fluff, obvious.
 This creates respect: for user, for craft, for ecosystem.
 ````
 
+### 2.14. PRE-FLIGHT TOKEN APPROVAL v3.0 (MANDATORY)
+
+**CRITICAL CHANGE:** All tasks >5k tokens MUST show estimate BEFORE execution.
+
+**Philosophy:** Control without dictatorship. Inform, don't restrict.
+
+#### Approval Flow
+
+````
+User request
+    ↓
+[ANALYZE] Complexity, scope, risk factors
+    ↓
+[ESTIMATE] Calculate tokens + confidence level
+    ↓
+[PRESENT] Show cost breakdown to user
+    ↓
+[WAIT] User approval (unless auto-approve threshold)
+    ↓
+[EXECUTE] Track actual vs estimate
+    ↓
+[LEARN] Update variance history
+````
+
+#### Task Size Gates
+
+**MICRO (<5k tokens):**
+- ✅ Auto-approve, silent execution
+- No estimate shown (unless `//VERBOSE`)
+- Example: "Fix typo in line 42"
+
+**SMALL (5-15k tokens):**
+- ✅ Brief estimate, auto-approve in Green zone
+- Format: `[QUICK ESTIMATE] ~12k tokens (6%) • Proceeding...`
+- Example: "Update auth function"
+
+**MEDIUM (15-40k tokens):**
+- 🟡 **MANDATORY full breakdown**
+- 🟡 **Explicit user approval required**
+- Show: cost breakdown, confidence, budget impact
+- Example: "Refactor authentication middleware"
+
+**LARGE (40-80k tokens):**
+- 🟠 **Detailed breakdown + alternatives**
+- 🟠 **Suggest splitting into stages**
+- Show: risks, zone transition, staging options
+- Example: "Implement user dashboard"
+
+**CRITICAL (>80k or zone → Red):**
+- 🔴 **MANDATORY discussion**
+- 🔴 **Multi-session plan required**
+- Show: risk analysis, recommended split
+- Example: "Complete system refactor"
+
+#### Estimate Format (MEDIUM+ tasks)
+
+````markdown
+[TOKEN ESTIMATE]
+Request: "[brief user request]"
+
+Cost breakdown:
+┌─ Analysis phase
+│  ├─ Reading files (list): ~Xk
+│  ├─ Code analysis: ~Yk
+│  └─ Subtotal: ~Zk
+│
+├─ Execution phase
+│  ├─ Implementation: ~Xk
+│  ├─ Testing: ~Yk
+│  ├─ Documentation: ~Zk
+│  └─ Subtotal: ~Nk
+│
+└─ Safety buffer (15%): ~Mk
+   ═══════════════════════════════
+   TOTAL ESTIMATE: ~Tk tokens
+
+Confidence: [HIGH/MEDIUM/LOW] (±X%)
+Based on: [historical context or "no similar tasks"]
+
+Budget impact:
+• Currently available: Xk
+• After this task: Yk (Z% remaining)
+• Status: [current] → [after] (zone change if any)
+
+[APPROVE SPEND?] YES / ADJUST / DECLINE
+````
+
+#### Auto-Approve Thresholds
+
+Configurable in `.ai/token-limits.json`:
+
+````json
+{
+  "auto_approve_thresholds": {
+    "green_zone": 15000,      // 0-50% used
+    "moderate_zone": 8000,    // 50-70% used
+    "caution_zone": 3000,     // 70-90% used
+    "critical_zone": 0        // 90%+ used (NO auto-approve)
+  }
+}
+````
+
+**Behavior:**
+- If task estimate ≤ threshold for current zone → auto-approve with brief notice
+- If task estimate > threshold → require explicit user approval
+- User can adjust thresholds: `//CONFIG auto_approve 20000`
+
+#### Approval Keywords
+
+User responses:
+- `YES` / `Y` / `✓` / `go` / `proceed` / `давай` → Execute
+- `ADJUST` / `reduce` / `modify` → Discuss scope reduction
+- `DECLINE` / `NO` / `stop` / `wait` → Cancel, don't execute
+
+### 2.15. CONFIDENCE-BASED ESTIMATION
+
+**Innovation:** Not all estimates are equal. Be honest about accuracy.
+
+#### Confidence Levels
+
+**HIGH (±15%):**
+- Known task type with history
+- Clear scope, files identified
+- No external dependencies
+- Similar tasks: 5+ in variance_history
+- **Example:** "Fix bug in auth.ts line 123"
+
+**MEDIUM (±30%):**
+- Moderate task type with some history
+- Scope mostly clear, some unknowns
+- Few external dependencies
+- Similar tasks: 1-4 in variance_history
+- **Example:** "Refactor authentication flow"
+
+**LOW (±50%):**
+- Unknown or complex task type
+- Vague scope, many unknowns
+- External dependencies unclear
+- Similar tasks: 0 in variance_history
+- **Example:** "Optimize system performance"
+
+#### Confidence Scoring Algorithm
+
+````python
+# Pseudocode for AI understanding
+def calculate_confidence(request, history):
+    score = 100
+
+    # DEDUCTIONS (unknowns, risks)
+    if "refactor" in request: score -= 20  # Scope uncertainty
+    if "system" in request: score -= 15   # Multiple files
+    if not history.similar_tasks: score -= 25  # No learning data
+    if request.words < 5: score -= 20     # Vague requirement
+    if "optimize" in request: score -= 20  # Broad scope
+
+    # BONUSES (clarity, history)
+    if history.similar_tasks > 5: score += 15  # Good data
+    if "fix typo" in request: score += 20      # Very specific
+    if files_known and files == 1: score += 10 # Limited scope
+    if "line X" in request: score += 15        # Exact location
+
+    # MAP to levels
+    if score >= 85: return "HIGH", "±15%"
+    if score >= 65: return "MEDIUM", "±30%"
+    return "LOW", "±50%"
+````
+
+#### Adaptive Checkpoints (by confidence, not size)
+
+**HIGH confidence:**
+- No checkpoints → execute fully
+- "I know exactly what to do"
+
+**MEDIUM confidence:**
+- 1 checkpoint at 50% progress
+- "Let me validate mid-way"
+- Format: `[CHECKPOINT] 50% done, used Xk of Yk estimate. Continue? [YES/ADJUST]`
+
+**LOW confidence:**
+- 2 checkpoints at 33% and 66%
+- "Complex task, frequent validation"
+- Allow course correction
+
+**UNKNOWN task:**
+- Checkpoint after analysis phase
+- "Let me analyze first, then provide detailed estimate"
+
+### 2.16. LEARNING ENGINE & VARIANCE TRACKING
+
+**Purpose:** Improve estimate accuracy over time through variance analysis.
+
+#### Variance Recording
+
+After EVERY completed task, record:
+
+````json
+{
+  "task_id": "uuid-generated",
+  "date": "2026-02-03T14:30:00Z",
+  "request_brief": "Refactor auth middleware",
+  "task_type": "refactor",
+  "scope": "medium",
+  "complexity": "moderate",
+  "estimated_tokens": 40000,
+  "actual_tokens": 45000,
+  "variance_tokens": 5000,
+  "variance_percent": 12.5,
+  "confidence_level": "medium",
+  "confidence_range": "±30%",
+  "within_range": true,
+  "reason": "Additional type definitions needed",
+  "files_estimated": 3,
+  "files_actual": 4,
+  "user_approved_as_is": true
+}
+````
+
+**Storage:** `.ai/token-limits.json` → `variance_history` array
+
+#### Pattern Recognition
+
+After 10+ tasks, AI learns patterns:
+
+````markdown
+[LEARNING APPLIED]
+
+Historical pattern detected:
+• Task type: "refactor"
+• Historical variance: +35% average (from 8 similar tasks)
+• Reason: Scope creep, additional files discovered
+
+Base estimate: 30k
+Adjusted estimate: 40k (30k × 1.35)
+Confidence: MEDIUM (±30%)
+
+This estimate is more accurate due to learning.
+````
+
+**Common Patterns:**
+
+| Task Type | Typical Variance | Reason |
+|-----------|------------------|--------|
+| "Fix typo" | +5% | Usually accurate |
+| "Refactor X" | +35% | Scope creep common |
+| "Implement feature" | +40% | Requirements clarify mid-work |
+| "Optimize" | +50% | Broad scope, iterative |
+| "Quick fix" | +15% | Sometimes not so quick |
+| User says "simple" | +40% | Ironic but true |
+
+#### Accuracy Improvement Tracking
+
+System monitors its own accuracy:
+
+````markdown
+[VARIANCE ANALYSIS]
+
+Last 30 days performance:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Tasks completed: 34
+Total tokens: 1.2M
+
+Estimate accuracy:
+• Week 1: ±45% average variance (learning)
+• Week 2: ±35% (improving)
+• Week 3: ±28% (good)
+• Week 4: ±22% (excellent) ✓
+
+Best estimates: "fix bug" tasks (±8%)
+Worst estimates: "system refactor" (±52%)
+
+Confidence distribution:
+• HIGH: 24 tasks (71%)
+• MEDIUM: 8 tasks (23%)
+• LOW: 2 tasks (6%)
+
+System is learning effectively ✓
+````
+
+#### Self-Calibration (Month 1 analysis)
+
+After 30 days, system proposes optimizations:
+
+````markdown
+[SYSTEM SELF-ANALYSIS] Month 1 Complete
+
+Your work patterns detected:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Tasks/month: 47
+• Avg task size: 38k tokens (above typical 25k)
+• Approval rate: 89% as-is (rarely adjust)
+• Work style: 2-3 focused sessions/day
+• Peak hours: Morning (68% of tokens)
+
+Variance accuracy:
+• Month start: ±45% (learning phase)
+• Month end: ±22% (improved 51%!) ✓
+
+Optimization recommendations:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. RAISE auto-approve threshold
+   Current: 15k → Suggested: 25k
+   Reason: You trust estimates, rarely adjust
+   Impact: ~15 fewer approval prompts/month
+
+2. ENABLE batch mode by default
+   Reason: You prefer larger combined tasks
+   Impact: ~12% token savings potential
+
+3. LOWER checkpoint frequency
+   Reason: 95% of checkpoints you say "continue"
+   Impact: Smoother workflow, less interruption
+
+Apply these suggestions? [YES/REVIEW/NO]
+````
+
+### 2.17. EMERGENCY RESERVE MANAGEMENT
+
+**Philosophy:** Always keep 10-15% available for unexpected issues.
+
+#### Reserve Protection
+
+````markdown
+[BUDGET WARNING]
+
+Request: Large implementation (~70k tokens)
+
+Current situation:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Daily limit: 200k
+Used today: 135k (67%)
+Available: 65k (33%)
+Emergency reserve: 20k (10% protected)
+Safe available: 45k
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ Task (70k) exceeds safe available (45k)
+Would leave only 25k (<15% reserve)
+
+Why reserves matter:
+• Bug fixes during implementation
+• User clarifications that expand scope
+• Testing reveals unexpected issues
+• Documentation updates
+• Rollback scenarios
+• Emergency hot fixes
+
+Recommended options:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. REDUCE SCOPE (~40k)
+   Fit essential features within safe budget
+   Keep 25k reserve (12%)
+
+2. SPLIT ACROSS SESSIONS (~35k today, ~35k tomorrow)
+   Each session has adequate reserve
+   Safer approach, predictable budget
+
+3. PROCEED ANYWAY (RISKY)
+   Use reserve, no safety net remains
+   Only if urgent and willing to accept risk
+
+4. DEFER TO TOMORROW
+   Start fresh with full 200k limit
+   Full reserve protection
+
+Recommendation: Option 2 (SPLIT)
+
+Your choice? [1/2/3/4]
+````
+
+#### Reserve Calculation
+
+````python
+# Reserve policy
+daily_limit = 200000
+reserve_percent = 10  # Can be 10-15% user preference
+
+reserve_tokens = daily_limit * (reserve_percent / 100)
+safe_available = available_tokens - reserve_tokens
+
+if task_estimate > safe_available:
+    TRIGGER_RESERVE_WARNING()
+````
+
+#### Zone Transition Warnings
+
+````markdown
+[ZONE TRANSITION ALERT]
+
+Current zone: 🟢 Green (48% used)
+After this task: 🟡 Moderate (63% used)
+
+What changes in Moderate zone:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Auto-approve threshold: 15k → 8k
+• Response verbosity: Normal → Brief
+• Code display: Full files → Diff-only
+• Context compression: Standard → Aggressive
+• Explanation detail: Full → Essential only
+
+This is normal progression as budget is consumed.
+All functionality remains available.
+
+Continue with task? [YES/NO]
+````
+
+### 2.18. OPTIMIZATION STRATEGIES (The 10-15% Rule)
+
+**Goal:** Save 10-15% tokens per session by eliminating waste, not cutting quality.
+
+#### Types of Waste & Fixes
+
+**1. Redundant Reads (save ~40%)**
+
+````markdown
+❌ WASTEFUL:
+User: "Update function X in file.ts"
+AI: Reads file.ts (3k)
+[... makes edit ...]
+User: "Now update function Y in same file"
+AI: Reads file.ts AGAIN (3k) ← WASTE!
+
+✅ OPTIMIZED:
+AI maintains session cache of recently read files
+Second request: Uses cached content, saves 3k
+````
+
+**2. Exploratory Reads (save ~60%)**
+
+````markdown
+❌ WASTEFUL:
+User: "Fix typo in README.md"
+AI: "Let me read package.json to understand project structure"
+AI: "Let me check tsconfig.json too"
+AI: "Now checking dependencies..."
+AI: "OK, fixing typo..." (spent 8k on unnecessary context)
+
+✅ OPTIMIZED:
+AI: Reads only README.md (1k)
+AI: Fixes typo directly
+Saves: 7k tokens (87%)
+````
+
+**3. Over-Explanation (save ~30%)**
+
+````markdown
+❌ WASTEFUL:
+AI: "I'm going to fix the typo 'teh' to 'the'. A typo is a
+typographical error. In this case, the word 'teh' should be
+'the'. This is important because typos reduce readability
+and professionalism..." (2k tokens of obvious explanation)
+
+✅ OPTIMIZED:
+AI: "Fixed typo: 'teh' → 'the' in line 42"
+Saves: 1.8k tokens
+````
+
+**4. Premature Execution (save 100% on wrong path!)**
+
+````markdown
+❌ WASTEFUL:
+User: "Add authentication"
+AI: [immediately implements OAuth with Google/Facebook/GitHub]
+(30k tokens spent)
+User: "I meant simple password auth..."
+Result: 30k wasted, need to redo
+
+✅ OPTIMIZED:
+User: "Add authentication"
+AI: [DISCUSSION]
+Options:
+1. OAuth (Google/FB/GitHub) ~30k
+2. Password-based (bcrypt) ~15k
+3. JWT tokens ~20k
+Which approach?
+
+User: "Option 2"
+AI: Implements correctly the first time
+Saves: 30k wasted tokens + redo time
+````
+
+**5. Sequential Operations (save ~35%)**
+
+````markdown
+❌ WASTEFUL (sequential):
+User: "Update files A, B, C related to auth"
+AI: Reads A (3k) → edits A → commits
+AI: Reads B (3k) → edits B → commits
+AI: Reads C (2k) → edits C → commits
+Total: 25k tokens
+
+✅ OPTIMIZED (batched):
+AI: [OPTIMIZATION OPPORTUNITY]
+"Detected 3 related files, batch them?"
+User: "Yes"
+AI: Reads A, B, C together (7k)
+AI: Plans all edits (3k)
+AI: Executes batch (8k)
+AI: Single commit
+Total: 18k tokens
+Saves: 7k (28%)
+````
+
+#### Smart Batch Detection
+
+AI proactively detects batch opportunities:
+
+````markdown
+[OPTIMIZATION OPPORTUNITY]
+
+Detected pattern: Multiple related file updates
+
+You asked:
+├─ "Update auth.ts"
+├─ "Update middleware.ts"
+└─ "Update types.ts" (all auth-related)
+
+Cost analysis:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sequential: 15k + 12k + 8k = 35k
+Batched: 7k (read) + 4k (plan) + 12k (execute) = 23k
+
+💰 SAVE 12k tokens (34%)
+
+Batch them? [YES] / [NO, keep separate]
+````
+
+#### Deferred Execution Queue
+
+Not everything needs to happen NOW:
+
+````markdown
+[STAGE COMPLETE] Core implementation done
+Used: 28k tokens (estimate: 25k, +12% variance)
+
+Next in queue:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┌─ Unit tests (~8k)
+├─ Integration tests (~12k)
+├─ Documentation (~5k)
+└─ Total remaining: ~25k
+
+Your budget:
+• Used today: 78k (39%)
+• Available: 122k (61%)
+• After queue: ~97k (48%) 🟢 Green
+
+Options:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. CONTINUE ALL: Execute full queue (~25k)
+   Complete everything today
+
+2. TESTS ONLY: Unit + integration, defer docs (~20k)
+   Documentation can wait
+
+3. ESSENTIAL: Unit tests only (~8k)
+   Defer integration + docs
+
+4. DEFER ALL: Commit current work
+   Queue for tomorrow with fresh budget
+
+Recommendation: Option 1 (good budget remaining)
+
+Your choice? [1/2/3/4]
+````
+
+#### Compression Triggers (from v2.0, still valid)
+
+Auto-compress context at:
+- Every 3 completed tasks
+- 50% token usage
+- After `git push` (post-push compression)
+- Manual: `//COMPACT` command
+
+Saves: 40-60% of context tokens
+
+#### Multi-Session Forecasting
+
+````markdown
+[SESSION FORECAST]
+
+Today's queue:
+├─ Task A: ~35k (approved, in progress)
+├─ Task B: ~28k (in queue)
+└─ Task C: ~40k (proposed)
+
+Budget projection:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Current: 52k used (26%)
+After A: ~87k (43%) 🟢 Green
+After B: ~115k (57%) 🟡 Moderate ← Zone change
+After C: ~155k (77%) 🟠 Caution
+
+Recommendation:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Complete A + B today (~115k, stay Moderate)
+• Defer C to tomorrow (fresh 200k budget)
+• Maintains comfortable reserve
+
+Alternative:
+• Do all three (~155k, enter Caution zone)
+• Risky: only 45k reserve (22%)
+
+Your decision? [A+B / ALL / CUSTOM]
+````
+
+#### Optimization Checklist (AI internal)
+
+Before each response >5k tokens, AI checks:
+- [ ] Can I use Edit instead of Write? (saves read)
+- [ ] Can I show diff instead of full file? (saves 80%)
+- [ ] Is this explanation necessary or obvious? (brevity)
+- [ ] Am I repeating context from earlier? (reference it)
+- [ ] Can I batch multiple operations? (savings 30-40%)
+- [ ] Should I compress context now? (after 3 tasks)
+- [ ] Is this task actually needed NOW? (defer option)
+
+#### Success Metrics
+
+**Week 1:**
+- ✅ At least 8% tokens saved vs baseline
+- ✅ Zero redundant file reads detected
+- ✅ Batching suggestions shown ≥3 times
+
+**Month 1:**
+- ✅ 10-15% tokens saved consistently
+- ✅ User adopts batching ≥50% when suggested
+- ✅ Deferred execution used ≥20% of opportunities
+
 ---
 
 ## 3. ITERATIVE WORKFLOW (The Sacred Process)
@@ -703,12 +1399,15 @@ git push origin main
 ## 7. COMMUNICATION PROTOCOL
 
 ### 7.1. LANGUAGE RULES
-*   **Internal dialogue (You ↔ AI):** Russian — наше рабочее правило
+*   **Internal dialogue (You ↔ AI):** Adaptive - match user's language (Ukrainian, Russian, or English)
+    - Session starts with Ukrainian greeting: "Чим я можу вам допомогти?"
+    - Then AI adapts to user's language choice
+    - Respectful to all users regardless of language preference
 *   **Code comments:** English only
 *   **Commit messages:** English only
 *   **Variable names:** English, camelCase/PascalCase
 *   **Branch names:** English (`feat/user-auth`)
-*   **RULES entries:** Russian/English mix OK
+*   **RULES entries:** Ukrainian/Russian/English mix OK
 
 ### 7.2. QUERY TEMPLATE
 ````markdown
@@ -728,6 +1427,42 @@ Which?
 
 Ready? [YES/REVIEW/ADJUST]
 ````
+
+### 7.4. TONE & PUBLIC COMMUNICATION
+
+**Two contexts with different tones:**
+
+**Internal Dialogue (You ↔ AI in chat):**
+- ✅ Warm, friendly, supportive
+- ✅ Humor, irony, jokes allowed
+- ✅ Casual language, emoji, informal terms
+- ✅ "Олень", "кролик" for educational purposes OK
+- ✅ Home atmosphere, trust, partnership
+
+**Public Files (README, docs, commits, code comments):**
+- ✅ **Confident but not arrogant**
+- ✅ Professional, respectful to users
+- ✅ Clear, helpful, educational
+- ✅ Welcoming to beginners
+- ❌ NO condescending language ("dummy", "noob", etc.)
+- ❌ NO arrogance or elitism
+- ❌ NO jokes at user's expense
+
+**Examples:**
+
+**❌ BAD (public README):**
+> "Even a dummy can follow these steps"
+> "If you're too lazy to read docs..."
+> "This is obvious to anyone with a brain"
+
+**✅ GOOD (public README):**
+> "Step-by-step guide for easy setup"
+> "Quick start for developers of all levels"
+> "Clear instructions to get you started"
+
+**Principle:**
+> In chat: warm colleagues. In public: professional service.
+> Respect earns trust. Arrogance loses users.
 
 ---
 
@@ -793,6 +1528,338 @@ Ready? [YES/REVIEW/ADJUST]
     [GUARD]: [Issue]
     Fix: [Description]
 ````
+
+### 10.1. PRE-COMMIT HOOK: 3-TIER PROTECTION SYSTEM
+
+**Philosophy:** Silent Guardian — protect without blocking productivity.
+
+**Approach:** Intelligent secret detection based on GitGuardian + GitHub Advanced Security best practices.
+
+#### Tier 1: HARD BLOCK (100% confidence)
+**What:** Real API keys, private keys, credentials files
+**Behavior:** Blocks commit immediately, NO bypass except `--no-verify`
+**When triggered:** Exact pattern match on known secret formats
+
+**Blocked patterns:**
+- Anthropic API keys: `sk-ant-api03-{95 chars}`
+- OpenAI API keys: `sk-{48+ chars}`
+- GitHub tokens: `ghp_{36 chars}`, `gho_{36 chars}`
+- AWS credentials: `AKIA{16 chars}`
+- Stripe secret keys: `sk_live_{24+ chars}`
+- Private keys: `BEGIN PRIVATE KEY`, `BEGIN RSA PRIVATE KEY`
+- Credentials files: `.env`, `.env.local`, `.env.production`, `credentials.json`, `*.pem`, `*.key`
+
+**Example:**
+```javascript
+// ❌ BLOCKED - Real API key detected
+const apiKey = "sk-ant-api03-ABC...{95 chars}"
+
+// ✅ ALLOWED - Environment variable
+const apiKey = process.env.ANTHROPIC_API_KEY
+```
+
+**Why hard block:** Committing real secrets = immediate security breach. No legitimate reason to commit these.
+
+---
+
+#### Tier 2: WARNING + CHOICE (suspicious patterns)
+**What:** Generic API key assignments, bearer tokens, database URLs
+**Behavior:** Shows warning, asks user for confirmation
+**When triggered:** Pattern suggests possible secret, but not 100% certain
+
+**Warned patterns:**
+- Generic assignments: `API_KEY = "abc123..."`
+- Bearer tokens: `Bearer xyz789...`
+- Database URLs: `postgres://user:password@host`
+- Hardcoded passwords: `password = "secret123"`
+
+**Bypass options:**
+1. **Interactive confirmation:** Type `yes` when prompted
+2. **Inline comment:** Add `// secure-ignore` at end of line
+3. **File ignore:** Add file to `.securityignore`
+
+**Example:**
+```javascript
+// ⚠️  WARNING - User must confirm
+const API_KEY = "test-key-12345"
+
+// ✅ BYPASSED - Inline comment
+const DEMO_KEY = "fake-demo-key" // secure-ignore
+
+// ✅ BYPASSED - Obvious placeholder
+const API_KEY = "your_api_key_here"
+```
+
+**Why warning + choice:** Not all assignments are real secrets. User knows context best.
+
+---
+
+#### Tier 3: SILENT ALLOW (context-aware)
+**What:** Legitimate use cases automatically recognized
+**Behavior:** Silently allowed, no warning shown
+**When triggered:** Context indicates this is safe
+
+**Silently allowed:**
+- Files: `.env.example`, `.env.sample`, `.env.template`
+- Paths: `examples/`, `tests/fixtures/`, `__tests__/mocks/`
+- Comments: `// const key = "sk-..."` (example code)
+- Documentation: `*.md` files (unless real pattern detected)
+- Files in `.securityignore`
+
+**Example:**
+```bash
+# .env.example
+API_KEY=your_api_key_here
+OPENAI_KEY=sk-your-key-here
+
+# ✅ SILENT ALLOW - Recognized as placeholder file
+```
+
+**Why silent:** These are intentional examples/templates. No need to bother user.
+
+---
+
+#### Bypass Mechanisms (Tier 2 only)
+
+**1. Inline Comment**
+```javascript
+const TEST_KEY = "demo-123" // secure-ignore
+```
+
+**2. `.securityignore` File**
+```gitignore
+# Exclude from secret scanning
+docs/api-examples.md
+tests/fixtures/**
+tools/demo-config.json  # Documented safe
+```
+
+**3. Interactive Confirmation**
+```bash
+⚠️  WARNING: Potential API key in src/config.ts:12
+Proceed with commit? Type 'yes': yes
+```
+
+**4. Emergency Override**
+```bash
+git commit --no-verify  # Disables ALL checks
+```
+
+---
+
+#### Configuration
+
+**`.ai/security-policy.json`** (optional)
+```json
+{
+  "secret_scanning": {
+    "mode": "balanced",  // strict | balanced | permissive
+    "tier2_warning": {
+      "interactive_prompts": true
+    }
+  }
+}
+```
+
+**`.securityignore`** (optional)
+```gitignore
+# Files to exclude from scanning
+docs/examples/**
+legacy/old-client.js  # Uses deprecated test endpoint
+```
+
+---
+
+#### Best Practices
+
+**DO:**
+- ✅ Use environment variables: `process.env.API_KEY`
+- ✅ Store secrets in `.env` (gitignored)
+- ✅ Use `.env.example` for templates
+- ✅ Add `// secure-ignore` for known false positives
+- ✅ Document WHY file is in `.securityignore`
+
+**DON'T:**
+- ❌ Hardcode real API keys in code
+- ❌ Commit `.env` files
+- ❌ Use `--no-verify` routinely (only emergencies)
+- ❌ Abuse `.securityignore` to bypass security
+
+---
+
+#### Audit Trail
+
+All blocked commits are logged to `.ai/audit-trail.log`:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-02-05 14:30:22 UTC] COMMIT BLOCKED
+Event: HARD_BLOCK
+Details: Real Anthropic API key detected in src/api.ts:12
+User: John Doe <john@example.com>
+Branch: feature/auth
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Purpose:** Legal protection, compliance, incident response.
+
+---
+
+#### Additional Checks
+
+**LANG-CRITICAL (WARNING only)**
+- Detects russian content: `.ru` domains, `ru-RU` locale
+- Policy: RULES_PRODUCT.md Section 3
+- Does NOT block commit (warning only)
+
+**Russian Trackers (BLOCK)**
+- Detects: Yandex Metrika, VK Pixel, Mail.ru, etc.
+- Security threat: Data sent to russian state servers
+- BLOCKS commit (Tier 1 severity)
+
+---
+
+#### When Hook Fails
+
+**Tier 1 (Hard Block):**
+```bash
+❌ COMMIT BLOCKED - Real API key detected
+
+To fix:
+  1. Remove secret from code
+  2. Use process.env.VAR
+  3. Add to .gitignore
+```
+
+**Tier 2 (Warning):**
+```bash
+⚠️  WARNING: Potential secret detected
+Proceed? Type 'yes': no
+
+❌ Commit cancelled by user
+```
+
+**All Clear:**
+```bash
+✅ SECURITY SCAN PASSED
+No secrets or trackers detected
+Proceeding with commit...
+```
+
+---
+
+#### Version History
+
+- **v8.2** [2026-02-05] – 3-Tier Protection System implemented
+  - Tier 1: Hard block (real secrets)
+  - Tier 2: Warning + choice (suspicious)
+  - Tier 3: Silent allow (context-aware)
+  - Added `.securityignore` support
+  - Added inline `// secure-ignore` bypass
+  - Based on GitGuardian + GitHub Advanced Security
+  - Philosophy: Trust informed decisions
+
+- **v4.0** [2025-01-26] – Basic secret scanning added
+  - Pattern matching for API keys
+  - Blocked file types
+  - LANG-CRITICAL warnings
+
+---
+
+#### Platform Compatibility & Universal AI Provider Support
+
+**v8.3 Update:** Hook works everywhere, detects all major AI providers.
+
+**3 Hook Versions** (choose one based on platform):
+
+| Version | File | Best For | Requirements |
+|---------|------|----------|--------------|
+| **Bash** | `scripts/pre-commit` | Linux, macOS, Git Bash | bash/sh (built-in) |
+| **Node.js** | `scripts/pre-commit.js` | All platforms | Node.js 14+ |
+| **PowerShell** | `scripts/pre-commit.ps1` | Windows native | PowerShell 5.1+ |
+
+**Installation:**
+```bash
+# Bash (default, works everywhere with Git)
+cp scripts/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+
+# Node.js (universal, no bash needed)
+cp scripts/pre-commit.js .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+
+# PowerShell (Windows native)
+Copy-Item scripts\pre-commit.ps1 .git\hooks\pre-commit
+```
+
+**AI Providers Detected** (v8.3):
+
+- ✅ **Anthropic** (Claude): `sk-ant-api03-{95}`
+- ✅ **OpenAI** (GPT, ChatGPT): `sk-{48-51}`
+- ✅ **Google** (Gemini, PaLM): `AIza{35}`
+- ✅ **Hugging Face**: `hf_{32+}`
+- ✅ **Cohere**: context-aware detection
+- ✅ **Replicate**: `r8_{40}`
+- ✅ **Azure OpenAI**: pattern matching
+- ✅ **GitHub** (Copilot): `ghp_{36}`, `gho_{36}`
+- ✅ **AWS** (Bedrock): `AKIA{16}`
+- ✅ **Stripe**: `sk_live_{24+}`
+- ✅ **Generic**: High-entropy detection (entropy > 4.5)
+
+**IDE Compatibility:**
+
+Works with ANY git-based IDE:
+- VS Code, Cursor, Windsurf
+- WebStorm, IntelliJ IDEA
+- Sublime Text, Vim, Neovim
+- GitHub Codespaces, Gitpod
+- Any other IDE using git
+
+**CI/CD Auto-Detection:**
+
+Hook automatically detects CI/CD environment:
+- GitHub Actions (`GITHUB_ACTIONS=true`)
+- GitLab CI (`GITLAB_CI=true`)
+- Jenkins (`JENKINS_HOME`)
+- CircleCI, Travis CI
+- Generic (`CI=true`)
+
+**Behavior in CI/CD:**
+- Tier 1: Always blocks (real secrets)
+- Tier 2: Auto-blocks (no interactive prompts)
+- Override: `export SECURITY_HOOK_MODE=permissive` to allow tier 2
+
+**Environment Variables:**
+
+```bash
+# Mode control
+export SECURITY_HOOK_MODE=strict      # Block everything (high FP)
+export SECURITY_HOOK_MODE=balanced    # Default (recommended)
+export SECURITY_HOOK_MODE=permissive  # Only tier 1 blocks
+
+# CI/CD bypass (tier 2 only)
+export SECURITY_HOOK_MODE=permissive  # Allow tier 2 in CI
+```
+
+**Cross-Platform Notes:**
+
+- **Windows users without Git Bash:** Use Node.js or PowerShell version
+- **macOS/Linux:** Bash version recommended (native)
+- **Docker/containers:** Node.js version (universal)
+- **CI/CD pipelines:** Auto-detects, no config needed
+
+**Entropy-Based Detection:**
+
+High-randomness strings (likely secrets) automatically detected:
+
+```javascript
+// ❌ BLOCKED - Entropy: 4.8
+const key = "Tj9mK3nP8vL2xQ5wR7yZ1aB4cD6fG0h"
+
+// ✅ ALLOWED - Entropy: 2.1 (obvious placeholder)
+const key = "your-api-key-here"
+```
+
+**Threshold:** Shannon entropy > 4.5 for strings ≥20 chars
 
 ---
 
@@ -876,6 +1943,9 @@ Before proposing solution:
 ---
 
 ## CHANGELOG
+*   **v8.3** [2026-02-05] – **UNIVERSAL COMPATIBILITY: ALL PLATFORMS, ALL AI PROVIDERS**. Complete cross-platform rewrite of security hooks. New: 3 hook versions (bash/Node.js/PowerShell), 9+ AI providers detection (Anthropic, OpenAI, Google Gemini, Hugging Face, Cohere, Replicate, Azure, AWS, generic), entropy-based secret detection (Shannon entropy > 4.5), CI/CD auto-detection (GitHub Actions, GitLab, Jenkins, etc.), environment-based modes (strict/balanced/permissive). Philosophy: "Work everywhere, detect everything, trust platforms." Files: `scripts/pre-commit`, `scripts/pre-commit.js`, `scripts/pre-commit.ps1`, `.ai/security-policy.json` updated. Platforms: Linux, macOS, Windows (native), all IDEs, all CI/CD. Added Platform Compatibility section in 10.1.
+*   **v8.2** [2026-02-05] – **3-TIER SECURITY SYSTEM: INTELLIGENT SECRET PROTECTION**. Major upgrade to pre-commit hook based on GitGuardian + GitHub Advanced Security best practices. New: Tier 1 (hard block real secrets), Tier 2 (warning + choice for suspicious patterns), Tier 3 (silent allow for context-aware cases). Added `.securityignore` support, inline `// secure-ignore` bypass, interactive prompts, audit trail logging. Philosophy: "Trust informed decisions — protect without blocking productivity." Reduces false positives by ~70% while maintaining security. Files: `scripts/pre-commit`, `.ai/security-policy.json`, `.securityignore`. Added Section 10.1. Full spec in RULES_CORE.md Section 10.1.
+*   **v8.0** [2026-02-03] – **TOKEN CONTROL v3.0: INTELLIGENT BUDGET MANAGEMENT**. Major upgrade from reactive monitoring to proactive control. New: Pre-flight token approval (mandatory estimates BEFORE execution), confidence-based estimation (HIGH/MEDIUM/LOW ±%), learning engine with variance tracking, emergency reserve protection (10-15%), smart batch detection, deferred execution queue, self-calibrating thresholds. Philosophy: "Control without dictatorship — inform, don't restrict." Target: 10-15% token savings without quality loss. Added Sections 2.14-2.18. Full spec: `.ai/token-control-v3-spec.md`.
 *   **v7.1** [2026-02-02] – Universal AGENTS.md support added. Framework now works with 90%+ AI coding tools (Claude Code, Cursor, Windsurf, Aider, Continue, OpenAI Codex, Google Jules, etc.) through AGENTS.md universal standard. Auto-loading in most tools. BUG-005 fixed (Session Start Protocol not applied automatically).
 *   **v6.1** [2026-02-01] – Added POST-PUSH COMPRESSION (mandatory workflow after git push) and FOCUS OPTIMIZATION (Quality > Speed philosophy). Philosophy: "We don't save tokens, we concentrate attention on critical tasks."
 *   **v6.0** [2026-01-31] – Token Management v2.0: context compression, lazy loading, verbosity auto-scaling, session checkpoints, graduated warnings, monthly tracking. Added SESSION START PROTOCOL (Section 0) for mandatory RULES reading.
@@ -887,4 +1957,4 @@ Before proposing solution:
 
 ---
 
-*This document is living. Update with approval. Last updated: 2026-02-02 (v7.1 Universal)*
+*This document is living. Update with approval. Last updated: 2026-02-05 (v8.3 Universal Compatibility)*

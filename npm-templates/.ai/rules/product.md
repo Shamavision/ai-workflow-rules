@@ -2027,7 +2027,638 @@ git commit -m "security: add new russian tracker to blacklist"
 
 ---
 
+## 9. CYBER DEFENSE (Ukrainian Market Security)
+
+### 9.1. THREAT MODEL
+
+**Reality Check (2024-2026):**
+
+Ukrainian companies ARE active targets for:
+- 🔴 **DDoS attacks** - Daily for major sites, sporadic for SMBs
+- 🔴 **Data exfiltration** - Russian intelligence agencies target Ukrainian user data
+- 🔴 **Supply chain attacks** - Compromised npm packages, CDN injections
+- 🟠 **Phishing campaigns** - Targeted at employees, clients
+- 🟠 **Reputation attacks** - False accusations, social media campaigns
+
+**You ARE a target if:**
+- Ukrainian company (ТОВ, ФОП, etc.)
+- Processing Ukrainian citizen data
+- B2B/B2C with Ukrainian clients
+- Public-facing service (website, API, mobile app)
+- Fintech, healthcare, government contractors (HIGH PRIORITY targets)
+
+**This is NOT paranoia. This is 2026 reality.**
+
+---
+
+### 9.2. MANDATORY PROTECTIONS
+
+#### Layer 1: Infrastructure (FREE tier sufficient)
+
+**Cloudflare Proxy (REQUIRED):**
+```nginx
+# Setup: cloudflare.com → Add site → Update DNS → Orange cloud ON
+
+Benefits (FREE plan):
+✅ DDoS protection (automatic, unlimited)
+✅ WAF (Web Application Firewall)
+✅ Bot protection
+✅ Rate limiting (10 req/sec per IP default)
+✅ SSL/TLS encryption
+✅ CDN (faster page load)
+
+# Additional: Block russian IP ranges
+Cloudflare Dashboard → Security → WAF → Custom Rules:
+  Rule: Block country = RU, BY
+  Action: Block
+```
+
+**Why Cloudflare:**
+- Absorbs 99% of DDoS attacks automatically
+- FREE tier sufficient for SMBs (<100k visitors/month)
+- Takes 10 minutes to setup
+- **Cost:** $0/month
+
+**Alternative:** Nginx rate limiting (self-hosted):
+```nginx
+# /etc/nginx/nginx.conf
+limit_req_zone $binary_remote_addr zone=req_limit:10m rate=10r/s;
+
+server {
+  # Block russian IP ranges (updated list)
+  include /etc/nginx/block-russia.conf;
+
+  # Rate limiting
+  limit_req zone=req_limit burst=20 nodelay;
+
+  # DDoS protection headers
+  add_header X-Frame-Options "DENY" always;
+  add_header X-Content-Type-Options "nosniff" always;
+}
+```
+
+---
+
+#### Layer 2: Application Security
+
+**Content Security Policy (CSP) - CRITICAL:**
+```typescript
+// middleware/security.ts or next.config.js
+export const securityHeaders = {
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    "script-src 'self' https://trusted-cdn.com",
+    "connect-src 'self' https://api.yourdomain.com",
+    "img-src 'self' data: https:",
+    "style-src 'self' 'unsafe-inline'",  // Only if necessary
+
+    // CRITICAL: Prevent data exfiltration
+    "form-action 'self'",  // No form submission to external sites
+    "frame-ancestors 'none'",  // Prevent clickjacking
+    "block-all-mixed-content",  // Force HTTPS
+    "upgrade-insecure-requests"
+  ].join('; '),
+
+  // Additional headers
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+
+  // HSTS (force HTTPS for 1 year)
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload'
+};
+```
+
+**Why CSP matters:**
+- Blocks russian tracking scripts (even if bypassed pre-commit)
+- Prevents XSS attacks
+- Stops data exfiltration to external domains
+
+**Supply Chain Protection:**
+```json
+// package.json - Add security checks
+{
+  "scripts": {
+    "preinstall": "npx lockfile-lint --type npm --path package-lock.json",
+    "audit": "npm audit --audit-level=moderate",
+    "check-deps": "npx better-npm-audit audit"
+  }
+}
+```
+
+**NPM Best Practices:**
+```bash
+# Before installing any package:
+1. Check package age: >1 year = safer
+2. Check downloads: >100k/week = popular, reviewed
+3. Check repo: GitHub stars, last commit, maintainer
+4. Avoid: .ru domains in repo, russian maintainers (sad but true)
+
+# Example:
+npm view yandex-metrika  # Check before install
+```
+
+---
+
+#### Layer 3: Monitoring & Alerts
+
+**Real-time Security Monitoring:**
+```typescript
+// lib/security-monitor.ts
+export function initSecurityMonitoring() {
+  // Monitor for suspicious patterns
+
+  // 1. Russian IP detection
+  app.use((req, res, next) => {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const country = geoip.lookup(ip)?.country;
+
+    if (country === 'RU' || country === 'BY') {
+      logSecurityEvent({
+        type: 'BLOCKED_HOSTILE_IP',
+        ip: ip,
+        country: country,
+        url: req.url,
+        timestamp: new Date()
+      });
+
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    next();
+  });
+
+  // 2. Rate limit exceeded
+  app.use((req, res, next) => {
+    // If Cloudflare/nginx rate limit bypassed somehow
+    const key = req.ip;
+    const requests = requestCount.get(key) || 0;
+
+    if (requests > 100) {  // 100 req/minute = suspicious
+      alertAdmins('Rate limit abuse detected', { ip: req.ip });
+    }
+
+    next();
+  });
+
+  // 3. Data export monitoring
+  app.get('/api/users/export', async (req, res) => {
+    // Log ALL data export requests (GDPR requirement + security)
+    await logAuditEvent({
+      type: 'DATA_EXPORT',
+      user: req.user.id,
+      ip: req.ip,
+      timestamp: new Date(),
+      reason: req.body.reason || 'Not provided'
+    });
+
+    // Alert if unusual pattern (e.g., 10+ exports in hour)
+    if (recentExports > 10) {
+      alertAdmins('Unusual data export activity', { user: req.user.id });
+    }
+
+    // ... proceed with export
+  });
+}
+```
+
+**Alert Channels:**
+```typescript
+// Notify admins immediately
+function alertAdmins(message: string, context: any) {
+  // Email
+  sendEmail({
+    to: ['security@company.com', 'cto@company.com'],
+    subject: `🚨 Security Alert: ${message}`,
+    body: JSON.stringify(context, null, 2)
+  });
+
+  // Telegram (instant)
+  sendTelegram({
+    chatId: process.env.SECURITY_TELEGRAM_CHAT,
+    text: `🚨 ${message}\n${JSON.stringify(context)}`
+  });
+
+  // Sentry / Rollbar
+  Sentry.captureMessage(message, {
+    level: 'error',
+    extra: context
+  });
+}
+```
+
+---
+
+### 9.3. INCIDENT RESPONSE PLAN
+
+**Scenario 1: DDoS Attack (Service Unavailable)**
+
+**Detection:**
+- Traffic spike >1000x normal
+- Server response time >5 seconds
+- Cloudflare "Under Attack" mode triggered
+
+**Response (Automatic):**
+1. Cloudflare absorbs attack (no action needed usually)
+2. If overwhelmed → Manual: Enable "I'm Under Attack Mode"
+   - Cloudflare Dashboard → Security → Settings → Security Level: I'm Under Attack
+
+**Response (Manual, if Cloudflare fails):**
+1. **Switch to maintenance mode:**
+   ```nginx
+   # nginx: Serve static page only
+   return 503;
+   error_page 503 /maintenance.html;
+   ```
+
+2. **Activate backup:**
+   - Secondary domain (different registrar)
+   - GitHub Pages static site (announcements)
+
+3. **Communication:**
+   - Post on social media: "We're experiencing technical difficulties. Working to restore service."
+   - Email subscribers (if possible)
+
+**Recovery time:** <1 hour (usually automatic via Cloudflare)
+
+**Post-incident:**
+- Review logs (identify attacker patterns)
+- Update Cloudflare rules (block specific patterns)
+- Consider upgrading to Cloudflare Pro ($20/month) if attacks persist
+
+---
+
+**Scenario 2: Data Breach (Sensitive Data Exposed)**
+
+**Detection:**
+- Unusual database queries
+- Large data export requests
+- User reports unauthorized access
+- Sentry alerts on suspicious activity
+
+**Response (IMMEDIATE, <1 hour):**
+
+1. **ISOLATE** - Disconnect affected systems:
+   ```bash
+   # Take server offline temporarily
+   systemctl stop nginx
+   systemctl stop app-service
+   ```
+
+2. **ASSESS** - Scope of breach:
+   - Which data? (users, payments, passwords, etc.)
+   - How many records?
+   - When did breach occur? (check logs)
+   - How was access gained? (vulnerability, stolen credentials, etc.)
+
+3. **PRESERVE** - Evidence (for investigation):
+   ```bash
+   # Backup logs immediately
+   tar -czf incident-$(date +%Y%m%d-%H%M%S).tar.gz /var/log/
+
+   # Database snapshot
+   pg_dump database > breach-snapshot-$(date +%Y%m%d).sql
+   ```
+
+4. **NOTIFY** - Legal obligations (Ukraine + GDPR):
+   - **Users:** Email affected users "without undue delay" (GDPR Art. 34)
+     - What data was exposed
+     - When it happened
+     - What you're doing about it
+     - What they should do (change passwords, monitor accounts)
+
+   - **Уповноважений (Commissioner):** Within 72 hours (GDPR Art. 33)
+     - Online: https://pd.gov.ua/notification/
+     - Include: nature of breach, affected data, measures taken
+
+   - **Cyberpolice:** Report to https://cyberpolice.gov.ua
+     - Evidence: logs, snapshots, attacker IPs
+
+   - **Media:** Only if breach affects >100k users or high-profile
+
+5. **FIX** - Patch vulnerability:
+   - Identify entry point (SQL injection, XSS, stolen credentials, etc.)
+   - Deploy fix
+   - Rotate ALL credentials (database, API keys, admin passwords)
+   - Force password reset for all users
+
+6. **MONITOR** - Extra vigilance (30 days):
+   - Watch for repeat attacks
+   - Monitor dark web (is your data being sold?)
+   - Track user complaints
+
+**Recovery time:** 2-4 hours (system back online), 1-2 weeks (full resolution)
+
+**Legal consequences:**
+- GDPR fine: Up to €20M or 4% annual revenue (whichever higher)
+- Ukrainian law: Up to 3% annual revenue
+- **Reality:** SMBs usually get warnings first, not fines (if you notify promptly)
+
+---
+
+**Scenario 3: Reputation Attack (False Accusations)**
+
+**Detection:**
+- Social media posts claiming "data leak", "russian trackers", etc.
+- Negative reviews on DOU, Glassdoor, Google
+- Articles on tech blogs
+
+**Response (CALM, <24 hours):**
+
+1. **DOCUMENT** - Save evidence:
+   - Screenshots of all claims (before they're deleted)
+   - Archive URLs (web.archive.org)
+   - Note: date, author, platform
+
+2. **VERIFY** - Is claim true?
+   ```bash
+   # Check audit logs
+   tail -n 1000 .ai/audit-trail.log | grep "RUSSIAN"
+
+   # Check git history
+   git log --all --grep="yandex\|metrika\|vk\.com" --oneline
+
+   # Run framework checks
+   ./scripts/seo-check.sh .
+   ```
+
+3. **RESPOND** - Public statement (if claim is FALSE):
+   ```markdown
+   Public Response Template:
+
+   "We investigated the claim of [accusation].
+
+   Our audit trail shows:
+   - Framework blocked [service] on [date] (see attached log)
+   - Pre-commit hook triggered (see git history)
+   - All checks passed (see seo-check.sh output)
+
+   We take security seriously. Our framework (open-source,
+   community-reviewed) enforces Ukrainian market standards.
+
+   Full audit log: [link to public gist with redacted sensitive info]
+   Framework: https://github.com/Shamavision/ai-workflow-rules
+
+   We welcome independent audits."
+   ```
+
+4. **LEGAL** - If defamation:
+   - Consult lawyer (if damages significant)
+   - Send cease-and-desist letter
+   - Consider lawsuit (as last resort)
+
+**Recovery time:** 1-2 days (respond), 1-2 weeks (reputation stabilizes)
+
+**Prevention:**
+- Maintain audit trail (proof you did your job)
+- Be transparent (open-source helps)
+- Respond quickly (silence = guilt in public opinion)
+
+---
+
+**Scenario 4: Regulatory Inquiry (Government Questions)**
+
+**Detection:**
+- Official letter from Уповноважений (Commissioner)
+- Email from tax authorities (DPS)
+- Phone call from cyberpolice
+
+**Response (PROFESSIONAL, <72 hours):**
+
+1. **DON'T PANIC**
+   - Having framework = good faith effort
+   - Inquiry ≠ accusation
+   - Cooperation = mitigation
+
+2. **GATHER EVIDENCE:**
+   - Audit trail logs (`.ai/audit-trail.log`)
+   - Framework documentation (RULES_PRODUCT.md)
+   - Git history (shows implementation of security measures)
+   - Pre-commit hook configuration
+   - seo-check.sh reports (if saved)
+
+3. **LEGAL CONSULTATION**
+   - DO NOT respond officially without lawyer review
+   - Show evidence to lawyer first
+   - Prepare response together
+
+4. **RESPOND OFFICIALLY:**
+   ```markdown
+   Response Template (lawyer-approved):
+
+   "In response to inquiry [number], we provide:
+
+   1. Security Measures Implemented:
+      - Open-source security framework (ai-workflow-rules v8.0)
+      - Automated pre-commit scanning (russian content blocked)
+      - Pre-deploy validation (seo-check.sh)
+      - Continuous monitoring (audit trail)
+
+   2. Evidence of Compliance:
+      - Audit trail logs (attached, [dates])
+      - Git commit history (shows security commits)
+      - Framework documentation (transparent, public)
+
+   3. Good Faith Effort:
+      - Industry best practices applied
+      - Community-reviewed framework (GitHub public)
+      - Zero tolerance policy for russian services
+
+   We remain available for further questions.
+
+   [Company name], [authorized representative]"
+   ```
+
+5. **COOPERATE**
+   - Answer questions honestly
+   - Provide requested documents
+   - Show willingness to improve
+
+**Recovery time:** 1-2 weeks (inquiry resolution)
+
+**Outcome (if good faith shown):**
+- Warning (first offense, minor issues)
+- Recommendation to improve (specific items)
+- No penalties (if cooperation + evidence of effort)
+
+---
+
+### 9.4. BUSINESS CONTINUITY
+
+**Backup Infrastructure:**
+```yaml
+# docker-compose.backup.yml
+# Deploy to different region (EU, US)
+
+services:
+  app-backup:
+    image: your-app:latest
+    environment:
+      - DATABASE_URL=${BACKUP_DB_URL}
+      - CLOUDFLARE_ZONE=${BACKUP_ZONE}
+
+  # Secondary database (replica)
+  db-backup:
+    image: postgres:15
+    volumes:
+      - backup-data:/var/lib/postgresql/data
+```
+
+**Failover Plan:**
+```markdown
+IF primary site down:
+1. Update DNS (point to backup server)
+   - TTL: 300 seconds (5 min propagation)
+
+2. Activate backup database (read replica → primary)
+
+3. Update Cloudflare proxy (if needed)
+
+4. Test critical paths:
+   - Login works
+   - Payment processing works
+   - Data accessible
+
+RECOVERY TIME: <15 minutes
+```
+
+**Communication Plan:**
+```markdown
+IF service unavailable >1 hour:
+
+1. Post on social media (Facebook, LinkedIn, Twitter/X):
+   "We're experiencing technical difficulties.
+    Our team is working to restore service.
+    ETA: [estimate].
+    Updates every 30 min."
+
+2. Email subscribers:
+   Subject: "Service Status Update"
+   Body: Transparent explanation, ETA, apology
+
+3. Website banner (if accessible):
+   "Service degraded. Restoration in progress."
+
+4. Status page (if you have one):
+   Update status.yourdomain.com
+
+FREQUENCY: Update every 30 minutes until resolved
+```
+
+---
+
+### 9.5. SECURITY CHECKLIST (Pre-Launch)
+
+```markdown
+CYBER DEFENSE READINESS CHECKLIST:
+
+Infrastructure:
+- [ ] Cloudflare proxy enabled (orange cloud ON)
+- [ ] DDoS protection active (auto)
+- [ ] Russian IP ranges blocked (Cloudflare rule)
+- [ ] Rate limiting configured (10 req/sec default)
+- [ ] SSL/TLS certificate valid (A+ rating on ssllabs.com)
+
+Application:
+- [ ] Content-Security-Policy header configured
+- [ ] Security headers present (X-Frame-Options, HSTS, etc.)
+- [ ] Form actions restricted to same domain
+- [ ] No russian CDN URLs in code
+- [ ] lockfile-lint in preinstall hook
+- [ ] npm audit passing (no HIGH/CRITICAL vulns)
+
+Monitoring:
+- [ ] Error tracking configured (Sentry/Rollbar)
+- [ ] Security alerts configured (email + Telegram)
+- [ ] Audit trail logging active
+- [ ] Unusual traffic monitoring (russian IPs, rate limit abuse)
+
+Incident Response:
+- [ ] Incident response plan documented (this section)
+- [ ] Team trained (knows who to contact, what to do)
+- [ ] Backup infrastructure tested (failover works)
+- [ ] Communication templates ready (social media, email)
+- [ ] Legal contacts ready (lawyer, cyberpolice, Commissioner)
+
+Compliance:
+- [ ] GDPR compliance verified (privacy policy, cookie consent)
+- [ ] Ukrainian law compliance (data retention, AML if fintech)
+- [ ] Audit trail proves security efforts
+```
+
+---
+
+### 9.6. COST ESTIMATE
+
+**Cyber Defense Budget (Monthly):**
+
+```
+FREE Tier (Sufficient for SMBs):
+- Cloudflare Free:              $0
+- GitHub (public repo):         $0
+- npm audit:                    $0
+- Pre-commit hooks:             $0
+- Nginx rate limiting:          $0
+                                ----
+TOTAL (Minimal):                $0/month
+
+Recommended Tier (Better protection):
+- Cloudflare Pro:               $20
+- Sentry (error tracking):      $0 (free tier: 5k events/month)
+- VPS backup (Hetzner):         €5 ($5.50)
+- Monitoring (UptimeRobot):     $0 (free tier)
+                                ----
+TOTAL (Recommended):            ~$26/month
+
+Enterprise Tier (Large scale):
+- Cloudflare Business:          $200
+- Sentry Business:              $80
+- Dedicated backup infra:       $50
+- 24/7 SOC monitoring:          $500+
+                                ----
+TOTAL (Enterprise):             $830+/month
+```
+
+**ROI:**
+- One prevented DDoS attack: Saves $1000-10,000 (downtime cost)
+- One prevented data breach: Saves $10,000-100,000+ (fines + reputation)
+- **Conclusion:** $26/month is cheap insurance.
+
+---
+
+### 9.7. REFERENCES & TOOLS
+
+**Official:**
+- Уповноважений із захисту персональних даних: https://pd.gov.ua
+- Кіберполіція України: https://cyberpolice.gov.ua
+- CERT-UA (Computer Emergency Response Team): https://cert.gov.ua
+
+**Tools (FREE):**
+- Cloudflare: https://cloudflare.com (DDoS protection)
+- SSL Labs: https://ssllabs.com/ssltest/ (SSL audit)
+- Security Headers: https://securityheaders.com (header audit)
+- Mozilla Observatory: https://observatory.mozilla.org (security scan)
+- OWASP ZAP: https://zaproxy.org (penetration testing)
+
+**Monitoring:**
+- Sentry: https://sentry.io (error tracking)
+- UptimeRobot: https://uptimerobot.com (uptime monitoring)
+- Cloudflare Analytics (included in free plan)
+
+**IP Blocklists:**
+- Russian IP ranges: https://www.ip2location.com/free/russia-ip-address-ranges
+- Tor exit nodes: https://check.torproject.org/exit-addresses
+- Known attack IPs: https://www.abuseipdb.com
+
+---
+
+**This section added 2026-02-03 to address active cyber threats against Ukrainian businesses.**
+
+---
+
 ## CHANGELOG
+*   **v1.4** [2026-02-03] – **SECURITY CRITICAL:** Added Section 9: CYBER DEFENSE (Ukrainian Market Security). Comprehensive threat model (DDoS, data breaches, reputation attacks), 3-layer protection (infrastructure, application, monitoring), 4 incident response scenarios, business continuity planning. Added pre-commit audit trail logging (legal protection evidence). Total: 900+ lines of real-world security guidance for Ukrainian companies under active cyber threat.
 *   **v1.3** [2026-01-31] – Enhanced Section 8: forbidden-trackers.json v2.0 with npmPackages support, category-based structure, improved seo-check.sh with package.json scanning
 *   **v1.2** [2025-01-27] – Added Section 8: FORBIDDEN TRACKING (Russian Services Protection)
 *   **v1.1** [2025-01-27] – Added Section 7: SEO/GEO Strategy (Ukrainian market)
@@ -2035,4 +2666,4 @@ git commit -m "security: add new russian tracker to blacklist"
 
 ---
 
-*Stored in private repo with RULES_CORE.md. Last updated: 2026-01-31*
+*Stored in public repo (open source). Last updated: 2026-02-03*

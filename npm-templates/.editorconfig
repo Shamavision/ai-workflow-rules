@@ -1,0 +1,106 @@
+# ========================================
+# EditorConfig - Cross-IDE Consistency
+# ========================================
+#
+# This file ensures consistent coding styles across
+# different editors and IDEs (VS Code, Cursor, JetBrains, etc.)
+#
+# Learn more: https://editorconfig.org
+#
+# ========================================
+
+# Top-most EditorConfig file
+root = true
+
+# ----------------------------------------
+# Default Settings (all files)
+# ----------------------------------------
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# ----------------------------------------
+# Markdown Files
+# ----------------------------------------
+
+[*.md]
+# Don't trim trailing whitespace (markdown uses 2 spaces for line breaks)
+trim_trailing_whitespace = false
+
+# ----------------------------------------
+# YAML Files
+# ----------------------------------------
+
+[*.{yml,yaml}]
+indent_size = 2
+
+# ----------------------------------------
+# JSON Files
+# ----------------------------------------
+
+[*.json]
+indent_size = 2
+
+# ----------------------------------------
+# TypeScript/JavaScript
+# ----------------------------------------
+
+[*.{ts,tsx,js,jsx}]
+indent_size = 2
+
+# ----------------------------------------
+# Python
+# ----------------------------------------
+
+[*.py]
+indent_size = 4
+
+# ----------------------------------------
+# Shell Scripts
+# ----------------------------------------
+
+[*.sh]
+indent_size = 2
+end_of_line = lf  # Unix line endings (required for bash)
+
+# ----------------------------------------
+# PowerShell Scripts
+# ----------------------------------------
+
+[*.ps1]
+indent_size = 4
+end_of_line = crlf  # Windows line endings
+
+# ----------------------------------------
+# Makefiles
+# ----------------------------------------
+
+[Makefile]
+indent_style = tab
+
+# ----------------------------------------
+# Package Files
+# ----------------------------------------
+
+[{package.json,package-lock.json}]
+indent_size = 2
+
+# ----------------------------------------
+# Config Files
+# ----------------------------------------
+
+[*.config.{js,ts}]
+indent_size = 2
+
+# ----------------------------------------
+# Environment Files
+# ----------------------------------------
+
+[.env*]
+trim_trailing_whitespace = true
+insert_final_newline = true
