@@ -241,7 +241,7 @@ $ npm run providers
 
 ### Session Management
 
-**New guide:** [.ai/SESSION_MANAGEMENT.md](.ai/SESSION_MANAGEMENT.md)
+**New guide:** [.ai/docs/session-mgmt.md](.ai/docs/session-mgmt.md)
 
 **Key insight:** Session restart costs 18-25k tokens
 
@@ -460,7 +460,7 @@ AI time costs money. Monitor, optimize, never waste.
 - ✅ Continue: Bug fixes, same feature, after compression
 - 🔄 Restart: Pushed to main, >90% tokens, different feature
 
-📖 Full guide: [.ai/SESSION_MANAGEMENT.md](.ai/SESSION_MANAGEMENT.md)
+📖 Full guide: [.ai/docs/session-mgmt.md](.ai/docs/session-mgmt.md)
 
 ---
 
@@ -515,7 +515,7 @@ Works with **90%+ of AI coding tools** through AGENTS.md universal standard:
 
 **60,000+ projects** already use AGENTS.md standard.
 
-📖 **Full compatibility details:** [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md)
+📖 **Full compatibility details:** [.ai/docs/compatibility.md](.ai/docs/compatibility.md)
 
 </details>
 
@@ -535,7 +535,7 @@ Works with **90%+ of AI coding tools** through AGENTS.md universal standard:
 
 **Technical:**
 - [Token Usage](.ai/docs/token-usage.md) - Token cost transparency
-- [AI_COMPATIBILITY.md](AI_COMPATIBILITY.md) - Tested AI assistants matrix
+- [.ai/docs/compatibility.md](.ai/docs/compatibility.md) - Tested AI assistants matrix
 - [INSTALL.md](INSTALL.md) - Detailed installation guide
 
 **Examples:**

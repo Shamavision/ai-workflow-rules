@@ -208,7 +208,7 @@ Proceed anyway? [YES/FIX/SKIP]
 - Auto-runs in pre-commit hook anyway
 - AI should suggest, not force
 
-**Documentation:** See [.ai/docs/code-quality.md](.ai/docs/code-quality.md)
+**Documentation:** See [docs/code-quality.md](docs/code-quality.md)
 
 ---
 

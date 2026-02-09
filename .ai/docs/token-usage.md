@@ -13,8 +13,8 @@
 | **Core Rules** | .ai/rules/core.md | ~15k | ✅ YES |
 | **Product Rules** | .ai/rules/product.md | ~30k | ⚠️ Only for UA market |
 | **Configuration** | `.ai/` folder (3 files) | ~6k | ✅ YES |
-| **Guides** | START.md, ../../INSTALL.md, AI_COMPATIBILITY.md | ~9k | ⚠️ Optional |
-| **Quick Start** | quickstart.md, CHEATSHEET.md | ~1k | ⚠️ Optional |
+| **Guides** | .ai/docs/start.md, INSTALL.md, .ai/docs/compatibility.md | ~9k | ⚠️ Optional |
+| **Quick Start** | quickstart.md, .ai/docs/cheatsheet.md | ~1k | ⚠️ Optional |
 | **Examples** | `examples/` (3 files) | ~3k | ⚠️ Optional |
 | **Templates** | .env.example, configs | ~2k | ⚠️ Optional |
 | **Total** | | **~66k** | |
@@ -56,7 +56,7 @@ AI assistants (Claude Code, Cursor) **automatically read** all markdown files an
 ```bash
 .ai/                    # Configs (6k tokens)
 .ai/rules/core.md           # Core rules (15k tokens)
-START.md                # Quick guide (2k tokens)
+.ai/docs/start.md                # Quick guide (2k tokens)
 scripts/seo-check.sh    # Security check (3k tokens)
 .git/hooks/pre-commit   # Git hook (4k tokens)
 ```
@@ -96,14 +96,14 @@ Some files are only needed during setup. **Safe to delete after reading:**
 
 | File | Tokens Saved | When to Delete |
 |------|-------------|----------------|
-| `../../INSTALL.md` | ~3k | After installation complete |
-| `AI_COMPATIBILITY.md` | ~4k | After choosing your AI |
-| `TOKEN_USAGE.md` | ~1k | After reading this (yes, this file!) |
+| `INSTALL.md` | ~3k | After installation complete |
+| `.ai/docs/compatibility.md` | ~4k | After choosing your AI |
+| `.ai/docs/token-usage.md` | ~1k | After reading this (yes, this file!) |
 | `examples/` | ~3k | After understanding patterns |
 
 **How to delete:**
 ```bash
-rm ../../INSTALL.md AI_COMPATIBILITY.md TOKEN_USAGE.md
+rm INSTALL.md .ai/docs/compatibility.md .ai/docs/token-usage.md
 rm -rf examples/
 ```
 
@@ -138,12 +138,12 @@ Total: 90k / 200k (45% used)
 ### Documentation (Markdown)
 - .ai/rules/core.md: ~15k (737 lines × ~20 tokens/line)
 - .ai/rules/product.md: ~30k (2037 lines × ~15 tokens/line)
-- START.md: ~2k (100 lines × ~20 tokens/line)
-- ../../INSTALL.md: ~3k (150 lines × ~20 tokens/line)
-- AI_COMPATIBILITY.md: ~4k (200 lines × ~20 tokens/line)
+- .ai/docs/start.md: ~2k (100 lines × ~20 tokens/line)
+- INSTALL.md: ~3k (150 lines × ~20 tokens/line)
+- .ai/docs/compatibility.md: ~4k (200 lines × ~20 tokens/line)
 - quickstart.md: ~0.5k (25 lines × ~20 tokens/line)
-- CHEATSHEET.md: ~0.5k (25 lines × ~20 tokens/line)
-- TOKEN_USAGE.md: ~1k (50 lines × ~20 tokens/line)
+- .ai/docs/cheatsheet.md: ~0.5k (25 lines × ~20 tokens/line)
+- .ai/docs/token-usage.md: ~1k (50 lines × ~20 tokens/line)
 
 ### Configuration (JSON)
 - `.ai/token-limits.json`: ~1k (structured data)
@@ -176,7 +176,7 @@ Total: 90k / 200k (45% used)
 
 ### Q: What if I hit token limit?
 **A:**
-1. Delete optional files (../../INSTALL.md, examples/, etc.)
+1. Delete optional files (INSTALL.md, examples/, etc.)
 2. Use `//COMPACT` command to compress context
 3. Restart session (fresh context)
 4. Upgrade to Pro plan
@@ -700,7 +700,7 @@ Based on actual variance data:
 ## Related Files
 
 - **[quickstart.md](quickstart.md)** - Fast setup guide
-- **[../../INSTALL.md](../../INSTALL.md)** - Installation options (minimal vs full)
+- **[INSTALL.md](../../INSTALL.md)** - Installation options (minimal vs full)
 - **[.ai/token-limits.json](.ai/token-limits.json)** - Your actual token limits and usage
 
 ---

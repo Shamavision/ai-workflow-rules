@@ -329,7 +329,7 @@ See `.ai/token-limits.json` PRESETS section for up-to-date limits:
 
 - **Quick Start:** [`START.md`](START.md)
 - **Installation:** [`INSTALL.md`](../../INSTALL.md)
-- **Documentation:** [`README.md`](README.md)
+- **Documentation:** [`README.md`](../../README.md)
 - **Issues:** [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
 
 ---

@@ -422,7 +422,7 @@
 - Run `npm run token-status` for usage dashboard
 
 **Session Management:**
-- See `.ai/SESSION_MANAGEMENT.md` for best practices
+- See `.ai/docs/session-mgmt.md` for best practices
 - Continue vs restart decision guide
 
 **Framework:**

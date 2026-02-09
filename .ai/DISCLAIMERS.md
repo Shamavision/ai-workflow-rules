@@ -201,7 +201,7 @@ We will respond within 72 hours.
 
 ## References
 
-- [Threat Model](.ai/THREAT_MODEL.md) - What we protect vs don't
+- [Threat Model](THREAT_MODEL.md) - What we protect vs don't
 - [Security Policy](.ai/security-policy.json) - Detection rules
 - [AI Protection Policy](.ai/ai-protection-policy.json) - AI-specific rules
 - [GPL v3 License](../LICENSE) - Full license text

@@ -4,7 +4,7 @@
 
 This project uses **AI Workflow Rules Framework v7.1 Universal** — a set of rules for safe and efficient AI-assisted development.
 
-**✨ New in v7.1:** Universal AGENTS.md support for automatic rule loading across all AI tools!
+**✨ New in v7.1:** Universal ../../AGENTS.md support for automatic rule loading across all AI tools!
 
 ---
 
@@ -13,7 +13,7 @@ This project uses **AI Workflow Rules Framework v7.1 Universal** — a set of ru
 **⚡ Fastest way to start any AI session:**
 
 Just type `//START` in your first message and the AI will:
-1. Read AGENTS.md automatically
+1. Read ../../AGENTS.md automatically
 2. Execute Session Start Protocol
 3. Display `[SESSION START]` confirmation
 4. Start working with full context
@@ -24,19 +24,19 @@ Just type `//START` in your first message and the AI will:
 
 ## 📖 Automatic Loading (CLI/Cursor)
 
-**Some AI tools load rules automatically from [`AGENTS.md`](AGENTS.md):**
+**Some AI tools load rules automatically from [`../../AGENTS.md`](../../AGENTS.md):**
 
 ✅ **Full auto-load (CLI only):**
-- Claude Code CLI (loads AGENTS.md + hooks work)
-- Cursor (loads AGENTS.md)
-- Windsurf (loads AGENTS.md)
-- Continue.dev (loads AGENTS.md)
-- Aider (loads AGENTS.md)
+- Claude Code CLI (loads ../../AGENTS.md + hooks work)
+- Cursor (loads ../../AGENTS.md)
+- Windsurf (loads ../../AGENTS.md)
+- Continue.dev (loads ../../AGENTS.md)
+- Aider (loads ../../AGENTS.md)
 
-⚠️ **Partial support (AGENTS.md not auto-loaded, but CLAUDE.md works):**
+⚠️ **Partial support (../../AGENTS.md not auto-loaded, but CLAUDE.md works):**
 - Claude Code VSCode Extension ✅ (Use `//START` - works via CLAUDE.md Layer 0!)
-- OpenAI Codex (AGENTS.md support varies)
-- Google Jules (AGENTS.md support varies)
+- OpenAI Codex (../../AGENTS.md support varies)
+- Google Jules (../../AGENTS.md support varies)
 
 💡 **Recommendation:** Use `//START` command to guarantee Session Start across all tools!
 ✨ **NEW:** VSCode Extension now fully supported via `.claude/CLAUDE.md` auto-loading!
@@ -45,12 +45,12 @@ Just type `//START` in your first message and the AI will:
 
 ## 📖 Manual Loading (Fallback)
 
-### For AI tools WITHOUT AGENTS.md support (ChatGPT Web, etc.):
+### For AI tools WITHOUT ../../AGENTS.md support (ChatGPT Web, etc.):
 
 ## What You Need to Do
 
 ### 1. Read the Core Rules
-**File:** [`.ai/rules/core.md`](.ai/rules/core.md)
+**File:** [`../rules/core.md`](../rules/core.md)
 
 This file contains:
 - Session Start Protocol (mandatory!)
@@ -60,7 +60,7 @@ This file contains:
 - Communication protocol (language rules)
 
 ### 2. Read the Product Rules
-**File:** [`.ai/rules/product.md`](.ai/rules/product.md)
+**File:** [`../rules/product.md`](../rules/product.md)
 
 This file contains:
 - i18n architecture (Ukrainian market focus)
@@ -94,16 +94,16 @@ All rules are **mandatory** during this session:
 ## Important Notes
 
 ### For AI Tools WITH Automatic Loading (Claude Code, Cursor, Windsurf, etc.)
-✅ You already loaded RULES from `AGENTS.md` automatically — this file is optional reference.
+✅ You already loaded RULES from `../../AGENTS.md` automatically — this file is optional reference.
 
 **Auto-loaded file:**
-- `AGENTS.md` (universal standard) ⭐
+- `../../AGENTS.md` (universal standard) ⭐
 
 ### For ChatGPT Web / Gemini Web / Other Manual AI
 ⚠️ You need to **manually read** RULES at the start of each session:
 
 **How to use:**
-1. Read [`AGENTS.md`](AGENTS.md) or [`.ai/rules/core.md`](.ai/rules/core.md)
+1. Read [`../../AGENTS.md`](../../AGENTS.md) or [`../rules/core.md`](../rules/core.md)
 2. Tell the AI: "Follow these rules throughout our conversation"
 3. Start working
 
@@ -112,7 +112,7 @@ All rules are **mandatory** during this session:
 - Security rules (no secrets, no russian trackers)
 - Code quality standards
 - Basic workflow (discuss before changing)
-- Check AGENTS.md periodically for guidance
+- Check ../../AGENTS.md periodically for guidance
 
 ---
 
@@ -162,11 +162,18 @@ project/
 ├── scripts/
 │   └── seo-check.sh               # Pre-deploy security check (9 audits)
 │
-├── .ai/rules/core.md                  # Main AI workflow rules (YOU ARE HERE)
-├── .ai/rules/product.md               # Product-specific rules (Ukrainian market)
-├── START.md                       # This file
-├── ../../INSTALL.md                     # Installation guide
-└── AI_COMPATIBILITY.md            # Which AI assistants are supported
+├── .ai/                           # Framework hub (v9.1)
+│   ├── contexts/                  # 4 context presets
+│   ├── docs/                      # Documentation
+│   │   ├── start.md              # This file
+│   │   ├── compatibility.md       # AI assistants support
+│   │   ├── quickstart.md          # 5-minute setup
+│   │   └── ...                    # Other guides
+│   └── rules/                     # Full rules
+│       ├── core.md               # Main workflow rules
+│       └── product.md            # Ukrainian market specifics
+├── .claude/CLAUDE.md              # Session instructions
+└── ../../AGENTS.md                      # Navigation hub
 ```
 
 ---
@@ -185,8 +192,8 @@ project/
 
 ## Ready to Start?
 
-1. ✅ Read `.ai/rules/core.md` (5 min)
-2. ✅ Read `.ai/rules/product.md` (3 min)
+1. ✅ Read `../rules/core.md` (5 min)
+2. ✅ Read `../rules/product.md` (3 min)
 3. ✅ Check `.ai/token-limits.json` (1 min)
 4. ✅ Follow the rules
 
@@ -199,7 +206,7 @@ project/
 **AI Workflow Rules Framework v7.1 Universal**
 *Made in Ukraine 🇺🇦 • Open Source (MIT License)*
 
-**✨ New:** AGENTS.md support for universal AI compatibility
+**✨ New:** ../../AGENTS.md support for universal AI compatibility
 
 [GitHub](https://github.com/Shamavision/ai-workflow-rules) • [Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
 

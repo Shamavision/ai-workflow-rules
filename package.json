@@ -28,7 +28,8 @@
     "test": "node bin/cli.js --help",
     "token-status": "bash scripts/token-status.sh || pwsh scripts/token-status.ps1 || powershell scripts/token-status.ps1",
     "estimate-tokens": "bash scripts/estimate-tokens.sh",
-    "providers": "cat .ai/docs/provider-comparison.md"
+    "providers": "cat .ai/docs/provider-comparison.md",
+    "check-links": "bash scripts/check-links.sh"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,7 @@
   },
   "homepage": "https://github.com/Shamavision/ai-workflow-rules#readme",
   "author": "Shamavision <shamavision@wellme.ua>",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "dependencies": {
     "inquirer": "^8.2.6",
     "fs-extra": "^11.2.0",

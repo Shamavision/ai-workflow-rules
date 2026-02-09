@@ -24,7 +24,7 @@ If ANY of these conditions apply:
    - If `config.context = "standard"` → Read `.ai/contexts/standard.context.md` (~14k tokens, v9.1 optimized)
    - If `config.context = "ukraine-full"` → Read `.ai/contexts/ukraine-full.context.md` (~18k tokens, v9.1 optimized)
    - If `config.context = "enterprise"` → Read `.ai/contexts/enterprise.context.md` (~23k tokens, v9.1 optimized)
-   - **Fallback:** If no config or contexts → Read `RULES_CORE.md` (legacy mode)
+   - **Fallback:** If no config or contexts → Read `.ai/rules/core.md` (legacy mode)
 3. **Token budget:** Read `.ai/token-limits.json` for tracking
 
 **Why this matters:** Selective loading saves 40-70% tokens for specific users.
@@ -144,7 +144,7 @@ When user sends these commands:
 
 **💰 Token savings: Continue instead of restart = save 18-25k per avoided restart**
 
-**📖 Full guide:** [.ai/docs/session-mgmt.md](.ai/docs/session-mgmt.md)
+**📖 Full guide:** [.ai/docs/session-mgmt.md](../.ai/docs/session-mgmt.md)
 
 ---
 
@@ -238,11 +238,11 @@ Verify at session start:
 - ✅ Enterprise: Now self-contained (~23k)
 
 **Session Management Best Practices:**
-- ✅ New guide: `.ai/SESSION_MANAGEMENT.md`
+- ✅ New guide: [`.ai/docs/session-mgmt.md`](../.ai/docs/session-mgmt.md)
 - ✅ Continue vs restart decision guide
 - ✅ Platform-specific tips (VSCode, Cursor, Windsurf)
 - ✅ Expected savings: 50% fewer restarts = ~35-50k tokens/day
 
 **Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
 
-**Migration:** Automatic - contexts updated in place. Read SESSION_MANAGEMENT.md for best practices.
+**Migration:** Automatic - contexts updated in place. Read [.ai/docs/session-mgmt.md](../.ai/docs/session-mgmt.md) for best practices.

@@ -14,7 +14,7 @@ Choose the installation method that works best for your environment.
 | **Full** | ~66k tokens | Pro/Team users, all features |
 | **Automatic** | ~66k tokens | Everyone (script does everything) |
 
-📖 **Details:** See [TOKEN_USAGE.md](TOKEN_USAGE.md)
+📖 **Details:** See [.ai/docs/token-usage.md](.ai/docs/token-usage.md)
 
 ---
 
@@ -63,7 +63,7 @@ cd ai-workflow-rules
    cp -r .ai /path/to/your-project/
    cp RULES_CORE.md /path/to/your-project/
    cp RULES_PRODUCT.md /path/to/your-project/
-   cp START.md /path/to/your-project/
+   cp .ai/docs/start.md /path/to/your-project/
 
    # (Optional) Copy scripts for pre-deploy checks
    cp -r scripts /path/to/your-project/
@@ -98,7 +98,7 @@ cd ai-workflow-rules
    ln -s .ai-rules/.ai .ai
    ln -s .ai-rules/RULES_CORE.md RULES_CORE.md
    ln -s .ai-rules/RULES_PRODUCT.md RULES_PRODUCT.md
-   ln -s .ai-rules/START.md START.md
+   ln -s .ai-rules/.ai/docs/start.md .ai/docs/start.md
    ln -s .ai-rules/scripts scripts
    ```
 
@@ -144,16 +144,16 @@ git pull origin main
 
 1. **Download the repository** (or copy files manually)
 
-2. **Open [`START.md`](START.md)** in the repository
+2. **Open [`.ai/docs/start.md`](.ai/docs/start.md)** in the repository
 
 3. **Copy the content** of the following files:
-   - `START.md` — overview
+   - `.ai/docs/start.md` — overview
    - `RULES_CORE.md` — main rules
    - `RULES_PRODUCT.md` — product-specific rules
 
 4. **Paste into your AI chat:**
    ```
-   [Paste START.md content]
+   [Paste .ai/docs/start.md content]
 
    Please read and follow these rules throughout our conversation.
    ```
@@ -180,7 +180,7 @@ cp -r .ai /path/to/project/
 Copy-Item -Recurse -Path ".ai" -Destination "C:\path\to\project\"
 Copy-Item "RULES_CORE.md" -Destination "C:\path\to\project\"
 Copy-Item "RULES_PRODUCT.md" -Destination "C:\path\to\project\"
-Copy-Item "START.md" -Destination "C:\path\to\project\"
+Copy-Item ".ai/docs/start.md" -Destination "C:\path\to\project\"
 ```
 
 **Pre-commit hooks on Windows:**
@@ -300,8 +300,8 @@ git commit -m "chore: update AI rules submodule"
 
 After installation:
 
-1. **Read [`START.md`](START.md)** — quick onboarding for AI assistants
-2. **Read [`AI_COMPATIBILITY.md`](AI_COMPATIBILITY.md)** — check which features work with your AI
+1. **Read [`.ai/docs/start.md`](.ai/docs/start.md)** — quick onboarding for AI assistants
+2. **Read [`.ai/docs/compatibility.md`](.ai/docs/compatibility.md)** — check which features work with your AI
 3. **Customize `.ai/token-limits.json`** — set your provider and plan
 4. **Run `./scripts/seo-check.sh`** — verify your project is clean
 5. **Start working** with your AI assistant!
