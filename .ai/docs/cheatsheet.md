@@ -249,11 +249,11 @@ git commit --no-verify -m "docs: legitimate exception"
 
 | File | What's Inside | Reading Time |
 |------|---------------|--------------|
-| [QUICKSTART.md](QUICKSTART.md) | 5-minute setup | 5 min |
-| [RULES_CORE.md](RULES_CORE.md) | Main workflow rules | 15 min |
-| [RULES_PRODUCT.md](RULES_PRODUCT.md) | UA market specifics | 10 min |
-| [TOKEN_USAGE.md](TOKEN_USAGE.md) | Token optimization | 5 min |
-| [START.md](START.md) | AI onboarding | 3 min |
+| [quickstart.md](quickstart.md) | 5-minute setup | 5 min |
+| [.ai/rules/core.md](../rules/core.md) | Main workflow rules | 15 min |
+| [.ai/rules/product.md](../rules/product.md) | UA market specifics | 10 min |
+| [token-usage.md](token-usage.md) | Token optimization | 5 min |
+| [start.md](start.md) | AI onboarding | 3 min |
 
 ---
 
@@ -263,6 +263,6 @@ git commit --no-verify -m "docs: legitimate exception"
 
 Questions? [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
 
-**AI Workflow Rules Framework v8.0** • Token Control v3.0 • Made in Ukraine 🇺🇦
+**AI Workflow Rules Framework v9.1** • Token Control v3.0 • Made in Ukraine 🇺🇦
 
 </div>

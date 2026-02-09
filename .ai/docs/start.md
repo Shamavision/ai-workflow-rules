@@ -50,7 +50,7 @@ Just type `//START` in your first message and the AI will:
 ## What You Need to Do
 
 ### 1. Read the Core Rules
-**File:** [`RULES_CORE.md`](RULES_CORE.md)
+**File:** [`.ai/rules/core.md`](.ai/rules/core.md)
 
 This file contains:
 - Session Start Protocol (mandatory!)
@@ -60,7 +60,7 @@ This file contains:
 - Communication protocol (language rules)
 
 ### 2. Read the Product Rules
-**File:** [`RULES_PRODUCT.md`](RULES_PRODUCT.md)
+**File:** [`.ai/rules/product.md`](.ai/rules/product.md)
 
 This file contains:
 - i18n architecture (Ukrainian market focus)
@@ -103,7 +103,7 @@ All rules are **mandatory** during this session:
 ⚠️ You need to **manually read** RULES at the start of each session:
 
 **How to use:**
-1. Read [`AGENTS.md`](AGENTS.md) or [`RULES_CORE.md`](RULES_CORE.md)
+1. Read [`AGENTS.md`](AGENTS.md) or [`.ai/rules/core.md`](.ai/rules/core.md)
 2. Tell the AI: "Follow these rules throughout our conversation"
 3. Start working
 
@@ -162,10 +162,10 @@ project/
 ├── scripts/
 │   └── seo-check.sh               # Pre-deploy security check (9 audits)
 │
-├── RULES_CORE.md                  # Main AI workflow rules (YOU ARE HERE)
-├── RULES_PRODUCT.md               # Product-specific rules (Ukrainian market)
+├── .ai/rules/core.md                  # Main AI workflow rules (YOU ARE HERE)
+├── .ai/rules/product.md               # Product-specific rules (Ukrainian market)
 ├── START.md                       # This file
-├── INSTALL.md                     # Installation guide
+├── ../../INSTALL.md                     # Installation guide
 └── AI_COMPATIBILITY.md            # Which AI assistants are supported
 ```
 
@@ -185,8 +185,8 @@ project/
 
 ## Ready to Start?
 
-1. ✅ Read `RULES_CORE.md` (5 min)
-2. ✅ Read `RULES_PRODUCT.md` (3 min)
+1. ✅ Read `.ai/rules/core.md` (5 min)
+2. ✅ Read `.ai/rules/product.md` (3 min)
 3. ✅ Check `.ai/token-limits.json` (1 min)
 4. ✅ Follow the rules
 

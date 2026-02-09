@@ -113,7 +113,7 @@ This framework supports multiple AI assistants through **AGENTS.md universal sta
 3. Tell ChatGPT: "Follow these rules throughout our conversation"
 
 **Workarounds:**
-- Copy `RULES_CORE.md` content at session start
+- Copy `.ai/rules/core.md` content at session start
 - Manually check `.ai/forbidden-trackers.json` before adding services
 - Re-paste rules if ChatGPT forgets (long conversations)
 
@@ -138,7 +138,7 @@ This framework supports multiple AI assistants through **AGENTS.md universal sta
 - ❌ Pre-commit hooks (unless running locally)
 
 **Installation:**
-- Include `RULES_CORE.md` content in API system prompt
+- Include `.ai/rules/core.md` content in API system prompt
 - Use `.ai/token-limits.json` to track API usage
 
 **Example API Usage:**
@@ -148,7 +148,7 @@ const response = await openai.chat.completions.create({
   messages: [
     {
       role: "system",
-      content: fs.readFileSync('RULES_CORE.md', 'utf8') // Inject rules
+      content: fs.readFileSync('.ai/rules/core.md', 'utf8') // Inject rules
     },
     { role: "user", content: "Your task here" }
   ]
@@ -220,7 +220,7 @@ const response = await openai.chat.completions.create({
 **Installation:**
 1. Install **AI Assistant** plugin in JetBrains IDE
 2. Copy `.ai/` and `RULES_*.md` to project
-3. Configure plugin to read `RULES_CORE.md` at startup (if supported)
+3. Configure plugin to read `.ai/rules/core.md` at startup (if supported)
 
 **Notes:**
 - JetBrains AI support varies by IDE version and plugin
@@ -284,7 +284,7 @@ const response = await openai.chat.completions.create({
 
 To verify compatibility with your AI assistant:
 
-- [ ] AI reads `RULES_CORE.md` (automatic or manual)
+- [ ] AI reads `.ai/rules/core.md` (automatic or manual)
 - [ ] AI follows Russian service prohibition (check `.ai/forbidden-trackers.json`)
 - [ ] AI respects language rules (Russian dialogue, English code)
 - [ ] Token tracking works (if applicable)
@@ -328,7 +328,7 @@ See `.ai/token-limits.json` PRESETS section for up-to-date limits:
 ## Need Help?
 
 - **Quick Start:** [`START.md`](START.md)
-- **Installation:** [`INSTALL.md`](INSTALL.md)
+- **Installation:** [`INSTALL.md`](../../INSTALL.md)
 - **Documentation:** [`README.md`](README.md)
 - **Issues:** [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
 

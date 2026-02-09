@@ -10,7 +10,7 @@ Get up and running with AI Workflow Rules Framework in 5 minutes.
 ```bash
 # Copy essentials only
 cp -r .ai /path/to/your-project/
-cp RULES_CORE.md START.md /path/to/your-project/
+cp .ai/rules/core.md .ai/docs/start.md /path/to/your-project/
 cp scripts/seo-check.sh /path/to/your-project/scripts/
 ```
 
@@ -18,8 +18,8 @@ cp scripts/seo-check.sh /path/to/your-project/scripts/
 ```bash
 # Copy everything
 cp -r .ai /path/to/your-project/
-cp RULES_*.md START.md INSTALL.md AI_COMPATIBILITY.md /path/to/your-project/
-cp QUICKSTART.md CHEATSHEET.md TOKEN_USAGE.md /path/to/your-project/
+cp RULES_*.md .ai/docs/start.md INSTALL.md AI_COMPATIBILITY.md /path/to/your-project/
+cp QUICK.ai/docs/start.md CHEATSHEET.md .ai/docs/token-usage.md /path/to/your-project/
 cp -r scripts examples /path/to/your-project/
 cp .env.example .editorconfig /path/to/your-project/
 cp -r .vscode /path/to/your-project/
@@ -84,7 +84,7 @@ DATABASE_URL=postgresql://...
 
 # Expected output:
 # ✅ token-limits.json
-# ✅ RULES_CORE.md
+# ✅ .ai/rules/core.md
 # ✅ Pre-commit hook
 # ✅ seo-check works
 ```
@@ -99,7 +99,7 @@ If anything shows ❌, follow the instructions to fix it.
 Just start coding - AI automatically reads RULES ✅
 
 ### For ChatGPT / Gemini:
-1. Open [`START.md`](START.md)
+1. Open [`.ai/docs/start.md`](.ai/docs/start.md)
 2. Copy content into first message
 3. Tell AI: "Follow these rules"
 
@@ -131,9 +131,9 @@ Check `examples/` folder:
 - `env-usage.ts` - environment variables
 
 ### Want Full Docs?
-- [RULES_CORE.md](RULES_CORE.md) - Main rules (15 min read)
-- [RULES_PRODUCT.md](RULES_PRODUCT.md) - Product specifics (10 min read)
-- [TOKEN_USAGE.md](TOKEN_USAGE.md) - Token optimization
+- [.ai/rules/core.md](.ai/rules/core.md) - Main rules (15 min read)
+- [.ai/rules/product.md](.ai/rules/product.md) - Product specifics (10 min read)
+- [.ai/docs/token-usage.md](.ai/docs/token-usage.md) - Token optimization
 
 ---
 
@@ -141,7 +141,7 @@ Check `examples/` folder:
 
 ### "AI doesn't see the rules"
 - **Claude Code/Cursor:** Restart IDE
-- **ChatGPT:** Copy-paste START.md manually
+- **ChatGPT:** Copy-paste .ai/docs/start.md manually
 - **GitHub Copilot:** Add key rules as code comments
 
 ### "Pre-commit hook doesn't work"
@@ -153,7 +153,7 @@ chmod +x .git/hooks/pre-commit
 ```
 
 ### "Ran out of tokens on setup"
-See [TOKEN_USAGE.md](TOKEN_USAGE.md) for:
+See [.ai/docs/token-usage.md](.ai/docs/token-usage.md) for:
 - Minimal installation (30k tokens)
 - Files you can delete after reading
 - Token optimization tips
