@@ -14,6 +14,17 @@ If ANY of these conditions apply:
 
 → **STOP and execute Session Start Protocol immediately**
 
+### Step 1.5: 🔴 TOKEN PRE-FLIGHT CHECK (CRITICAL!)
+
+**BEFORE starting ANY task estimated >20k tokens:**
+
+1. ASK: "How many tokens used TODAY already?"
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF task > remaining → STOP + WARN + GET APPROVAL
+4. NEVER start >20k work without this check!
+
+**Failure = 2 days downtime. NON-NEGOTIABLE!**
+
 ### Step 2: Load Project Rules (Smart Context Loading)
 
 **NEW (v8.1 Modular):** Context-based loading for token efficiency

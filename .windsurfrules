@@ -5,6 +5,16 @@
 # Update via: npm run sync-rules (or bash scripts/sync-rules.sh)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+## 🔴 TOKEN PRE-FLIGHT CHECK (MANDATORY!)
+
+**BEFORE ANY task >20k tokens:**
+1. ASK: "How many tokens used TODAY?"
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF insufficient → STOP + WARN + GET APPROVAL
+4. NEVER start without check!
+
+**Failure = 2 days downtime!**
+
 ## 🚀 SESSION START PROTOCOL (MANDATORY)
 
 **BEFORE any work in this project, you MUST:**

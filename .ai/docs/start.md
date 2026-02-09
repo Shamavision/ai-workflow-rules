@@ -1,5 +1,15 @@
 # 🤖 AI Assistant: Read This First
 
+## 🔴 TOKEN PRE-FLIGHT CHECK (CRITICAL!)
+
+**BEFORE ANY task >20k tokens, you MUST:**
+1. ASK me: "How many tokens used TODAY?"
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF task > remaining → STOP + WARN + GET MY APPROVAL
+4. NEVER start >20k work without this!
+
+**Failure = 2 days downtime. NON-NEGOTIABLE!**
+
 ## Project Context
 
 This project uses **AI Workflow Rules Framework v7.1 Universal** — a set of rules for safe and efficient AI-assisted development.

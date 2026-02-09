@@ -493,6 +493,29 @@ d3125a2e - fix(scripts): make all scripts executable (chmod +x)
 **Total changes:** 51 files, 5751 insertions(+), 124 deletions(-)
 
 **Phases completed:** 1-7 (detailed audit)
-**Phases deferred:** 8-10 (Documentation Quality, UX Flow, Performance - optional deep audit)
+**Phases deferred:** 8-10 (Documentation Quality, UX Flow, Performance - optional deep audit, postponed to next day due to daily token limit)
+
+---
+
+## Critical Improvement: TOKEN PRE-FLIGHT CHECK
+
+**Issue discovered during audit:** AI did NOT check daily token usage before starting comprehensive audit (50-70k task), violating MEMORY.md CRITICAL RULE #1.
+
+**Fix applied:** Added **TOKEN PRE-FLIGHT CHECK** to all IDE configurations:
+- `.claude/CLAUDE.md` (Claude Code)
+- `.cursorrules` (Cursor IDE)
+- `.windsurfrules` (Windsurf IDE)
+- `.ai/docs/start.md` (ChatGPT/Gemini/manual load)
+- `.ai/AI-ENFORCEMENT.md` (automatic protocols)
+
+**Protocol:** BEFORE starting ANY task >20k tokens, AI MUST:
+1. Ask user: "How many tokens used TODAY?"
+2. Calculate: remaining = daily_limit - daily_used
+3. IF insufficient → STOP + WARN + GET APPROVAL
+4. NEVER start without explicit approval
+
+**Impact:** Prevents rate limit violations (2 days downtime), ensures user trust for multi-layered product.
+
+---
 
 **Made in Ukraine 🇺🇦**

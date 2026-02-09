@@ -6,6 +6,21 @@
 
 ## 🔴 CRITICAL PROTOCOLS (Zero Tolerance)
 
+### 0. TOKEN PRE-FLIGHT CHECK (HIGHEST PRIORITY!)
+
+**TRIGGER:** Task estimated >20k tokens
+
+**MANDATORY STEPS:**
+1. ASK: "How many tokens used TODAY?"
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF task > remaining → STOP + WARN + GET APPROVAL
+4. NEVER proceed without explicit approval!
+
+**Failure consequences:**
+- Rate limit = 2 days downtime
+- Incomplete work = worse than not starting
+- Damaged trust = critical for complex product
+
 ### 1. POST-PUSH COMPRESSION (MANDATORY)
 
 **TRIGGERS (any of these = MUST compress):**
