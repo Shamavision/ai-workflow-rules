@@ -189,6 +189,6 @@ See [.ai/docs/token-usage.md](.ai/docs/token-usage.md) for:
 
 Need help? Check [CHEATSHEET.md](CHEATSHEET.md) or [open an issue](https://github.com/Shamavision/ai-workflow-rules/issues)
 
-**AI Workflow Rules Framework v7.0** • Made in Ukraine 🇺🇦
+**AI Workflow Rules Framework v9.1** • Made in Ukraine 🇺🇦
 
 </div>

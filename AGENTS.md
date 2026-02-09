@@ -52,6 +52,7 @@
 | [Cheatsheet](.ai/docs/cheatsheet.md) | Commands & shortcuts reference | ~3k |
 | [Token Usage](.ai/docs/token-usage.md) | Understanding token costs | ~3k |
 | [Session Management](.ai/docs/session-mgmt.md) | When to restart vs continue | ~4k |
+| [Code Quality](.ai/docs/code-quality.md) | Lint setup & pre-commit checks | ~3k |
 | [Compatibility](.ai/docs/compatibility.md) | Supported AI tools & models | ~3k |
 | [Getting Started](.ai/docs/start.md) | Onboarding guide | ~2k |
 | [Provider Comparison](.ai/docs/provider-comparison.md) | AI provider comparison | ~3k |
