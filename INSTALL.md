@@ -59,11 +59,10 @@ cd ai-workflow-rules
 
 2. **Copy files to your project:**
    ```bash
-   # Copy essential files
+   # Copy framework files
    cp -r .ai /path/to/your-project/
-   cp RULES_CORE.md /path/to/your-project/
-   cp RULES_PRODUCT.md /path/to/your-project/
-   cp .ai/docs/start.md /path/to/your-project/
+   cp -r .claude /path/to/your-project/
+   cp AGENTS.md /path/to/your-project/
 
    # (Optional) Copy scripts for pre-deploy checks
    cp -r scripts /path/to/your-project/
@@ -96,9 +95,8 @@ cd ai-workflow-rules
    ```bash
    # Link configuration files
    ln -s .ai-rules/.ai .ai
-   ln -s .ai-rules/RULES_CORE.md RULES_CORE.md
-   ln -s .ai-rules/RULES_PRODUCT.md RULES_PRODUCT.md
-   ln -s .ai-rules/.ai/docs/start.md .ai/docs/start.md
+   ln -s .ai-rules/.claude .claude
+   ln -s .ai-rules/AGENTS.md AGENTS.md
    ln -s .ai-rules/scripts scripts
    ```
 
@@ -147,9 +145,9 @@ git pull origin main
 2. **Open [`.ai/docs/start.md`](.ai/docs/start.md)** in the repository
 
 3. **Copy the content** of the following files:
-   - `.ai/docs/start.md` — overview
-   - `RULES_CORE.md` — main rules
-   - `RULES_PRODUCT.md` — product-specific rules
+   - `.ai/docs/start.md` — quick start guide
+   - `.ai/rules/core.md` — full rules
+   - `.ai/rules/product.md` — product-specific rules (if needed)
 
 4. **Paste into your AI chat:**
    ```
@@ -176,11 +174,10 @@ cp -r .ai /path/to/project/
 
 **PowerShell:**
 ```powershell
-# Copy files
+# Copy framework files
 Copy-Item -Recurse -Path ".ai" -Destination "C:\path\to\project\"
-Copy-Item "RULES_CORE.md" -Destination "C:\path\to\project\"
-Copy-Item "RULES_PRODUCT.md" -Destination "C:\path\to\project\"
-Copy-Item ".ai/docs/start.md" -Destination "C:\path\to\project\"
+Copy-Item -Recurse -Path ".claude" -Destination "C:\path\to\project\"
+Copy-Item "AGENTS.md" -Destination "C:\path\to\project\"
 ```
 
 **Pre-commit hooks on Windows:**
@@ -217,8 +214,8 @@ After installation, verify everything works:
 ls -la .ai/
 # Should show: forbidden-trackers.json, locale-context.json, token-limits.json
 
-ls -la RULES_*.md
-# Should show: RULES_CORE.md, RULES_PRODUCT.md
+ls -la AGENTS.md .claude/
+# Should show: AGENTS.md, .claude/CLAUDE.md
 ```
 
 ### 2. Test pre-commit hook (if installed):
@@ -261,9 +258,9 @@ nano .ai/token-limits.json
 ### "AI doesn't see the rules"
 
 **Claude Code / Cursor:**
-- Rules should be detected automatically
+- Rules should be detected automatically via AGENTS.md
 - Try restarting the IDE
-- Check that `RULES_CORE.md` is in project root
+- Check that `AGENTS.md` is in project root
 
 **ChatGPT:**
 - Use Option C (manual copy-paste)
@@ -318,8 +315,8 @@ After installation:
 
 <div align="center">
 
-**AI Workflow Rules Framework v7.0**
-*Made in Ukraine 🇺🇦 • Open Source (MIT License)*
+**AI Workflow Rules Framework v9.1.1**
+*Made in Ukraine 🇺🇦 • Open Source (GPL-3.0 License)*
 
 [GitHub](https://github.com/Shamavision/ai-workflow-rules) • [Website](https://wellme.ua)
 

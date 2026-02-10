@@ -400,10 +400,13 @@
     "Emergency reserve (10-15%) always protected",
     "Smart batching suggests optimizations automatically",
     "Context compression auto-triggers at 50% (saves 40-60% tokens)",
-    "AI automatically updates this file - no manual tracking needed"
+    "NOTE: Token tracking is MANUAL - AI cannot auto-update JSON files",
+    "Update daily_usage manually or use provider's dashboard for tracking",
+    "This file serves as reference/template for token management protocols"
   ],
 
   "history": {
-    "_comment": "Daily usage tracking - AI fills this automatically"
+    "_comment": "Manual tracking only - record daily usage here if needed",
+    "_example": "2026-02-10: 145k/150k (daily limit approached)"
   }
 }

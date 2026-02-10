@@ -9,7 +9,7 @@ Production-ready security framework for AI-assisted development.
 **Stop leaks. Save tokens. Stay compliant.**
 
 <p>
-  <img src="https://img.shields.io/badge/version-9.1%20Optimization-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
+  <img src="https://img.shields.io/badge/version-9.1.1-FAAF0D?style=flat-square&labelColor=1D1D1B" alt="Version">
   <img src="https://img.shields.io/badge/license-GPL%20v3-blue?style=flat-square&labelColor=1D1D1B" alt="License">
   <img src="https://img.shields.io/badge/status-Production-success?style=flat-square&labelColor=1D1D1B" alt="Status">
   <img src="https://img.shields.io/badge/AGENTS.md-Universal-blue?style=flat-square&labelColor=1D1D1B" alt="AGENTS.md">

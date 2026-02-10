@@ -108,11 +108,11 @@ $ claude code
 
 # AI responds:
 [SESSION START]
-✓ Context loaded: ukraine-full (v8.1)
-✓ Token budget: ~25k for rules (16.7% of daily)
+✓ Context loaded: ukraine-full (~18k tokens, v9.1 optimized)
+✓ Token budget: ~18k for rules (12% of daily)
 ✓ Language: Adaptive
 ✓ Token limit: 150k daily (Anthropic Pro)
-✓ Current usage: 29k (19.3%) | Remaining: ~121k
+✓ Current usage: 18k (12%) | Remaining: ~132k
 ✓ Status: 🟢 Green - Full capacity
 
 Чим я можу вам допомогти?

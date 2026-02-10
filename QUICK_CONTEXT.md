@@ -6,7 +6,7 @@
 
 ## 🎯 What This Is
 
-When starting a new AI session, you don't need to re-read 1500+ lines of RULES_CORE.md. This file is the **essential 30 rules** that matter most.
+When starting a new AI session, you don't need to re-read full .ai/rules/core.md. This file is the **essential 30 rules** that matter most.
 
 **Usage:**
 ```
@@ -323,14 +323,14 @@ Yes: Solve today's problem, refactor when needed
 
 **Use this QUICK_CONTEXT for:** 90% of sessions (standard work)
 
-**Read full RULES_CORE.md when:**
+**Read full .ai/rules/core.md when:**
 - First time using framework
 - Complex architectural decisions
 - Multi-day projects (read checkpoints section)
 - Token budget planning (variance tracking)
 - Security incident response
 
-**Read RULES_PRODUCT.md when:**
+**Read .ai/rules/product.md when:**
 - Ukrainian market specifics (SEO, compliance)
 - i18n architecture decisions
 - Migrating from russian services
@@ -340,12 +340,12 @@ Yes: Solve today's problem, refactor when needed
 ## 🔗 Key Files
 
 ```
-RULES_CORE.md           - Full workflow rules (1500 lines)
-RULES_PRODUCT.md        - Ukrainian market specifics
-.ai/token-limits.json   - Token budget tracking
+.ai/rules/core.md           - Full workflow rules
+.ai/rules/product.md        - Ukrainian market specifics
+.ai/token-limits.json       - Token budget tracking
 .ai/forbidden-trackers.json - Russian services blacklist
-examples/               - Real-world dialog examples
-scripts/pre-commit      - Security scanning hook
+examples/                   - Real-world dialog examples
+scripts/pre-commit          - Security scanning hook
 ```
 
 ---
