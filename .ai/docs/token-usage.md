@@ -4,6 +4,36 @@
 
 ---
 
+## 📊 Understanding Context Token Costs
+
+**Important clarification:**
+
+| Metric | Token Count | What It Includes |
+|--------|-------------|------------------|
+| **Context file alone** | ~2-3k tokens | Just the `.ai/contexts/[name].context.md` file |
+| **Full session start** | ~10-23k tokens | Context + overhead (configs, enforcement, etc.) |
+
+**Overhead includes (~8-10k tokens):**
+- `.claude/CLAUDE.md`: ~3-4k (session instructions)
+- `.ai/AI-ENFORCEMENT.md`: ~5-6k (mandatory protocols)
+- `.ai/token-limits.json`: ~1k (budget tracking)
+- Other configs: ~1-2k (locale, trackers, etc.)
+
+**Why this matters:**
+- Documentation shows **full session start costs** (realistic)
+- Individual context files are small (~2-3k each)
+- Session start MESSAGE displays total (context + overhead)
+
+**Example:**
+```
+[SESSION START]
+✓ Context loaded: minimal (~10k tokens, v9.1 optimized)
+                          ^^^^
+                          This is TOTAL (context 2k + overhead 8k)
+```
+
+---
+
 ## Setup Cost Breakdown
 
 ### Full Installation

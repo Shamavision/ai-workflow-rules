@@ -186,6 +186,7 @@ is_ignored() {
         "RULES_CORE.md"
         "CHANGELOG.md"
         "node_modules/"
+        "npm-templates/"
         "dist/"
         "build/"
         ".next/"

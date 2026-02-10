@@ -137,6 +137,35 @@ Check `examples/` folder:
 
 ---
 
+## 💡 Understanding Token Costs
+
+**Quick note on context token counts:**
+
+When AI shows session start like:
+```
+[SESSION START]
+✓ Context loaded: minimal (~10k tokens)
+```
+
+This **~10k** is the **full session start cost**, not just the context file:
+
+| Component | Tokens |
+|-----------|--------|
+| Context file (`.ai/contexts/minimal.context.md`) | ~2-3k |
+| Session overhead (CLAUDE.md, AI-ENFORCEMENT.md, configs) | ~8k |
+| **Total session start** | **~10k** |
+
+**Why overhead exists:**
+- `.claude/CLAUDE.md`: Session instructions (~3-4k)
+- `.ai/AI-ENFORCEMENT.md`: Mandatory protocols (~5-6k)
+- `.ai/token-limits.json`: Budget tracking (~1k)
+
+**Bottom line:** Context files are small (~2-3k), but full session includes necessary configs.
+
+**See:** [token-usage.md](token-usage.md) for detailed breakdown.
+
+---
+
 ## 🚨 Common Issues
 
 ### "AI doesn't see the rules"

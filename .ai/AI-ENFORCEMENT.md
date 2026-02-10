@@ -6,15 +6,66 @@
 
 ## 🔴 CRITICAL PROTOCOLS (Zero Tolerance)
 
+### -1. AI BEHAVIOR FUNDAMENTALS (OVERRIDE EVERYTHING!)
+
+**Added 2026-02-10 from ROADMAP Phase 1 - These rules take precedence over ALL other considerations, including token savings!**
+
+**Rule: КАЧЕСТВО > СКОРОСТЬ (Quality > Speed)**
+
+```
+✅ Attention to details - ALWAYS
+✅ Quality > Speed - NOT negotiable
+✅ Thorough approach to every task
+❌ NEVER skip steps to save time/tokens
+❌ NEVER do "quick verification" instead of detailed work
+❌ NEVER fly through tasks
+```
+
+**Rule: "I Don't Know" Honesty**
+
+```
+✅ Think HARDER before every answer
+✅ If uncertain → say "I don't know"
+✅ If guessing → clearly state it's a guess
+✅ If need to check → check FIRST, then answer
+❌ NEVER fabricate facts/data
+❌ NEVER pretend to know
+❌ NEVER guess silently
+```
+
+**Rule: No Auto-Commit**
+
+```
+❌ NEVER auto-commit
+❌ NEVER auto-push
+✅ ONLY when explicitly requested
+✅ After phase → PROPOSE (don't execute)
+```
+
+**Why these are #-1 (before #0):**
+- Quality trumps speed ALWAYS
+- Honesty trumps quick answers ALWAYS
+- User control trumps convenience ALWAYS
+- These are MORE important than token management!
+
+---
+
 ### 0. TOKEN PRE-FLIGHT CHECK (HIGHEST PRIORITY!)
 
 **TRIGGER:** Task estimated >20k tokens
 
 **MANDATORY STEPS:**
 1. ASK: "How many tokens used TODAY?"
+   - Accept answers like "мы только начали сегодня" = ~0-25k used
+   - Don't repeat question if user already answered!
 2. CALCULATE: remaining = daily_limit - daily_used
 3. IF task > remaining → STOP + WARN + GET APPROVAL
 4. NEVER proceed without explicit approval!
+
+**IMPORTANT:** Understand user's answers!
+- "мы только начали сегодня" = daily usage ~0-25k ✅
+- "свежий день" = daily usage ~0k ✅
+- Don't ask same question twice if already answered!
 
 **Failure consequences:**
 - Rate limit = 2 days downtime
@@ -120,6 +171,50 @@ Session tokens 90%+   → Level 3 (Maximum)
 - Daily usage (from token-limits.json or user)
 - Calculate remaining budget
 - Warn if >60% used
+
+---
+
+### 2.5. PHASE COMPLETION TOKEN CHECK (MANDATORY - STRICT!)
+
+**Added 2026-02-10 from ROADMAP [3] - This protocol existed but was IGNORED!**
+
+**TRIGGER:** After completing ANY phase/stage/major task
+
+**REQUIRED ACTION (NO EXCEPTIONS):**
+
+```markdown
+[PHASE X COMPLETE]
+Session tokens: Xk/200k (Y%)
+Daily tokens: Zk/150k (W%)
+Remaining: ~Nk
+Status: 🟢/🟡/🟠/🔴
+
+Next: [Brief description of next phase]
+Estimate: ~Nk tokens
+
+Продолжить Phase X+1? [Y/n]
+```
+
+**MANDATORY RULES:**
+- ✅ Show AFTER every phase completion
+- ✅ Show estimate for NEXT phase
+- ✅ Wait for user approval BEFORE continuing
+- ❌ NEVER skip this display
+- ❌ NEVER start next phase without confirmation
+- ❌ NEVER show old/cached token data (use CURRENT!)
+
+**User feedback that triggered this:**
+- "При чем ы ниразу не сообщил мне в конце фаз про токены"
+- AI completed Phases 8-10 without showing token status
+- POST-PUSH showed OLD data (89k from previous session)
+
+**Why this is CRITICAL:**
+- Prevents token budget violations
+- Gives user control over pacing
+- Allows user to pause if needed
+- Shows respect for user's budget
+
+**This rule existed in AI-ENFORCEMENT.md but AI IGNORED it → Now it's STRICT!**
 
 ---
 

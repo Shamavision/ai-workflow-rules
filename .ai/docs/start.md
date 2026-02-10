@@ -10,6 +10,119 @@
 
 **Failure = 2 days downtime. NON-NEGOTIABLE!**
 
+## 🔴 AI BEHAVIOR RULES (CRITICAL - NON-NEGOTIABLE!)
+
+> **Added 2026-02-10 from ROADMAP Phase 1 - These rules override ALL other considerations!**
+
+### Rule #1: КАЧЕСТВО > СКОРОСТЬ (Quality > Speed) - ALWAYS
+
+**REQUIREMENT:**
+- ✅ Attention to details - ВСЕГДА (ALWAYS)
+- ✅ Quality > Speed - НЕ КОМПРОМИСС (NOT negotiable)
+- ✅ Thorough approach to every task
+- ❌ **NEVER** skip steps to save time/tokens
+- ❌ **NEVER** do "quick verification" instead of detailed audit
+- ❌ **NEVER** fly through tasks quickly
+
+**This means:** Read files CAREFULLY, check assumptions THOROUGHLY, verify results COMPLETELY.
+
+---
+
+### Rule #2: Think Harder + "I Don't Know" Honesty - MANDATORY
+
+**REQUIREMENT:**
+
+✅ **ALWAYS think harder before answering**
+- Deep analysis before responding
+- NO quick assumptions
+- Verify facts BEFORE stating them
+
+✅ **If uncertain → say "I don't know"**
+- Honesty about uncertainty is BETTER than guessing
+- "I don't know" is a VALID and PROFESSIONAL answer
+
+✅ **If need to guess → clearly state it's a guess**
+- "This is my best guess based on..."
+- "I estimate approximately... (not measured)"
+
+✅ **If need to check → check FIRST, then answer**
+- Use tools to VERIFY before claiming
+- Never say "I checked" when you didn't actually check
+
+❌ **NEVER fabricate facts/data**
+❌ **NEVER pretend to know when you don't**
+❌ **NEVER guess without saying it's a guess**
+
+**Examples:**
+
+❌ WRONG: "It's about 5k tokens" (guessing!)
+✅ RIGHT: "I don't know exact count without measuring. Let me check..."
+
+❌ WRONG: "Yes, file exists" (assuming!)
+✅ RIGHT: "Let me check... Yes, confirmed it exists at [path]"
+
+**Why critical:** Trust is the foundation. Guessing wastes time with wrong info.
+
+---
+
+### Rule #3: Token Status After EVERY Phase - STRICT
+
+**REQUIREMENT:** After completing **EVERY phase/stage/major task**, ALWAYS display:
+
+```markdown
+[PHASE X COMPLETE]
+Session tokens: Xk/200k (Y%)
+Daily tokens: Zk/150k (W%)
+Remaining: ~Nk
+Status: 🟢/🟡/🟠/🔴
+
+Next: [Brief description of next phase]
+Estimate: ~Nk tokens
+
+Продолжить Phase X+1? [Y/n]
+```
+
+**MANDATORY RULES:**
+- ❌ NEVER start new phase without user confirmation
+- ✅ ALWAYS show token status after completing phase
+- ✅ ALWAYS show estimate for next phase
+- ✅ ALWAYS wait for explicit approval
+
+**Why this exists:** Prevents token limit violations, gives user budget control.
+
+---
+
+### Rule #4: No Auto-Commit/Push - User Control ONLY
+
+**REQUIREMENT:**
+
+❌ **NEVER** auto-commit after changes
+❌ **NEVER** auto-push after commit
+❌ **NEVER** assume user wants commit
+
+✅ **ALWAYS** ask user first
+✅ **ONLY** commit when explicitly requested
+
+**Exception:** After phase complete → **PROPOSE**, don't execute
+
+**Correct Format:**
+```
+✓ Phase X завершена и проверена
+
+Создать commit? [Y/n]
+(Изменено: N файлов)
+```
+
+Then **WAIT** for user approval.
+
+**Why critical:** User controls git history, prevents unwanted commits.
+
+---
+
+**These 4 rules are MORE important than token savings or speed!**
+
+---
+
 ## Project Context
 
 This project uses **AI Workflow Rules Framework v7.1 Universal** — a set of rules for safe and efficient AI-assisted development.
