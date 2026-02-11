@@ -72,6 +72,54 @@
 - Incomplete work = worse than not starting
 - Damaged trust = critical for complex product
 
+---
+
+### 0.5. PRE-PHASE RULE REFRESH (ANTI-AMNESIA)
+
+**Added 2026-02-11 from ROADMAP Phase 5 - Prevents AI from forgetting protocols during long sessions**
+
+**TRIGGER:** Before EVERY phase/stage/major task (user says "go", "давай", starts new work)
+
+**REQUIRED ACTION:**
+
+1. **Quick mental refresh** - recall active protocols:
+   - ✅ Quality > Speed (Rule #-1)
+   - ✅ "I Don't Know" honesty (Rule #-1)
+   - ✅ Token status after phase (Protocol 2.5)
+   - ✅ No auto-commit (Rule #-1)
+   - ✅ Ukrainian language check if needed (Protocol 1.5)
+
+2. **Check token budget** (if task >20k):
+   - Daily usage check (Protocol 0)
+   - Verify sufficient budget
+   - Get approval if tight
+
+3. **Optionally** (if session >50% tokens or after 15+ messages):
+   - Re-read `.ai/RULES-CRITICAL.md` for full checklist
+   - Display active protocols for current phase
+   - Confirm readiness
+
+**WHY MANDATORY:**
+- Long sessions → AI forgets protocols (proven issue)
+- 11+ critical protocols too many to remember
+- Proactive refresh prevents violations
+- ROI: ~1.5k per phase prevents 20-50k in fixes
+
+**COST vs BENEFIT:**
+- Cost: ~1.5k tokens per phase = ~4-6k per session
+- Benefit: Prevents violations that cost 20-50k to fix
+- Net savings: +15-45k tokens per session
+- **POSITIVE ROI after first violation prevented!**
+
+**User feedback that triggered this:**
+- "ты просто забываешь про них" (you just forget about them)
+- AI violated Protocol 2.5 (Phase Completion Token Status) multiple times
+- AI violated Protocol 1 (Post-Push Compression) after git push
+
+**FAILURE = VIOLATION:** If AI violates any protocol in Phase 5+, this refresh was insufficient.
+
+---
+
 ### 1. POST-PUSH COMPRESSION (MANDATORY)
 
 **TRIGGERS (any of these = MUST compress):**
@@ -149,6 +197,54 @@ Session tokens 90%+   → Level 3 (Maximum)
 - Extends session lifespan
 
 **FAILURE = VIOLATION:** If AI does NOT compress when triggered, this is a protocol violation.
+
+---
+
+### 1.5. UKRAINIAN LANGUAGE QUALITY SELF-CHECK (PRE-COMMIT)
+
+**Added 2026-02-11 from ROADMAP Phase 6 - Prevents казуси in Ukrainian text**
+
+**TRIGGER:** Before every `git commit` with Ukrainian text
+
+**PROTOCOL:**
+
+1. **Identify Ukrainian content** in changes:
+   - Documentation files (README, GUIDE, docs/)
+   - i18n/locale files (uk.json, uk_UA.json)
+   - Ukrainian comments (if any)
+   - User-facing messages
+
+2. **Self-check against patterns:**
+   - ✅ **Surzhyk detection** - russian words/phrases in Ukrainian text
+   - ✅ **Common grammar mistakes** - see reference patterns below
+   - ✅ **Terminology consistency** - український (not украинский), тощо (not и т.д.)
+   - ✅ **Punctuation** - Ukrainian standards (not russian)
+
+3. **Action based on confidence:**
+   ```
+   IF 100% certain it's wrong → Auto-fix silently
+   IF 80-99% certain → Fix + notify user ("Fixed: X → Y")
+   IF <80% certain → Flag for user review:
+
+   ⚠️ UKRAINIAN CHECK: Uncertain about line X:
+   "[text]"
+   Possible issue: [description]
+   Keep as-is or change to "[suggestion]"?
+   ```
+
+4. **Reference patterns:** See `.ai/contexts/ukraine-full.context.md` section 7.3
+
+**IMPORTANT:**
+- This is SELF-CHECK, not external tool
+- Uses AI's Ukrainian knowledge + reference patterns
+- Zero dependencies, zero overhead
+- Prevents embarrassing казуси in production
+
+**WHY MANDATORY:**
+- Project targets Ukrainian market
+- Ukrainian language quality = brand reputation
+- Surzhyk/russian leaks = unprofessional
+- Better catch before commit than after deploy
 
 ---
 
@@ -469,11 +565,12 @@ IF AI violates protocol:
 - Remove protocols that prove unnecessary
 - Refine triggers based on experience
 
-**Last Updated:** 2026-02-07
-**Version:** 2.0 (v9.1 Enhanced Compression)
-**Critical Protocols:** 4
+**Last Updated:** 2026-02-11
+**Version:** 2.2 (v9.1.1 Rule Refresh & Anti-Amnesia)
+**Critical Protocols:** 6 (added Protocol 0.5 Pre-Phase Refresh + Protocol 1.5 Ukrainian Language)
 **Compression Levels:** 3 (Light/Aggressive/Maximum)
 **Triggers:** 5 (git push, 50% tokens, task completion, new task, 15+ messages)
+**Anti-Amnesia:** RULES-CRITICAL.md checklist system
 
 ---
 

@@ -380,6 +380,131 @@ Commit? [YES/EDIT/WAIT]
 - ✅ Check `.ai/forbidden-trackers.json` before adding tracking
 - ✅ Follow Ukrainian market compliance
 
+### 7.3. Ukrainian Language Quality Reference (v1.0)
+
+> **Added 2026-02-11 - Reference for AI self-check (Protocol 1.5)**
+> **Purpose:** Prevent казуси, surzhyk, and common mistakes in Ukrainian text
+
+#### 7.3.1. Surzhyk Detection - Top Pitfalls
+
+**Russian words commonly leaking into Ukrainian:**
+
+| ❌ Russian (WRONG) | ✅ Ukrainian (CORRECT) | Context |
+|-------------------|----------------------|---------|
+| пользователь | **користувач** | User |
+| приложение | **додаток** | Application |
+| настройки | **налаштування** | Settings |
+| поиск | **пошук** | Search |
+| кнопка | **кнопка** *(same, but check context)* | Button |
+| файл | **файл** *(acceptable)* | File |
+| браузер | **браузер** / **оглядач** | Browser (both OK) |
+| и т.д. | **тощо** / **і т. д.** | Etc. |
+| и т.п. | **і таке інше** | And so on |
+| т.к. | **оскільки** / **бо** | Because |
+| украинский | **український** | Ukrainian (adjective) |
+| скачать | **завантажити** | Download |
+| загрузить | **завантажити** / **вивантажити** | Upload/Load |
+| сохранить | **зберегти** | Save |
+| удалить | **видалити** | Delete |
+| отменить | **скасувати** | Cancel |
+| выбрать | **вибрати** | Choose |
+| войти | **увійти** | Log in |
+| выйти | **вийти** | Log out |
+| ошибка | **помилка** | Error |
+| предупреждение | **попередження** | Warning |
+| сообщение | **повідомлення** | Message |
+| подтвердить | **підтвердити** | Confirm |
+
+#### 7.3.2. Common Grammar Mistakes
+
+**1. Apostrophe usage ('):**
+- ✅ **м'який, п'ять, б'є, в'їзд** -after м, п, б, в before я, ю, є, ї
+- ❌ **мякий, пять, бє, візд** - missing apostrophe
+
+**2. Soft sign (ь):**
+- ✅ **тільки, вісім, користувач, день**
+- ❌ **тилки, вісім, користувач, ден**
+
+**3. И vs І:**
+- ✅ **і** (and), **білий** (white), **київ** (Kyiv)
+- ❌ **и** (russian), **бiлий**, **киïв**
+
+**4. Є vs Е:**
+- ✅ **є** (is/are), **тепер** (now)
+- ❌ **е**, **тепєр**
+
+**5. Prepositions:**
+- ✅ **у Києві** (in Kyiv), **на Україні** (in Ukraine - controversial, both OK)
+- ✅ **в Україні** (also acceptable)
+
+#### 7.3.3. Preferred Terminology
+
+**Technology terms:**
+
+| English | ❌ Avoid | ✅ Prefer |
+|---------|---------|----------|
+| User | пользователь | **користувач** |
+| Application | приложение | **додаток** / **застосунок** |
+| Settings | настройки | **налаштування** |
+| Developer | разработчик | **розробник** |
+| Code | код | **код** (OK) |
+| Function | функция | **функція** |
+| Variable | переменная | **змінна** |
+| File | файл | **файл** (OK) |
+| Folder | папка | **тека** / **папка** (both OK) |
+| Database | база данных | **база даних** |
+| Server | сервер | **сервер** (OK) |
+| Client | клиент | **клієнт** |
+| Framework | фреймворк | **фреймворк** / **каркас** |
+| Library | библиотека | **бібліотека** |
+| Package | пакет | **пакет** / **пакунок** |
+| Module | модуль | **модуль** (OK) |
+
+**UI/UX terms:**
+
+| English | ❌ Avoid | ✅ Prefer |
+|---------|---------|----------|
+| Button | кнопка | **кнопка** (OK) |
+| Menu | меню | **меню** (OK) |
+| Login | вход | **вхід** |
+| Logout | выход | **вихід** |
+| Save | сохранить | **зберегти** |
+| Cancel | отменить | **скасувати** |
+| Delete | удалить | **видалити** |
+| Edit | редактировать | **редагувати** |
+| Search | поиск | **пошук** |
+| Filter | фильтр | **фільтр** (OK) |
+| Sort | сортировка | **сортування** |
+
+#### 7.3.4. Quick Self-Check Patterns
+
+**Before committing Ukrainian text, check for:**
+
+1. ✅ **No russian keyboard layout leaks** (проверка → перевірка)
+2. ✅ **No russian word endings** (-ся → -ться, -ться → -тися)
+3. ✅ **Proper apostrophes** (м', п', б', в' before я, ю, є, ї)
+4. ✅ **Consistent terminology** (don't mix ukrainian/russian in one text)
+5. ✅ **Ukrainian і, not russian и**
+6. ✅ **Ukrainian є, not russian е (where applicable)**
+7. ✅ **Proper soft signs (ь)** where needed
+8. ✅ **"тощо" instead of "и т.д."**
+
+#### 7.3.5. When Uncertain
+
+**If AI is <80% certain:**
+1. Flag for user review
+2. Show original + suggestion
+3. Let user decide
+4. **Never guess silently** (Rule #2: "I Don't Know" Honesty)
+
+**Examples of uncertainty:**
+- Proper names (transliteration varies)
+- Technical neologisms (multiple variants exist)
+- Context-dependent terms (завантажити = upload OR download)
+- Regional variations (тека vs папка, застосунок vs додаток)
+
+**Golden rule:** When in doubt → ask user, don't guess.
+
 ---
 
 ## 8. RED FLAGS (Auto-Stop)
@@ -404,10 +529,18 @@ Commit? [YES/EDIT/WAIT]
 - `//CHECK:SECURITY` - Security audit (secrets, XSS, injection, API leaks)
 - `//CHECK:LANG` - LANG-CRITICAL violations scan
 - `//CHECK:ALL` - Full audit (security + performance + lang + i18n)
+- `//CHECK:RULES` - Display full protocol checklist + confirm active rules (v9.1.1)
+- `//REFRESH` - Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia, v9.1.1)
+- `//WHICH:RULES` - Show which protocols apply to current operation (v9.1.1)
 - `//COMPACT` - Manual context compression
 - `//THINK` - Show reasoning in `<thinking>` tags
 - `//TOKENS` - Show current token status
 - `//ROADMAP` - Generate/update roadmap
+
+**NEW (v9.1.1):** Rule Refresh & Anti-Amnesia System
+- AI reads `.ai/RULES-CRITICAL.md` at session start + before phases
+- Prevents protocol amnesia during long sessions
+- Use `//REFRESH` if AI forgets critical rules
 
 ### 9.1. Check Output Format
 
@@ -471,5 +604,5 @@ Extend capabilities, don't replace judgment. When in doubt, give control and opt
 
 ---
 
-**Context:** ukraine-full v1.1 (optimized) | **Generated:** 2026-02-08 | **From:** .ai/rules/core.md v8.0
+**Context:** ukraine-full v1.2 (Ukrainian Language Quality) | **Updated:** 2026-02-11 | **From:** .ai/rules/core.md v8.0
 **Made in Ukraine 🇺🇦**

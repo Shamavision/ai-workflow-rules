@@ -303,8 +303,14 @@ if [ -z "$STAGED_FILES" ]; then
 fi
 
 print_header
-echo "Scanning $(echo "$STAGED_FILES" | wc -l) staged file(s)..."
+
+# Count total files
+TOTAL_FILES=$(echo "$STAGED_FILES" | wc -l)
+echo "Scanning $TOTAL_FILES staged file(s)..."
 echo ""
+
+# Progress tracking
+CURRENT_FILE=0
 
 # ==============================================================================
 # TIER 1: HARD BLOCK - Real Secrets (ALL AI Providers)
@@ -315,9 +321,15 @@ echo "━━━ Checking for real API keys (all AI providers)..."
 TIER1_BLOCKED=false
 
 for file in $STAGED_FILES; do
+    ((CURRENT_FILE++))
+
     if is_ignored "$file"; then
+        echo "  [$CURRENT_FILE/$TOTAL_FILES] Skipped (ignored): $(basename "$file")"
         continue
     fi
+
+    # Show progress
+    echo "  [$CURRENT_FILE/$TOTAL_FILES] Scanning: $(basename "$file")"
 
     if file "$file" 2>/dev/null | grep -q "binary"; then
         continue
@@ -537,13 +549,20 @@ done
 
 if [ "$TIER1_BLOCKED" == "true" ]; then
     HARD_BLOCKED=true
+    echo ""
+    echo "  Summary: Secrets detected - commit blocked"
+else
+    echo ""
+    echo "  Summary: No secrets detected in $TOTAL_FILES file(s)"
 fi
+echo ""
 
 # ==============================================================================
 # TIER 2: WARNING + CHOICE - Suspicious Patterns
 # ==============================================================================
 
 echo "━━━ Checking for suspicious patterns..."
+CURRENT_FILE=0  # Reset counter for TIER 2
 
 for file in $STAGED_FILES; do
     if is_ignored "$file"; then

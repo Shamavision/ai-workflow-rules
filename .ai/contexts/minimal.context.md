@@ -280,7 +280,12 @@ Commit? [YES/EDIT/WAIT]
 - `//COMPACT` - Manual compression
 - `//THINK` - Show reasoning
 - `//CHECK:SECURITY` - Security audit
+- `//CHECK:RULES` - Protocol checklist (v9.1.1)
+- `//REFRESH` - Re-read rules (anti-amnesia, v9.1.1)
+- `//WHICH:RULES` - Show active protocols (v9.1.1)
 - `//ROADMAP` - Generate roadmap
+
+**NEW (v9.1.1):** Rule Refresh System - AI reads `.ai/RULES-CRITICAL.md` to prevent protocol amnesia
 
 ---
 

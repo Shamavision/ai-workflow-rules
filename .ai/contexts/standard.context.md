@@ -387,6 +387,9 @@ Commit? [YES/EDIT/WAIT]
 - `//CHECK:LANG` - LANG-CRITICAL violations
 - `//CHECK:I18N` - i18n-readiness check
 - `//CHECK:ALL` - Full audit (all checks)
+- `//CHECK:RULES` - Display full protocol checklist + confirm active rules (v9.1.1)
+- `//REFRESH` - Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia, v9.1.1)
+- `//WHICH:RULES` - Show which protocols apply to current operation (v9.1.1)
 - `//THINK` - Show reasoning
 - `//QUICK` - Fast draft with placeholders
 - `//PROD` - Production-ready, zero placeholders
@@ -394,6 +397,11 @@ Commit? [YES/EDIT/WAIT]
 - `//ROADMAP` - Generate/update roadmap
 - `//TOKENS` - Token usage status
 - `//COMPACT` - Manual compression
+
+**NEW (v9.1.1):** Rule Refresh & Anti-Amnesia System
+- AI reads `.ai/RULES-CRITICAL.md` at session start + before phases
+- Prevents protocol amnesia during long sessions
+- Use `//REFRESH` if AI forgets critical rules
 
 ### 8.1. Check Output Format
 

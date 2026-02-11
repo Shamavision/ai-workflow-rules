@@ -93,6 +93,9 @@ When user sends these commands:
 - `//CHECK:SECURITY` → Security audit (secrets, XSS, injection, API leaks)
 - `//CHECK:LANG` → LANG-CRITICAL violations scan
 - `//CHECK:ALL` → Full audit (security + performance + lang + i18n)
+- `//CHECK:RULES` → Display full protocol checklist + confirm active rules
+- `//REFRESH` → Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia)
+- `//WHICH:RULES` → Show which protocols apply to current operation
 - `//COMPACT` → Manual context compression
 - `//THINK` → Show reasoning in `<thinking>` tags
 

@@ -115,13 +115,16 @@ Status: 🟢/🟡/🟠/🔴
 ## 🎯 KEY COMMANDS
 
 ```bash
-//START    - Execute session start protocol
-//TOKENS   - Show token usage status
-//COMPACT  - Compress context (save 40-60% tokens)
-//THINK    - Show AI reasoning
-//CHECK:SECURITY  - Security audit
-//CHECK:LANG      - Language compliance check
-//CHECK:ALL       - Full audit
+//START          - Execute session start protocol
+//TOKENS         - Show token usage status
+//COMPACT        - Compress context (save 40-60% tokens)
+//THINK          - Show AI reasoning
+//CHECK:SECURITY - Security audit
+//CHECK:LANG     - Language compliance check
+//CHECK:ALL      - Full audit
+//CHECK:RULES    - Display full protocol checklist + confirm active rules
+//REFRESH        - Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia)
+//WHICH:RULES    - Show which protocols apply to current operation
 ```
 
 ---

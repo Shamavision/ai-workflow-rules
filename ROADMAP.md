@@ -3,43 +3,15 @@
 > **План покращень для версії 9.1.1**
 > Версія НЕ змінюється до major update. Всі зміни - incremental improvements.
 
-**Last Updated:** 2026-02-10
-**Session:** Phases 1, 2, 4 виконано сьогодні
+**Last Updated:** 2026-02-11
+**Status:** v9.1.1 - Phases 5, 6, Item [14] completed today ✅
 
 ---
 
-## ✅ COMPLETED TODAY (2026-02-10)
+## 🟡 PENDING (Phase 3 - Automation & Tools)
 
-### Phase 1: AI Behavior Rules ✅
-- [x] **[1-4] AI Behavior Rules** - ЗАВЕРШЕНО
-  - ✅ [1] КАЧЕСТВО > СКОРОСТЬ - додано в 10 файлів
-  - ✅ [2] "I Don't Know" Honesty - додано в усі конфіги
-  - ✅ [3] Token Management між фазами - посилено в AI-ENFORCEMENT.md
-  - ✅ [4] No Auto-Commit/Push - додано правило
-  - **Files updated:** `.claude/CLAUDE.md`, `.cursorrules`, `.windsurfrules`, `.ai/docs/start.md`, `.ai/AI-ENFORCEMENT.md`, `MEMORY.md`, 4 context files
-
-### Phase 2: Critical Technical ✅
-- [x] **[5] Pre-commit hook performance** - ЗАВЕРШЕНО
-  - ✅ Додано `npm-templates/` в BUILT_IN_IGNORE
-  - ✅ Очікуваний результат: сканування 10-30 сек → 1-3 сек
-  - **File updated:** `scripts/pre-commit`
-
-### Phase 4: Documentation ✅
-- [x] **[9] Context token docs clarification** - ЗАВЕРШЕНО
-  - ✅ Додана секція "Understanding Context Token Costs" в `token-usage.md`
-  - ✅ Додана секція "Understanding Token Costs" в `quickstart.md`
-  - ✅ Пояснено різницю: context file (~2-3k) vs full session start (~10-23k)
-  - **Files updated:** `.ai/docs/token-usage.md`, `.ai/docs/quickstart.md`
-
-**Total changes:** 13 файлів
-**Tokens used:** ~82k / 150k (55%)
-
----
-
-## 🟡 PENDING (Phase 3 - Deferred to Tomorrow)
-
-> **Reason:** Phase 3 потребує ~45-65k tokens, залишилось ~68k
-> **Decision:** Краще виконати з fresh daily limit завтра
+> **Reason:** Phase 3 потребує ~45-65k tokens
+> **Decision:** Виконати з fresh daily limit завтра (2026-02-12)
 
 ### Phase 3: Automation & Tools
 
@@ -78,14 +50,11 @@
 
 ---
 
-## 💡 ADDITIONAL TASKS (New - Optional)
-
-> **Budget remaining:** ~68k tokens today
-> **Options for today:**
+## 💡 ADDITIONAL TASKS (Optional)
 
 ### [10] Update CHANGELOG.md with today's changes
 - [ ] **Status:** NOT STARTED
-- **Action:** Додати запис про виконані Phases 1, 2, 4
+- **Action:** Додати запис про виконані Phases 5, 6, Item [14]
 - **Format:** v9.1.1 incremental improvements (не новий release!)
 - **Estimated:** ~5-10k tokens
 - **Priority:** MEDIUM - good practice to document
@@ -93,7 +62,7 @@
 ### [11] Verify all changes work correctly
 - [ ] **Status:** NOT STARTED
 - **Actions:**
-  - Test pre-commit hook works faster
+  - Test pre-commit hook works faster with progress indicator
   - Verify all IDE configs load без помилок
   - Check documentation links
   - Quick smoke test
@@ -101,10 +70,10 @@
 - **Priority:** HIGH - ensure quality
 
 ### [12] Archive completed ROADMAP items
-- [ ] **Status:** NOT STARTED
-- **Action:** Перемістити виконані items в ARCHIVE.md або CHANGELOG.md
-- **Reason:** Залишити ROADMAP чистим з тільки active tasks
-- **Estimated:** ~5k tokens
+- [ ] **Status:** PARTIALLY DONE
+- **Action:** ✅ Today's items removed from ROADMAP (archived via git history)
+- **Reason:** Keep ROADMAP clean with only active tasks
+- **Estimated:** ~0k tokens (done manually)
 - **Priority:** LOW - organizational
 
 ### [13] Review and update CONTRIBUTING.md
@@ -121,33 +90,33 @@
 
 ## 📊 Token Budget Summary
 
-**Today (2026-02-10):**
-- ✅ Used: ~82k / 150k (55%)
-- ✅ Remaining: ~68k
-- 🟡 Status: MODERATE zone
+**Today (2026-02-11) - Summary:**
+- ✅ Phase 6: Ukrainian Language Quality (~3.8k)
+- ✅ Phase 5: Rule Refresh & Anti-Amnesia (~22k)
+- ✅ Item [14]: Fix pre-commit hook progress indicator (~5k)
+- ✅ Daily: ~105k / 150k (70%)
+- ✅ Session: ~116k / 200k (58%)
+- 🟡 Status: MODERATE ZONE
 
-**Recommendations for today:**
-- **Option A:** Items [10] + [11] (~20-25k) + save reserve → **SAFE**
-- **Option B:** Items [10] + [11] + [13] (~35-40k) + reserve → **SAFE**
-- **Option C:** Finish day, commit changes, Phase 3 tomorrow → **RECOMMENDED**
+**Tomorrow (2026-02-12) - Fresh 150k limit! 🟢:**
+- Phase 3: Automation & Tools [6-8] (~45-65k) - PRIMARY GOAL
+- Optional items [10-13] (~30-55k) - if tokens permit
 
-**Tomorrow (fresh 150k daily limit):**
-- Execute full Phase 3: items [6] + [7] + [8] (~45-65k)
-- Still have ~85-105k for other work
+**Total estimate tomorrow:** ~45-120k tokens (safe within 150k)
 
 ---
 
-## 🎯 Recommended Next Steps
+## 🎯 Recommended Next Steps (Tomorrow)
 
-**Today (if continuing):**
-1. ✅ Item [10]: Update CHANGELOG (~5-10k)
-2. ✅ Item [11]: Verify changes (~10-15k)
-3. ✅ Create commit for all changes (~5k)
-4. 🔄 Push to remote
+1. **Phase 3: Automation & Tools [6-8]** (~45-65k tokens) - **START HERE**
+   - Utility scripts для автоматизації
+   - Token tracking improvement
+   - npm publish workflow docs
 
-**Tomorrow (recommended):**
-1. 🔄 Phase 3: Utility Scripts [6-8] (~45-65k)
-2. 💡 Optional: Items [12-13] if time permits
+2. **Optional enhancements** (if tokens permit):
+   - Item [10]: Update CHANGELOG (~5-10k)
+   - Item [11]: Verify changes (~10-15k)
+   - Item [13]: Update CONTRIBUTING (~10-15k)
 
 ---
 
