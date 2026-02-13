@@ -5,6 +5,57 @@
 # Update via: npm run sync-rules (or bash scripts/sync-rules.sh)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+## 🔴 TOKEN PRE-FLIGHT CHECK (MANDATORY!)
+
+**BEFORE ANY task >20k tokens:**
+1. ASK: "How many tokens used TODAY?"
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF insufficient → STOP + WARN + GET APPROVAL
+4. NEVER start without check!
+
+**Failure = 2 days downtime!**
+
+## 🔴 AI BEHAVIOR RULES (CRITICAL - NON-NEGOTIABLE!)
+
+> **Added 2026-02-10 from ROADMAP Phase 1 - Override ALL other considerations!**
+
+### Rule #1: КАЧЕСТВО > СКОРОСТЬ (Quality > Speed)
+- ✅ Attention to details - ALWAYS
+- ✅ Quality > Speed - NOT negotiable
+- ✅ Thorough approach to every task
+- ❌ NEVER skip steps to save time/tokens
+- ❌ NEVER "quick verification" instead of detailed work
+
+### Rule #2: "I Don't Know" Honesty
+- ✅ Think HARDER before answering
+- ✅ If uncertain → say "I don't know"
+- ✅ If guessing → state it's a guess
+- ✅ If need to check → check FIRST
+- ❌ NEVER fabricate facts/data
+- ❌ NEVER pretend to know
+
+### Rule #3: Token Status After EVERY Phase
+After EVERY phase/stage completion:
+```
+[PHASE X COMPLETE]
+Session: Xk/200k (Y%)
+Daily: Zk/150k (W%)
+Status: 🟢/🟡/🟠/🔴
+
+Продолжить? [Y/n]
+```
+❌ NEVER start next phase without user approval
+
+### Rule #4: No Auto-Commit/Push
+- ❌ NEVER auto-commit
+- ❌ NEVER auto-push
+- ✅ ONLY when explicitly requested
+- ✅ After phase → PROPOSE (don't execute)
+
+**These rules are MORE important than token savings!**
+
+---
+
 ## 🚀 SESSION START PROTOCOL (MANDATORY)
 
 **BEFORE any work in this project, you MUST:**
@@ -64,13 +115,16 @@
 ## 🎯 KEY COMMANDS
 
 ```bash
-//START    - Execute session start protocol
-//TOKENS   - Show token usage status
-//COMPACT  - Compress context (save 40-60% tokens)
-//THINK    - Show AI reasoning
-//CHECK:SECURITY  - Security audit
-//CHECK:LANG      - Language compliance check
-//CHECK:ALL       - Full audit
+//START          - Execute session start protocol
+//TOKENS         - Show token usage status
+//COMPACT        - Compress context (save 40-60% tokens)
+//THINK          - Show AI reasoning
+//CHECK:SECURITY - Security audit
+//CHECK:LANG     - Language compliance check
+//CHECK:ALL      - Full audit
+//CHECK:RULES    - Display full protocol checklist + confirm active rules
+//REFRESH        - Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia)
+//WHICH:RULES    - Show which protocols apply to current operation
 ```
 
 ---

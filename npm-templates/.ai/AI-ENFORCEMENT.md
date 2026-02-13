@@ -6,6 +6,120 @@
 
 ## 🔴 CRITICAL PROTOCOLS (Zero Tolerance)
 
+### -1. AI BEHAVIOR FUNDAMENTALS (OVERRIDE EVERYTHING!)
+
+**Added 2026-02-10 from ROADMAP Phase 1 - These rules take precedence over ALL other considerations, including token savings!**
+
+**Rule: КАЧЕСТВО > СКОРОСТЬ (Quality > Speed)**
+
+```
+✅ Attention to details - ALWAYS
+✅ Quality > Speed - NOT negotiable
+✅ Thorough approach to every task
+❌ NEVER skip steps to save time/tokens
+❌ NEVER do "quick verification" instead of detailed work
+❌ NEVER fly through tasks
+```
+
+**Rule: "I Don't Know" Honesty**
+
+```
+✅ Think HARDER before every answer
+✅ If uncertain → say "I don't know"
+✅ If guessing → clearly state it's a guess
+✅ If need to check → check FIRST, then answer
+❌ NEVER fabricate facts/data
+❌ NEVER pretend to know
+❌ NEVER guess silently
+```
+
+**Rule: No Auto-Commit**
+
+```
+❌ NEVER auto-commit
+❌ NEVER auto-push
+✅ ONLY when explicitly requested
+✅ After phase → PROPOSE (don't execute)
+```
+
+**Why these are #-1 (before #0):**
+- Quality trumps speed ALWAYS
+- Honesty trumps quick answers ALWAYS
+- User control trumps convenience ALWAYS
+- These are MORE important than token management!
+
+---
+
+### 0. TOKEN PRE-FLIGHT CHECK (HIGHEST PRIORITY!)
+
+**TRIGGER:** Task estimated >20k tokens
+
+**MANDATORY STEPS:**
+1. ASK: "How many tokens used TODAY?"
+   - Accept answers like "мы только начали сегодня" = ~0-25k used
+   - Don't repeat question if user already answered!
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF task > remaining → STOP + WARN + GET APPROVAL
+4. NEVER proceed without explicit approval!
+
+**IMPORTANT:** Understand user's answers!
+- "мы только начали сегодня" = daily usage ~0-25k ✅
+- "свежий день" = daily usage ~0k ✅
+- Don't ask same question twice if already answered!
+
+**Failure consequences:**
+- Rate limit = 2 days downtime
+- Incomplete work = worse than not starting
+- Damaged trust = critical for complex product
+
+---
+
+### 0.5. PRE-PHASE RULE REFRESH (ANTI-AMNESIA)
+
+**Added 2026-02-11 from ROADMAP Phase 5 - Prevents AI from forgetting protocols during long sessions**
+
+**TRIGGER:** Before EVERY phase/stage/major task (user says "go", "давай", starts new work)
+
+**REQUIRED ACTION:**
+
+1. **Quick mental refresh** - recall active protocols:
+   - ✅ Quality > Speed (Rule #-1)
+   - ✅ "I Don't Know" honesty (Rule #-1)
+   - ✅ Token status after phase (Protocol 2.5)
+   - ✅ No auto-commit (Rule #-1)
+   - ✅ Ukrainian language check if needed (Protocol 1.5)
+
+2. **Check token budget** (if task >20k):
+   - Daily usage check (Protocol 0)
+   - Verify sufficient budget
+   - Get approval if tight
+
+3. **Optionally** (if session >50% tokens or after 15+ messages):
+   - Re-read `.ai/RULES-CRITICAL.md` for full checklist
+   - Display active protocols for current phase
+   - Confirm readiness
+
+**WHY MANDATORY:**
+- Long sessions → AI forgets protocols (proven issue)
+- 11+ critical protocols too many to remember
+- Proactive refresh prevents violations
+- ROI: ~1.5k per phase prevents 20-50k in fixes
+
+**COST vs BENEFIT:**
+- Cost: ~1.5k tokens per phase = ~4-6k per session
+- Benefit: Prevents violations that cost 20-50k to fix
+- Net savings: +15-45k tokens per session
+- **POSITIVE ROI after first violation prevented!**
+
+**User feedback that triggered this:**
+- "ты просто забываешь про них" (you just forget about them)
+- AI violated Protocol 2.5 (Phase Completion Token Status) multiple times
+- AI violated Protocol 1 (Post-Push Compression) after git push
+
+**FAILURE = VIOLATION:** If AI violates any protocol in Phase 5+, this refresh was insufficient.
+
+---
+
 ### 1. POST-PUSH COMPRESSION (MANDATORY)
 
 **TRIGGERS (any of these = MUST compress):**
@@ -86,6 +200,54 @@ Session tokens 90%+   → Level 3 (Maximum)
 
 ---
 
+### 1.5. UKRAINIAN LANGUAGE QUALITY SELF-CHECK (PRE-COMMIT)
+
+**Added 2026-02-11 from ROADMAP Phase 6 - Prevents казуси in Ukrainian text**
+
+**TRIGGER:** Before every `git commit` with Ukrainian text
+
+**PROTOCOL:**
+
+1. **Identify Ukrainian content** in changes:
+   - Documentation files (README, GUIDE, docs/)
+   - i18n/locale files (uk.json, uk_UA.json)
+   - Ukrainian comments (if any)
+   - User-facing messages
+
+2. **Self-check against patterns:**
+   - ✅ **Surzhyk detection** - russian words/phrases in Ukrainian text
+   - ✅ **Common grammar mistakes** - see reference patterns below
+   - ✅ **Terminology consistency** - український (not украинский), тощо (not и т.д.)
+   - ✅ **Punctuation** - Ukrainian standards (not russian)
+
+3. **Action based on confidence:**
+   ```
+   IF 100% certain it's wrong → Auto-fix silently
+   IF 80-99% certain → Fix + notify user ("Fixed: X → Y")
+   IF <80% certain → Flag for user review:
+
+   ⚠️ UKRAINIAN CHECK: Uncertain about line X:
+   "[text]"
+   Possible issue: [description]
+   Keep as-is or change to "[suggestion]"?
+   ```
+
+4. **Reference patterns:** See `.ai/contexts/ukraine-full.context.md` section 7.3
+
+**IMPORTANT:**
+- This is SELF-CHECK, not external tool
+- Uses AI's Ukrainian knowledge + reference patterns
+- Zero dependencies, zero overhead
+- Prevents embarrassing казуси in production
+
+**WHY MANDATORY:**
+- Project targets Ukrainian market
+- Ukrainian language quality = brand reputation
+- Surzhyk/russian leaks = unprofessional
+- Better catch before commit than after deploy
+
+---
+
 ### 2. SESSION START TOKEN CHECK (MANDATORY)
 
 **TRIGGER:** Every new session start (`//START` or auto-load)
@@ -105,6 +267,50 @@ Session tokens 90%+   → Level 3 (Maximum)
 - Daily usage (from token-limits.json or user)
 - Calculate remaining budget
 - Warn if >60% used
+
+---
+
+### 2.5. PHASE COMPLETION TOKEN CHECK (MANDATORY - STRICT!)
+
+**Added 2026-02-10 from ROADMAP [3] - This protocol existed but was IGNORED!**
+
+**TRIGGER:** After completing ANY phase/stage/major task
+
+**REQUIRED ACTION (NO EXCEPTIONS):**
+
+```markdown
+[PHASE X COMPLETE]
+Session tokens: Xk/200k (Y%)
+Daily tokens: Zk/150k (W%)
+Remaining: ~Nk
+Status: 🟢/🟡/🟠/🔴
+
+Next: [Brief description of next phase]
+Estimate: ~Nk tokens
+
+Продолжить Phase X+1? [Y/n]
+```
+
+**MANDATORY RULES:**
+- ✅ Show AFTER every phase completion
+- ✅ Show estimate for NEXT phase
+- ✅ Wait for user approval BEFORE continuing
+- ❌ NEVER skip this display
+- ❌ NEVER start next phase without confirmation
+- ❌ NEVER show old/cached token data (use CURRENT!)
+
+**User feedback that triggered this:**
+- "При чем ы ниразу не сообщил мне в конце фаз про токены"
+- AI completed Phases 8-10 without showing token status
+- POST-PUSH showed OLD data (89k from previous session)
+
+**Why this is CRITICAL:**
+- Prevents token budget violations
+- Gives user control over pacing
+- Allows user to pause if needed
+- Shows respect for user's budget
+
+**This rule existed in AI-ENFORCEMENT.md but AI IGNORED it → Now it's STRICT!**
 
 ---
 
@@ -208,7 +414,7 @@ Proceed anyway? [YES/FIX/SKIP]
 - Auto-runs in pre-commit hook anyway
 - AI should suggest, not force
 
-**Documentation:** See [.ai/docs/code-quality.md](.ai/docs/code-quality.md)
+**Documentation:** See [docs/code-quality.md](docs/code-quality.md)
 
 ---
 
@@ -359,11 +565,12 @@ IF AI violates protocol:
 - Remove protocols that prove unnecessary
 - Refine triggers based on experience
 
-**Last Updated:** 2026-02-07
-**Version:** 2.0 (v9.1 Enhanced Compression)
-**Critical Protocols:** 4
+**Last Updated:** 2026-02-11
+**Version:** 2.2 (v9.1.1 Rule Refresh & Anti-Amnesia)
+**Critical Protocols:** 6 (added Protocol 0.5 Pre-Phase Refresh + Protocol 1.5 Ukrainian Language)
 **Compression Levels:** 3 (Light/Aggressive/Maximum)
 **Triggers:** 5 (git push, 50% tokens, task completion, new task, 15+ messages)
+**Anti-Amnesia:** RULES-CRITICAL.md checklist system
 
 ---
 

@@ -10,7 +10,7 @@ Get up and running with AI Workflow Rules Framework in 5 minutes.
 ```bash
 # Copy essentials only
 cp -r .ai /path/to/your-project/
-cp RULES_CORE.md START.md /path/to/your-project/
+cp .ai/rules/core.md .ai/docs/start.md /path/to/your-project/
 cp scripts/seo-check.sh /path/to/your-project/scripts/
 ```
 
@@ -18,8 +18,8 @@ cp scripts/seo-check.sh /path/to/your-project/scripts/
 ```bash
 # Copy everything
 cp -r .ai /path/to/your-project/
-cp RULES_*.md START.md INSTALL.md AI_COMPATIBILITY.md /path/to/your-project/
-cp QUICKSTART.md CHEATSHEET.md TOKEN_USAGE.md /path/to/your-project/
+cp -r .claude /path/to/your-project/
+cp AGENTS.md INSTALL.md /path/to/your-project/
 cp -r scripts examples /path/to/your-project/
 cp .env.example .editorconfig /path/to/your-project/
 cp -r .vscode /path/to/your-project/
@@ -84,7 +84,7 @@ DATABASE_URL=postgresql://...
 
 # Expected output:
 # ✅ token-limits.json
-# ✅ RULES_CORE.md
+# ✅ .ai/rules/core.md
 # ✅ Pre-commit hook
 # ✅ seo-check works
 ```
@@ -99,7 +99,7 @@ If anything shows ❌, follow the instructions to fix it.
 Just start coding - AI automatically reads RULES ✅
 
 ### For ChatGPT / Gemini:
-1. Open [`START.md`](START.md)
+1. Open [`start.md`](start.md)
 2. Copy content into first message
 3. Tell AI: "Follow these rules"
 
@@ -121,7 +121,7 @@ Just start coding - AI automatically reads RULES ✅
 ### First Time User?
 Read the one-page cheatsheet:
 ```bash
-cat CHEATSHEET.md
+cat .ai/docs/cheatsheet.md
 ```
 
 ### Need Examples?
@@ -131,9 +131,38 @@ Check `examples/` folder:
 - `env-usage.ts` - environment variables
 
 ### Want Full Docs?
-- [RULES_CORE.md](RULES_CORE.md) - Main rules (15 min read)
-- [RULES_PRODUCT.md](RULES_PRODUCT.md) - Product specifics (10 min read)
-- [TOKEN_USAGE.md](TOKEN_USAGE.md) - Token optimization
+- [.ai/rules/core.md](../rules/core.md) - Main rules (15 min read)
+- [.ai/rules/product.md](../rules/product.md) - Product specifics (10 min read)
+- [token-usage.md](token-usage.md) - Token optimization
+
+---
+
+## 💡 Understanding Token Costs
+
+**Quick note on context token counts:**
+
+When AI shows session start like:
+```
+[SESSION START]
+✓ Context loaded: minimal (~10k tokens)
+```
+
+This **~10k** is the **full session start cost**, not just the context file:
+
+| Component | Tokens |
+|-----------|--------|
+| Context file (`.ai/contexts/minimal.context.md`) | ~2-3k |
+| Session overhead (CLAUDE.md, AI-ENFORCEMENT.md, configs) | ~8k |
+| **Total session start** | **~10k** |
+
+**Why overhead exists:**
+- `.claude/CLAUDE.md`: Session instructions (~3-4k)
+- `.ai/AI-ENFORCEMENT.md`: Mandatory protocols (~5-6k)
+- `.ai/token-limits.json`: Budget tracking (~1k)
+
+**Bottom line:** Context files are small (~2-3k), but full session includes necessary configs.
+
+**See:** [token-usage.md](token-usage.md) for detailed breakdown.
 
 ---
 
@@ -141,7 +170,7 @@ Check `examples/` folder:
 
 ### "AI doesn't see the rules"
 - **Claude Code/Cursor:** Restart IDE
-- **ChatGPT:** Copy-paste START.md manually
+- **ChatGPT:** Copy-paste .ai/docs/start.md manually
 - **GitHub Copilot:** Add key rules as code comments
 
 ### "Pre-commit hook doesn't work"
@@ -153,7 +182,7 @@ chmod +x .git/hooks/pre-commit
 ```
 
 ### "Ran out of tokens on setup"
-See [TOKEN_USAGE.md](TOKEN_USAGE.md) for:
+See [token-usage.md](token-usage.md) for:
 - Minimal installation (30k tokens)
 - Files you can delete after reading
 - Token optimization tips
@@ -187,8 +216,8 @@ See [TOKEN_USAGE.md](TOKEN_USAGE.md) for:
 
 <div align="center">
 
-Need help? Check [CHEATSHEET.md](CHEATSHEET.md) or [open an issue](https://github.com/Shamavision/ai-workflow-rules/issues)
+Need help? Check [cheatsheet.md](cheatsheet.md) or [open an issue](https://github.com/Shamavision/ai-workflow-rules/issues)
 
-**AI Workflow Rules Framework v7.0** • Made in Ukraine 🇺🇦
+**AI Workflow Rules Framework v9.1** • Made in Ukraine 🇺🇦
 
 </div>

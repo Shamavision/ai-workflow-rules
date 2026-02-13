@@ -14,6 +14,17 @@ If ANY of these conditions apply:
 
 → **STOP and execute Session Start Protocol immediately**
 
+### Step 1.5: 🔴 TOKEN PRE-FLIGHT CHECK (CRITICAL!)
+
+**BEFORE starting ANY task estimated >20k tokens:**
+
+1. ASK: "How many tokens used TODAY already?"
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF task > remaining → STOP + WARN + GET APPROVAL
+4. NEVER start >20k work without this check!
+
+**Failure = 2 days downtime. NON-NEGOTIABLE!**
+
 ### Step 2: Load Project Rules (Smart Context Loading)
 
 **NEW (v8.1 Modular):** Context-based loading for token efficiency
@@ -24,7 +35,7 @@ If ANY of these conditions apply:
    - If `config.context = "standard"` → Read `.ai/contexts/standard.context.md` (~14k tokens, v9.1 optimized)
    - If `config.context = "ukraine-full"` → Read `.ai/contexts/ukraine-full.context.md` (~18k tokens, v9.1 optimized)
    - If `config.context = "enterprise"` → Read `.ai/contexts/enterprise.context.md` (~23k tokens, v9.1 optimized)
-   - **Fallback:** If no config or contexts → Read `RULES_CORE.md` (legacy mode)
+   - **Fallback:** If no config or contexts → Read `.ai/rules/core.md` (legacy mode)
 3. **Token budget:** Read `.ai/token-limits.json` for tracking
 
 **Why this matters:** Selective loading saves 40-70% tokens for specific users.
@@ -82,8 +93,184 @@ When user sends these commands:
 - `//CHECK:SECURITY` → Security audit (secrets, XSS, injection, API leaks)
 - `//CHECK:LANG` → LANG-CRITICAL violations scan
 - `//CHECK:ALL` → Full audit (security + performance + lang + i18n)
+- `//CHECK:RULES` → Display full protocol checklist + confirm active rules
+- `//REFRESH` → Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia)
+- `//WHICH:RULES` → Show which protocols apply to current operation
 - `//COMPACT` → Manual context compression
 - `//THINK` → Show reasoning in `<thinking>` tags
+
+---
+
+## 🔴 AI BEHAVIOR RULES (CRITICAL - NON-NEGOTIABLE!)
+
+> **Added 2026-02-10 from ROADMAP Phase 1 - These rules are MANDATORY and override all other considerations.**
+
+### Rule #1: КАЧЕСТВО > СКОРОСТЬ (Quality > Speed) - ALWAYS
+
+**REQUIREMENT (HARD LEVEL):**
+- ✅ Внимание к деталям (attention to details) - ВСЕГДА
+- ✅ Качество > Скорость - НЕ КОМПРОМИСС!
+- ✅ Тщательный подход к каждой задаче
+- ❌ **NEVER** пропускать шаги для экономии времени/токенов
+- ❌ **NEVER** делать "quick verification" вместо detailed audit
+- ❌ **NEVER** пролетать по задачам быстро
+
+**User feedback that triggered this rule:**
+- "Что то ты быстро пролетел по 7 фазам"
+- Phases 8-10 были выполнены как "quick verification" instead of detailed audit
+
+**This means:**
+- Read files CAREFULLY
+- Check assumptions THOROUGHLY
+- Verify results COMPLETELY
+- Take time to think DEEPLY
+- Speed is secondary to correctness
+
+---
+
+### Rule #2: Think Harder + "I Don't Know" Honesty - MANDATORY
+
+**REQUIREMENT (NON-NEGOTIABLE):**
+
+✅ **ALWAYS think harder before answering**
+- Глибокий аналіз перед відповіддю
+- НЕ швидкі припущення
+- Перевіряй факти ПЕРЕД твердженнями
+
+✅ **If uncertain → say "I don't know"**
+- Being honest about uncertainty is BETTER than guessing
+- "I don't know" is a VALID and PROFESSIONAL answer
+
+✅ **If need to guess → clearly state it's a guess**
+- "This is my best guess based on..."
+- "I estimate approximately... (not measured)"
+
+✅ **If need to check → check FIRST, then answer**
+- Use Read/Bash/Grep to VERIFY before claiming
+- Never say "I checked" when you didn't actually check
+
+❌ **NEVER fabricate facts/data**
+❌ **NEVER pretend to know when you don't**
+❌ **NEVER guess without saying it's a guess**
+
+**Examples:**
+
+❌ **WRONG:**
+```
+User: "What's the exact token count of file X?"
+AI: "It's about 5k tokens" (GUESSING!)
+```
+
+✅ **RIGHT:**
+```
+User: "What's the exact token count of file X?"
+AI: "I don't know the exact count without measuring. Let me check with estimate-tokens.sh"
+```
+
+❌ **WRONG:**
+```
+User: "Does file Y exist?"
+AI: "Yes, it exists" (ASSUMING!)
+```
+
+✅ **RIGHT:**
+```
+User: "Does file Y exist?"
+AI: "Let me check [uses Read/Bash to verify] ... Yes, confirmed it exists at path/to/file"
+```
+
+❌ **WRONG (Швидкий висновок):**
+```
+AI: "I checked all files, they look good" (НЕ ПЕРЕВІРИВ!)
+```
+
+✅ **RIGHT (Ретельний підхід):**
+```
+AI: "Let me systematically check each file:
+     1. File A [checks with Read] - OK
+     2. File B [checks with Read] - Found issue: XYZ
+     3. File C [checks with Read] - OK
+     Conclusion: 2/3 OK, 1 needs fix"
+```
+
+**Why this is critical:**
+- Trust is the foundation of effective collaboration
+- Guessing wastes user's time with incorrect information
+- Honesty allows user to make informed decisions
+- "I don't know" + verification = professional approach
+
+---
+
+### Rule #3: Token Status After EVERY Phase - STRICT
+
+**REQUIREMENT (NON-NEGOTIABLE):**
+
+After completing **EVERY phase/stage/major task**, ALWAYS display:
+
+```markdown
+[PHASE X COMPLETE]
+Session tokens: Xk/200k (Y%)
+Daily tokens: Zk/150k (W%)
+Remaining: ~Nk
+Status: 🟢/🟡/🟠/🔴
+
+Next: [Brief description of next phase]
+Estimate: ~Nk tokens
+
+Продолжить Phase X+1? [Y/n]
+```
+
+**MANDATORY RULES:**
+- ❌ **NEVER** start new phase without user confirmation
+- ✅ **ALWAYS** show token status after completing phase
+- ✅ **ALWAYS** show estimate for next phase
+- ✅ **ALWAYS** wait for explicit approval
+
+**User feedback that triggered this rule:**
+- "При чем ы ниразу не сообщил мне в конце фаз про токены"
+- AI пропустил показ token status после Phases 8-10
+
+**Why this exists:**
+- Prevents token limit violations
+- Gives user control over budget
+- Allows user to decide: continue, pause, or defer
+- Critical for multi-phase work
+
+**This protocol exists in AI-ENFORCEMENT.md but was IGNORED - now it's CRITICAL here too!**
+
+---
+
+### Rule #4: No Auto-Commit/Push - User Control ONLY
+
+**REQUIREMENT (STRICT):**
+
+❌ **NEVER** auto-commit after changes
+❌ **NEVER** auto-push after commit
+❌ **NEVER** assume user wants commit
+
+✅ **ALWAYS** ask user first
+✅ **ONLY** commit when explicitly requested
+
+**Exception:** After phase complete → **PROPOSE**, don't execute
+
+**Correct Format:**
+```
+✓ Phase X завершена и проверена
+
+Создать commit? [Y/n]
+(Изменено: N файлов)
+```
+
+Then **WAIT** for user approval.
+
+**User feedback that triggered this rule:**
+- "Комитить и пушить каждый этап не надо. Только по требованию пользователя"
+
+**Why this is critical:**
+- User controls git history
+- Prevents unwanted commits
+- Allows user to review changes first
+- Respects user's workflow preferences
 
 ---
 
@@ -144,7 +331,7 @@ When user sends these commands:
 
 **💰 Token savings: Continue instead of restart = save 18-25k per avoided restart**
 
-**📖 Full guide:** [.ai/docs/session-mgmt.md](.ai/docs/session-mgmt.md)
+**📖 Full guide:** [.ai/docs/session-mgmt.md](../.ai/docs/session-mgmt.md)
 
 ---
 
@@ -238,11 +425,11 @@ Verify at session start:
 - ✅ Enterprise: Now self-contained (~23k)
 
 **Session Management Best Practices:**
-- ✅ New guide: `.ai/SESSION_MANAGEMENT.md`
+- ✅ New guide: [`.ai/docs/session-mgmt.md`](../.ai/docs/session-mgmt.md)
 - ✅ Continue vs restart decision guide
 - ✅ Platform-specific tips (VSCode, Cursor, Windsurf)
 - ✅ Expected savings: 50% fewer restarts = ~35-50k tokens/day
 
 **Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
 
-**Migration:** Automatic - contexts updated in place. Read SESSION_MANAGEMENT.md for best practices.
+**Migration:** Automatic - contexts updated in place. Read [.ai/docs/session-mgmt.md](../.ai/docs/session-mgmt.md) for best practices.

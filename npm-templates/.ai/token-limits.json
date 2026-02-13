@@ -1,7 +1,10 @@
 {
-  "_comment": "🤖 Universal AI Token Tracker v3.0 - Just Works™",
+  "_comment": "🤖 Universal AI Token Tracker v3.0 - Intelligent Budget Management",
   "_disclaimer": "Limits are CONSERVATIVE (intentionally 10-20% lower). You'll get early warnings, not surprises.",
   "_howto": "1. Set 'provider' below  2. Set 'plan'  3. Copy limits from PRESETS (or leave defaults)  4. Done!",
+  "_version": "3.0.0",
+  "_updated": "2026-02-03",
+  "_changelog": "v3.0: Pre-flight approval, confidence-based estimation, variance learning, emergency reserves, smart batching",
 
   "provider": "anthropic",
   "plan": "pro",
@@ -10,44 +13,267 @@
   "daily_limit": 150000,
 
   "PRESETS": {
-    "_note": "These are SAFE estimates. Your actual limits may be higher - always check provider docs.",
+    "_note": "Comprehensive provider database. Limits are conservative estimates where not officially published.",
+    "_last_updated": "2026-02-07",
+    "_data_source": "Official docs + verified user reports",
 
     "anthropic": {
-      "free": { "monthly": 250000, "daily": 8000 },
-      "pro": { "monthly": 5000000, "daily": 150000 },
-      "team": { "monthly": 25000000, "daily": 800000 },
-      "_docs": "https://console.anthropic.com/settings/limits",
-      "_updated": "2026-01"
-    },
+      "_docs": "https://www.anthropic.com/pricing",
+      "_updated": "2026-02-07",
 
-    "openai": {
-      "free": { "monthly": 80000, "daily": 4000 },
-      "plus": { "monthly": 800000, "daily": 40000 },
-      "team": { "monthly": 4000000, "daily": 150000 },
-      "_docs": "https://platform.openai.com/account/limits",
-      "_updated": "2026-01"
+      "api": {
+        "name": "API (Pay-as-you-go)",
+        "monthly": 999999999,
+        "daily": 999999999,
+        "session": 200000,
+        "pricing_input": 3.00,
+        "pricing_output": 15.00,
+        "pricing_unit": "per 1M tokens (Sonnet)",
+        "rate_limit": "Tier-based (grows with spend)",
+        "limit_type": "soft",
+        "notes": "Sonnet: $3/$15, Opus: $15/$75, Haiku: $0.25/$1.25 per 1M tokens. Prompt caching available."
+      },
+
+      "free": {
+        "name": "claude.ai Free",
+        "monthly": 250000,
+        "daily": 8000,
+        "session": 200000,
+        "pricing_input": 0,
+        "pricing_output": 0,
+        "rate_limit": "Message caps (rolling window)",
+        "limit_type": "fair_use",
+        "notes": "Limited Opus usage, lower priority compute"
+      },
+
+      "pro": {
+        "name": "Claude Pro",
+        "monthly": 5000000,
+        "daily": 500000,
+        "session": 200000,
+        "pricing_input": 0,
+        "pricing_output": 0,
+        "cost_monthly": 20,
+        "rate_limit": "Higher than free (not published)",
+        "limit_type": "fair_use",
+        "notes": "Daily limit ESTIMATED (~500k-1M). Priority access, all models, VSCode Extension included."
+      },
+
+      "team": {
+        "name": "Claude Team",
+        "monthly": 25000000,
+        "daily": 800000,
+        "session": 200000,
+        "cost_monthly": 25,
+        "rate_limit": "Shared workspace limits",
+        "limit_type": "fair_use",
+        "notes": "$25-30/user/month. Pooled usage, admin panel, central billing."
+      }
     },
 
     "google": {
-      "free": { "monthly": 400000, "daily": 15000 },
-      "pro": { "monthly": 1500000, "daily": 80000 },
       "_docs": "https://ai.google.dev/pricing",
-      "_updated": "2026-01"
+      "_updated": "2026-02-07",
+
+      "api": {
+        "name": "Gemini API",
+        "monthly": 999999999,
+        "daily": 999999999,
+        "session": 1000000,
+        "pricing_input": 3.50,
+        "pricing_output": 10.50,
+        "pricing_unit": "per 1M tokens (1.5 Pro)",
+        "rate_limit": "Tier-based quotas",
+        "limit_type": "soft",
+        "notes": "Pro: $3.50/$10.50, Flash: $0.35/$1.05 per 1M. Up to 1M context (Pro). Free trial credits."
+      },
+
+      "free": {
+        "name": "Gemini Free",
+        "monthly": 400000,
+        "daily": 15000,
+        "session": 32000,
+        "rate_limit": "Message caps (rolling)",
+        "limit_type": "fair_use",
+        "notes": "Limited access to latest models, lower priority"
+      },
+
+      "advanced": {
+        "name": "Gemini Advanced",
+        "monthly": 1500000,
+        "daily": 80000,
+        "session": 1000000,
+        "cost_monthly": 20,
+        "rate_limit": "Higher than free",
+        "limit_type": "fair_use",
+        "notes": "$20/month (Google One AI Premium). Long-context enabled, top models."
+      }
     },
 
     "cursor": {
-      "free": { "monthly": 150000, "daily": 8000 },
-      "pro": { "monthly": 1500000, "daily": 80000 },
       "_docs": "https://cursor.sh/pricing",
-      "_updated": "2026-01"
+      "_updated": "2026-02-07",
+
+      "free": {
+        "name": "Cursor Free",
+        "monthly": 150000,
+        "daily": 8000,
+        "rate_limit": "Limited fast requests",
+        "limit_type": "soft",
+        "notes": "Unlimited basic autocompletion. Limited fast AI requests → fallback to slower queue."
+      },
+
+      "pro": {
+        "name": "Cursor Pro",
+        "monthly": 1500000,
+        "daily": 80000,
+        "cost_monthly": 20,
+        "rate_limit": "Large allowance of fast premium requests",
+        "limit_type": "soft",
+        "notes": "$20/month. Access to GPT-4/Claude models. Faster responses vs Free."
+      },
+
+      "business": {
+        "name": "Cursor Business",
+        "monthly": 3000000,
+        "daily": 150000,
+        "cost_monthly": 40,
+        "rate_limit": "Priority routing",
+        "limit_type": "fair_use",
+        "notes": "$40/user/month. Team management, central billing, policy controls."
+      }
     },
 
     "github_copilot": {
-      "free": { "monthly": 100000, "daily": 5000 },
-      "individual": { "monthly": 500000, "daily": 25000 },
-      "business": { "monthly": 2000000, "daily": 100000 },
       "_docs": "https://github.com/features/copilot",
-      "_updated": "2026-01"
+      "_updated": "2026-02-07",
+
+      "individual": {
+        "name": "Copilot Individual",
+        "monthly": 500000,
+        "daily": 25000,
+        "cost_monthly": 10,
+        "rate_limit": "Internal throttling",
+        "limit_type": "fair_use",
+        "notes": "$10/month or $100/year. Code completions + chat. Heavy users may experience throttling."
+      },
+
+      "business": {
+        "name": "Copilot Business",
+        "monthly": 2000000,
+        "daily": 100000,
+        "cost_monthly": 19,
+        "rate_limit": "Higher than Individual",
+        "limit_type": "fair_use",
+        "notes": "$19/user/month. Organization deployment, policy controls."
+      },
+
+      "enterprise": {
+        "name": "Copilot Enterprise",
+        "monthly": 5000000,
+        "daily": 200000,
+        "cost_monthly": 0,
+        "rate_limit": "Priority capacity",
+        "limit_type": "contract",
+        "notes": "Custom pricing. Deep GitHub integration, security/compliance features."
+      }
+    },
+
+    "mistral": {
+      "_docs": "https://mistral.ai/technology/#pricing",
+      "_updated": "2026-02-07",
+
+      "api": {
+        "name": "Mistral API",
+        "monthly": 999999999,
+        "daily": 999999999,
+        "session": 128000,
+        "pricing_input": 2.70,
+        "pricing_output": 8.10,
+        "pricing_unit": "per 1M tokens (Medium)",
+        "rate_limit": "Tier-based quotas",
+        "limit_type": "soft",
+        "notes": "Large: $8/$24, Medium: $2.7/$8.1, Small: $1/$3 per 1M. Strong EU alternative. Often cheaper than GPT-4."
+      }
+    },
+
+    "groq": {
+      "_docs": "https://groq.com/",
+      "_updated": "2026-02-07",
+
+      "free": {
+        "name": "Groq Free Tier",
+        "monthly": 100000,
+        "daily": 5000,
+        "rate_limit": "Requests/minute caps",
+        "limit_type": "hard",
+        "notes": "Extremely fast inference. Daily rolling limits. Popular for real-time apps."
+      }
+    },
+
+    "deepseek": {
+      "_docs": "https://www.deepseek.com/",
+      "_updated": "2026-02-07",
+
+      "api": {
+        "name": "DeepSeek API",
+        "monthly": 999999999,
+        "daily": 999999999,
+        "pricing_input": 0.50,
+        "pricing_output": 1.50,
+        "pricing_unit": "per 1M tokens (estimated)",
+        "rate_limit": "Tiered quotas",
+        "limit_type": "soft",
+        "notes": "Ultra-cheap GPT alternative. Sub-$1/1M input. Rapid adoption 2025-2026. Strong coding."
+      }
+    },
+
+    "perplexity": {
+      "_docs": "https://www.perplexity.ai/pro",
+      "_updated": "2026-02-07",
+
+      "free": {
+        "name": "Perplexity Free",
+        "monthly": 50000,
+        "daily": 2000,
+        "rate_limit": "Limited Pro searches per day",
+        "limit_type": "hard",
+        "notes": "Mix of models (OpenAI/Anthropic). Search-first UX."
+      },
+
+      "pro": {
+        "name": "Perplexity Pro",
+        "monthly": 400000,
+        "daily": 20000,
+        "cost_monthly": 20,
+        "rate_limit": "Higher Pro search allowance",
+        "limit_type": "fair_use",
+        "notes": "$20/month. Premium models, higher daily limits, priority access."
+      }
+    },
+
+    "windsurf": {
+      "_docs": "https://codeium.com/windsurf",
+      "_updated": "2026-02-07",
+
+      "free": {
+        "name": "Windsurf Free",
+        "monthly": 200000,
+        "daily": 10000,
+        "rate_limit": "Fair use",
+        "limit_type": "fair_use",
+        "notes": "AI IDE with built-in models. Competes with Cursor. Not publicly quantified."
+      },
+
+      "enterprise": {
+        "name": "Windsurf Enterprise",
+        "monthly": 2000000,
+        "daily": 100000,
+        "cost_monthly": 0,
+        "rate_limit": "Contract-based",
+        "limit_type": "contract",
+        "notes": "Custom per-seat pricing. Enterprise deployment focus."
+      }
     },
 
     "custom": {
@@ -89,15 +315,98 @@
     "lazy_loading_prevented_reads": 0
   },
 
+  "v3_features": {
+    "_comment": "Token Control v3.0 - Intelligent Budget Management",
+
+    "auto_approve_thresholds": {
+      "_comment": "Tasks below threshold auto-approve (based on current zone)",
+      "green_zone": 15000,
+      "moderate_zone": 8000,
+      "caution_zone": 3000,
+      "critical_zone": 0
+    },
+
+    "session_tracking": {
+      "_comment": "Real-time session budget tracking",
+      "used": 0,
+      "committed": 0,
+      "available": 150000,
+      "reserve_percent": 10,
+      "reserve_tokens": 15000,
+      "safe_available": 135000
+    },
+
+    "variance_history": {
+      "_comment": "Learning data for estimate accuracy improvement",
+      "_max_records": 100,
+      "_current_count": 0,
+      "_example_record": {
+        "task_id": "uuid-here",
+        "date": "2026-02-03T14:30:00Z",
+        "request_brief": "Refactor auth middleware",
+        "task_type": "refactor",
+        "scope": "medium",
+        "complexity": "moderate",
+        "estimated_tokens": 40000,
+        "actual_tokens": 45000,
+        "variance_tokens": 5000,
+        "variance_percent": 12.5,
+        "confidence_level": "medium",
+        "confidence_range": "±30%",
+        "within_range": true,
+        "reason": "Additional type definitions needed",
+        "files_estimated": 3,
+        "files_actual": 4,
+        "user_approved_as_is": true
+      },
+      "tasks": []
+    },
+
+    "learning_stats": {
+      "_comment": "Accuracy metrics for self-improvement",
+      "total_tasks": 0,
+      "avg_variance_percent": 0,
+      "high_confidence_tasks": 0,
+      "medium_confidence_tasks": 0,
+      "low_confidence_tasks": 0,
+      "accuracy_trend": "improving",
+      "last_calibration": null
+    },
+
+    "batch_opportunities": {
+      "_comment": "Track detected batch optimizations",
+      "detected": 0,
+      "accepted": 0,
+      "tokens_saved": 0
+    },
+
+    "deferred_tasks": {
+      "_comment": "Queue of tasks user chose to defer",
+      "queue": []
+    },
+
+    "learning_enabled": true,
+    "self_calibration_enabled": true,
+    "batch_detection_enabled": true
+  },
+
   "notes": [
+    "v3.0: Intelligent budget management with pre-flight approval",
     "Limits are CONSERVATIVE (10-20% lower) for early warnings",
     "Check PRESETS above for your provider and plan",
+    "Pre-flight estimates shown BEFORE execution (tasks >5k)",
+    "Confidence levels: HIGH (±15%), MEDIUM (±30%), LOW (±50%)",
+    "System learns from variance to improve estimates over time",
+    "Emergency reserve (10-15%) always protected",
+    "Smart batching suggests optimizations automatically",
     "Context compression auto-triggers at 50% (saves 40-60% tokens)",
-    "Session checkpoints created at 80% tokens",
-    "AI automatically updates this file - no manual tracking needed"
+    "NOTE: Token tracking is MANUAL - AI cannot auto-update JSON files",
+    "Update daily_usage manually or use provider's dashboard for tracking",
+    "This file serves as reference/template for token management protocols"
   ],
 
   "history": {
-    "_comment": "Daily usage tracking - AI fills this automatically"
+    "_comment": "Manual tracking only - record daily usage here if needed",
+    "_example": "2026-02-10: 145k/150k (daily limit approached)"
   }
 }
