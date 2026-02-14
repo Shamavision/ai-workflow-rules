@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "9.0.0",
+  "version": "9.1.1",
   "description": "Security policy for pre-commit hook - Universal 3-tier protection system + AI Protection",
 
   "secret_scanning": {
@@ -332,7 +332,7 @@
 
   "metadata": {
     "framework": "ai-workflow-rules",
-    "version": "9.0.0",
+    "version": "9.1.1",
     "philosophy": "Silent Guardian - Protect without blocking productivity",
     "approach": "Universal 3-tier: Hard Block / Warning + Choice / Silent Allow + AI Protection",
     "best_practices_based_on": ["GitGuardian", "GitHub Advanced Security", "TruffleHog", "OWASP LLM Top 10"],

@@ -156,7 +156,9 @@ $ ./scripts/seo-check.sh
 - ✅ 3 versions: Bash, Node.js, PowerShell
 - ✅ Works with all AI assistants
 
-[Read Threat Model](.ai/THREAT_MODEL.md) | [See Disclaimers](.ai/DISCLAIMERS.md)
+**Documentation:**
+- [Threat Model](./.ai/THREAT_MODEL.md)
+- [Disclaimers](./.ai/DISCLAIMERS.md)
 
 ---
 

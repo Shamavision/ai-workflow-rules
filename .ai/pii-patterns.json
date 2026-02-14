@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "9.0.0",
+  "version": "9.1.1",
   "description": "PII Detection for AI Logs Protection - Ukrainian market focus",
   "updated": "2026-02-05",
 
@@ -388,7 +388,7 @@
 
   "metadata": {
     "framework": "ai-workflow-rules",
-    "version": "9.0.0",
+    "version": "9.1.1",
     "component": "AI Protection - PII Detection",
     "based_on": [
       "GDPR Article 4 (Personal Data Definition)",

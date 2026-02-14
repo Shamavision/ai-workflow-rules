@@ -276,6 +276,11 @@ sentry-debug-configuration.json
 *.old
 *~
 
+# Backup directories (with timestamps or suffixes)
+*.backup.*/
+*-backup/
+backup.*/
+
 # ==============================================================================
 # DOCUMENTATION (Generated)
 # ==============================================================================

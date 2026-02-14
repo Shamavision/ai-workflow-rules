@@ -226,7 +226,8 @@ All rules are **mandatory** during this session:
 ⚠️ You need to **manually read** RULES at the start of each session:
 
 **How to use:**
-1. Read [`../../AGENTS.md`](../../AGENTS.md) or [`../rules/core.md`](../rules/core.md)
+1. Read [`../../AGENTS.md`](../../AGENTS.md)
+   **OR** read [`../rules/core.md`](../rules/core.md)
 2. Tell the AI: "Follow these rules throughout our conversation"
 3. Start working
 

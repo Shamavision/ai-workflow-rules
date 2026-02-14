@@ -1,4 +1,4 @@
-# Security Disclaimers - AI Workflow Rules v9.0
+# Security Disclaimers - AI Workflow Rules v9.1.1
 
 > **IMPORTANT LEGAL NOTICE**
 > **Please read carefully before using this framework**
@@ -208,6 +208,6 @@ We will respond within 72 hours.
 
 ---
 
-**Made in Ukraine 🇺🇦** | **Framework Version 9.0.0** | **GPL v3**
+**Made in Ukraine 🇺🇦** | **Framework Version 9.1.1** | **GPL v3**
 
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-14

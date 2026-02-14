@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # AI PROTECTION SCRIPT - Bash Version
-# AI Workflow Rules Framework v9.0
+# AI Workflow Rules Framework v9.1.1
 # ==============================================================================
 #
 # PURPOSE:
@@ -299,7 +299,7 @@ main() {
     fi
 
     echo ""
-    echo "🤖 AI Protection v9.0"
+    echo "🤖 AI Protection v9.1.1"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
 
