@@ -1,24 +1,28 @@
 #!/bin/bash
 # ==============================================================================
-# SYNC RULES - Update AI tool rules from source context
-# AI Workflow Rules Framework v9.1
+# SYNC RULES - Simplified Version v2.0
+# AI Workflow Rules Framework v9.1.1
 # ==============================================================================
+#
+# Philosophy: IDE configs are STATIC TEMPLATES (context-agnostic)
+#             Context is DYNAMIC CONFIGURATION (.ai/config.json)
+#
+# What this script does:
+#   1. If IDE config missing → copy from npm-templates
+#   2. If IDE config exists → update version header only (preserve content!)
+#   3. NEVER copy full context into IDE configs (breaks modularity!)
 #
 # Usage:
 #   bash scripts/sync-rules.sh
 #
-# This script regenerates IDE-specific rule files from the selected context.
-# Files regenerated: .cursorrules, .windsurfrules, .continuerules
-# Files NOT touched: AGENTS.md (navigation hub), .claude/CLAUDE.md (custom wrapper)
-#
-# Use this after:
-#   - Updating framework (npm update)
-#   - Changing context in .ai/config.json
-#   - Manual edits to context files
+# When to run:
+#   - After npm install (first time setup)
+#   - After framework update (to update version number)
+#   - NOT needed when changing context (just edit .ai/config.json)
 #
 # ==============================================================================
 
-set -e
+# Note: NOT using 'set -e' because we handle return codes explicitly
 
 # Colors
 RED='\033[0;31m'
@@ -28,13 +32,16 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+FRAMEWORK_VERSION="9.1.1"
+TEMPLATE_DIR="npm-templates"
+
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}🔄 Syncing AI Rules${NC}"
+echo -e "${BLUE}🔄 Syncing AI Rules (Simplified v2.0)${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
 # ==============================================================================
-# READ CONFIG
+# VALIDATE ENVIRONMENT
 # ==============================================================================
 
 if [ ! -f ".ai/config.json" ]; then
@@ -43,187 +50,156 @@ if [ ! -f ".ai/config.json" ]; then
     exit 1
 fi
 
-# Extract context from config
-CONTEXT=$(grep -o '"context"[[:space:]]*:[[:space:]]*"[^"]*"' .ai/config.json | sed 's/.*"\([^"]*\)".*/\1/')
-
-if [ -z "$CONTEXT" ]; then
-    echo -e "${YELLOW}⚠️  Context not found in config, using 'standard'${NC}"
-    CONTEXT="standard"
-fi
-
-echo -e "${CYAN}Context: $CONTEXT${NC}"
-echo ""
-
-SOURCE_RULES=".ai/contexts/$CONTEXT.context.md"
-
-if [ ! -f "$SOURCE_RULES" ]; then
-    echo -e "${RED}❌ Error: Source rules not found: $SOURCE_RULES${NC}"
+if [ ! -d "$TEMPLATE_DIR" ]; then
+    echo -e "${RED}❌ Error: $TEMPLATE_DIR directory not found${NC}"
+    echo "   This script must be run from project root"
     exit 1
 fi
 
-echo -e "${GREEN}✓${NC} Source: $SOURCE_RULES"
-echo ""
+# Extract context from config (for display only, not used for generation!)
+CONTEXT=$(grep -o '"context"[[:space:]]*:[[:space:]]*"[^"]*"' .ai/config.json | sed 's/.*"\([^"]*\)".*/\1/')
 
-# ==============================================================================
-# DETECT EXISTING RULE FILES
-# ==============================================================================
-
-echo "Detecting AI tool rule files..."
-echo ""
-
-RULE_FILES=()
-
-# Check for each tool's rule file
-#
-# NOTE (v9.1): AGENTS.md and .claude/CLAUDE.md are now custom files (not auto-generated)
-# - AGENTS.md: Navigation hub with links to .ai/docs/ and .ai/rules/
-# - .claude/CLAUDE.md: Custom wrapper for Claude Code with smart context loading
-#
-# These files are synchronized from IDE templates (.cursorrules, .windsurfrules, etc.)
-[ -f ".cursorrules" ] && RULE_FILES+=(".cursorrules:Cursor")
-[ -f ".windsurfrules" ] && RULE_FILES+=(".windsurfrules:Windsurf")
-[ -f ".continuerules" ] && RULE_FILES+=(".continuerules:Continue.dev")
-
-if [ ${#RULE_FILES[@]} -eq 0 ]; then
-    echo -e "${YELLOW}⚠️  No rule files found${NC}"
-    echo "   Run installer to create them"
-    exit 0
+if [ -z "$CONTEXT" ]; then
+    CONTEXT="standard"
 fi
 
-echo -e "${CYAN}Found ${#RULE_FILES[@]} file(s) to sync:${NC}"
-for item in "${RULE_FILES[@]}"; do
-    file="${item%%:*}"
-    tool="${item##*:}"
-    echo -e "  • $file ${BLUE}($tool)${NC}"
-done
+echo -e "${CYAN}Current context: $CONTEXT${NC}"
+echo -e "${CYAN}Framework version: $FRAMEWORK_VERSION${NC}"
 echo ""
 
 # ==============================================================================
 # SYNC FUNCTIONS
 # ==============================================================================
 
-# Function: Update generated file (without markers)
-update_generated_file() {
+# Function: Ensure IDE config exists (copy from template if missing)
+# Returns: 0 = created new, 1 = updated existing, 2 = error
+ensure_ide_config() {
     local file=$1
     local tool_name=$2
+    local template="$TEMPLATE_DIR/$file"
 
-    echo -e "${CYAN}→${NC} Updating $file..."
-
-    # Backup
-    cp "$file" "$file.backup-$(date +%Y%m%d-%H%M%S)"
-
-    # Regenerate
-    cat > "$file" << EOF
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# AI WORKFLOW RULES FRAMEWORK v9.0
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#
-# Tool: $tool_name
-# Context: $CONTEXT
-# Auto-generated from: .ai/contexts/$CONTEXT.context.md
-# Last synced: $(date '+%Y-%m-%d %H:%M:%S')
-#
-# To update rules: npm run sync-rules (or bash scripts/sync-rules.sh)
-# Framework: https://github.com/Shamavision/ai-workflow-rules
-#
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-EOF
-
-    cat "$SOURCE_RULES" >> "$file"
-
-    cat >> "$file" << EOF
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# END OF AUTO-GENERATED RULES
-# Made in Ukraine 🇺🇦
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-
-    echo -e "${GREEN}✓${NC} Updated $file"
-}
-
-# Function: Update file with markers (preserves user content)
-update_marked_file() {
-    local file=$1
-    local tool_name=$2
-
-    echo -e "${CYAN}→${NC} Updating $file (preserving user content)..."
-
-    # Check if file has markers
-    if ! grep -q "AI-WORKFLOW-RULES-START" "$file"; then
-        echo -e "${YELLOW}  ⚠️  No markers found - skipping (manual file)${NC}"
-        return
+    if [ ! -f "$template" ]; then
+        echo -e "${YELLOW}⚠️  Template not found: $template${NC}"
+        return 2
     fi
 
-    # Backup
-    cp "$file" "$file.backup-$(date +%Y%m%d-%H%M%S)"
-
-    # Extract content between markers
-    START_LINE=$(grep -n "AI-WORKFLOW-RULES-START" "$file" | cut -d: -f1)
-    END_LINE=$(grep -n "AI-WORKFLOW-RULES-END" "$file" | cut -d: -f1)
-
-    if [ -z "$START_LINE" ] || [ -z "$END_LINE" ]; then
-        echo -e "${RED}  ✗ Markers incomplete - skipping${NC}"
-        return
+    if [ ! -f "$file" ]; then
+        # File missing - copy from template
+        echo -e "${CYAN}→${NC} Creating $file from template..."
+        cp "$template" "$file"
+        echo -e "${GREEN}✓${NC} Created $file (${tool_name})"
+        return 0
     fi
 
-    # Keep content before markers
-    head -n "$START_LINE" "$file" > "$file.tmp"
+    # File exists - update header only
+    echo -e "${CYAN}→${NC} Updating $file header..."
 
-    # Regenerate our section
-    cat >> "$file.tmp" << EOF
+    # Backup
+    cp "$file" "$file.backup-$(date +%Y%m%d-%H%M%S)" 2>/dev/null || true
 
-EOF
+    # Update version (line 2) and timestamp (line 5)
+    # Using platform-agnostic sed approach
 
-    cat "$SOURCE_RULES" >> "$file.tmp"
-
-    cat >> "$file.tmp" << EOF
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# AI-WORKFLOW-RULES-END v9.0.0
-# Last synced: $(date '+%Y-%m-%d %H:%M:%S')
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-
-    # Keep content after markers (if any)
-    TAIL_START=$((END_LINE + 1))
-    tail -n +$TAIL_START "$file" >> "$file.tmp"
+    # Create temp file with updated header
+    {
+        echo "# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "# AI WORKFLOW RULES FRAMEWORK v$FRAMEWORK_VERSION"
+        echo "# Tool: $tool_name"
+        echo "# Auto-generated - DO NOT EDIT MANUALLY"
+        echo "# Update via: npm run sync-rules (or bash scripts/sync-rules.sh)"
+        echo "# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        tail -n +7 "$file"  # Keep everything after line 6
+    } > "$file.tmp"
 
     # Replace original
     mv "$file.tmp" "$file"
 
-    echo -e "${GREEN}✓${NC} Updated $file (user content preserved)"
+    echo -e "${GREEN}✓${NC} Updated $file (content preserved, header updated)"
+    return 1
 }
 
 # ==============================================================================
-# SYNC ALL FILES
+# DETECT AND SYNC IDE CONFIGS
 # ==============================================================================
 
-echo "Syncing files..."
+echo "Detecting IDE config files..."
 echo ""
 
-for item in "${RULE_FILES[@]}"; do
-    file="${item%%:*}"
-    tool="${item##*:}"
+SYNCED_COUNT=0
+CREATED_COUNT=0
+FAILED_COUNT=0
 
-    # Check if file has markers (user's existing file) or is fully generated
-    if grep -q "AI-WORKFLOW-RULES-START" "$file" 2>/dev/null; then
-        # Has markers - preserve user content
-        update_marked_file "$file" "$tool"
-    else
-        # Fully generated - replace entirely
-        update_generated_file "$file" "$tool"
-    fi
-done
-
+# Cursor IDE
+ensure_ide_config ".cursorrules" "Cursor IDE"
+RESULT=$?
+case $RESULT in
+    0) ((CREATED_COUNT++)) ;;
+    1) ((SYNCED_COUNT++)) ;;
+    2) ((FAILED_COUNT++)) ;;
+esac
 echo ""
+
+# Windsurf IDE
+ensure_ide_config ".windsurfrules" "Windsurf IDE"
+RESULT=$?
+case $RESULT in
+    0) ((CREATED_COUNT++)) ;;
+    1) ((SYNCED_COUNT++)) ;;
+    2) ((FAILED_COUNT++)) ;;
+esac
+echo ""
+
+# Continue.dev (optional)
+if [ -f "$TEMPLATE_DIR/.continuerules" ]; then
+    ensure_ide_config ".continuerules" "Continue.dev"
+    RESULT=$?
+    case $RESULT in
+        0) ((CREATED_COUNT++)) ;;
+        1) ((SYNCED_COUNT++)) ;;
+        2) ((FAILED_COUNT++)) ;;
+    esac
+    echo ""
+fi
+
+# ==============================================================================
+# SUMMARY
+# ==============================================================================
+
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${GREEN}✅ Sync complete!${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo "Updated ${#RULE_FILES[@]} file(s) from context: $CONTEXT"
+
+if [ $CREATED_COUNT -gt 0 ]; then
+    echo -e "${GREEN}Created:${NC} $CREATED_COUNT file(s) from templates"
+fi
+
+if [ $SYNCED_COUNT -gt 0 ]; then
+    echo -e "${CYAN}Updated:${NC} $SYNCED_COUNT file(s) (header only, content preserved)"
+fi
+
+if [ $FAILED_COUNT -gt 0 ]; then
+    echo -e "${YELLOW}Skipped:${NC} $FAILED_COUNT file(s) (templates missing)"
+fi
+
 echo ""
-echo "Backups created with timestamp suffix"
-echo "Next: Restart your AI assistant to load updated rules"
+echo -e "${CYAN}💡 How it works:${NC}"
+echo "   • IDE configs are STATIC templates (context-agnostic)"
+echo "   • To change context: Edit .ai/config.json"
+echo "   • AI will load the appropriate context automatically"
+echo "   • No need to re-run sync-rules after context change!"
+echo ""
+echo -e "${CYAN}📖 Context system:${NC}"
+echo "   • minimal: ~10k tokens (startups, MVP)"
+echo "   • standard: ~14k tokens (standard projects)"
+echo "   • ukraine-full: ~18k tokens (Ukrainian market + full features)"
+echo "   • enterprise: ~23k tokens (compliance + advanced)"
+echo ""
+
+if [ $SYNCED_COUNT -gt 0 ]; then
+    echo "Backups created with timestamp suffix (.backup-YYYYMMDD-HHMMSS)"
+    echo ""
+fi
+
+echo "Next: Restart your AI assistant to ensure updated rules are loaded"
 echo ""
