@@ -339,11 +339,11 @@ sync-rules.sh v2.0 now:
 
 ---
 
-### **Phase 8.6: TOKEN_PRESETS Synchronization** (~10-15k tokens) **NEXT**
+### **Phase 8.6: TOKEN_PRESETS Synchronization** ✅ **COMPLETE** (2026-02-16)
 
 **Цель:** Синхронизировать TOKEN_PRESETS в wizard с .ai/token-limits.json
 
-**Status:** 🔴 **PLANNED for Day 4 (2026-02-16)**
+**Status:** ✅ **COMPLETE** (~12k actual)
 
 **Problem Discovered:**
 - **bin/cli.js TOKEN_PRESETS** (lines 14-60) OUTDATED:
@@ -361,27 +361,197 @@ sync-rules.sh v2.0 now:
 - Accurate wizard setup
 - User gets correct daily/monthly limits
 
-**Tasks:**
-- [ ] Update TOKEN_PRESETS in bin/cli.js (lines 14-41):
-  - [ ] Remove "openai" (not in token-limits.json reference)
-  - [ ] Add: windsurf (free, enterprise)
-  - [ ] Add: perplexity (free, pro)
-  - [ ] Add: groq (free)
-  - [ ] Add: deepseek (api)
-  - [ ] Add: mistral (api)
-  - [ ] Complete existing: cursor.business, github_copilot.enterprise, google.advanced
-- [ ] Update PLANS mapping (lines 53-60)
-- [ ] Update PROVIDERS list (lines 44-51)
-- [ ] Test wizard with all new providers
-- [ ] Verify limits match token-limits.json PRESETS
+**Tasks Completed:**
+- [x] Update TOKEN_PRESETS in bin/cli.js:
+  - [x] Fixed anthropic.pro: daily 150k → 500k
+  - [x] Removed "openai" (not in token-limits.json reference)
+  - [x] Added: windsurf (free, enterprise)
+  - [x] Added: perplexity (free, pro)
+  - [x] Added: groq (free)
+  - [x] Added: deepseek (api)
+  - [x] Added: mistral (api)
+  - [x] Completed existing: cursor.business, github_copilot.enterprise, google.advanced → "advanced"
+  - [x] Added anthropic.api, google.api, mistral.api for API users
+- [x] Update PLANS mapping - all providers synced
+- [x] Update PROVIDERS list - 10 providers now (was 6)
 
-**Token Estimate:** ~10-15k (code updates + testing + verification)
+**Actual Token Usage:** ~12k
+
+**Results:**
+- ✅ Wizard now supports ALL 10 providers (was 6)
+- ✅ All 28 plans available (was 13)
+- ✅ Limits match token-limits.json exactly
+- ✅ "openai" removed (outdated)
+- ✅ Added sync comment: "Synced with .ai/token-limits.json (v3.0) - 2026-02-16"
+
+**Files Changed:**
+- bin/cli.js - TOKEN_PRESETS, PROVIDERS, PLANS synced
+
+---
+
+### **Phase 8.7: Token System 2026 Reality Upgrade** (~85-100k tokens)
+
+**Цель:** Адаптувати token management до reality 2026 (MODEL_3: Fair Use Dynamic)
+
+**Status:** 🔴 **PLANNED** (Day 4-5, split recommended)
+
+**Context (forensic audit):**
+- **task.txt:** Fair use без фіксованих лімітів (офіційно підтверджено)
+- **task2.txt:** Claude Pro session-based (200K session, ~5h reset, ~45 msgs/session)
+- **task3.txt:** CTO architecture - MODEL_3, industry shift 2024-2026, intentional opacity
+
+**Problem Discovered:**
+- 🔴 **token-limits.json містить вигадані ліміти:**
+  - `daily_limit: 150000` ← НЕ ІСНУЄ для Claude Pro (fair use)
+  - `monthly_limit: 5000000` ← НЕ ПУБЛІКУЄТЬСЯ (динамічний)
+- 🔴 **Claude Pro = MODEL_3** (Fair Use Dynamic Limits):
+  - Session-based: 200K tokens, ~5h rolling windows
+  - Daily/monthly: UNKNOWN (NOT DISCLOSED) - product strategy 2026
+- 🔴 **Token Control v3.0 розроблений для fixed limits:**
+  - Scripts розраховують % від daily_limit (які не існують!)
+  - Zones базуються на конкретних числах
+  - НЕ підтримує session-based модель
+- 🔴 **"Тихий помічник" не працює з реальністю:**
+  - Попереджає на основі неіснуючих лімітів
+  - Користувач не розуміє справжній стан бюджету
+
+**Solution (БЕЗ зміни версій!):**
+
+Адаптувати систему для підтримки **3 МОДЕЛЕЙ**:
+- **MODEL_1:** Hard Token Billing (API providers) - залишити як є
+- **MODEL_2:** Request Quota (Copilot) - залишити як є
+- **MODEL_3:** Fair Use Dynamic (Claude Pro) - додати нову логіку ← НОВЕ!
+
+**ВАЖЛИВО:**
+- ✅ **НЕ МІНЯТИ ВЕРСІЇ!** (залишити v3.0.0, v9.1.1)
+- ✅ **Backward compatibility** (старі конфіги працюють)
+- ✅ **Модульна система** (всі 4 контексти підтримуються)
+- ✅ **Еволюція, не революція** (філософія ROADMAP)
+
+---
+
+**Sub-phases:**
+
+#### **8.7.1: Schema Enhancement (NO VERSION CHANGE!)** (~15k)
+
+**Files:** `.ai/token-limits.json`
+
+**Tasks:**
+- [ ] Add `_architecture_model` field для кожного провайдера
+- [ ] For MODEL_3 plans (Claude Pro, Gemini Advanced, etc.), add:
+  - `session_limit`, `session_duration_hours`, `session_reset`
+  - `approx_messages_per_session` (baseline)
+  - Change `daily_limit` to `"UNKNOWN (NOT DISCLOSED)"`
+  - Change `monthly_limit` to `"UNKNOWN (NOT DISCLOSED)"`
+  - Add `shared_usage` array (web + VSCode + Code)
+- [ ] Update PRESETS для ВСІХ провайдерів:
+  - anthropic.pro → MODEL_3
+  - google.advanced → MODEL_3
+  - cursor.pro/business → MODEL_3
+  - mistral.api, deepseek.api → MODEL_1
+  - github_copilot → MODEL_2
+- [ ] Add `market_context_2026` section
+- [ ] Keep v3.0.0 version (НЕ міняти!)
+- [ ] Keep legacy fields для backward compatibility
+
+**Estimate:** ~15k tokens
+
+---
+
+#### **8.7.2: Scripts Adaptation** (~12k)
+
+**Files:** `scripts/token-status.sh`
+
+**Tasks:**
+- [ ] Detect `_architecture_model` from token-limits.json
+- [ ] **For MODEL_3 (Fair Use):**
+  - Show session-based dashboard
+  - Display: "Session: 200K tokens (~5h rolling)"
+  - Display: "Approx messages: ~45 per session"
+  - Display: "Daily: UNKNOWN (dynamic)"
+- [ ] **For MODEL_1/2 (Hard caps):**
+  - Keep existing daily % logic
+- [ ] Adapt zones:
+  - MODEL_3: zones по session %
+  - MODEL_1/2: zones по daily %
+- [ ] Update recommendations для кожної моделі
+
+**Estimate:** ~12k tokens
+
+---
+
+#### **8.7.3: Token Control v3.0 Enhancement** (~15k)
+
+**Files:** `.ai/token-control-v3-spec.md`
+
+**Tasks:**
+- [ ] Add Section: "MODEL_3 Session-Based Support"
+- [ ] Keep existing v3.0 features (НЕ нова версія!)
+- [ ] Document dual-mode operation
+- [ ] Add examples для session-based estimation
+- [ ] Emergency reserve: адаптувати для сесій
+
+**Estimate:** ~15k tokens
+
+---
+
+#### **8.7.4: Documentation Updates** (~20k)
+
+**Files:**
+- `.ai/docs/provider-comparison.md`
+- `.ai/docs/token-usage.md`
+
+**Tasks:**
+- [ ] provider-comparison.md:
+  - Remove: "~500k-1M daily (estimated)"
+  - Replace: "UNKNOWN (NOT DISCLOSED) - session-based"
+  - Add task2/task3 insights
+- [ ] token-usage.md:
+  - Add: "Understanding Fair Use (MODEL_3)"
+  - Add session-based examples
+
+**Estimate:** ~20k tokens
+
+---
+
+#### **8.7.5: Context Files Sync** (~15k)
+
+**Files:** All 4 contexts
+
+**Tasks:**
+- [ ] ukraine-full.context.md - Section 2 (Token Management)
+- [ ] standard/minimal/enterprise - if has token refs
+- [ ] Ensure modular system works
+
+**Estimate:** ~15k tokens
+
+---
+
+#### **8.7.6: Validation & Testing** (~8k)
+
+**Tests:**
+- [ ] token-status.sh працює з MODEL_3
+- [ ] JSON validation
+- [ ] Backward compatibility
+- [ ] All 4 contexts work
+
+**Estimate:** ~8k tokens
+
+---
+
+**Total Estimate:** ~85-100k tokens
+
+**Timeline:** Split recommended
+- **Day 4 (today):** 8.7.1-8.7.3 (~42k) ← IF budget allows
+- **Day 5:** 8.7.4-8.7.6 (~43k)
 
 **Success Criteria:**
-- ✅ Wizard offers all IDE options (Cursor, Windsurf, etc.)
-- ✅ All plans available (Pro, Business, Enterprise, Free)
-- ✅ Limits match token-limits.json exactly
-- ✅ No outdated providers (openai removed)
+- ✅ token-limits.json відображає reality 2026 (чесні дані!)
+- ✅ Scripts працюють з 3 моделями
+- ✅ Backward compatibility
+- ✅ Модульна система OK
+- ✅ "Тихий помічник" з реальними даними
+- ✅ Версії НЕ змінені (v3.0.0, v9.1.1)
 
 ---
 

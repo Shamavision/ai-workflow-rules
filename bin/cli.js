@@ -11,29 +11,45 @@ const path = require('path');
 const chalk = require('chalk');
 
 // Presets for token limits by provider and plan
+// Synced with .ai/token-limits.json (v3.0) - 2026-02-16
 const TOKEN_PRESETS = {
   anthropic: {
     free: { monthly: 250000, daily: 8000 },
-    pro: { monthly: 5000000, daily: 150000 },
-    team: { monthly: 25000000, daily: 800000 }
-  },
-  openai: {
-    free: { monthly: 80000, daily: 4000 },
-    plus: { monthly: 800000, daily: 40000 },
-    team: { monthly: 4000000, daily: 150000 }
+    pro: { monthly: 5000000, daily: 500000 },
+    team: { monthly: 25000000, daily: 800000 },
+    api: { monthly: 999999999, daily: 999999999 }
   },
   google: {
     free: { monthly: 400000, daily: 15000 },
-    pro: { monthly: 1500000, daily: 80000 }
+    advanced: { monthly: 1500000, daily: 80000 },
+    api: { monthly: 999999999, daily: 999999999 }
   },
   cursor: {
     free: { monthly: 150000, daily: 8000 },
-    pro: { monthly: 1500000, daily: 80000 }
+    pro: { monthly: 1500000, daily: 80000 },
+    business: { monthly: 3000000, daily: 150000 }
   },
   github_copilot: {
-    free: { monthly: 100000, daily: 5000 },
     individual: { monthly: 500000, daily: 25000 },
-    business: { monthly: 2000000, daily: 100000 }
+    business: { monthly: 2000000, daily: 100000 },
+    enterprise: { monthly: 5000000, daily: 200000 }
+  },
+  mistral: {
+    api: { monthly: 999999999, daily: 999999999 }
+  },
+  groq: {
+    free: { monthly: 100000, daily: 5000 }
+  },
+  deepseek: {
+    api: { monthly: 999999999, daily: 999999999 }
+  },
+  perplexity: {
+    free: { monthly: 50000, daily: 2000 },
+    pro: { monthly: 400000, daily: 20000 }
+  },
+  windsurf: {
+    free: { monthly: 200000, daily: 10000 },
+    enterprise: { monthly: 2000000, daily: 100000 }
   },
   other: {
     default: { monthly: 500000, daily: 20000 }
@@ -41,21 +57,30 @@ const TOKEN_PRESETS = {
 };
 
 // Provider and plan mappings
+// Synced with .ai/token-limits.json PRESETS - 2026-02-16
 const PROVIDERS = [
   { name: 'Claude (Anthropic)', value: 'anthropic' },
-  { name: 'ChatGPT (OpenAI)', value: 'openai' },
   { name: 'Gemini (Google)', value: 'google' },
-  { name: 'Cursor', value: 'cursor' },
+  { name: 'Cursor IDE', value: 'cursor' },
+  { name: 'Windsurf IDE', value: 'windsurf' },
   { name: 'GitHub Copilot', value: 'github_copilot' },
+  { name: 'Perplexity', value: 'perplexity' },
+  { name: 'Mistral API', value: 'mistral' },
+  { name: 'DeepSeek API', value: 'deepseek' },
+  { name: 'Groq', value: 'groq' },
   { name: 'Other / Custom', value: 'other' }
 ];
 
 const PLANS = {
-  anthropic: ['Free', 'Pro', 'Team'],
-  openai: ['Free', 'Plus', 'Team'],
-  google: ['Free', 'Pro'],
-  cursor: ['Free', 'Pro'],
-  github_copilot: ['Free', 'Individual', 'Business'],
+  anthropic: ['Free', 'Pro', 'Team', 'API'],
+  google: ['Free', 'Advanced', 'API'],
+  cursor: ['Free', 'Pro', 'Business'],
+  windsurf: ['Free', 'Enterprise'],
+  github_copilot: ['Individual', 'Business', 'Enterprise'],
+  perplexity: ['Free', 'Pro'],
+  mistral: ['API'],
+  deepseek: ['API'],
+  groq: ['Free'],
   other: ['Default']
 };
 
