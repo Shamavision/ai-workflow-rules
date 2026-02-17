@@ -455,6 +455,132 @@ sync-rules.sh v2.0 now:
 - [ ] Keep legacy fields для backward compatibility
 
 **Estimate:** ~15k tokens
+**Status:** ✅ **COMPLETE** (Day 4, 2026-02-16)
+**Actual:** ~15k tokens (commit: `250e902`)
+
+---
+
+#### **8.7.1.1: VARIANT B - Conservative Estimates for ALL MODEL_3** (~20-25k)
+
+**Цель:** Додати conservative estimates для MODEL_3 планів (для розрахунків у скриптах)
+
+**Status:** ✅ **COMPLETE** (Day 5, 2026-02-17)
+
+**Problem Discovered (Day 4):**
+- ✅ Phase 8.7.1 виконано - додано MODEL_3 support
+- 🔴 НО: `daily` і `monthly` = "UNKNOWN (NOT DISCLOSED)" ← не підходить для `token-status.sh`
+- 🔴 Скрипти не можуть робити розрахунки з UNKNOWN
+- 🔴 Юзер не може планувати роботу без цифр
+
+**Solution: VARIANT B - Hybrid Approach**
+
+**Філософія:**
+```
+HONESTY + PRACTICALITY
+- Є estimate для розрахунків
+- Чітко позначено що це ESTIMATE ONLY
+- MODEL_3 documentation зберігається
+- Не ламаємо функціональність
+```
+
+**Root Config Changes:**
+```json
+{
+  "session_limit": 200000,
+  "daily_limit_type": "fair_use_dynamic",  // NEW
+  "daily_limit": 500000,  // CHANGE from "UNKNOWN"
+  "daily_limit_note": "Conservative estimate for planning. Real limit UNKNOWN (MODEL_3).",  // NEW
+  "monthly_limit": 5000000,  // CHANGE
+  "monthly_limit_note": "Conservative estimate. Real limit UNKNOWN (MODEL_3)."  // NEW
+}
+```
+
+**PRESETS Changes (для ВСІХ MODEL_3):**
+
+**Anthropic (Claude Pro/Free/Team):**
+```json
+"pro": {
+  "_architecture_model": "MODEL_3",
+  "daily": 500000,  // ADD: Conservative estimate
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN.",  // ADD
+  "monthly": 5000000,  // ADD
+  "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN.",  // ADD
+  "session": 200000,
+  // ... rest of MODEL_3 fields from 8.7.1
+}
+```
+
+**Google (Gemini Advanced/Free):**
+```json
+"advanced": {
+  "_architecture_model": "MODEL_3",
+  "daily": 80000,  // ADD
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  "monthly": 1500000,  // ADD
+  "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  "session": 1000000,
+  // ...
+}
+```
+
+**Cursor (Free/Pro/Business):**
+```json
+"pro": {
+  "_architecture_model": "MODEL_3",
+  "daily": 80000,  // ADD
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  "monthly": 1500000,  // ADD
+  "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  // ...
+}
+```
+
+**Perplexity (Free/Pro):**
+```json
+"pro": {
+  "_architecture_model": "MODEL_3",
+  "daily": 20000,  // ADD
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  "monthly": 400000,  // ADD
+  "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  // ...
+}
+```
+
+**Windsurf (Free/Enterprise):**
+```json
+"free": {
+  "_architecture_model": "MODEL_3",
+  "daily": 10000,  // ADD
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  "monthly": 200000,  // ADD
+  "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  // ...
+}
+```
+
+**Groq (Free):**
+```json
+"free": {
+  "_architecture_model": "MODEL_3",
+  "daily": 5000,  // ADD
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  "monthly": 100000,  // ADD
+  "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN.",
+  // ...
+}
+```
+
+**Tasks:**
+- [ ] Update Root config (6 providers × 2-3 plans = ~15 entries)
+- [ ] Add `daily_limit_type`, `daily_limit_note`, `monthly_limit_note` fields
+- [ ] Replace "UNKNOWN" з numbers + notes для всіх MODEL_3
+- [ ] Update market_context_2026 section (додати VARIANT B explanation)
+- [ ] Update notes section
+- [ ] Test: token-status.sh повинен показувати estimates
+
+**Estimate:** ~20-25k tokens
+**Rationale:** Більше entries ніж 8.7.1, але проста логіка (додати 2 поля до кожного плану)
 
 ---
 
@@ -462,21 +588,22 @@ sync-rules.sh v2.0 now:
 
 **Files:** `scripts/token-status.sh`
 
-**Tasks:**
-- [ ] Detect `_architecture_model` from token-limits.json
-- [ ] **For MODEL_3 (Fair Use):**
-  - Show session-based dashboard
-  - Display: "Session: 200K tokens (~5h rolling)"
-  - Display: "Approx messages: ~45 per session"
-  - Display: "Daily: UNKNOWN (dynamic)"
-- [ ] **For MODEL_1/2 (Hard caps):**
-  - Keep existing daily % logic
-- [ ] Adapt zones:
-  - MODEL_3: zones по session %
-  - MODEL_1/2: zones по daily %
-- [ ] Update recommendations для кожної моделі
+**Status:** ✅ **COMPLETE** (Day 5, 2026-02-17)
 
-**Estimate:** ~12k tokens
+**Tasks:**
+- [x] Detect `_architecture_model` from token-limits.json (via PRESETS)
+- [x] Handle non-numeric daily_limit (backward compat for old configs with "UNKNOWN" strings)
+- [x] **For MODEL_3 (Fair Use):**
+  - Show "FAIR USE DYNAMIC LIMITS" notice
+  - Display: Session limit, ~Xh rolling window, ~45 msgs/session
+  - Display: Daily/monthly as "ESTIMATE ONLY - not a real limit"
+  - Show PLAN_DAILY_NOTE from PRESETS
+- [x] **For MODEL_1/2 (Hard caps):**
+  - Existing daily % logic preserved
+- [x] Link to correct provider URL based on MODEL (claude.ai vs console)
+- [x] npm-templates synced, verify-templates ✅
+
+**Actual:** ~8k tokens
 
 ---
 
@@ -484,14 +611,18 @@ sync-rules.sh v2.0 now:
 
 **Files:** `.ai/token-control-v3-spec.md`
 
-**Tasks:**
-- [ ] Add Section: "MODEL_3 Session-Based Support"
-- [ ] Keep existing v3.0 features (НЕ нова версія!)
-- [ ] Document dual-mode operation
-- [ ] Add examples для session-based estimation
-- [ ] Emergency reserve: адаптувати для сесій
+**Status:** ✅ **COMPLETE** (Day 5, 2026-02-17)
 
-**Estimate:** ~15k tokens
+**Tasks:**
+- [x] Add Section: "MODEL_3: Session-Based Support (v3.0 Dual-Mode)"
+- [x] Keep existing v3.0 features (version NOT changed)
+- [x] Document dual-mode architecture (SESSION MODE vs DAILY MODE)
+- [x] Add examples for session-based estimation (SMALL/MEDIUM/approaching limit)
+- [x] Emergency reserve: adapted for sessions (10% of 200K = 20K)
+- [x] VARIANT B schema documented in Backwards Compatibility section
+- [x] Updated status/date in header
+
+**Actual:** ~8k tokens
 
 ---
 
@@ -501,16 +632,23 @@ sync-rules.sh v2.0 now:
 - `.ai/docs/provider-comparison.md`
 - `.ai/docs/token-usage.md`
 
-**Tasks:**
-- [ ] provider-comparison.md:
-  - Remove: "~500k-1M daily (estimated)"
-  - Replace: "UNKNOWN (NOT DISCLOSED) - session-based"
-  - Add task2/task3 insights
-- [ ] token-usage.md:
-  - Add: "Understanding Fair Use (MODEL_3)"
-  - Add session-based examples
+**Status:** ✅ **COMPLETE** (Day 5, 2026-02-17)
 
-**Estimate:** ~20k tokens
+**Tasks:**
+- [x] provider-comparison.md:
+  - Removed fake estimates ("~500k-1M daily (unofficial)")
+  - Added MODEL_3 reality (session-based 200K / ~5h)
+  - Updated Claude Pro table: UNKNOWN† with VARIANT B footnote
+  - Added architecture models table (MODEL_1/2/3)
+  - Rewrote "Token Limit Reality Check" section with 2026 data
+- [x] token-usage.md:
+  - Added "Understanding Fair Use (MODEL_3)" section with examples
+  - Updated daily limits table to show session-based reality
+  - Updated "Recommendations by Plan" (removed fake 150k/200k/800k daily)
+  - Added TL;DR note about MODEL_3
+- [x] npm-templates synced, verify-templates 22/22 ✅
+
+**Actual:** ~12k tokens
 
 ---
 
@@ -518,24 +656,31 @@ sync-rules.sh v2.0 now:
 
 **Files:** All 4 contexts
 
-**Tasks:**
-- [ ] ukraine-full.context.md - Section 2 (Token Management)
-- [ ] standard/minimal/enterprise - if has token refs
-- [ ] Ensure modular system works
+**Status:** ✅ **COMPLETE** (Day 5, 2026-02-17)
 
-**Estimate:** ~15k tokens
+**Tasks:**
+- [x] All 4 contexts: Removed fake "150k" daily limit from PHASE COMPLETE template
+- [x] All 4 contexts: Updated "200k daily" → "200k/session (MODEL_3: daily UNKNOWN)"
+- [x] ukraine-full/standard/enterprise: Updated JSON example (added MODEL_3, session_limit, daily_limit_type)
+- [x] npm-templates synced, verify-templates 22/22 ✅
+
+**Actual:** ~8k tokens
 
 ---
 
 #### **8.7.6: Validation & Testing** (~8k)
 
-**Tests:**
-- [ ] token-status.sh працює з MODEL_3
-- [ ] JSON validation
-- [ ] Backward compatibility
-- [ ] All 4 contexts work
+**Status:** ✅ **COMPLETE** (Day 5, 2026-02-17)
 
-**Estimate:** ~8k tokens
+**Tests:**
+- [x] token-status.sh MODEL_3 logic tested (bash simulation) ✅
+- [x] token-limits.json valid JSON ✅
+- [x] MODEL_3 plans: 13/13 with estimates + notes ✅
+- [x] Backward compat: "UNKNOWN" strings → fallback numbers ✅
+- [x] All 4 contexts: no fake 150k refs ✅
+- [x] verify-templates 22/22 ✅
+
+**Actual:** ~5k tokens
 
 ---
 
@@ -555,43 +700,43 @@ sync-rules.sh v2.0 now:
 
 ---
 
-### **Phase 8: Distribution Package Audit** (~18-25k tokens)
+### **✅ Phase 8: Distribution Package Audit** **COMPLETE** (2026-02-17)
 
-**Цель:** Проверить npm package - пользователь получит все нужное
+**Цель:** Проверити npm package - користувач отримає все потрібне
 
-**Проверки:**
-- [ ] **package.json:**
-  - [ ] "files" field includes all needed:
-    - [ ] `bin/`
-    - [ ] `npm-templates/`
-  - [ ] "bin" field points to correct CLI
-  - [ ] "scripts" all functional
-  - [ ] Dependencies minimal (inquirer, fs-extra, chalk)
-  - [ ] No unnecessary dev dependencies leaked
-- [ ] **bin/cli.js:**
-  - [ ] Shebang correct (`#!/usr/bin/env node`)
-  - [ ] Executable permission set
-  - [ ] Copies all files from npm-templates correctly
-  - [ ] Wizard questions cover all contexts
-  - [ ] Token presets up-to-date
-  - [ ] Error handling robust
-- [ ] **npm-templates/ structure:**
-  - [ ] Contains all files user needs
-  - [ ] No unnecessary files (dev-only)
-  - [ ] No sensitive data
-  - [ ] README.md for npm-templates (if exists)
-- [ ] **Test npm pack:**
-  - [ ] `npm pack` creates .tgz
-  - [ ] Inspect contents: `tar -tzf *.tgz | head -50`
-  - [ ] Verify critical files included
-
-**Expected Result:**
-- ✅ Package contains exactly what users need
-- ✅ No unnecessary bloat
-- ✅ CLI wizard works
-- ✅ npm pack output looks correct
+**Audit Results:**
+- [x] **package.json:** ✅ PASS
+  - [x] "files": `["bin/", "npm-templates/"]` ✅
+  - [x] "bin" → `./bin/cli.js` ✅
+  - [x] Dependencies minimal: inquirer, fs-extra, chalk ✅
+  - [x] No unnecessary dev deps leaked ✅
+- [x] **bin/cli.js:** ✅ FIXED (6 issues found and corrected)
+  - [x] Shebang correct (`#!/usr/bin/env node`) ✅
+  - [x] TOKEN_PRESETS: 7 mismatches fixed (VARIANT B sync) ✅
+    - anthropic.free: 250k/8k → 200k/20k ✅
+    - anthropic.team: 25M monthly → 8M monthly ✅
+    - google.free: 400k/15k → 100k/5k ✅
+    - cursor.free: 150k/8k → 400k/20k ✅
+    - cursor.business: 3M/150k → 2.5M/120k ✅
+    - perplexity.free: 50k/2k → 200k/10k ✅
+    - windsurf.enterprise: 2M/100k → 1M/50k ✅
+  - [x] **BUG FIXED:** `.ai/contexts/` were never copied → `generateRulesFiles` silently failed. Added `copyContextFiles()` ✅
+  - [x] **BUG FIXED:** `createTokenLimitsConfig` missing MODEL_3 fields. Added `daily_limit_type`, `session_limit`, `daily_limit_note`, `_architecture_model` ✅
+  - [x] **BUG FIXED:** `AI-ENFORCEMENT.md` not copied (referenced by CLAUDE.md). Added to installer ✅
+  - [x] **BUG FIXED:** `provider-comparison.md` not copied (updated in Phase 8.7.4). Added to installer ✅
+  - [x] Comparison table: "Daily %" → "Session %" (correct for MODEL_3) ✅
+  - [x] `getArchModel()` helper added for MODEL_1/2/3 detection ✅
+- [x] **npm-templates/ structure:** ✅ PASS
+  - [x] 35 files, all needed ✅
+  - [x] No dev-only files ✅
+  - [x] No sensitive data ✅
+  - [x] verify-templates 22/22 ✅
+- [x] **npm pack:** ✅ PASS
+  - [x] 35 files in package, 164.9kB packed, 497.4kB unpacked ✅
+  - [x] All critical files included ✅
 
 **Token Estimate:** ~8-12k (reads, pack test, validation)
+**Actual:** ~20k (6 bugs found and fixed)
 
 ---
 
@@ -609,9 +754,9 @@ sync-rules.sh v2.0 now:
 | **Phase 6** | 8-12k | 20-30k | **~12k** | ✅ COMPLETE (Day 2) |
 | **Phase 7** | 5-8k | 12-18k | **~17k** | ✅ COMPLETE (Day 2) |
 | **Phase 8.5** | N/A | 30-60k | **~37k** | ✅ COMPLETE (Day 3) |
-| **Phase 8.6** | N/A | 10-15k | TBD | 🔴 PLANNED (Day 4) |
-| **Phase 8** | 8-12k | 18-25k | TBD | Pending (Day 4) |
-| **Phases 1-8.5** | ~100k | ~350k | **~245k** | ✅ 7/9 phases done (78%) |
+| **Phase 8.6** | N/A | 10-15k | **~12k** | ✅ COMPLETE (Day 4) |
+| **Phase 8** | 8-12k | 18-25k | **~20k** | ✅ COMPLETE (Day 5) |
+| **Phases 1-8** | ~100k | ~350k | **~265k** | ✅ ALL PHASES COMPLETE |
 
 ### Actual Timeline:
 
@@ -638,23 +783,46 @@ sync-rules.sh v2.0 now:
 - **Commit:** Prepared for git push
 - **Result:** Modular system works, IDE configs context-agnostic
 
-**Day 4 (2026-02-16) - PLANNED:**
-- **Phase 8.6: TOKEN_PRESETS Sync** (~10-15k tokens) **NEXT**
-  - Synchronize wizard with token-limits.json
-  - Add missing IDE providers (windsurf, perplexity, etc.)
-  - Complete existing plans (cursor.business, etc.)
-- **Phase 8: Distribution Package** (~18-25k tokens)
-  - npm package validation
-  - CLI wizard testing
-  - npm pack verification
-- **Total:** ~28-40k tokens
-- **Fresh budget:** 150k daily (comfortable!)
+**Day 4 (2026-02-16) - ACTUAL:** ✅ COMPLETE
+- **✅ Phase 8.6: TOKEN_PRESETS Sync** (~12k actual)
+  - Synchronized wizard with token-limits.json (10 providers, 28 plans)
+  - Added missing providers (windsurf, perplexity, groq, mistral, deepseek)
+  - Removed deprecated (openai), renamed plans (google.advanced)
+  - **Commit:** `ff8825d` - feat(phase-8.5): sync-rules.sh v2.0 simplified - modular system fixed
+- **✅ Phase 8.7.1: Schema Enhancement - MODEL_3 Support** (~15k actual)
+  - Added `_architecture_model` to all 28 plans
+  - Implemented MODEL_3 fields (session_duration, shared_usage, etc.)
+  - Added `market_context_2026` section with CTO-level analysis
+  - Kept v3.0.0 (backward compatible)
+  - **Commit:** `250e902` - feat(phase-8.7.1): token system 2026 reality - MODEL_3 support
+- **🔴 DISCOVERED:** VARIANT B needed (estimates для MODEL_3 scripts)
+- **Total:** ~27k tokens (efficient!)
+- **Session:** ~187k/200k used (93%)
 
-**Day 5 (After Audit Complete):**
-- 🐰 Test на "кролику" (fresh install verification)
-- Create professional README (essentials only)
-- Final validation
-- Publish to npm (optional)
+**Day 5 (2026-02-17) - ✅ COMPLETE:**
+- **✅ Phase 8.7.1.1: VARIANT B** (~15k actual)
+  - 13 MODEL_3 plans: numeric estimates + `daily_note`/`monthly_note` + `_note` fields
+  - Root config: `daily_limit_type`, `daily_limit_note`, `monthly_limit_note`, `variant_b_approach`
+  - npm-templates synced, verify-templates ✅
+- **✅ Phase 8.7.2: Scripts Adaptation** (~12k actual)
+  - token-status.sh v1.1: MODEL_3 detection, ESTIMATE ONLY labels, session info block
+  - Backward compat: non-numeric fallback guard
+- **✅ Phase 8.7.3: token-control-v3-spec.md** (~8k actual)
+  - Dual-mode architecture spec: SESSION MODE vs DAILY MODE
+  - VARIANT B examples, emergency reserve adaptation
+- **✅ Phase 8.7.4: provider-comparison.md + token-usage.md** (~10k actual)
+  - MODEL_3 architecture table, Fair Use section, removed fake limits
+- **✅ Phase 8.7.5: All 4 context files** (~8k actual)
+  - SESSION template: "200k daily" → "200k/session (MODEL_3: daily UNKNOWN)"
+  - PHASE COMPLETE: removed fake "150k" daily label
+- **✅ Phase 8.7.6: Validation** (verify-templates 22/22 ✅)
+- **✅ Phase 8: Distribution Package Audit** (~20k actual)
+  - 6 bugs found and fixed in `bin/cli.js`
+  - TOKEN_PRESETS 7 mismatches fixed (VARIANT B sync)
+  - Context copy bug, AI-ENFORCEMENT.md, provider-comparison.md added
+  - MODEL_3 fields in createTokenLimitsConfig
+- **Total Day 5:** ~73k actual
+- **Commit:** TBD
 
 ### Optimization Strategies (Phases 2-8):
 

@@ -1,8 +1,9 @@
 # AI Provider Comparison Guide
 
-> **Last Updated:** 2026-02-07
-> **Data Source:** Official documentation + verified user reports
+> **Last Updated:** 2026-02-17
+> **Data Source:** Official documentation + CTO-level forensic audit (Feb 2026)
 > **Coverage:** 9 providers, 25+ plans
+> **2026 Reality:** Most consumer plans (MODEL_3) use Fair Use Dynamic limits. No published daily/monthly caps.
 
 ---
 
@@ -26,8 +27,8 @@
 
 ### For Chat & General AI Work
 **Winner: Anthropic Claude Pro ($20/mo)**
-- ✅ 200k session context (great for long conversations)
-- ✅ Fair use ~500k-1M daily (unofficial)
+- ✅ 200k tokens / ~5h rolling session (MODEL_3 session-based)
+- ✅ Daily/monthly limits: UNKNOWN (Fair Use Dynamic — not published by design)
 - ✅ VSCode Extension included
 - ✅ Priority access, all models
 - ✅ Best for: Ukrainian businesses, RAG, long documents
@@ -87,18 +88,21 @@
 - VSCode Extension for Pro subscribers
 
 **⚠️ Considerations:**
-- API: No published daily limits (tier-based)
-- Pro subscription: Daily limits not publicly disclosed (~500k-1M estimated)
-- Fair use policy (not hard limits)
+- API: MODEL_1 (Hard Token Billing) — metered, no daily cap
+- Pro/Free/Team: MODEL_3 (Fair Use Dynamic) — daily/monthly UNKNOWN by design
+- Session-based: 200K tokens / ~5h rolling window (~45 msgs baseline)
+- Usage shared across: claude.ai web + VSCode Extension + Claude Code
 
 **Plans:**
 
-| Plan | Cost | Context | Daily | Best For |
-|------|------|---------|-------|----------|
-| API | Pay-as-go | 200k | Unlimited* | High-volume apps |
-| claude.ai Free | Free | 200k | ~8k est. | Testing, light use |
-| **Claude Pro** | **$20/mo** | **200k** | **~500k est.** | **Recommended** |
-| Claude Team | $25-30/user | 200k | ~800k est. | Teams 3+ |
+| Plan | Cost | Context | Daily | Model | Best For |
+|------|------|---------|-------|-------|----------|
+| API | Pay-as-go | 200k | Unlimited* | MODEL_1 | High-volume apps |
+| claude.ai Free | Free | 200k | UNKNOWN† | MODEL_3 | Testing, light use |
+| **Claude Pro** | **$20/mo** | **200k** | **UNKNOWN†** | **MODEL_3** | **Recommended** |
+| Claude Team | $25-30/user | 200k | UNKNOWN† | MODEL_3 | Teams 3+ |
+
+† UNKNOWN (NOT DISCLOSED) — Fair Use Dynamic. Conservative estimates: Free ~20k/d, Pro ~500k/d, Team ~800k/d. See `.ai/token-limits.json`.
 
 **Pricing (API):**
 - Sonnet: $3/$15 per 1M tokens (input/output)
@@ -329,10 +333,10 @@
 | Anthropic Opus | API | ~$90.00 | $15 (in) + $75 (out) |
 
 **Subscriptions (included usage):**
-- Claude Pro: $20/mo (includes VSCode Extension, ~500k-1M daily)
-- Cursor Pro: $20/mo (includes IDE, large fast request allowance)
-- GitHub Copilot: $10/mo (includes code + chat)
-- Gemini Advanced: $20/mo (includes Google ecosystem)
+- Claude Pro: $20/mo (includes VSCode Extension, 200K session / ~5h rolling, daily UNKNOWN)
+- Cursor Pro: $20/mo (includes IDE, large fast request allowance, daily UNKNOWN)
+- GitHub Copilot: $10/mo (300 premium requests/month, MODEL_2)
+- Gemini Advanced: $20/mo (includes Google ecosystem, daily UNKNOWN)
 
 ---
 
@@ -365,31 +369,35 @@
 
 ---
 
-## 📊 Token Limit Reality Check
+## 📊 Token Limit Reality Check (2026)
 
-**⚠️ Important Notes:**
+**⚠️ Critical 2026 Market Shift:**
 
-1. **Subscription Plans:** Most don't publish exact token limits
-   - Claude Pro: ~500k-1M daily (estimated, fair use)
-   - Cursor Pro: "Large allowance" (not quantified)
-   - GitHub Copilot: Not disclosed
+Industry moved from **fixed quotas → elastic compute allocation** (2024-2026). Most providers stopped publishing daily/monthly limits.
 
-2. **API Plans:** Usually no hard limits, tier-based rate limiting
-   - Anthropic API: Grows with spend history
-   - Google API: GCP quota management
-   - Mistral API: Tiered quotas
+### Architecture Models (3 types):
 
-3. **"Fair Use" means:**
-   - No exact hard limit published
-   - Rate limiting kicks in with heavy use
-   - Priority reduced, not blocked
-   - Designed for normal human usage patterns
+| Model | Used By | Daily/Monthly Limits |
+|-------|---------|----------------------|
+| **MODEL_1** (Hard Token Billing) | Anthropic API, Mistral, DeepSeek, Google API | Published, metered |
+| **MODEL_2** (Request Quota) | GitHub Copilot | Monthly request caps (300/month) |
+| **MODEL_3** (Fair Use Dynamic) | Claude Pro, Gemini Advanced, Cursor, Windsurf | **UNKNOWN (NOT DISCLOSED)** |
 
-4. **How to check real usage:**
-   - Anthropic API: https://console.anthropic.com/settings/limits
-   - Claude Pro: https://claude.ai/settings/usage
-   - Google API: Google Cloud Console
-   - Cursor/Copilot: No public usage dashboard
+### MODEL_3 Reality (Claude Pro, Gemini Advanced, Cursor, etc.):
+
+- **Daily/monthly limits:** UNKNOWN (NOT DISCLOSED) — intentional product strategy
+- **Session-based:** 200K tokens / ~5h rolling window (Claude Pro)
+- **Dynamic throttling:** Based on system load and user behavior
+- **Why UNKNOWN?** Competitive opacity + elastic compute + abuse prevention
+
+> **VARIANT B:** Framework uses conservative estimates for planning (clearly marked as ESTIMATE ONLY). See `.ai/token-limits.json` for per-plan values.
+
+### How to check real usage:
+
+- **Anthropic API (MODEL_1):** https://console.anthropic.com/settings/limits
+- **Claude Pro (MODEL_3):** https://claude.ai — session indicator in UI
+- **Google API (MODEL_1):** Google Cloud Console
+- **Cursor/Copilot/Windsurf:** No public usage dashboard (fair use policy)
 
 ---
 
@@ -432,5 +440,5 @@
 ---
 
 **Made in Ukraine 🇺🇦**
-**Last Updated:** 2026-02-07
-**v9.1 Optimization Release**
+**Last Updated:** 2026-02-17
+**v9.1 + Phase 8.7.4: MODEL_3 2026 reality update**

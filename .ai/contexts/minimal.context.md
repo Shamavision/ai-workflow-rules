@@ -18,7 +18,7 @@
 [SESSION START]
 ✓ Context: minimal (~10k tokens)
 ✓ Language: Adaptive
-✓ Token limit: 200k daily
+✓ Token limit: 200k/session (MODEL_3: daily UNKNOWN)
 ✓ Usage: [X]k ([Y]%)
 
 Чим я можу вам допомогти?
@@ -63,7 +63,7 @@
 After every phase/stage:
 ```
 [PHASE X COMPLETE]
-Session: Xk/200k (Y%) | Daily: Zk/150k (W%)
+Session: Xk/200k (Y%) | Remaining: ~Wk
 Status: 🟢/🟡/🟠/🔴
 Продолжить? [Y/n]
 ```

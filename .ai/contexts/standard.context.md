@@ -18,7 +18,7 @@
 [SESSION START]
 ✓ Context: standard (~14k tokens)
 ✓ Language: Adaptive
-✓ Token limit: 200k daily
+✓ Token limit: 200k/session (MODEL_3: daily UNKNOWN)
 ✓ Usage: [X]k ([Y]%)
 
 Чім я можу вам допомогти?
@@ -65,7 +65,7 @@
 After every phase/stage:
 ```
 [PHASE X COMPLETE]
-Session: Xk/200k (Y%) | Daily: Zk/150k (W%)
+Session: Xk/200k (Y%) | Remaining: ~Wk
 Status: 🟢/🟡/🟠/🔴
 Продолжить? [Y/n]
 ```
@@ -96,9 +96,11 @@ Status: 🟢/🟡/🟠/🔴
 ```json
 {
   "plan": "pro",
-  "monthly_limit": 6000000,
-  "daily_limit": 200000,
-  "monthly_usage": 0,
+  "_architecture_model": "MODEL_3",
+  "session_limit": 200000,
+  "daily_limit": 500000,
+  "daily_limit_type": "fair_use_dynamic",
+  "daily_limit_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3).",
   "daily_usage": 0
 }
 ```

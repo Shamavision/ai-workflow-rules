@@ -1,6 +1,8 @@
 # 💰 Token Usage Guide
 
-**TL;DR:** First-time setup costs ~66k tokens (~33% Pro / ~44% Free daily limit). This is **one-time**. After setup, AI uses compression and lazy loading.
+**TL;DR:** First-time setup costs ~66k tokens. This is **one-time**. After setup, AI uses compression and lazy loading.
+
+> **2026 Note:** Claude Pro / Gemini Advanced / Cursor use **MODEL_3 (Fair Use Dynamic)**. No published daily/monthly limits. Session-based: 200K tokens / ~5h rolling. See [Understanding Fair Use (MODEL_3)](#understanding-fair-use-model3) below.
 
 ---
 
@@ -51,13 +53,15 @@
 
 ### Token Cost by Plan
 
-| Plan | Daily Limit | Setup Cost | % of Daily | Remaining |
-|------|------------|------------|------------|-----------|
-| **Free** | 150k | 66k | 44% | ~84k |
-| **Pro** | 200k | 66k | 33% | ~134k |
-| **Team** | 800k | 66k | 8% | ~734k |
+| Plan | Model | Session Limit | Daily Limit | Setup Cost | Remaining |
+|------|-------|--------------|-------------|------------|-----------|
+| **Free** | MODEL_3 | 200k / ~5h | UNKNOWN† | 66k | ~134k session |
+| **Pro** | MODEL_3 | 200k / ~5h | UNKNOWN† | 66k | ~134k session |
+| **Team** | MODEL_3 | 200k / ~5h | UNKNOWN† | 66k | ~134k session |
+| **API** | MODEL_1 | 200k | Unlimited* | 66k | Depends on tier |
 
-**Note:** Conservative estimates based on `.ai/token-limits.json` PRESETS.
+† **UNKNOWN (NOT DISCLOSED)** — Fair Use Dynamic. Conservative planning estimates: Free ~20k/d, Pro ~500k/d. See `.ai/token-limits.json`.
+* API: No daily cap; rate-limited by tier (grows with spend history).
 
 ---
 
@@ -222,24 +226,100 @@ Total: 90k / 200k (45% used)
 
 ---
 
+## Understanding Fair Use (MODEL_3)
+
+> **Added:** Phase 8.7.4 (2026-02-17) — 2026 market reality
+
+### What is MODEL_3?
+
+Claude Pro, Gemini Advanced, Cursor Pro, and Windsurf use **Fair Use Dynamic Limits** (MODEL_3):
+
+- **No published daily/monthly caps** — intentional product strategy
+- **Session-based budget:** 200K tokens / ~5h rolling window (Claude Pro)
+- **Dynamic throttling:** System adjusts limits based on load and usage patterns
+- **UNKNOWN is not missing data** — it's how providers manage elastic compute
+
+### How to think about your budget (MODEL_3):
+
+```
+PRIMARY BUDGET: Session (200K tokens, ~5h)
+SECONDARY: Daily estimate (conservative, for planning only)
+
+Session usage → is real and predictable
+Daily usage → estimate only, use as planning guide
+```
+
+### Session-based budget examples:
+
+**Small task session (2-3h coding):**
+```
+Session start:  18k tokens (ukraine-full context)
+Task 1:         15k tokens (refactor function)
+Task 2:         12k tokens (add tests)
+Task 3:          8k tokens (fix bug)
+─────────────────────────────────────
+Total used:     53k / 200k (26%) 🟢 Plenty remaining
+```
+
+**Heavy coding session (~5h):**
+```
+Session start:  18k tokens
+Work:          155k tokens (multiple large tasks)
+─────────────────────────────────────
+Total used:    173k / 200k (86%) 🟠 Approaching limit
+Recommendation: Commit work, start new session
+```
+
+**When to start a new session:**
+- Used >80% of session (160k+ tokens)
+- Session is ~5h old (rolling window approaching reset)
+- Switching to completely different context/project
+
+### What MODEL_3 means for token tracking:
+
+| Metric | Reality | What to do |
+|--------|---------|------------|
+| Daily limit | UNKNOWN | Use session % as primary indicator |
+| Monthly limit | UNKNOWN | Use session count × avg session cost |
+| Session limit | 200K (real!) | Track this carefully |
+| Throttling | Dynamic | No warning before it happens |
+
+### Conservative estimates in token-limits.json:
+
+The framework uses **VARIANT B** — numeric estimates for MODEL_3 plans, clearly marked:
+
+```json
+"pro": {
+  "daily": 500000,  // ESTIMATE ONLY
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3).",
+  "session": 200000  // REAL (published by Anthropic)
+}
+```
+
+Use session limit (200K) for accurate planning. Daily estimates are approximate planning guides.
+
+---
+
 ## Recommendations by Plan
 
-### Free Plan (150k/day)
-- ✅ Use minimal installation (30k)
+### Free Plan (MODEL_3 — Fair Use)
+- ✅ Use minimal installation (30k from 200k session)
 - ✅ Delete optional files after reading
-- ✅ Avoid long conversations (keep sessions focused)
-- ⚠️ Full installation leaves only ~84k for work
+- ✅ Keep sessions focused (5h rolling window)
+- ⚠️ Heavy throttling possible — fair use priority is lower than Pro
 
-### Pro Plan (200k/day)
-- ✅ Full installation recommended (66k)
-- ✅ Plenty of tokens for productive work (~134k remaining)
+### Pro Plan (MODEL_3 — Fair Use)
+- ✅ Full installation recommended (66k from 200k session → 134k remaining)
+- ✅ Session: 200K tokens / ~5h rolling (primary budget to track)
 - ✅ Keep all files for team consistency
-- ✅ Use context compression at 50%
+- ✅ Use context compression at 50% session usage
+- ℹ️ Daily limit UNKNOWN — use session % as your real indicator
 
-### Team Plan (800k/day)
-- ✅ Full installation is negligible (8% of daily limit)
-- ✅ No need to optimize token usage
-- ✅ Focus on productivity, not token counting
+### Team Plan (MODEL_3 — Fair Use)
+- ✅ Full installation is small fraction of session budget
+- ✅ Higher priority than Free/Pro (pooled compute)
+- ✅ Focus on productivity — session budget ample for most work
+- ℹ️ Usage shared across team workspace + web + IDE
 
 ---
 

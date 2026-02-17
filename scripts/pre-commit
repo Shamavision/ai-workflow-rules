@@ -341,7 +341,7 @@ for file in $STAGED_FILES; do
 
     line_num=0
     while IFS= read -r line || [ -n "$line" ]; do
-        ((line_num++))
+        ((++line_num))
 
         if has_bypass_comment "$line"; then
             continue
@@ -584,7 +584,7 @@ for file in $STAGED_FILES; do
 
     line_num=0
     while IFS= read -r line || [ -n "$line" ]; do
-        ((line_num++))
+        ((++line_num))
 
         if has_bypass_comment "$line"; then
             continue

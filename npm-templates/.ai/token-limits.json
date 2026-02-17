@@ -3,26 +3,32 @@
   "_disclaimer": "Limits are CONSERVATIVE (intentionally 10-20% lower). You'll get early warnings, not surprises.",
   "_howto": "1. Set 'provider' below  2. Set 'plan'  3. Copy limits from PRESETS (or leave defaults)  4. Done!",
   "_version": "3.0.0",
-  "_updated": "2026-02-03",
-  "_changelog": "v3.0: Pre-flight approval, confidence-based estimation, variance learning, emergency reserves, smart batching",
+  "_updated": "2026-02-17",
+  "_changelog": "v3.0: Pre-flight approval, confidence-based estimation, variance learning, emergency reserves, smart batching. Phase 8.7.1 (2026-02-16): Added MODEL_3 support, 2026 market reality integration, architecture model classification for all providers. Phase 8.7.1.1 (2026-02-17): VARIANT B - Conservative estimates for MODEL_3 plans (scripts-friendly honesty + practicality approach).",
 
   "provider": "anthropic",
   "plan": "pro",
 
+  "session_limit": 200000,
+  "daily_limit": 500000,
+  "daily_limit_type": "fair_use_dynamic",
+  "daily_limit_note": "Conservative estimate for planning (Claude Pro baseline). Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
   "monthly_limit": 5000000,
-  "daily_limit": 150000,
+  "monthly_limit_note": "Conservative estimate. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+  "monthly_limit_estimate": 5000000,
 
   "PRESETS": {
-    "_note": "Comprehensive provider database. Limits are conservative estimates where not officially published.",
-    "_last_updated": "2026-02-07",
-    "_data_source": "Official docs + verified user reports",
+    "_note": "Comprehensive provider database with 2026 market reality. MODEL_3 providers use fair use dynamic limits (UNKNOWN daily/monthly by design). VARIANT B: daily/monthly = conservative estimates for scripts, clearly marked with _note fields.",
+    "_last_updated": "2026-02-17",
+    "_data_source": "Official docs + CTO-level forensic audit (Feb 2026)",
 
     "anthropic": {
       "_docs": "https://www.anthropic.com/pricing",
-      "_updated": "2026-02-07",
+      "_updated": "2026-02-17",
 
       "api": {
         "name": "API (Pay-as-you-go)",
+        "_architecture_model": "MODEL_1",
         "monthly": 999999999,
         "daily": 999999999,
         "session": 200000,
@@ -36,38 +42,59 @@
 
       "free": {
         "name": "claude.ai Free",
-        "monthly": 250000,
-        "daily": 8000,
+        "_architecture_model": "MODEL_3",
+        "monthly": 200000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "daily": 20000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "session": 200000,
+        "session_duration_hours": 5,
+        "session_reset": "rolling",
+        "approx_messages_per_session": "Limited (not published)",
+        "shared_usage": ["claude.ai web", "mobile apps"],
         "pricing_input": 0,
         "pricing_output": 0,
         "rate_limit": "Message caps (rolling window)",
         "limit_type": "fair_use",
-        "notes": "Limited Opus usage, lower priority compute"
+        "notes": "Limited Opus usage, lower priority compute. Fair use dynamic throttling."
       },
 
       "pro": {
         "name": "Claude Pro",
+        "_architecture_model": "MODEL_3",
         "monthly": 5000000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "daily": 500000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "session": 200000,
+        "session_duration_hours": 5,
+        "session_reset": "rolling",
+        "approx_messages_per_session": 45,
+        "shared_usage": ["claude.ai web", "VSCode Extension", "Claude Code"],
         "pricing_input": 0,
         "pricing_output": 0,
         "cost_monthly": 20,
-        "rate_limit": "Higher than free (not published)",
+        "rate_limit": "~45 messages per 5h session (baseline, varies with prompt size)",
         "limit_type": "fair_use",
-        "notes": "Daily limit ESTIMATED (~500k-1M). Priority access, all models, VSCode Extension included."
+        "notes": "2026 Reality: NO published daily/monthly limits. Uses rolling 5h windows. Usage shared across all Claude Pro access points. Market strategy: elastic compute, dynamic throttling."
       },
 
       "team": {
         "name": "Claude Team",
-        "monthly": 25000000,
+        "_architecture_model": "MODEL_3",
+        "monthly": 8000000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "daily": 800000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "session": 200000,
+        "session_duration_hours": 5,
+        "session_reset": "rolling",
+        "approx_messages_per_session": "Higher than Pro (not published)",
+        "shared_usage": ["claude.ai web", "VSCode Extension", "Claude Code", "team workspace"],
         "cost_monthly": 25,
-        "rate_limit": "Shared workspace limits",
+        "rate_limit": "Shared workspace limits (fair use)",
         "limit_type": "fair_use",
-        "notes": "$25-30/user/month. Pooled usage, admin panel, central billing."
+        "notes": "$25-30/user/month. Pooled usage, admin panel, central billing. Fair use dynamic throttling."
       }
     },
 
@@ -77,6 +104,7 @@
 
       "api": {
         "name": "Gemini API",
+        "_architecture_model": "MODEL_1",
         "monthly": 999999999,
         "daily": 999999999,
         "session": 1000000,
@@ -90,23 +118,37 @@
 
       "free": {
         "name": "Gemini Free",
-        "monthly": 400000,
-        "daily": 15000,
+        "_architecture_model": "MODEL_3",
+        "monthly": 100000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "daily": 5000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "session": 32000,
+        "session_duration_hours": 24,
+        "session_reset": "rolling",
+        "approx_messages_per_session": "~5 prompts/day (soft guidance)",
+        "shared_usage": ["gemini.google.com"],
         "rate_limit": "Message caps (rolling)",
         "limit_type": "fair_use",
-        "notes": "Limited access to latest models, lower priority"
+        "notes": "Limited access to latest models, lower priority. Fair use dynamic throttling."
       },
 
       "advanced": {
         "name": "Gemini Advanced",
+        "_architecture_model": "MODEL_3",
         "monthly": 1500000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "daily": 80000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "session": 1000000,
+        "session_duration_hours": 24,
+        "session_reset": "rolling",
+        "approx_messages_per_session": "~100 prompts/day (soft guidance)",
+        "shared_usage": ["gemini.google.com", "Google One AI Premium"],
         "cost_monthly": 20,
-        "rate_limit": "Higher than free",
+        "rate_limit": "Higher than free (not published)",
         "limit_type": "fair_use",
-        "notes": "$20/month (Google One AI Premium). Long-context enabled, top models."
+        "notes": "$20/month (Google One AI Premium). Long-context enabled, top models. Fair use dynamic throttling."
       }
     },
 
@@ -116,31 +158,52 @@
 
       "free": {
         "name": "Cursor Free",
-        "monthly": 150000,
-        "daily": 8000,
+        "_architecture_model": "MODEL_3",
+        "monthly": 400000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "daily": 20000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "session_duration_hours": 24,
+        "session_reset": "rolling",
+        "approx_messages_per_session": "Limited fast requests (not published)",
+        "shared_usage": ["Cursor IDE"],
         "rate_limit": "Limited fast requests",
         "limit_type": "soft",
-        "notes": "Unlimited basic autocompletion. Limited fast AI requests → fallback to slower queue."
+        "notes": "Unlimited basic autocompletion. Limited fast AI requests → fallback to slower queue. Fair use dynamic."
       },
 
       "pro": {
         "name": "Cursor Pro",
+        "_architecture_model": "MODEL_3",
         "monthly": 1500000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "daily": 80000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "session_duration_hours": 24,
+        "session_reset": "rolling",
+        "approx_messages_per_session": "Large allowance (not published)",
+        "shared_usage": ["Cursor IDE"],
         "cost_monthly": 20,
         "rate_limit": "Large allowance of fast premium requests",
         "limit_type": "soft",
-        "notes": "$20/month. Access to GPT-4/Claude models. Faster responses vs Free."
+        "notes": "$20/month. Access to GPT-4/Claude models. Faster responses vs Free. Fair use dynamic throttling."
       },
 
       "business": {
         "name": "Cursor Business",
-        "monthly": 3000000,
-        "daily": 150000,
+        "_architecture_model": "MODEL_3",
+        "monthly": 2500000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "daily": 120000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "session_duration_hours": 24,
+        "session_reset": "rolling",
+        "approx_messages_per_session": "Priority allowance (not published)",
+        "shared_usage": ["Cursor IDE", "team workspace"],
         "cost_monthly": 40,
         "rate_limit": "Priority routing",
         "limit_type": "fair_use",
-        "notes": "$40/user/month. Team management, central billing, policy controls."
+        "notes": "$40/user/month. Team management, central billing, policy controls. Fair use dynamic throttling."
       }
     },
 
@@ -150,32 +213,38 @@
 
       "individual": {
         "name": "Copilot Individual",
-        "monthly": 500000,
-        "daily": 25000,
+        "_architecture_model": "MODEL_2",
+        "monthly": "UNKNOWN (NOT DISCLOSED)",
+        "daily": "UNKNOWN (NOT DISCLOSED)",
+        "premium_requests_monthly": 300,
         "cost_monthly": 10,
-        "rate_limit": "Internal throttling",
-        "limit_type": "fair_use",
-        "notes": "$10/month or $100/year. Code completions + chat. Heavy users may experience throttling."
+        "rate_limit": "Internal throttling (fair use for completions)",
+        "limit_type": "hybrid",
+        "notes": "$10/month or $100/year. Unlimited completions, 300 premium chat requests/month. Heavy users may experience throttling."
       },
 
       "business": {
         "name": "Copilot Business",
-        "monthly": 2000000,
-        "daily": 100000,
+        "_architecture_model": "MODEL_2",
+        "monthly": "UNKNOWN (NOT DISCLOSED)",
+        "daily": "UNKNOWN (NOT DISCLOSED)",
+        "premium_requests_monthly": 300,
         "cost_monthly": 19,
         "rate_limit": "Higher than Individual",
-        "limit_type": "fair_use",
-        "notes": "$19/user/month. Organization deployment, policy controls."
+        "limit_type": "hybrid",
+        "notes": "$19/user/month. Unlimited completions, 300 premium requests/user/month. Organization deployment, policy controls."
       },
 
       "enterprise": {
         "name": "Copilot Enterprise",
-        "monthly": 5000000,
-        "daily": 200000,
+        "_architecture_model": "MODEL_2",
+        "monthly": "UNKNOWN (NOT DISCLOSED)",
+        "daily": "UNKNOWN (NOT DISCLOSED)",
+        "premium_requests_monthly": "Higher (not published)",
         "cost_monthly": 0,
         "rate_limit": "Priority capacity",
         "limit_type": "contract",
-        "notes": "Custom pricing. Deep GitHub integration, security/compliance features."
+        "notes": "Custom pricing. Deep GitHub integration, security/compliance features. Request quotas negotiated."
       }
     },
 
@@ -185,6 +254,7 @@
 
       "api": {
         "name": "Mistral API",
+        "_architecture_model": "MODEL_1",
         "monthly": 999999999,
         "daily": 999999999,
         "session": 128000,
@@ -203,11 +273,14 @@
 
       "free": {
         "name": "Groq Free Tier",
+        "_architecture_model": "MODEL_3",
         "monthly": 100000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "daily": 5000,
-        "rate_limit": "Requests/minute caps",
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "rate_limit": "Requests/minute caps (capacity-based)",
         "limit_type": "hard",
-        "notes": "Extremely fast inference. Daily rolling limits. Popular for real-time apps."
+        "notes": "Extremely fast inference. Rate limited by capacity. Popular for real-time apps. Fair use dynamic throttling."
       }
     },
 
@@ -217,6 +290,7 @@
 
       "api": {
         "name": "DeepSeek API",
+        "_architecture_model": "MODEL_1",
         "monthly": 999999999,
         "daily": 999999999,
         "pricing_input": 0.50,
@@ -234,21 +308,27 @@
 
       "free": {
         "name": "Perplexity Free",
-        "monthly": 50000,
-        "daily": 2000,
-        "rate_limit": "Limited Pro searches per day",
+        "_architecture_model": "MODEL_3",
+        "monthly": 200000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "daily": 10000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "rate_limit": "Limited Pro searches per day (not published)",
         "limit_type": "hard",
-        "notes": "Mix of models (OpenAI/Anthropic). Search-first UX."
+        "notes": "Mix of models (OpenAI/Anthropic). Search-first UX. Fair use dynamic throttling."
       },
 
       "pro": {
         "name": "Perplexity Pro",
+        "_architecture_model": "MODEL_3",
         "monthly": 400000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "daily": 20000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "cost_monthly": 20,
-        "rate_limit": "Higher Pro search allowance",
+        "rate_limit": "Higher Pro search allowance (not published)",
         "limit_type": "fair_use",
-        "notes": "$20/month. Premium models, higher daily limits, priority access."
+        "notes": "$20/month. Premium models, higher daily limits, priority access. Fair use dynamic throttling."
       }
     },
 
@@ -258,21 +338,27 @@
 
       "free": {
         "name": "Windsurf Free",
+        "_architecture_model": "MODEL_3",
         "monthly": 200000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "daily": 10000,
-        "rate_limit": "Fair use",
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "rate_limit": "Fair use (not published)",
         "limit_type": "fair_use",
-        "notes": "AI IDE with built-in models. Competes with Cursor. Not publicly quantified."
+        "notes": "AI IDE with built-in models. Competes with Cursor. Fair use dynamic throttling. Not publicly quantified."
       },
 
       "enterprise": {
         "name": "Windsurf Enterprise",
-        "monthly": 2000000,
-        "daily": 100000,
+        "_architecture_model": "MODEL_3",
+        "monthly": 1000000,
+        "monthly_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
+        "daily": 50000,
+        "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).",
         "cost_monthly": 0,
-        "rate_limit": "Contract-based",
+        "rate_limit": "Contract-based (not published)",
         "limit_type": "contract",
-        "notes": "Custom per-seat pricing. Enterprise deployment focus."
+        "notes": "Custom per-seat pricing. Enterprise deployment focus. Fair use dynamic throttling."
       }
     },
 
@@ -290,9 +376,6 @@
   "current_month": "2026-01",
   "monthly_usage": 0,
   "monthly_percentage": 0,
-
-  "daily_usage": 0,
-  "daily_percentage": 0,
   "last_reset_daily": "2026-01-31T00:00:00Z",
   "last_reset_monthly": "2026-01-01T00:00:00Z",
 
@@ -390,19 +473,96 @@
     "batch_detection_enabled": true
   },
 
+  "market_context_2026": {
+    "_comment": "Critical market shift understanding (2024-2026)",
+    "_data_source": "Official provider docs + CTO-level forensic audit (Feb 2026)",
+
+    "industry_reality": {
+      "shift": "From fixed quotas → elastic compute allocation",
+      "why": [
+        "Compute cost volatility",
+        "Abuse prevention",
+        "Competitive opacity",
+        "Dynamic load management"
+      ],
+      "result": "Most providers stopped publishing daily/monthly token limits"
+    },
+
+    "architecture_models": {
+      "MODEL_1": {
+        "name": "Hard Token Billing",
+        "used_by": ["API providers (Anthropic, Mistral, DeepSeek, Google)"],
+        "properties": ["Predictable", "Metered", "Cost-linked", "No soft throttling"]
+      },
+      "MODEL_2": {
+        "name": "Request Quota",
+        "used_by": ["GitHub Copilot premium requests"],
+        "properties": ["Monthly caps", "Feature-specific limits", "Upgrade pressure mechanism"]
+      },
+      "MODEL_3": {
+        "name": "Fair Use Dynamic Limits",
+        "used_by": ["Claude Pro", "Gemini Advanced", "Cursor", "Windsurf", "Perplexity"],
+        "properties": ["No fixed token numbers", "Load-dependent throttling", "Rolling windows", "Hidden caps"],
+        "official_stance": "UNKNOWN (NOT DISCLOSED) is intentional product strategy, not missing data"
+      }
+    },
+
+    "variant_b_approach": {
+      "_comment": "VARIANT B implemented in Phase 8.7.1.1 (2026-02-17)",
+      "name": "Conservative Estimates for MODEL_3 (HONESTY + PRACTICALITY)",
+      "problem": "Scripts cannot calculate percentages or zones with 'UNKNOWN (NOT DISCLOSED)' string values",
+      "solution": "Use conservative numeric estimates clearly marked as ESTIMATE ONLY via _note fields",
+      "philosophy": "Be honest about uncertainty while remaining practically useful",
+      "key_rules": [
+        "All MODEL_3 daily/monthly values = conservative estimates, NOT real limits",
+        "Every estimate has a corresponding _note field: 'ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3).'",
+        "Estimates are intentionally conservative (10-20% lower than typical usage)",
+        "Scripts use estimates for calculations; users see _note clarifications",
+        "MODEL_3 documentation preserved in architecture_models section"
+      ],
+      "values_methodology": "Session-based calculation (session_limit × estimated_sessions_per_day) + market research",
+      "backward_compatibility": "Old configs continue working; new _note fields are additive"
+    },
+
+    "claude_pro_specifics": {
+      "session_limit": "200K tokens",
+      "session_duration": "~5 hours (rolling window)",
+      "baseline_usage": "~45 messages per 5h session (varies with prompt size)",
+      "shared_pool": "claude.ai web + VSCode Extension + Claude Code share SAME quota",
+      "daily_monthly_limits": "UNKNOWN (NOT DISCLOSED)",
+      "throttling": "Dynamic, based on system load and user behavior",
+      "reset_behavior": "Rolling windows, not fixed midnight resets"
+    },
+
+    "framework_philosophy": {
+      "approach": "Warn, don't block ('тихий помічник' - silent helper)",
+      "estimates": "Conservative (10-20% lower) for early warnings",
+      "handling_unknowns": "VARIANT B: Use session-based estimates + _note fields. Mark clearly as estimates.",
+      "backward_compatibility": "Old configs continue working, new fields optional"
+    }
+  },
+
   "notes": [
     "v3.0: Intelligent budget management with pre-flight approval",
-    "Limits are CONSERVATIVE (10-20% lower) for early warnings",
-    "Check PRESETS above for your provider and plan",
+    "2026 Market Reality: Most providers use fair use dynamic limits (MODEL_3), NOT fixed daily/monthly caps",
+    "UNKNOWN (NOT DISCLOSED) for daily/monthly = intentional provider strategy, NOT missing data",
+    "VARIANT B (Phase 8.7.1.1): MODEL_3 plans now have numeric estimates + _note fields for script compatibility",
+    "All MODEL_3 daily/monthly values = ESTIMATE ONLY (clearly marked). Real limits remain UNKNOWN.",
+    "Limits are CONSERVATIVE (10-20% lower) where published, for early warnings",
+    "For MODEL_3 plans: Conservative estimates used in daily_limit/monthly_limit fields; _note fields explain they are estimates",
+    "Check PRESETS above for your provider and plan - now includes _architecture_model + VARIANT B estimates",
     "Pre-flight estimates shown BEFORE execution (tasks >5k)",
     "Confidence levels: HIGH (±15%), MEDIUM (±30%), LOW (±50%)",
     "System learns from variance to improve estimates over time",
     "Emergency reserve (10-15%) always protected",
     "Smart batching suggests optimizations automatically",
     "Context compression auto-triggers at 50% (saves 40-60% tokens)",
+    "Claude Pro: 200K session, ~5h rolling window, ~45 msgs/session baseline, shared web+VSCode+CLI quota",
     "NOTE: Token tracking is MANUAL - AI cannot auto-update JSON files",
     "Update daily_usage manually or use provider's dashboard for tracking",
-    "This file serves as reference/template for token management protocols"
+    "This file serves as reference/template for token management protocols",
+    "See market_context_2026 section for detailed 2024-2026 industry shift analysis",
+    "See market_context_2026.variant_b_approach for VARIANT B philosophy and methodology"
   ],
 
   "history": {

@@ -1,9 +1,9 @@
 # Token Control v3.0 — Architecture Specification
 
-> **Status:** Implementation in progress
+> **Status:** Implementation complete
 > **Author:** AI Financial Analyst with 10 years experience (fictional persona)
-> **Date:** 2026-02-03
-> **Version:** 3.0.0
+> **Date:** 2026-02-17
+> **Version:** 3.0.0 (Phase 8.7.3 — MODEL_3 session-based support added)
 
 ---
 
@@ -69,6 +69,160 @@ Save 10-15% tokens per session by **eliminating waste**, not cutting quality:
 │ • Historical pattern matching                               │
 │ • Risk factor scoring                                       │
 └─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## MODEL_3: Session-Based Support (v3.0 Dual-Mode)
+
+> **Added:** Phase 8.7.3 (2026-02-17) | **Why:** 2026 market reality — most consumer AI plans use Fair Use Dynamic limits (no fixed daily/monthly numbers)
+
+### The Problem v3.0 Solves
+
+Original v3.0 was designed for **MODEL_1** (Hard Token Billing — API providers with fixed daily limits). But Claude Pro, Gemini Advanced, Cursor, and most consumer plans use **MODEL_3** (Fair Use Dynamic), where:
+
+- Daily/monthly limits = **UNKNOWN (NOT DISCLOSED)** — intentional product strategy
+- Limits are session-based: `200K tokens / ~5h rolling window`
+- Provider uses dynamic throttling based on system load
+
+### Dual-Mode Architecture
+
+Token Control v3.0 now operates in two modes automatically:
+
+```
+[AUTO-DETECT on startup]
+   ↓
+Read: .ai/token-limits.json
+   → daily_limit_type == "fair_use_dynamic" ?
+   ↓ YES                       ↓ NO
+[SESSION MODE]            [DAILY MODE]
+(MODEL_3)                 (MODEL_1/2)
+   ↓                           ↓
+Session % zones           Daily % zones
+Session estimates         Daily estimates
+"ESTIMATE ONLY" labels    Hard limit labels
+```
+
+**Detection logic:**
+```bash
+# Auto-detect from token-limits.json
+if daily_limit_type == "fair_use_dynamic":
+    mode = SESSION_MODE   # MODEL_3: Claude Pro, Gemini Advanced, etc.
+elif _architecture_model == "MODEL_3":
+    mode = SESSION_MODE
+else:
+    mode = DAILY_MODE     # MODEL_1/2: API providers, Copilot
+```
+
+### SESSION MODE — Behavior Differences
+
+| Feature | DAILY MODE (MODEL_1/2) | SESSION MODE (MODEL_3) |
+|---------|----------------------|----------------------|
+| **Primary budget** | Daily limit (hard) | Session limit (200K) |
+| **Zone thresholds** | % of daily_limit | % of session_limit |
+| **Estimate labels** | "Daily budget: Xk" | "ESTIMATE ONLY: Xk (not a real limit)" |
+| **Remaining calc** | daily_limit - daily_used | session_limit - session_used |
+| **Reset info** | "Daily limit resets at midnight" | "Session resets after ~5h" |
+| **Risk warning** | ">90% daily = CRITICAL" | ">80% session = start new session" |
+
+### VARIANT B: Estimates for Planning
+
+Since MODEL_3 limits are UNKNOWN, v3.0 uses **VARIANT B** — conservative estimates:
+
+```json
+// PRESETS entry for Claude Pro:
+{
+  "_architecture_model": "MODEL_3",
+  "daily": 500000,           // ESTIMATE (not real)
+  "daily_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3).",
+  "session": 200000,         // REAL (published by Anthropic)
+  "session_duration_hours": 5,
+  "approx_messages_per_session": 45
+}
+```
+
+**Philosophy:** Use session_limit (200K) as primary, daily estimate as secondary planning tool.
+
+### Session-Based Examples
+
+#### SESSION MODE: SMALL task (5k tokens)
+
+```markdown
+[QUICK ESTIMATE]
+Task: "Fix null check in auth.ts"
+Cost: ~5k tokens (2.5% of session)
+
+Session: 45k/200k used (22%) 🟢
+Session budget: ~155k remaining
+
+Proceeding...
+```
+
+#### SESSION MODE: MEDIUM task (30k tokens)
+
+```markdown
+[TOKEN ESTIMATE]
+Task: "Refactor authentication middleware"
+
+Cost: ~30k tokens
+Session impact: 45k → 75k used (37%)
+Status: 🟢 Green → 🟢 Green (safe)
+
+⚠️ Using ESTIMATE budget (Claude Pro MODEL_3):
+   Daily estimate: ~30k of ~500k (conservative)
+   Note: Real daily limit UNKNOWN. Session limit is what matters.
+
+Approve? [YES/no]
+```
+
+#### SESSION MODE: When approaching session limit
+
+```markdown
+[SESSION WARNING]
+Session: 165k/200k used (82%) 🟠
+
+⚠️ Approaching session limit (~5h rolling window)
+   Remaining: ~35k tokens
+
+Options:
+1. CONTINUE: ~35k available for small tasks
+2. COMMIT + COMPRESS: Save work, compress context, continue
+3. NEW SESSION: Fresh 200K budget (after current session expires)
+
+Recommendation: Option 2 if >50k task planned
+```
+
+### Emergency Reserve — Session Adaptation
+
+For MODEL_3, the 10% reserve rule applies to **session**, not daily:
+
+```
+Session limit: 200K tokens
+Reserve (10%): 20K (protected)
+Safe available: 180K per session
+
+[BUDGET WARNING — SESSION MODE]
+Task: ~45k tokens
+Session used: 145k/200k (72%)
+Safe remaining: 200k - 145k - 20k(reserve) = 35k
+
+⚠️ Task (45k) exceeds safe remaining (35k)
+Recommendation: Commit current work, start new session
+```
+
+### Model Information Display
+
+When presenting token status in SESSION MODE:
+
+```markdown
+🤖 Provider: anthropic (pro) [MODEL_3 - Fair Use Dynamic]
+
+⚠️ FAIR USE DYNAMIC LIMITS
+   Real limits: UNKNOWN (NOT DISCLOSED) — product strategy
+   Using conservative estimates for planning
+
+💬 Session: 200,000 tokens | ~5h rolling | ~45 msgs/session
+📅 Daily (ESTIMATE): 500,000 tokens | Note: ESTIMATE ONLY
 ```
 
 ---
@@ -534,7 +688,7 @@ v3.0 gracefully extends v2.0:
   "tracking_enabled": true
 }
 
-// v3.0 adds optional fields
+// v3.0 adds optional fields (MODEL_1/2 — hard caps)
 {
   "provider": "anthropic",
   "plan": "pro",
@@ -555,6 +709,25 @@ v3.0 gracefully extends v2.0:
   },
   "variance_history": [],
   "learning_enabled": true
+}
+
+// VARIANT B: MODEL_3 (Claude Pro, Gemini Advanced, etc.)
+// Phase 8.7.1.1 (2026-02-17) — Conservative estimates + notes
+{
+  "provider": "anthropic",
+  "plan": "pro",
+  "session_limit": 200000,
+  "daily_limit": 500000,                   // ESTIMATE (not real)
+  "daily_limit_type": "fair_use_dynamic",  // NEW: triggers SESSION MODE
+  "daily_limit_note": "Conservative estimate. Real limit UNKNOWN (MODEL_3).",
+  "monthly_limit": 5000000,                // ESTIMATE
+  "monthly_limit_note": "Conservative estimate. Real limit UNKNOWN (MODEL_3).",
+  "tracking_enabled": true
+  // PRESETS[provider][plan] contains:
+  //   _architecture_model: "MODEL_3"
+  //   session_duration_hours: 5
+  //   approx_messages_per_session: 45
+  //   daily_note: "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3)."
 }
 ```
 
@@ -695,5 +868,5 @@ Total potential savings: **10-15% per session** without quality loss.
 
 **End of Specification**
 **Version:** 3.0.0
-**Status:** Ready for implementation
-**Next:** Update RULES_CORE.md Section 2
+**Status:** Complete (dual-mode: MODEL_1/2 daily + MODEL_3 session)
+**Updated:** Phase 8.7.3 (2026-02-17) — MODEL_3 session-based support, VARIANT B schema

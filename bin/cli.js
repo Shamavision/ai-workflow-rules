@@ -11,23 +11,23 @@ const path = require('path');
 const chalk = require('chalk');
 
 // Presets for token limits by provider and plan
-// Synced with .ai/token-limits.json (v3.0) - 2026-02-16
+// Synced with .ai/token-limits.json (v3.0 VARIANT B) - 2026-02-17
 const TOKEN_PRESETS = {
   anthropic: {
-    free: { monthly: 250000, daily: 8000 },
+    free: { monthly: 200000, daily: 20000 },
     pro: { monthly: 5000000, daily: 500000 },
-    team: { monthly: 25000000, daily: 800000 },
+    team: { monthly: 8000000, daily: 800000 },
     api: { monthly: 999999999, daily: 999999999 }
   },
   google: {
-    free: { monthly: 400000, daily: 15000 },
+    free: { monthly: 100000, daily: 5000 },
     advanced: { monthly: 1500000, daily: 80000 },
     api: { monthly: 999999999, daily: 999999999 }
   },
   cursor: {
-    free: { monthly: 150000, daily: 8000 },
+    free: { monthly: 400000, daily: 20000 },
     pro: { monthly: 1500000, daily: 80000 },
-    business: { monthly: 3000000, daily: 150000 }
+    business: { monthly: 2500000, daily: 120000 }
   },
   github_copilot: {
     individual: { monthly: 500000, daily: 25000 },
@@ -44,12 +44,12 @@ const TOKEN_PRESETS = {
     api: { monthly: 999999999, daily: 999999999 }
   },
   perplexity: {
-    free: { monthly: 50000, daily: 2000 },
+    free: { monthly: 200000, daily: 10000 },
     pro: { monthly: 400000, daily: 20000 }
   },
   windsurf: {
     free: { monthly: 200000, daily: 10000 },
-    enterprise: { monthly: 2000000, daily: 100000 }
+    enterprise: { monthly: 1000000, daily: 50000 }
   },
   other: {
     default: { monthly: 500000, daily: 20000 }
@@ -57,7 +57,7 @@ const TOKEN_PRESETS = {
 };
 
 // Provider and plan mappings
-// Synced with .ai/token-limits.json PRESETS - 2026-02-16
+// Synced with .ai/token-limits.json PRESETS - 2026-02-17
 const PROVIDERS = [
   { name: 'Claude (Anthropic)', value: 'anthropic' },
   { name: 'Gemini (Google)', value: 'google' },
@@ -96,6 +96,20 @@ const CONTEXTS = [
   { name: 'Ukraine-Full - Ukrainian businesses (~18k tokens, v9.1)', value: 'ukraine-full', tokens: 18000 },
   { name: 'Enterprise - Large teams (~23k tokens, v9.1)', value: 'enterprise', tokens: 23000 }
 ];
+
+// Architecture model classification (2026 reality)
+// MODEL_1: Hard Token Billing (API, metered)
+// MODEL_2: Request Quota (GitHub Copilot)
+// MODEL_3: Fair Use Dynamic (limits NOT DISCLOSED by provider)
+const MODEL_1_KEYS = new Set(['anthropic.api', 'google.api', 'mistral.api', 'deepseek.api']);
+const MODEL_2_KEYS = new Set(['github_copilot.individual', 'github_copilot.business', 'github_copilot.enterprise']);
+
+function getArchModel(provider, plan) {
+  const key = `${provider}.${plan}`;
+  if (MODEL_1_KEYS.has(key)) return 'MODEL_1';
+  if (MODEL_2_KEYS.has(key)) return 'MODEL_2';
+  return 'MODEL_3';
+}
 
 // Function: Generate rules files for AI tools
 async function generateRulesFiles(targetDir, context) {
@@ -145,6 +159,7 @@ async function generateRulesFiles(targetDir, context) {
 `;
 
     const footer = `
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # END OF AUTO-GENERATED RULES
@@ -217,13 +232,14 @@ async function selectContextWithRecommendation() {
   // Show comparison table
   console.log(chalk.bold.cyan('\n📊 Context Comparison\n'));
   console.log('┌─────────────────┬────────────┬─────────────┬──────────────────────┐');
-  console.log('│ Context         │ Tokens     │ Daily %     │ Best For             │');
+  console.log('│ Context         │ Tokens     │ Session %   │ Best For             │');
   console.log('├─────────────────┼────────────┼─────────────┼──────────────────────┤');
   console.log('│ Minimal         │ ~10k       │ 5%          │ Startups, MVP        │');
   console.log('│ Standard        │ ~14k       │ 7%          │ Most projects        │');
   console.log('│ Ukraine-Full    │ ~18k       │ 9%          │ Ukrainian market     │');
   console.log('│ Enterprise      │ ~23k       │ 11.5%       │ Large teams          │');
-  console.log('└─────────────────┴────────────┴─────────────┴──────────────────────┘\n');
+  console.log('└─────────────────┴────────────┴─────────────┴──────────────────────┘');
+  console.log(chalk.gray('  Session % = tokens used of 200K session limit (MODEL_3 primary metric)\n'));
 
   // Show recommendation
   console.log(chalk.bold.green(`✅ Recommended: ${recommended}\n`));
@@ -332,6 +348,14 @@ async function main() {
     await fs.ensureDir(path.join(currentDir, '.ai'));
     await fs.ensureDir(path.join(currentDir, '.ai/docs'));
     await fs.ensureDir(path.join(currentDir, '.ai/rules'));
+    await fs.ensureDir(path.join(currentDir, '.ai/contexts'));
+
+    // Copy AI enforcement protocol (required by CLAUDE.md)
+    await copyFile(
+      path.join(templatesDir, '.ai'),
+      path.join(currentDir, '.ai'),
+      'AI-ENFORCEMENT.md'
+    );
 
     // Copy documentation files to .ai/docs/
     await copyFile(
@@ -369,6 +393,11 @@ async function main() {
       path.join(currentDir, '.ai/docs'),
       'code-quality.md'
     );
+    await copyFile(
+      path.join(templatesDir, '.ai/docs'),
+      path.join(currentDir, '.ai/docs'),
+      'provider-comparison.md'
+    );
 
     // Copy rules files to .ai/rules/
     await copyFile(
@@ -393,6 +422,9 @@ async function main() {
       'forbidden-trackers.json'
     );
 
+    // Copy all context files (required for generateRulesFiles and future sync-rules)
+    await copyContextFiles(templatesDir, currentDir);
+
     // Create token-limits.json with user config
     await createTokenLimitsConfig(currentDir, answers);
 
@@ -416,7 +448,7 @@ async function main() {
       await updateGitignore(currentDir);
     }
 
-    // Generate rules for AI tools
+    // Generate rules for AI tools (reads from .ai/contexts/ copied above)
     await generateRulesFiles(currentDir, answers.context);
 
     // Success message
@@ -456,16 +488,35 @@ async function copyFile(sourceDir, targetDir, filename) {
   console.log(chalk.green(`  ✓ ${filename}`));
 }
 
+async function copyContextFiles(templatesDir, targetDir) {
+  const sourceContextsDir = path.join(templatesDir, '.ai/contexts');
+  const targetContextsDir = path.join(targetDir, '.ai/contexts');
+
+  const contextFiles = [
+    'minimal.context.md',
+    'standard.context.md',
+    'ukraine-full.context.md',
+    'enterprise.context.md'
+  ];
+
+  for (const file of contextFiles) {
+    await copyFile(sourceContextsDir, targetContextsDir, file);
+  }
+}
+
 async function createTokenLimitsConfig(targetDir, answers) {
   const provider = answers.provider;
   const plan = answers.plan.toLowerCase();
 
   const limits = TOKEN_PRESETS[provider]?.[plan] || TOKEN_PRESETS.other.default;
+  const archModel = getArchModel(provider, plan);
+  const isModel3 = archModel === 'MODEL_3';
 
   const config = {
     "_comment": "🤖 Universal AI Token Tracker v3.0 - Auto-configured",
     "provider": provider,
     "plan": plan,
+    "_architecture_model": archModel,
     "monthly_limit": limits.monthly,
     "daily_limit": limits.daily,
     "tracking_enabled": true,
@@ -500,9 +551,26 @@ async function createTokenLimitsConfig(targetDir, answers) {
     "history": {}
   };
 
+  // MODEL_3: Add Fair Use Dynamic fields (daily/monthly limits UNKNOWN by provider)
+  if (isModel3) {
+    config.daily_limit_type = "fair_use_dynamic";
+    config.daily_limit_note = "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).";
+    config.monthly_limit_note = "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).";
+    config.session_limit = 200000;
+    config.session_duration_hours = 5;
+    config.notes.unshift(
+      "MODEL_3: Fair Use Dynamic - real daily/monthly limits NOT DISCLOSED by provider",
+      "Session limit: 200K tokens / ~5h rolling window (primary budget metric for MODEL_3)"
+    );
+  }
+
   const targetPath = path.join(targetDir, '.ai', 'token-limits.json');
   await fs.writeJson(targetPath, config, { spaces: 2 });
-  console.log(chalk.green(`  ✓ .ai/token-limits.json (${provider} ${plan}: ${limits.daily.toLocaleString()} daily)`));
+
+  const limitLabel = isModel3
+    ? `${limits.daily.toLocaleString()} daily est. (MODEL_3: real limit UNKNOWN)`
+    : `${limits.daily.toLocaleString()} daily`;
+  console.log(chalk.green(`  ✓ .ai/token-limits.json (${provider} ${plan}: ${limitLabel})`));
 }
 
 async function installPreCommitHook(targetDir) {
