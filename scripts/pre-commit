@@ -193,6 +193,13 @@ is_ignored() {
         "examples/"
         "tests/fixtures/"
         "__tests__/mocks/"
+        "ROADMAP.md"
+        ".ai/docs/"
+        ".ai/contexts/"
+        ".ai/token-control-v3-spec.md"
+        ".ai/rules/"
+        "npm-templates/"
+        "scripts/token-status.sh"
     )
 
     for pattern in "${BUILT_IN_IGNORE[@]}"; do
