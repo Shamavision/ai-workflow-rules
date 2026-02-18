@@ -186,6 +186,54 @@ Will be documented after user provides full feedback.
 
 ---
 
+## 📊 Phase 11: Token Monitoring Rethink
+
+> **Status:** 🔴 PLANNED — research required before implementation
+> **Trigger:** кролик test revealed "~500k/day" is our own estimate, not Anthropic's real limit
+
+### The Problem
+
+Current framework claims to track daily token usage but cannot do so accurately for MODEL_3.
+
+**Fundamental constraint (cannot be solved):**
+- MODEL_3 providers (Claude Pro, Gemini Advanced, Cursor, Windsurf) do NOT expose daily usage APIs
+- Anthropic does NOT disclose the real daily limit for Pro subscribers
+- Cross-session tracking is impossible without provider API access
+
+**What we CAN track (accurately):**
+- SESSION tokens: AI sees its own context → accurate
+- API-based providers (MODEL_1): Anthropic API has `/v1/usage` endpoint → accurate
+
+**What we CANNOT track (honestly):**
+- Daily usage across multiple conversations/tabs (MODEL_3)
+- Real daily limit (MODEL_3 — intentionally undisclosed)
+
+### Research Tasks (before coding)
+
+| Research | Question | Status |
+|----------|----------|--------|
+| Claude Code hooks env vars | Does `user-prompt-submit.sh` receive token count? | ❓ Unknown |
+| Anthropic Pro internal API | Any undocumented usage endpoint for Pro? | ❓ Unknown |
+| Cursor/Windsurf tracking | How do they count tokens internally? | ❓ Unknown |
+| Industry best practices | How do tools like LangSmith handle this? | ❓ Unknown |
+
+### Implementation Plan (after research)
+
+| Task | Priority | Approach |
+|------|----------|----------|
+| **Session log** (`user-prompt-submit.sh` → `.ai/session-log.json`) | 🟠 High | Best-effort: log session start/end, aggregate daily estimate |
+| **MODEL_1 real checker** (Anthropic API `/v1/usage`) | 🟠 High | Accurate for API users |
+| **MODEL_3 honest UI** | 🔴 Critical | Label estimates clearly: "ESTIMATE (real limit unknown)" |
+| **Ban prevention warning** | 🔴 Critical | "Slow responses = approaching limit. Stop for today." |
+| **Docs update** | 🟠 High | Explain MODEL_3 limitation honestly to users |
+
+### Key Principle
+
+> "Better to say 'I don't know' than to show fake numbers."
+> Framework must be HONEST about what it can and cannot measure.
+
+---
+
 ## 🔮 Future: v9.2 Ideas
 
 > **Policy:** Only after Phase 10 (кролик fixes) complete.
