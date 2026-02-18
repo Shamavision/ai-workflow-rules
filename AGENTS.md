@@ -40,6 +40,8 @@
 
 **User command trigger:** `//START` or `//start` → Execute this protocol immediately
 
+> **Note:** Always type `//START` in a **new conversation**. Claude Code loads `.claude/CLAUDE.md` at conversation start — typing it in an existing conversation won't load the rules.
+
 **Details:** See [.claude/CLAUDE.md](.claude/CLAUDE.md) Section "Session Start Protocol"
 
 ---

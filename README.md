@@ -73,6 +73,12 @@ iwr -useb https://raw.githubusercontent.com/Shamavision/ai-workflow-rules/main/s
 
 Both installers run the **same interactive wizard** and produce **identical file sets**.
 
+### After Installation
+
+> **⚠️ Important for Claude Code users:** After running the installer, open a **new conversation** in Claude Code, then type `//START`.
+>
+> Do NOT type `//START` in an existing conversation — Claude Code loads project rules (`.claude/CLAUDE.md`) only at conversation start.
+
 ---
 
 ## 🤖 AI Commands
