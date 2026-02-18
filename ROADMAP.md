@@ -301,6 +301,20 @@ Verify that session-log.json tracking + `//TOKENS` command works correctly acros
 - Does each AI correctly read/write `session-log.json`?
 - Is `//TOKENS` behavior consistent across different rule file formats?
 
+### Also in Phase 12: README + AGENTS.md Commands Audit
+
+**Problem:** New commands appeared but README/AGENTS.md not updated.
+
+Current README "AI Commands" table has: `//START`, `//TOKENS`, `//CHECK:*`, `//COMPACT`, `//THINK`
+
+Commands that appeared or will appear — need audit:
+- `//REFRESH` — reload rules (in CLAUDE.md, but is it in README?)
+- `//UPDATE` — framework update (Phase 13, new)
+- `//TOKENS` — verify format matches Phase 11 implementation
+- `//WHICH:RULES`, `//CHECK:RULES` — in CLAUDE.md but not README?
+
+**Task:** Compare ALL commands in `CLAUDE.md` + `AGENTS.md` vs README table → sync them.
+
 ---
 
 ## 🔄 Phase 13: Update Mechanism
