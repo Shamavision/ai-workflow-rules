@@ -154,9 +154,17 @@ Users don't know what "minimize usage" vs "full features" means in practice.
 
 **What it does:** Sets `auto_approve_thresholds` in config.json (when AI warns about token usage).
 
-**Options (awaiting decision):**
-- **Remove:** Always use "balanced" default — simpler wizard
-- **Improve:** Human-friendly labels: "Careful (Pro plans)" / "Balanced (recommended)" / "Relaxed (API/unlimited)"
+**Decision (2026-02-18): Improve with human-friendly labels** — user should have a choice.
+
+**New wording:**
+```
+How cautious should AI be with tokens?
+  1) Careful   — warns early, fewer long tasks (recommended for Pro/subscription plans)
+  2) Balanced  — standard warnings (recommended for most users)
+  3) Relaxed   — minimal interruptions (good for API/pay-per-token plans)
+```
+
+**Files to change:** `install.sh`, `bin/cli.js`
 
 ### Confirmed Issue #4: "Ряд замечаний" — TBD
 
@@ -171,7 +179,7 @@ Will be documented after user provides full feedback.
 | Remove language question from wizard (decision: Option A) | 🔴 Critical | 🔴 PLANNED |
 | Update CLAUDE.md + AI-ENFORCEMENT: start in Ukrainian+EN | 🔴 Critical | 🔴 PLANNED |
 | Update "Next steps" in bin/cli.js: same message | 🔴 Critical | 🔴 PLANNED |
-| Remove/improve "Token budget priority?" question | 🟠 High | ⏳ Awaiting decision |
+| Improve "Token budget priority?" with human-friendly labels | 🟠 High | 🔴 PLANNED |
 | Collect full кролик feedback (bash install issues #4) | 🔴 Critical | ⏳ Awaiting user |
 | Fix all bash install issues from feedback | 🔴 Critical | 🔴 PLANNED |
 | Re-test кролик after fixes | 🟠 High | 🔴 PLANNED |
