@@ -113,9 +113,45 @@ Currently they do NOT — different source files, different file sets, different
 
 ---
 
+## 🐇 Phase 10: "Кролик" Fixes (from real-world test 2026-02-18)
+
+> **Status:** 🔴 PLANNED — based on first кролик test (bash install, STUDIO project)
+
+### Confirmed Issue #1: //start fails in existing conversation
+
+**Root cause:** Claude Code loads `.claude/CLAUDE.md` ONCE at conversation start.
+If user installs framework while conversation is already open → CLAUDE.md not loaded.
+User types `//start` → AI doesn't recognize it (no project rules loaded).
+
+**Evidence:** AI responded "//start не совпал ни с одним из скиллов" — no CLAUDE.md in context.
+
+**Fix options:**
+- **Option A (install.sh):** Update "Next steps" message → add "Open a **NEW conversation** in Claude Code after installation"
+- **Option B (CLAUDE.md):** Add note about reloading
+- **Option C (user-prompt-submit.sh):** Ensure hook works in VSCode extension (currently CLI-only)
+
+**Priority:** 🔴 Critical UX — first impression of the framework.
+
+### Confirmed Issue #2: "Ряд замечаний" — TBD
+
+**Status:** User mentioned multiple issues with bash install, details pending.
+Will be documented after user provides full feedback.
+
+### Fix Plan:
+
+| Task | Priority | Status |
+|------|----------|--------|
+| Update "Next steps" in install.sh: "Open NEW conversation" | 🔴 Critical | 🔴 PLANNED |
+| Update "Next steps" in bin/cli.js: same message | 🔴 Critical | 🔴 PLANNED |
+| Collect full кролик feedback (bash install issues) | 🔴 Critical | ⏳ Awaiting user |
+| Fix all bash install issues from feedback | 🔴 Critical | 🔴 PLANNED |
+| Re-test кролик after fixes | 🟠 High | 🔴 PLANNED |
+
+---
+
 ## 🔮 Future: v9.2 Ideas
 
-> **Policy:** Only after Phase 9 + "кролик" feedback.
+> **Policy:** Only after Phase 10 (кролик fixes) complete.
 
 | Idea | Priority | Notes |
 |------|----------|-------|
