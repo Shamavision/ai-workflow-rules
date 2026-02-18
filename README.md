@@ -39,6 +39,17 @@ AI coding assistants are powerful but dangerous:
 
 ---
 
+## 🇺🇦 Made in Ukraine. Open Source.
+
+This framework is our tribute to Ukrainian business — built during the war, for the teams that keep shipping under extraordinary conditions.
+
+Ukrainian teams have specific requirements: zero russian services, GDPR compliance, Ukrainian language standards enforced at commit level. We turned those requirements into automation — not as a filter added on top, but as the foundation.
+
+**Free. Open source. For the community.**
+Because Ukrainian expertise belongs to everyone.
+
+---
+
 ## 🚀 Quick Start
 
 **Two ways to install — both produce identical results:**
@@ -212,8 +223,7 @@ All tool files are **auto-generated** from your selected context. Update with `b
 your-project/
 ├── AGENTS.md                    # Universal AI entry point
 ├── .claude/
-│   ├── CLAUDE.md                # Claude Code configuration
-│   ├── CLAUDE.md               # Session start protocol
+│   ├── CLAUDE.md                # Claude Code rules + session protocol
 │   ├── settings.json            # Claude Code settings
 │   └── hooks/
 │       └── user-prompt-submit.sh # Auto session start (CLI)
@@ -322,31 +332,16 @@ bash scripts/token-status.sh
 
 ## 📝 Version History
 
-- **v9.1.1** [2026-02-17] — **DISTRIBUTION AUDIT.** Phase 8 complete: 6 bugs fixed in CLI installer (contexts never copied, MODEL_3 fields missing, AI-ENFORCEMENT.md missing). Token System 2026 VARIANT B: 13 MODEL_3 plans with conservative ESTIMATES. token-status.sh v1.1: SESSION MODE for Fair Use Dynamic providers. pre-commit hook: fixed set-e bug.
-- **v9.1** [2026-02-08] — **OPTIMIZATION RELEASE.** Phase 7: .ai/ hub restructure. Token optimization: 20-28% smaller contexts. Session management best practices guide.
+- **v9.1.1** [2026-02-18] — **INSTALLER PARITY.** Phase 9: both install paths (`npx` + `bash install.sh`) now produce identical 24-file sets. `.ai/config.json` generation added to npx (critical — was causing legacy mode). `install.sh` fully rewritten: npm-templates source, 10 providers, provider-specific plans, language selection, MODEL_3 support.
+- **v9.1.1** [2026-02-17] — **DISTRIBUTION AUDIT.** Phase 8: 6 bugs fixed in CLI installer (contexts never copied, MODEL_3 fields missing, AI-ENFORCEMENT.md missing). Token System 2026 VARIANT B: 13 MODEL_3 plans with conservative ESTIMATES. pre-commit hook: fixed set-e bug.
+- **v9.1** [2026-02-08] — **OPTIMIZATION RELEASE.** .ai/ hub restructure. Token optimization: 20-28% smaller contexts. Session management best practices guide.
 - **v9.0** [2026-02-05] — **AI ENFORCEMENT.** Mandatory protocols auto-loaded. Post-push compression. Multi-level compression (Light/Aggressive/Maximum).
 - **v8.1** [2026-02-04] — **MODULAR CONTEXTS.** Smart context loading (minimal/standard/ukraine-full/enterprise). Token savings: 40-70%.
 - **v8.0** [2026-02-03] — **TOKEN CONTROL v3.0.** Intelligent budget management. Pre-flight approval, emergency reserves.
-- **v7.2** [2026-02-02] — Layer 0: CLAUDE.md for Claude Code. 4-layer protection system.
-
----
-
-## ⚠️ Red Flags — AI Auto-Stop Conditions
-
-AI assistant **MUST stop and ask confirmation** before:
-- Deleting >10 files
-- Changing core configs (`package.json`, `tsconfig`, `.env` template)
-- Database migrations or major dependency updates
-- `rm -rf` or recursive deletes
-- Publishing to npm/production
-- Auth/authorization changes
-- **[LANG-CRITICAL]** Russian content detected in code
-- **[AI-API-CRITICAL]** API key detected in client code
-- **[TOKEN-CRITICAL]** >95% session tokens used
 
 ---
 
 **Made with ❤️ in Ukraine 🇺🇦**
 **License:** GPL v3
 **GitHub:** [Shamavision/ai-workflow-rules](https://github.com/Shamavision/ai-workflow-rules)
-**Last Updated:** 2026-02-17 | **Framework Version:** 9.1.1
+**Last Updated:** 2026-02-18 | **Framework Version:** 9.1.1

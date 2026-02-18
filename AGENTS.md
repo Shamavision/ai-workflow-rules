@@ -1,7 +1,7 @@
 # AI Workflow Rules Framework
 
 > **🚪 Entry point for all AI assistants**
-> **Framework:** v9.1 Optimization | **Made in Ukraine 🇺🇦**
+> **Framework:** v9.1.1 | **Made in Ukraine 🇺🇦**
 
 ---
 
@@ -132,7 +132,7 @@
 
 ## 📊 Context Comparison (v9.1 Optimized)
 
-| Context | Tokens | Daily % | Best For | Includes |
+| Context | Tokens | Session % | Best For | Includes |
 |---------|--------|---------|----------|----------|
 | **Minimal** | ~10k | 5% | Startups, MVP, simple projects | Core workflow, basic security |
 | **Standard** | ~14k | 7% | Most projects (recommended) | + Git discipline, token management |
@@ -194,10 +194,10 @@
 │   └── hooks/             # CLI hooks
 ├── .cursorrules           # Auto-generated (Cursor IDE)
 ├── .windsurfrules         # Auto-generated (Windsurf IDE)
-├── scripts/
-│   ├── pre-commit         # Security checks
-│   └── sync-rules.sh      # Regenerate tool files
-└── examples/              # Production code examples
+└── scripts/
+    ├── pre-commit         # Security checks
+    ├── sync-rules.sh      # Regenerate tool files
+    └── token-status.sh    # Token budget dashboard
 ```
 
 ---
@@ -244,18 +244,15 @@
 - ✅ All rules: .ai/rules/
 - ✅ Tool files: Auto-generated from contexts
 
-**Migration:** Existing users run `scripts/migrate-to-hub.sh`
-
 **Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
 
 ---
 
 **Made with ❤️ in Ukraine 🇺🇦**
-**License:** MIT
-**Website:** [wellme.ua](https://wellme.ua)
+**License:** GPL v3
 **GitHub:** [Shamavision/ai-workflow-rules](https://github.com/Shamavision/ai-workflow-rules)
 
 ---
 
-**Last Updated:** 2026-02-08
-**Framework Version:** 9.1 (Optimization Release)
+**Last Updated:** 2026-02-18
+**Framework Version:** 9.1.1

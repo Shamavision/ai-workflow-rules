@@ -194,6 +194,8 @@ is_ignored() {
         "tests/fixtures/"
         "__tests__/mocks/"
         "ROADMAP.md"
+        "README.md"
+        "AGENTS.md"
         ".ai/docs/"
         ".ai/contexts/"
         ".ai/token-control-v3-spec.md"
@@ -328,7 +330,7 @@ echo "━━━ Checking for real API keys (all AI providers)..."
 TIER1_BLOCKED=false
 
 for file in $STAGED_FILES; do
-    ((CURRENT_FILE++))
+    ((++CURRENT_FILE))
 
     if is_ignored "$file"; then
         echo "  [$CURRENT_FILE/$TOTAL_FILES] Skipped (ignored): $(basename "$file")"

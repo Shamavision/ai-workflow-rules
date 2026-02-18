@@ -1,7 +1,7 @@
 # AI Workflow Rules — ROADMAP
 
 > **Version:** 9.1.1 | **Status:** ✅ Production Ready
-> **Last Updated:** 2026-02-17
+> **Last Updated:** 2026-02-18
 > **Archive:** Full audit log → `ai-logs/ROADMAP-audit-2026-02-complete.md`
 
 ---
@@ -34,11 +34,10 @@
 
 ---
 
-## 🔴 Phase 9: Installer Parity (NEXT)
+## ✅ Phase 9: Installer Parity (COMPLETE)
 
-> **Status:** 🔴 PLANNED — before "кролик" test
-> **Priority:** CRITICAL — both install paths must be identical
-> **Estimate:** ~35-45k tokens | Split: Phase 9.1 + 9.2 + 9.3
+> **Status:** ✅ COMPLETE — 2026-02-18
+> **Commit:** e98070c
 
 ### Problem
 
@@ -120,11 +119,12 @@ Currently they do NOT — different source files, different file sets, different
 
 | Idea | Priority | Notes |
 |------|----------|-------|
-| GitHub Actions CI for verify-templates | Medium | Prevent drift in PRs |
-| `//TOKENS` real-time dashboard | Medium | Show actual session usage |
-| Auto-context selector (AI detects project type) | Low | v9.2 feature |
-| install.ps1 parity (Windows PowerShell) | Medium | Same as Phase 9 for PS1 |
-| v10.0: TypeScript rewrite of CLI | Very Low | Breaking change |
+| **install.ps1 parity** (Windows PowerShell) | 🔴 High | Same rewrite as Phase 9 for install.sh — uses dev root, wrong file set |
+| `.continuerules` generation | 🟠 Medium | Both installers generate .cursorrules + .windsurfrules but NOT .continuerules — gap vs README |
+| GitHub Actions CI for verify-templates | 🟡 Medium | Prevent drift in PRs |
+| `//TOKENS` real-time dashboard | 🟡 Medium | Show actual session usage |
+| Auto-context selector (AI detects project type) | 🔵 Low | v9.2 feature |
+| v10.0: TypeScript rewrite of CLI | 🔵 Very Low | Breaking change |
 
 ---
 
