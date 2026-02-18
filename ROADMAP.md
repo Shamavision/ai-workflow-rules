@@ -34,34 +34,96 @@
 
 ---
 
-## 🐰 Next: "Кролик" Test (Fresh Install)
+## 🔴 Phase 9: Installer Parity (NEXT)
 
-**Waiting for:** Feedback from fresh `npx @shamavision/ai-workflow-rules` install
+> **Status:** 🔴 PLANNED — before "кролик" test
+> **Priority:** CRITICAL — both install paths must be identical
+> **Estimate:** ~35-45k tokens | Split: Phase 9.1 + 9.2 + 9.3
 
-**Test checklist:**
-- [ ] `npx @shamavision/ai-workflow-rules` runs without errors
-- [ ] Wizard prompts work correctly (provider, plan, context selection)
-- [ ] All files created in target project: `.ai/`, `.claude/`, `.cursorrules`, `.windsurfrules`
-- [ ] `token-limits.json` has correct MODEL_3 fields for Claude Pro
-- [ ] `AI-ENFORCEMENT.md` present
-- [ ] `provider-comparison.md` present
-- [ ] `//START` command works in Claude Code
-- [ ] Context file loads correctly (session-based limits shown)
+### Problem
 
-**If issues found:** Fix → bump patch version → re-publish
+Both `npx @shamavision/ai-workflow-rules` and `bash install.sh` should produce **identical results**.
+Currently they do NOT — different source files, different file sets, different wizard behavior.
+
+### Missing from BOTH installers (critical):
+
+| File | npx (cli.js) | install.sh | Impact |
+|------|-------------|------------|--------|
+| `.ai/config.json` | ❌ NOT created | ⚠️ Dev version | CLAUDE.md → legacy mode! |
+| `.claude/settings.json` | ❌ | ✅ | Claude Code settings missing |
+| `.claude/hooks/user-prompt-submit.sh` | ❌ | ✅ | Auto-session start broken |
+| `scripts/sync-rules.sh` | ❌ | ⚠️ Dev version | User can't update rules |
+| `scripts/token-status.sh` | ❌ | ⚠️ Dev version | `npm run token-status` broken |
+
+### install.sh additional bugs:
+
+- Copies from dev repo root (NOT from `npm-templates/`) → wrong file set
+- `${CYAN}` and `${GRAY}` undefined → garbled output
+- "Daily %" in context table → should be "Session %"
+- OpenAI in provider list → not in TOKEN_PRESETS (inconsistency)
+- Copies ALL 20 dev scripts → only pre-commit + token-status + sync-rules needed
+- `token-limits.json`: patches dev PRESETS file → should generate clean user config
+- No MODEL_3 fields in generated token-limits.json
+
+### Phase 9 Plan:
+
+**Phase 9.1: Fix `bin/cli.js`** (~12-15k)
+- Create `.ai/config.json` with selected context (CRITICAL)
+- Copy `.claude/settings.json`
+- Copy `.claude/hooks/user-prompt-submit.sh`
+- Copy `scripts/sync-rules.sh`
+- Copy `scripts/token-status.sh`
+- (Provider list, token-limits stay as-is — already fixed in Phase 8)
+
+**Phase 9.2: Rewrite `install.sh`** (~20-25k)
+- Source: use `$TEMP_DIR/npm-templates/` (not dev root)
+- Same wizard as cli.js: 9 providers, 4 contexts, hooks, gitignore, product rules
+- Generate `.ai/config.json` with selected context (bash)
+- Generate clean `token-limits.json` with MODEL_3 fields (bash version of createTokenLimitsConfig)
+- Fix colors: add `CYAN` definition, replace `${GRAY}` with `${NC}`
+- Fix "Daily %" → "Session %" in table
+- Remove OpenAI (not in TOKEN_PRESETS), keep same 10 providers as cli.js
+- Copy only user-facing scripts (pre-commit, token-status.sh, sync-rules.sh)
+- Generate .cursorrules + .windsurfrules from selected context
+
+**Phase 9.3: Verification** (~5k)
+- Run both installers in temp dirs
+- Diff outputs — must be identical
+- Update verify-templates if needed
+- Bump to v9.1.2, commit + push
+
+### "Кролик" test checklist (AFTER Phase 9):
+
+**Both install paths must pass:**
+- [ ] Wizard runs without errors (colors display correctly)
+- [ ] All 9 providers available with correct plans
+- [ ] Context wizard: 3 questions → recommendation
+- [ ] `.ai/config.json` created with selected context ← CRITICAL
+- [ ] `.claude/CLAUDE.md` present (session start protocol works)
+- [ ] `.claude/settings.json` present
+- [ ] `.claude/hooks/user-prompt-submit.sh` present (auto-start)
+- [ ] `.ai/AI-ENFORCEMENT.md` present
+- [ ] `.ai/contexts/` all 4 files present
+- [ ] `.ai/token-limits.json` has MODEL_3 fields for Claude Pro
+- [ ] `.cursorrules` and `.windsurfrules` generated from selected context
+- [ ] `scripts/sync-rules.sh` present (user can update rules)
+- [ ] `scripts/token-status.sh` present (`bash scripts/token-status.sh` works)
+- [ ] Pre-commit hook installed and executable
+- [ ] `//START` command in Claude Code shows session start with correct context
+- [ ] Ukrainian market: `ukraine-full` context loads language rules + product.md option
 
 ---
 
 ## 🔮 Future: v9.2 Ideas
 
-> **Policy:** Only after "кролик" feedback. No premature development.
+> **Policy:** Only after Phase 9 + "кролик" feedback.
 
 | Idea | Priority | Notes |
 |------|----------|-------|
-| `//TOKENS` dashboard integration | Medium | Show real session usage |
-| Auto-context selector (AI detects project type) | Low | v9.2 feature |
-| `sync-rules.sh` auto-run post-install | Low | Could break existing setups |
 | GitHub Actions CI for verify-templates | Medium | Prevent drift in PRs |
+| `//TOKENS` real-time dashboard | Medium | Show actual session usage |
+| Auto-context selector (AI detects project type) | Low | v9.2 feature |
+| install.ps1 parity (Windows PowerShell) | Medium | Same as Phase 9 for PS1 |
 | v10.0: TypeScript rewrite of CLI | Very Low | Breaking change |
 
 ---
