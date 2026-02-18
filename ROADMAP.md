@@ -147,7 +147,18 @@ User types `//start` → AI doesn't recognize it (no project rules loaded).
 - `npm-templates/.claude/CLAUDE.md`: Step 3 — first response must be in Ukrainian + English
 - `npm-templates/.ai/AI-ENFORCEMENT.md`: same startup language behavior
 
-### Confirmed Issue #3: "Ряд замечаний" — TBD
+### Confirmed Issue #3: "Token budget priority?" question is confusing
+
+**Problem:** Wizard asks "Token budget priority? High/Medium/Low" — framework jargon, not user-friendly.
+Users don't know what "minimize usage" vs "full features" means in practice.
+
+**What it does:** Sets `auto_approve_thresholds` in config.json (when AI warns about token usage).
+
+**Options (awaiting decision):**
+- **Remove:** Always use "balanced" default — simpler wizard
+- **Improve:** Human-friendly labels: "Careful (Pro plans)" / "Balanced (recommended)" / "Relaxed (API/unlimited)"
+
+### Confirmed Issue #4: "Ряд замечаний" — TBD
 
 **Status:** User mentioned multiple additional bash install issues, details pending.
 Will be documented after user provides full feedback.
@@ -160,7 +171,8 @@ Will be documented after user provides full feedback.
 | Remove language question from wizard (decision: Option A) | 🔴 Critical | 🔴 PLANNED |
 | Update CLAUDE.md + AI-ENFORCEMENT: start in Ukrainian+EN | 🔴 Critical | 🔴 PLANNED |
 | Update "Next steps" in bin/cli.js: same message | 🔴 Critical | 🔴 PLANNED |
-| Collect full кролик feedback (bash install issues) | 🔴 Critical | ⏳ Awaiting user |
+| Remove/improve "Token budget priority?" question | 🟠 High | ⏳ Awaiting decision |
+| Collect full кролик feedback (bash install issues #4) | 🔴 Critical | ⏳ Awaiting user |
 | Fix all bash install issues from feedback | 🔴 Critical | 🔴 PLANNED |
 | Re-test кролик after fixes | 🟠 High | 🔴 PLANNED |
 
