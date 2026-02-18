@@ -132,16 +132,32 @@ User types `//start` → AI doesn't recognize it (no project rules loaded).
 
 **Priority:** 🔴 Critical UX — first impression of the framework.
 
-### Confirmed Issue #2: "Ряд замечаний" — TBD
+### Confirmed Issue #2: Language question in wizard has ru-RU option
 
-**Status:** User mentioned multiple issues with bash install, details pending.
+**Problem:** Wizard asks "Primary language for your project?" with options: en-US, uk-UA, **ru-RU**.
+
+- `ru-RU` is UNACCEPTABLE for a Ukrainian product with zero tolerance for Russian services
+- The question itself is confusing ("language of what exactly?")
+- CLAUDE.md already handles language adaptively — question may be redundant
+
+**Options (awaiting user decision):**
+- **Option A:** Remove question entirely → always set `"adaptive"` in config.json
+- **Option B:** Keep question with only en-US + uk-UA, rename to "Preferred AI dialogue language"
+- **Option C:** Auto-detect based on context: `ukraine-full` → uk-UA, others → adaptive
+
+**Awaiting:** User decision on which option to implement.
+
+### Confirmed Issue #3: "Ряд замечаний" — TBD
+
+**Status:** User mentioned multiple additional bash install issues, details pending.
 Will be documented after user provides full feedback.
 
 ### Fix Plan:
 
 | Task | Priority | Status |
 |------|----------|--------|
-| Update "Next steps" in install.sh: "Open NEW conversation" | 🔴 Critical | 🔴 PLANNED |
+| Update "Next steps" in install.sh: "Open NEW conversation" | 🔴 Critical | ✅ DONE (docs updated) |
+| Remove `ru-RU` from language wizard (Option A/B/C) | 🔴 Critical | ⏳ Awaiting decision |
 | Update "Next steps" in bin/cli.js: same message | 🔴 Critical | 🔴 PLANNED |
 | Collect full кролик feedback (bash install issues) | 🔴 Critical | ⏳ Awaiting user |
 | Fix all bash install issues from feedback | 🔴 Critical | 🔴 PLANNED |
