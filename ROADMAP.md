@@ -208,29 +208,52 @@ Current framework claims to track daily token usage but cannot do so accurately 
 - Daily usage across multiple conversations/tabs (MODEL_3)
 - Real daily limit (MODEL_3 — intentionally undisclosed)
 
-### Research Tasks (before coding)
+### Solution: "Honest Self-Reporting" (no provider API needed)
 
-| Research | Question | Status |
-|----------|----------|--------|
-| Claude Code hooks env vars | Does `user-prompt-submit.sh` receive token count? | ❓ Unknown |
-| Anthropic Pro internal API | Any undocumented usage endpoint for Pro? | ❓ Unknown |
-| Cursor/Windsurf tracking | How do they count tokens internally? | ❓ Unknown |
-| Industry best practices | How do tools like LangSmith handle this? | ❓ Unknown |
+**Core idea:** AI writes its own token count to a log file. Progressive accumulation across sessions.
 
-### Implementation Plan (after research)
+**Workflow:**
+```
+Session 1: start 09:00 → //TOKENS → AI writes 36k to log → closed
+Session 2: start 11:30 → //TOKENS → reads log (36k) + writes 145k → closed
+Session 3: start 15:00 → //TOKENS → sees "Today: 181k used, ~19k est. remaining" → STOP
+```
 
-| Task | Priority | Approach |
-|------|----------|----------|
-| **Session log** (`user-prompt-submit.sh` → `.ai/session-log.json`) | 🟠 High | Best-effort: log session start/end, aggregate daily estimate |
-| **MODEL_1 real checker** (Anthropic API `/v1/usage`) | 🟠 High | Accurate for API users |
-| **MODEL_3 honest UI** | 🔴 Critical | Label estimates clearly: "ESTIMATE (real limit unknown)" |
-| **Ban prevention warning** | 🔴 Critical | "Slow responses = approaching limit. Stop for today." |
-| **Docs update** | 🟠 High | Explain MODEL_3 limitation honestly to users |
+**`session-log.json` format:**
+```json
+{
+  "sessions": [
+    {"date": "2026-02-18", "start": "09:00", "tokens": 36000, "status": "closed"},
+    {"date": "2026-02-18", "start": "15:00", "tokens": 12000, "status": "active"}
+  ]
+}
+```
+
+**Honest limitations:**
+- Accuracy depends on user running `//TOKENS` — more = better log
+- If user never runs `//TOKENS`, log has only session starts (no token counts)
+- Still better than fake numbers: "I don't know" > fabricated data
+
+**Why this works universally:**
+- No provider API needed → works for Claude Pro, Gemini, Cursor, Windsurf, API
+- Simple bash + JSON → no dependencies
+- AI itself is the source of truth for its own session
+
+### Implementation Plan
+
+| Task | Priority | What |
+|------|----------|------|
+| `user-prompt-submit.sh`: log session start to `session-log.json` | 🟠 High | +5 lines bash |
+| `token-status.sh`: read `session-log.json` + show daily aggregate | 🟠 High | +20 lines bash |
+| `//TOKENS` in CLAUDE.md: AI reads log + writes current count + reports | 🔴 Critical | AI behavior update |
+| AI behavior: update log at `//COMPACT`, `//TOKENS`, phase completion | 🔴 Critical | CLAUDE.md rule |
+| Ban prevention: "Slow responses = limit reached. Stop today." | 🔴 Critical | CLAUDE.md + token-status |
+| MODEL_1 (API): add real `/v1/usage` checker for accurate tracking | 🟡 Medium | Future iteration |
 
 ### Key Principle
 
-> "Better to say 'I don't know' than to show fake numbers."
-> Framework must be HONEST about what it can and cannot measure.
+> Simple honest self-reporting > complex fake precision.
+> "I don't know exact limit, but I know I used 181k today — be careful."
 
 ---
 
