@@ -212,32 +212,53 @@ Current framework claims to track daily token usage but cannot do so accurately 
 
 **Core idea:** AI writes its own token count to a log file. Progressive accumulation across sessions.
 
+**Time as anchor — key insight:**
+New calendar day = new limits. This is a universal constant no user can change.
+We use LOCAL date (`date +%Y-%m-%d`) as the day boundary.
+
 **Workflow:**
 ```
-Session 1: start 09:00 → //TOKENS → AI writes 36k to log → closed
-Session 2: start 11:30 → //TOKENS → reads log (36k) + writes 145k → closed
-Session 3: start 15:00 → //TOKENS → sees "Today: 181k used, ~19k est. remaining" → STOP
+09:00  Session 1 starts → hook logs {date, start_time}
+       User works... pushes code → AI writes token count to log (POST-PUSH PROTOCOL)
+       User runs //COMPACT → AI updates log
+14:00  Session 2 starts → log check: same date? → show "Today: 36k used"
+       User asks //TOKENS → AI reads log + current session → "Today: 81k total"
+
+Next day:
+09:00  Session 3 starts → date changed! → "🟢 New day! Yesterday: 145k. Fresh limits."
 ```
 
 **`session-log.json` format:**
 ```json
 {
   "sessions": [
-    {"date": "2026-02-18", "start": "09:00", "tokens": 36000, "status": "closed"},
-    {"date": "2026-02-18", "start": "15:00", "tokens": 12000, "status": "active"}
-  ]
+    {"date": "2026-02-18", "start": "09:00", "tokens": 36000, "trigger": "git-push"},
+    {"date": "2026-02-18", "start": "14:00", "tokens": 45000, "trigger": "//TOKENS"}
+  ],
+  "daily": {"2026-02-18": 81000, "2026-02-17": 145000}
 }
 ```
 
+**Write triggers (when AI updates the log):**
+1. **After `git push`** — POST-PUSH PROTOCOL already mandatory → add log write here
+2. **`//COMPACT`** — user compresses context → natural checkpoint
+3. **`//TOKENS`** — explicit request → always writes current count
+
+**New day detection (at session start):**
+- Last log date ≠ today → "🟢 New day! Limits reset. Yesterday used: Xk."
+- Same date → "📊 Today so far: Xk (from log) + Yk (this session)"
+
 **Honest limitations:**
-- Accuracy depends on user running `//TOKENS` — more = better log
-- If user never runs `//TOKENS`, log has only session starts (no token counts)
-- Still better than fake numbers: "I don't know" > fabricated data
+- Accuracy = number of write triggers fired (push/compact/tokens)
+- If user never pushes/compacts → log has starts only, not counts
+- We don't know exact reset time (use local midnight as approximation)
+- Still better than fake numbers: progressive truth > fabricated precision
 
 **Why this works universally:**
-- No provider API needed → works for Claude Pro, Gemini, Cursor, Windsurf, API
+- No provider API → works for Claude Pro, Gemini, Cursor, Windsurf, API
+- Time is universal — every provider resets daily
 - Simple bash + JSON → no dependencies
-- AI itself is the source of truth for its own session
+- AI is its own source of truth
 
 ### Implementation Plan
 
