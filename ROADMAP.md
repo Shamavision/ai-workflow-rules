@@ -278,6 +278,73 @@ Next day:
 
 ---
 
+## 🧪 Phase 12: Cross-AI Validation
+
+> **Status:** 🔴 PLANNED — after Phase 11 implementation
+
+### Goal
+Verify that session-log.json tracking + `//TOKENS` command works correctly across ALL supported AI tools.
+
+### Test Matrix
+
+| AI Tool | Entry Point | Hook support | `//TOKENS` | New day detection | Status |
+|---------|-------------|-------------|-----------|------------------|--------|
+| Claude Code CLI | `.claude/CLAUDE.md` | ✅ `user-prompt-submit.sh` | ❓ TBD | ❓ TBD | 🔴 Not tested |
+| Claude Code VSCode | `.claude/CLAUDE.md` | ❌ hooks CLI-only | ❓ TBD | ❓ TBD | 🔴 Not tested |
+| Cursor | `.cursorrules` | ❓ Unknown | ❓ TBD | ❓ TBD | 🔴 Not tested |
+| Windsurf | `.windsurfrules` | ❓ Unknown | ❓ TBD | ❓ TBD | 🔴 Not tested |
+| Continue.dev | `.continuerules` | ❓ Unknown | ❓ TBD | ❓ TBD | 🔴 Not tested |
+| Claude Web / Any AI | `AGENTS.md` | ❌ No hooks | ❓ TBD | ❓ TBD | 🔴 Not tested |
+
+### Key Questions
+- Do hooks work in Cursor/Windsurf at all?
+- Does each AI correctly read/write `session-log.json`?
+- Is `//TOKENS` behavior consistent across different rule file formats?
+
+---
+
+## 🔄 Phase 13: Update Mechanism
+
+> **Status:** 🔴 PLANNED — after Phase 10 (кролик has updates to receive)
+> **Trigger:** кролик already installed v9.1.1, Phase 10 fixes are critical
+
+### Problem
+
+User installed the framework. Framework has critical updates. How do they update?
+
+**Current state:**
+- `sync-rules.sh` — regenerates tool files FROM contexts (not update mechanism)
+- Re-running installer — skips existing files (`copy_file` checks if exists)
+- No update mechanism exists at all
+
+### What must be updated vs preserved
+
+| Category | Files | Action on update |
+|----------|-------|-----------------|
+| **Framework files** | `.claude/CLAUDE.md`, `.ai/contexts/`, `AI-ENFORCEMENT.md`, `scripts/pre-commit`, `sync-rules.sh`, `token-status.sh` | ✅ Always update |
+| **User config** | `.ai/config.json`, `.ai/token-limits.json` | ❌ Never overwrite |
+| **User content** | `.ai/rules/product.md`, `AGENTS.md` | ⚠️ Ask user |
+
+### Options (no overengineering)
+
+**Option A — `//UPDATE` command (simplest):**
+AI executes `bash scripts/sync-rules.sh --update` which pulls latest from GitHub and updates framework files only. User runs it from chat.
+
+**Option B — `npm run update` script:**
+Add `update-framework.sh` that: git clone latest → diff framework files → copy updates → preserve config.
+
+**Option C — Version check at `//START`:**
+At session start, compare `.ai/config.json` version vs latest GitHub tag. If outdated → warn: "Update available: v9.1.2. Run `bash scripts/sync-rules.sh --update`"
+
+**Recommended approach:** Option B + Option C together. Version check warns, update script executes.
+
+### Research needed
+- Best practices: how do dotfile frameworks handle updates? (e.g., oh-my-zsh, chezmoi)
+- Should user confirm before update? (probably yes)
+- How to handle breaking changes between versions?
+
+---
+
 ## 🔮 Future: v9.2 Ideas
 
 > **Policy:** Only after Phase 10 (кролик fixes) complete.
