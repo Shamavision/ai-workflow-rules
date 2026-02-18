@@ -339,23 +339,38 @@ User installed the framework. Framework has critical updates. How do they update
 | **User config** | `.ai/config.json`, `.ai/token-limits.json` | ❌ Never overwrite |
 | **User content** | `.ai/rules/product.md`, `AGENTS.md` | ⚠️ Ask user |
 
-### Options (no overengineering)
+### Solution: Extend `sync-rules.sh` with `--update` flag (DECISION MADE)
 
-**Option A — `//UPDATE` command (simplest):**
-AI executes `bash scripts/sync-rules.sh --update` which pulls latest from GitHub and updates framework files only. User runs it from chat.
+**Key insight:** GitHub is already our source (install.sh clones from it). `sync-rules.sh` is already in user's project. Just add `--update` mode — no new scripts, no new dependencies.
 
-**Option B — `npm run update` script:**
-Add `update-framework.sh` that: git clone latest → diff framework files → copy updates → preserve config.
+```bash
+bash scripts/sync-rules.sh           # existing: regenerate tool files from contexts
+bash scripts/sync-rules.sh --update  # NEW: update framework files from GitHub
+```
 
-**Option C — Version check at `//START`:**
-At session start, compare `.ai/config.json` version vs latest GitHub tag. If outdated → warn: "Update available: v9.1.2. Run `bash scripts/sync-rules.sh --update`"
+**Update mini-wizard:**
+```
+🔄 Checking for updates...
+Current: v9.1.1  →  Latest: v9.2.0
 
-**Recommended approach:** Option B + Option C together. Version check warns, update script executes.
+Will UPDATE (framework):   Will PRESERVE (your config):
+  ✅ .claude/CLAUDE.md       🔒 .ai/config.json
+  ✅ .ai/contexts/ (all 4)   🔒 .ai/token-limits.json
+  ✅ scripts/pre-commit       🔒 .ai/rules/product.md
+  ✅ scripts/token-status.sh
 
-### Research needed
-- Best practices: how do dotfile frameworks handle updates? (e.g., oh-my-zsh, chezmoi)
-- Should user confirm before update? (probably yes)
-- How to handle breaking changes between versions?
+Proceed? [Y/n]
+```
+
+**`//UPDATE` command** → AI runs `bash scripts/sync-rules.sh --update`
+
+**Version check at `//START`** → compare `config.json` version vs GitHub → warn if outdated:
+`"Update available: v9.2.0. Run bash scripts/sync-rules.sh --update"`
+
+**Implementation:**
+- `sync-rules.sh`: add `--update` mode (git clone → copy framework files → preserve config)
+- `CLAUDE.md`: add `//UPDATE` trigger
+- `package.json`: add `"update": "bash scripts/sync-rules.sh --update"` script
 
 ---
 
