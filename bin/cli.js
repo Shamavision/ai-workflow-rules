@@ -344,6 +344,29 @@ async function main() {
       'CLAUDE.md'
     );
 
+    // Copy Claude Code settings (enables hooks)
+    await copyFile(
+      path.join(templatesDir, '.claude'),
+      path.join(currentDir, '.claude'),
+      'settings.json'
+    );
+
+    // Create .claude/hooks and copy Session Start hook
+    await fs.ensureDir(path.join(currentDir, '.claude', 'hooks'));
+    await copyFile(
+      path.join(templatesDir, '.claude', 'hooks'),
+      path.join(currentDir, '.claude', 'hooks'),
+      'user-prompt-submit.sh'
+    );
+
+    // Make hook executable (Unix systems)
+    if (process.platform !== 'win32') {
+      const hookPath = path.join(currentDir, '.claude', 'hooks', 'user-prompt-submit.sh');
+      if (await fs.pathExists(hookPath)) {
+        await fs.chmod(hookPath, 0o755);
+      }
+    }
+
     // Create .ai directory structure
     await fs.ensureDir(path.join(currentDir, '.ai'));
     await fs.ensureDir(path.join(currentDir, '.ai/docs'));
@@ -428,6 +451,9 @@ async function main() {
     // Create token-limits.json with user config
     await createTokenLimitsConfig(currentDir, answers);
 
+    // Create .ai/config.json with user's selected context (CRITICAL: CLAUDE.md reads this first)
+    await createAiConfig(currentDir, answers);
+
     // Create scripts directory
     await fs.ensureDir(path.join(currentDir, 'scripts'));
 
@@ -436,6 +462,18 @@ async function main() {
       path.join(templatesDir, 'scripts'),
       path.join(currentDir, 'scripts'),
       'pre-commit'
+    );
+
+    // Copy utility scripts (framework tools)
+    await copyFile(
+      path.join(templatesDir, 'scripts'),
+      path.join(currentDir, 'scripts'),
+      'sync-rules.sh'
+    );
+    await copyFile(
+      path.join(templatesDir, 'scripts'),
+      path.join(currentDir, 'scripts'),
+      'token-status.sh'
     );
 
     // Install pre-commit hook
@@ -571,6 +609,74 @@ async function createTokenLimitsConfig(targetDir, answers) {
     ? `${limits.daily.toLocaleString()} daily est. (MODEL_3: real limit UNKNOWN)`
     : `${limits.daily.toLocaleString()} daily`;
   console.log(chalk.green(`  ✓ .ai/token-limits.json (${provider} ${plan}: ${limitLabel})`));
+}
+
+async function createAiConfig(targetDir, answers) {
+  const provider = answers.provider;
+  const plan = answers.plan.toLowerCase();
+  const limits = TOKEN_PRESETS[provider]?.[plan] || TOKEN_PRESETS.other.default;
+
+  // Derive market from context choice
+  const market = answers.context === 'ukraine-full' ? 'ukraine' : 'international';
+
+  // Map language selection to internal_dialogue value
+  const langMap = { 'uk-UA': 'uk', 'ru-RU': 'ru', 'en-US': 'en' };
+  const internalLang = langMap[answers.language] || 'adaptive';
+
+  const config = {
+    "framework": "ai-workflow-rules",
+    "version": "9.1.1",
+    "config_version": "2.0",
+    "context": answers.context,
+    "modules": [],
+    "market": market,
+    "language": {
+      "internal_dialogue": internalLang,
+      "code_comments": "en",
+      "commit_messages": "en",
+      "variable_names": "en"
+    },
+    "token_budget": {
+      "daily_limit": limits.daily,
+      "monthly_limit": limits.monthly,
+      "auto_approve_thresholds": {
+        "green_zone": 15000,
+        "moderate_zone": 8000,
+        "caution_zone": 3000,
+        "critical_zone": 0
+      }
+    },
+    "optimizations": {
+      "auto_compress": true,
+      "post_push_compress": true,
+      "lazy_loading": true,
+      "diff_only_mode": true
+    },
+    "workflow": {
+      "roadmap_required": true,
+      "stage_based_commits": true,
+      "discuss_before_execute": true
+    },
+    "security": {
+      "check_forbidden_trackers": true,
+      "no_hardcoded_secrets": true,
+      "api_key_protection": true
+    },
+    "detection": {
+      "auto_detect_market": true,
+      "smart_preset_suggestion": true
+    }
+  };
+
+  const targetPath = path.join(targetDir, '.ai', 'config.json');
+
+  if (await fs.pathExists(targetPath)) {
+    console.log(chalk.yellow('  ⚠️  .ai/config.json already exists, skipping'));
+    return;
+  }
+
+  await fs.writeJson(targetPath, config, { spaces: 2 });
+  console.log(chalk.green(`  ✓ .ai/config.json (context: ${answers.context}, market: ${market})`));
 }
 
 async function installPreCommitHook(targetDir) {
