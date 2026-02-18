@@ -132,20 +132,20 @@ User types `//start` → AI doesn't recognize it (no project rules loaded).
 
 **Priority:** 🔴 Critical UX — first impression of the framework.
 
-### Confirmed Issue #2: Language question in wizard has ru-RU option
+### Confirmed Issue #2: Language question in wizard — DECISION MADE ✅
 
-**Problem:** Wizard asks "Primary language for your project?" with options: en-US, uk-UA, **ru-RU**.
+**Problem:** Wizard asks "Primary language for your project?" with options: en-US, uk-UA, ru-RU.
 
-- `ru-RU` is UNACCEPTABLE for a Ukrainian product with zero tolerance for Russian services
-- The question itself is confusing ("language of what exactly?")
-- CLAUDE.md already handles language adaptively — question may be redundant
+**Decision (2026-02-18):**
+1. **Code comments** → always English (existing rule, no change needed)
+2. **Chat language** → AI starts in Ukrainian + English translation, then adapts to user's language
+3. **Wizard** → remove language question entirely, always set `"adaptive"`
 
-**Options (awaiting user decision):**
-- **Option A:** Remove question entirely → always set `"adaptive"` in config.json
-- **Option B:** Keep question with only en-US + uk-UA, rename to "Preferred AI dialogue language"
-- **Option C:** Auto-detect based on context: `ukraine-full` → uk-UA, others → adaptive
-
-**Awaiting:** User decision on which option to implement.
+**Files to change:**
+- `install.sh`: remove language question + set `"adaptive"` in generated config.json
+- `bin/cli.js`: remove language question + set `"adaptive"` in createAiConfig()
+- `npm-templates/.claude/CLAUDE.md`: Step 3 — first response must be in Ukrainian + English
+- `npm-templates/.ai/AI-ENFORCEMENT.md`: same startup language behavior
 
 ### Confirmed Issue #3: "Ряд замечаний" — TBD
 
@@ -157,7 +157,8 @@ Will be documented after user provides full feedback.
 | Task | Priority | Status |
 |------|----------|--------|
 | Update "Next steps" in install.sh: "Open NEW conversation" | 🔴 Critical | ✅ DONE (docs updated) |
-| Remove `ru-RU` from language wizard (Option A/B/C) | 🔴 Critical | ⏳ Awaiting decision |
+| Remove language question from wizard (decision: Option A) | 🔴 Critical | 🔴 PLANNED |
+| Update CLAUDE.md + AI-ENFORCEMENT: start in Ukrainian+EN | 🔴 Critical | 🔴 PLANNED |
 | Update "Next steps" in bin/cli.js: same message | 🔴 Critical | 🔴 PLANNED |
 | Collect full кролик feedback (bash install issues) | 🔴 Critical | ⏳ Awaiting user |
 | Fix all bash install issues from feedback | 🔴 Critical | 🔴 PLANNED |
