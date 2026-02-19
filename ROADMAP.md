@@ -188,7 +188,8 @@ Will be documented after user provides full feedback.
 
 ## 📊 Phase 11: Token Monitoring Rethink
 
-> **Status:** 🔴 PLANNED — research required before implementation
+> **Status:** 🟡 IN PROGRESS — architecture confirmed (2026-02-19)
+> **Priority:** #1 — implementing before Phase 10, 12, 13
 > **Trigger:** кролик test revealed "~500k/day" is our own estimate, not Anthropic's real limit
 
 ### The Problem
@@ -208,73 +209,103 @@ Current framework claims to track daily token usage but cannot do so accurately 
 - Daily usage across multiple conversations/tabs (MODEL_3)
 - Real daily limit (MODEL_3 — intentionally undisclosed)
 
-### Solution: "Honest Self-Reporting" (no provider API needed)
+**Current state — broken (confirmed 2026-02-19):**
+- `token-status.sh` reads `daily_usage` from `token-limits.json` → always 0 → **total fiction**
+- `session-log.json` does not exist (confirmed by file search)
+- Every `npm run token-status` shows "Used: 0 tokens (0%)" — completely useless
 
-**Core idea:** AI writes its own token count to a log file. Progressive accumulation across sessions.
+### Architecture: "Time-Anchored AI Self-Reporting" (confirmed 2026-02-19)
 
-**Time as anchor — key insight:**
-New calendar day = new limits. This is a universal constant no user can change.
-We use LOCAL date (`date +%Y-%m-%d`) as the day boundary.
-
-**Workflow:**
+**Core principle:**
 ```
-09:00  Session 1 starts → hook logs {date, start_time}
-       User works... pushes code → AI writes token count to log (POST-PUSH PROTOCOL)
-       User runs //COMPACT → AI updates log
-14:00  Session 2 starts → log check: same date? → show "Today: 36k used"
-       User asks //TOKENS → AI reads log + current session → "Today: 81k total"
-
-Next day:
-09:00  Session 3 starts → date changed! → "🟢 New day! Yesterday: 145k. Fresh limits."
+Anchor: Local date (date +%Y-%m-%d) — universal constant, no provider API needed
+Log:    .ai/session-log.json — simple append-only file
+Writer: AI itself (at explicit triggers — NOT bash hooks)
+Reader: AI at session start + token-status.sh script
 ```
 
-**`session-log.json` format:**
+**Support tiers:**
+```
+FULL    → Claude Code CLI/VSCode, Cursor, Windsurf  (AI + file system write)
+SESSION → Claude Web, any web AI                    (session estimate only, no persistence)
+```
+
+**`session-log.json` — minimal schema:**
 ```json
 {
+  "_note": "AI self-reported token usage. Written at //TOKENS, //COMPACT, git push.",
   "sessions": [
-    {"date": "2026-02-18", "start": "09:00", "tokens": 36000, "trigger": "git-push"},
-    {"date": "2026-02-18", "start": "14:00", "tokens": 45000, "trigger": "//TOKENS"}
-  ],
-  "daily": {"2026-02-18": 81000, "2026-02-17": 145000}
+    {"date": "2026-02-19", "tokens": 45000, "tool": "claude-code", "trigger": "//tokens"},
+    {"date": "2026-02-19", "tokens": 20000, "tool": "cursor",      "trigger": "//compact"}
+  ]
 }
 ```
 
-**Write triggers (when AI updates the log):**
-1. **After `git push`** — POST-PUSH PROTOCOL already mandatory → add log write here
-2. **`//COMPACT`** — user compresses context → natural checkpoint
-3. **`//TOKENS`** — explicit request → always writes current count
+**Daily total** = `sessions.filter(date == today).sum(tokens)` — no separate `daily` object needed.
 
-**New day detection (at session start):**
-- Last log date ≠ today → "🟢 New day! Limits reset. Yesterday used: Xk."
-- Same date → "📊 Today so far: Xk (from log) + Yk (this session)"
+**`session-log.json` → `.gitignore`: YES** — personal usage data, privacy-first default.
+
+**Universal `//TOKENS` protocol (same logic in ALL rule files):**
+```
+1. Read .ai/session-log.json (lazy init if missing)
+2. today = local date (YYYY-MM-DD)
+3. If last entry date != today → "🟢 New day! Yesterday: Xk. Fresh limits."
+4. today_total = sum sessions where date == today
+5. Estimate current session tokens (rules_load + conversation_length, ±30%)
+6. Append: {date, tokens: estimate, tool: "tool-name", trigger: "//tokens"}
+7. Show [TOKEN STATUS]
+```
+
+**Trigger points:**
+| Trigger | Where defined | Action |
+|---------|--------------|--------|
+| `//TOKENS` | All rule files | read + estimate + write + show |
+| `//COMPACT` | All rule files | compress + write |
+| `git push` | CLAUDE.md only | POST-PUSH PROTOCOL + write |
+| Phase complete | All rule files | show status + write |
+
+**Graceful degradation (web AI):**
+> "Cross-session tracking requires a code editor. This session: ~Xk tokens (estimate)."
+
+**What we are NOT changing:**
+- ❌ `user-prompt-submit.sh` — hook is CLI-only, adds complexity without universal benefit
+- ❌ Monthly tracking — session/daily is sufficient
+- ❌ Complex states, session IDs — YAGNI
+- ❌ External dependencies — only `jq` (already required)
 
 **Honest limitations:**
-- Accuracy = number of write triggers fired (push/compact/tokens)
-- If user never pushes/compacts → log has starts only, not counts
-- We don't know exact reset time (use local midnight as approximation)
-- Still better than fake numbers: progressive truth > fabricated precision
+- Accuracy depends on trigger frequency (more triggers = better accuracy)
+- Token estimates: ±30-50% (rough but honest — better than static 0%)
+- No exact provider reset time → use local midnight as day boundary
+- **Progressive truth > fabricated precision (always)**
 
-**Why this works universally:**
-- No provider API → works for Claude Pro, Gemini, Cursor, Windsurf, API
-- Time is universal — every provider resets daily
-- Simple bash + JSON → no dependencies
-- AI is its own source of truth
+### Implementation Sub-Phases
 
-### Implementation Plan
+**Phase 11.1 — Schema + gitignore (~2k tokens)**
+- NEW: `npm-templates/.ai/session-log.json` (initial empty template)
+- MOD: `.gitignore` — add `.ai/session-log.json`
 
-| Task | Priority | What |
-|------|----------|------|
-| `user-prompt-submit.sh`: log session start to `session-log.json` | 🟠 High | +5 lines bash |
-| `token-status.sh`: read `session-log.json` + show daily aggregate | 🟠 High | +20 lines bash |
-| `//TOKENS` in CLAUDE.md: AI reads log + writes current count + reports | 🔴 Critical | AI behavior update |
-| AI behavior: update log at `//COMPACT`, `//TOKENS`, phase completion | 🔴 Critical | CLAUDE.md rule |
-| Ban prevention: "Slow responses = limit reached. Stop today." | 🔴 Critical | CLAUDE.md + token-status |
-| MODEL_1 (API): add real `/v1/usage` checker for accurate tracking | 🟡 Medium | Future iteration |
+**Phase 11.2 — AI Protocol (~8k tokens)**
+Files (dev + npm-templates pairs = 8 files):
+- `.claude/CLAUDE.md` + `npm-templates/.claude/CLAUDE.md` — `//TOKENS` protocol + write behavior
+- `.ai/AI-ENFORCEMENT.md` + `npm-templates/.ai/AI-ENFORCEMENT.md` — formalize write triggers
+- `.cursorrules` + `npm-templates/.cursorrules` — add `//TOKENS` section
+- `.windsurfrules` + `npm-templates/.windsurfrules` — add `//TOKENS` section
+
+**Phase 11.3 — token-status.sh v2.0 (~6k tokens)**
+- `scripts/token-status.sh` + `npm-templates/scripts/token-status.sh`:
+  - Read `session-log.json`, show real daily total
+  - New day detection ("🟢 New day!" message)
+  - Honest "ESTIMATE ±30%" labels for MODEL_3
+
+**Phase 11.4 — Verify + Commit (~2k tokens)**
+- Run `npm run verify-templates`
+- Mark Phase 11 ✅ COMPLETE
 
 ### Key Principle
 
 > Simple honest self-reporting > complex fake precision.
-> "I don't know exact limit, but I know I used 181k today — be careful."
+> "I don't know exact limit, but I know I used ~181k today — be careful."
 
 ---
 
@@ -314,6 +345,22 @@ Commands that appeared or will appear — need audit:
 - `//WHICH:RULES`, `//CHECK:RULES` — in CLAUDE.md but not README?
 
 **Task:** Compare ALL commands in `CLAUDE.md` + `AGENTS.md` vs README table → sync them.
+
+### Also in Phase 12: README Token Monitoring Documentation
+
+**Problem:** Users don't understand how token tracking works (especially MODEL_3 providers with unknown limits).
+
+**Task:** Add dedicated section to README on GitHub explaining:
+- Why token limits are "estimates" for Claude Pro / Cursor / Windsurf (MODEL_3)
+- How session-log.json self-reporting works
+- How AI uses time (new calendar day = fresh daily budget)
+- What triggers token count writes (git push, //COMPACT, //TOKENS)
+- How to read `//TOKENS` output correctly
+- Practical advice: how to do quality monitoring as a user
+
+**Format:** Simple, non-technical explanation. Analogies welcome.
+**Location:** README.md → new section "Token Monitoring" OR expand existing "AI Commands" section.
+**Goal:** User reads → immediately understands their daily budget picture.
 
 ---
 
