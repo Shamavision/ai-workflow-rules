@@ -209,12 +209,13 @@ Session tokens 90%+   → Level 3 (Maximum)
 
 **TRIGGERS (write to session-log.json when ANY of these fires):**
 
-| Trigger | Action |
-|---------|--------|
-| `//TOKENS` | read + estimate + write + show status |
-| `//COMPACT` | compress + write estimate |
-| `git push` | POST-PUSH + write estimate |
-| Phase complete | show status + write estimate |
+| Trigger | Tokens written | Entry format |
+|---------|---------------|--------------|
+| `//start` / session start | 0 (marker) | `session-start` + timestamp |
+| `//TOKENS` | current estimate | `//tokens` + timestamp |
+| `//COMPACT` | estimate before compress | `//compact` + timestamp |
+| `git push` | estimate | `git-push` + timestamp |
+| Phase complete | estimate | `phase-complete` + timestamp |
 
 **REQUIRED ACTION — Write entry to session-log.json:**
 
@@ -223,27 +224,48 @@ Session tokens 90%+   → Level 3 (Maximum)
   "date": "YYYY-MM-DD",
   "tokens": 45000,
   "tool": "claude-code",
-  "trigger": "//tokens"
+  "trigger": "//tokens",
+  "timestamp": 1740012345
 }
 ```
 
-**Step by step (for any trigger):**
+**session-start entry (tokens = 0, marks session boundary):**
+```json
+{"date": "YYYY-MM-DD", "tokens": 0, "tool": "claude-code", "trigger": "session-start", "timestamp": 1740010000}
+```
+
+**Step by step (for `//TOKENS` and other estimate triggers):**
 ```
 1. Read .ai/session-log.json (create if missing: {"_comment": "...", "sessions": []})
-2. today = local date (YYYY-MM-DD)
+2. today = local date (YYYY-MM-DD), NOW = Unix timestamp
 3. NEW DAY CHECK: last entry date != today?
    → Show: "🟢 New day! Yesterday: ~Xk. Fresh limits."
 4. today_total = sum sessions[].tokens where date == today
 5. Estimate current session tokens (rules_load + conversation ±30-50%)
-6. Append: {date: today, tokens: estimate, tool: "claude-code", trigger: "<trigger>"}
+6. Append: {date: today, tokens: estimate, tool: "...", trigger: "<trigger>", timestamp: NOW}
 7. Write updated file back
+8. Show session breakdown (group entries by session-start markers, gap >2h)
+```
+
+**Step by step (for `//start` — session boundary):**
+```
+1. Read .ai/session-log.json (or create)
+2. NOW = Unix timestamp, LAST_TS = last entry's timestamp (0 if none)
+3. GAP = NOW - LAST_TS
+4. IF GAP > 7200 (2h) OR no entry today:
+   → Append: {date, tokens: 0, tool, trigger: "session-start", timestamp: NOW}
+   → Show: "🟢 New session started (gap: Xh)"
+5. IF GAP < 7200: context refresh only — do NOT write entry
+   → Show: "📊 Continuing session. Today: ~Xk (N entries)"
 ```
 
 **SHOW [TOKEN STATUS] after every write:**
 ```
 [TOKEN STATUS]
 Session est.:  ~Xk tokens (±30% rough estimate)
-Today (log):   ~Yk accumulated (N log entries)
+Today (log):   ~Yk accumulated (N entries, M sessions)
+  Session 1 (HH:MM): ~Ak tokens
+  Session 2 (HH:MM): ~Bk tokens
 Limit:         UNKNOWN (MODEL_3 — not disclosed by provider)
 Status:        🟢 Session GREEN
 ```

@@ -123,18 +123,26 @@ Next: [description] (~Nk estimate)
 4. **Estimate** current session tokens (rough ±30-50%)
 5. **Append** new entry to `session-log.json`:
    ```json
-   {"date": "YYYY-MM-DD", "tokens": ESTIMATE, "tool": "cursor", "trigger": "//tokens"}
+   {"date": "YYYY-MM-DD", "tokens": ESTIMATE, "tool": "cursor", "trigger": "//tokens", "timestamp": UNIX_NOW}
    ```
 6. **Display** status:
    ```
    [TOKEN STATUS]
    Session: ~Xk tokens (self-reported estimate)
-   Today's total: ~Yk (from session-log: N entries)
+   Today (log): ~Yk accumulated (N entries, M sessions)
+     Session 1 (HH:MM): ~Ak tokens
+     Session 2 (HH:MM): ~Bk tokens  ← if multiple sessions
    Status: 🟢/🟡/🟠/🔴
 
    Note: Rough estimates ±30-50%. Better than static 0%.
    ```
 7. **If session-log.json missing:** Create it (copy schema from `.ai/session-log.json`)
+
+**`//start` — Session boundary marker (Phase 11.5):**
+- Read `session-log.json`, get `LAST_TS` = last entry's timestamp (0 if none)
+- `GAP = NOW - LAST_TS`
+- IF GAP > 7200s (2h): write `{tokens: 0, trigger: "session-start", timestamp: NOW}` → show "🟢 New session started"
+- IF GAP < 7200s: context refresh only — do NOT write → show "📊 Continuing session"
 
 **Also write to log at:**
 - `//COMPACT` trigger → append entry, then compress

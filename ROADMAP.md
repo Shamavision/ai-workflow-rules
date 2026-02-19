@@ -305,6 +305,46 @@ Files (dev + npm-templates pairs = 8 files):
 - `token-status.sh` v2.0 reads `session-log.json` for MODEL_3
 - Phase 11 complete 2026-02-19
 
+**Phase 11.5 — Time-Anchored Session Tracking ✅ DONE (2026-02-19)**
+
+> **Motivation:** session-log.json entries lacked time anchor → couldn't detect session boundaries → //TOKENS showed merged daily total without per-session breakdown → confusing output.
+
+**11.5.1 — session-log.json schema v1.1 ✅ DONE**
+- Added `timestamp` field (Unix seconds) to schema
+- Added `_session_logic` doc block: gap >7200s = new session
+- Added `trigger: "session-start"` with `tokens: 0` as session boundary marker
+
+**11.5.2 — user-prompt-submit.sh v2.0 ✅ DONE**
+- Changed from "file-exists check" to gap-based detection (gap >7200s = new session)
+- SESSION_MARKER now stores Unix timestamp (not just existence flag)
+- Auto-writes `session-start` entry to `session-log.json` on new session (best-effort, `2>/dev/null || true`)
+
+**11.5.3 — All 8 rule files updated ✅ DONE**
+- `.claude/CLAUDE.md` + `npm-templates/.claude/CLAUDE.md`: timestamp in //TOKENS step 5, session breakdown in display, new `//start` gap-check section
+- `.ai/AI-ENFORCEMENT.md` + `npm-templates/.ai/AI-ENFORCEMENT.md`: trigger table now has `session-start` row + timestamp column; JSON entry has `timestamp`; added `//start` step-by-step; [TOKEN STATUS] shows session breakdown
+- `.cursorrules` + `npm-templates/.cursorrules`: timestamp in entry, session breakdown display, `//start` boundary section
+- `.windsurfrules` + `npm-templates/.windsurfrules`: same as cursorrules (windsurf tool)
+
+**11.5.4 — ROADMAP update + commit**
+- Updated ROADMAP with Phase 11.5 details
+- Commit: `feat(phase-11.5): time-anchored session tracking via timestamp in session-log.json`
+
+**Updated session-log.json schema (v1.1):**
+```json
+{
+  "_version": "1.1",
+  "_schema": {"timestamp": "integer (Unix seconds — required for session boundary detection)"},
+  "_session_logic": {
+    "new_session": "gap > 7200 seconds (2h) since last entry = new session boundary",
+    "context_refresh": "gap < 7200 = same session, //refresh only — no new log entry"
+  },
+  "sessions": [
+    {"date": "2026-02-19", "tokens": 0,     "tool": "claude-code", "trigger": "session-start", "timestamp": 1740010000},
+    {"date": "2026-02-19", "tokens": 45000, "tool": "claude-code", "trigger": "//tokens",       "timestamp": 1740012345}
+  ]
+}
+```
+
 ### Key Principle
 
 > Simple honest self-reporting > complex fake precision.

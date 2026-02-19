@@ -117,13 +117,15 @@ When user sends these commands:
 5. Estimate current session (rough ±30-50%):
    - Rules loaded: ~18k (ukraine-full) / ~14k (standard) / ~10k (minimal)
    - + conversation length estimate
-6. Append to sessions[]: {date, tokens: estimate, tool: "claude-code", trigger: "//tokens"}
+6. Append to sessions[]: {date, tokens: estimate, tool: "claude-code", trigger: "//tokens", timestamp: UNIX_NOW}
 7. Show [TOKEN STATUS]:
 
 [TOKEN STATUS]
 Tool:          claude-code
 Session est.:  ~Xk tokens (±30% rough estimate)
-Today (log):   ~Yk accumulated (from N entries)
+Today (log):   ~Yk accumulated (N entries, M sessions)
+  Session 1 (HH:MM): ~Ak
+  Session 2 (HH:MM): ~Bk   ← if multiple sessions today
 Limit:         UNKNOWN (Claude Pro MODEL_3 — not disclosed)
 Status:        🟢 Session GREEN (session < 50%)
 ```
@@ -146,14 +148,23 @@ After every `git push`:
 2. **ALSO write to session-log.json:**
    - Append: `{date, tokens: estimate, tool: "claude-code", trigger: "git-push"}`
 
-### SESSION START — Log check
+### `//start` / SESSION START — Write + Log check (Phase 11.5)
 
 At session start (after loading rules):
 1. **Read `.ai/session-log.json`** (if exists)
-2. Check last entry date vs today:
-   - Same date → "📊 Today so far: ~Xk tokens (from log)"
-   - Different date → "🟢 New day! Yesterday: ~Xk. Fresh limits."
-   - File missing → "📊 No session log yet. Use //TOKENS to start tracking."
+2. Get `NOW` = current Unix timestamp, `LAST_TS` = last entry's timestamp (0 if none today)
+3. `GAP = NOW - LAST_TS`
+4. **If GAP > 7200 (2h) OR no entry today:**
+   - Write: `{date, tokens: 0, tool: "claude-code", trigger: "session-start", timestamp: NOW}`
+   - Display: "🟢 New session started. (Gap: Xh since last activity)"
+   - **If different date:** "🟢 New day! Yesterday: ~Xk. Fresh limits today."
+5. **If GAP < 7200 (same session, context refresh):**
+   - Do NOT write new entry (this is `//refresh`, not new session)
+   - Display: "📊 Continuing session. Today: ~Xk (from log, N entries)"
+6. **If file missing:** "📊 No session log yet — creating on first //TOKENS"
+
+**Note:** VSCode hook (`user-prompt-submit.sh`) auto-writes session-start before first message.
+For Cursor/Windsurf: AI writes it during `//start` protocol.
 
 ### Graceful degradation (web AI / no file system)
 
