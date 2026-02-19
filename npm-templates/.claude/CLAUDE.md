@@ -89,15 +89,82 @@ If ANY of these conditions apply:
 When user sends these commands:
 
 - `//START` or `//start` → Execute Session Start Protocol (above)
-- `//TOKENS` → Show current token status
+- `//TOKENS` → Token tracking: read session-log + estimate + write + show status
 - `//CHECK:SECURITY` → Security audit (secrets, XSS, injection, API leaks)
 - `//CHECK:LANG` → LANG-CRITICAL violations scan
 - `//CHECK:ALL` → Full audit (security + performance + lang + i18n)
 - `//CHECK:RULES` → Display full protocol checklist + confirm active rules
 - `//REFRESH` → Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia)
 - `//WHICH:RULES` → Show which protocols apply to current operation
-- `//COMPACT` → Manual context compression
+- `//COMPACT` → Context compression + write token estimate to session-log.json
 - `//THINK` → Show reasoning in `<thinking>` tags
+
+---
+
+## 📊 Token Self-Reporting Protocol (Phase 11)
+
+> **Principle:** AI is its own source of truth. Time is the anchor. No provider API needed.
+
+### `//TOKENS` — Full behavior (MANDATORY)
+
+```
+1. Read .ai/session-log.json
+   → If missing: lazy init (create with empty sessions: [])
+2. today = local date (YYYY-MM-DD)
+3. NEW DAY CHECK: if last entry date != today
+   → Show: "🟢 New day! Yesterday: ~Xk tokens. Fresh limits today."
+4. today_total = sum of sessions[].tokens where date == today
+5. Estimate current session (rough ±30-50%):
+   - Rules loaded: ~18k (ukraine-full) / ~14k (standard) / ~10k (minimal)
+   - + conversation length estimate
+6. Append to sessions[]: {date, tokens: estimate, tool: "claude-code", trigger: "//tokens"}
+7. Show [TOKEN STATUS]:
+
+[TOKEN STATUS]
+Tool:          claude-code
+Session est.:  ~Xk tokens (±30% rough estimate)
+Today (log):   ~Yk accumulated (from N entries)
+Limit:         UNKNOWN (Claude Pro MODEL_3 — not disclosed)
+Status:        🟢 Session GREEN (session < 50%)
+```
+
+**NEVER show fake daily percentages like "~Xk/500k (Y%)" — 500k is our estimate, not Anthropic's real limit.**
+
+### `//COMPACT` — Token write (MANDATORY addition)
+
+When user runs `//COMPACT`:
+1. Perform context compression (existing behavior)
+2. **ALSO write to session-log.json:**
+   - Estimate session tokens so far
+   - Append: `{date, tokens: estimate, tool: "claude-code", trigger: "//compact"}`
+3. Show compression results + token status
+
+### POST-PUSH PROTOCOL — Token write (MANDATORY addition)
+
+After every `git push`:
+1. Perform compression (existing POST-PUSH behavior)
+2. **ALSO write to session-log.json:**
+   - Append: `{date, tokens: estimate, tool: "claude-code", trigger: "git-push"}`
+
+### SESSION START — Log check
+
+At session start (after loading rules):
+1. **Read `.ai/session-log.json`** (if exists)
+2. Check last entry date vs today:
+   - Same date → "📊 Today so far: ~Xk tokens (from log)"
+   - Different date → "🟢 New day! Yesterday: ~Xk. Fresh limits."
+   - File missing → "📊 No session log yet. Use //TOKENS to start tracking."
+
+### Graceful degradation (web AI / no file system)
+
+If AI cannot write files (Claude Web, etc.):
+> "Cross-session tracking requires a code editor (Claude Code, Cursor, Windsurf).
+> This session: ~Xk tokens (estimate). No persistent log available."
+
+### Ban prevention
+
+> **If responses become slow or "overloaded" errors appear → approaching daily limits.**
+> **Recommended: stop working for today, resume tomorrow.**
 
 ---
 

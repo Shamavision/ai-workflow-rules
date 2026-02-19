@@ -200,6 +200,72 @@ Session tokens 90%+   → Level 3 (Maximum)
 
 ---
 
+### 1.1. SESSION-LOG WRITE PROTOCOL (Phase 11 - MANDATORY)
+
+**Added 2026-02-19 — Universal token self-reporting, works for ALL AI tools**
+
+**WHAT:** AI writes its own token estimates to `.ai/session-log.json`
+**WHY:** No provider API → AI is the only source of truth → honest self-reporting
+
+**TRIGGERS (write to session-log.json when ANY of these fires):**
+
+| Trigger | Action |
+|---------|--------|
+| `//TOKENS` | read + estimate + write + show status |
+| `//COMPACT` | compress + write estimate |
+| `git push` | POST-PUSH + write estimate |
+| Phase complete | show status + write estimate |
+
+**REQUIRED ACTION — Write entry to session-log.json:**
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "tokens": 45000,
+  "tool": "claude-code",
+  "trigger": "//tokens"
+}
+```
+
+**Step by step (for any trigger):**
+```
+1. Read .ai/session-log.json (create if missing: {"_comment": "...", "sessions": []})
+2. today = local date (YYYY-MM-DD)
+3. NEW DAY CHECK: last entry date != today?
+   → Show: "🟢 New day! Yesterday: ~Xk. Fresh limits."
+4. today_total = sum sessions[].tokens where date == today
+5. Estimate current session tokens (rules_load + conversation ±30-50%)
+6. Append: {date: today, tokens: estimate, tool: "claude-code", trigger: "<trigger>"}
+7. Write updated file back
+```
+
+**SHOW [TOKEN STATUS] after every write:**
+```
+[TOKEN STATUS]
+Session est.:  ~Xk tokens (±30% rough estimate)
+Today (log):   ~Yk accumulated (N log entries)
+Limit:         UNKNOWN (MODEL_3 — not disclosed by provider)
+Status:        🟢 Session GREEN
+```
+
+**IMPORTANT — Honesty rules:**
+- ❌ NEVER show fake daily percentages (e.g., "~45k/500k = 9%") — 500k is our estimate
+- ✅ ALWAYS label estimates as estimates ("~Xk ±30%")
+- ✅ Token count is rough — but better than static 0%
+- ✅ "Progressive truth > fabricated precision"
+
+**Graceful degradation (web AI, no file system):**
+> "Cross-session tracking requires a code editor. This session: ~Xk (estimate only)."
+
+**WHY MANDATORY:**
+- Current state: `daily_usage = 0` in token-limits.json → total fiction
+- This gives users REAL data (rough, but real)
+- Time anchor (date) enables cross-session accumulation without any API
+
+**FAILURE = VIOLATION:** If AI shows fake 0% usage or fake "500k/day" percentages.
+
+---
+
 ### 1.5. UKRAINIAN LANGUAGE QUALITY SELF-CHECK (PRE-COMMIT)
 
 **Added 2026-02-11 from ROADMAP Phase 6 - Prevents казуси in Ukrainian text**
@@ -258,15 +324,17 @@ Session tokens 90%+   → Level 3 (Maximum)
 [SESSION START]
 ✓ Context loaded: <context_name>
 ✓ Session: 0k/200k (0%)
-✓ Daily usage: <check .ai/token-limits.json or ask user>
-✓ Remaining today: ~Xk
+✓ Daily usage: <from session-log.json if exists>
 ✓ Status: 🟢/🟡/🟠/🔴 <zone>
 ```
 
-**MUST CHECK:**
-- Daily usage (from token-limits.json or user)
-- Calculate remaining budget
-- Warn if >60% used
+**MUST CHECK (Phase 11 update):**
+1. Read `.ai/session-log.json` (if exists)
+2. Compare last entry date vs today:
+   - **Same date** → Show: "📊 Today so far: ~Xk tokens (from log)"
+   - **Different date** → Show: "🟢 New day! Yesterday: ~Xk. Fresh limits today."
+   - **File missing** → Show: "📊 No session log yet. Use //TOKENS to start tracking."
+3. **NEVER** show fake daily % from token-limits.json (daily_usage is always 0 there)
 
 ---
 

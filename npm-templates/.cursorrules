@@ -39,12 +39,14 @@ After EVERY phase/stage completion:
 ```
 [PHASE X COMPLETE]
 Session: Xk/200k (Y%)
-Daily: Zk/150k (W%)
+Daily: ~Xk today (self-reported, ±30-50%)
 Status: 🟢/🟡/🟠/🔴
 
+Next: [description] (~Nk estimate)
 Продолжить? [Y/n]
 ```
 ❌ NEVER start next phase without user approval
+❌ NEVER show fake daily % like "Zk/150k (W%)" — 150k is NOT a real limit
 
 ### Rule #4: No Auto-Commit/Push
 - ❌ NEVER auto-commit
@@ -109,6 +111,40 @@ Status: 🟢/🟡/🟠/🔴
 ├── token-limits.json       # Token budget tracking
 └── AI-ENFORCEMENT.md       # Mandatory protocols
 ```
+
+---
+
+## 📊 //TOKENS Protocol (Phase 11 — Token Self-Reporting)
+
+**When user types `//TOKENS`:**
+1. **Read** `.ai/session-log.json` (if exists)
+2. **Check date** of last entry vs today (`YYYY-MM-DD`)
+3. **Calculate** daily total: sum all entries where `date == today`
+4. **Estimate** current session tokens (rough ±30-50%)
+5. **Append** new entry to `session-log.json`:
+   ```json
+   {"date": "YYYY-MM-DD", "tokens": ESTIMATE, "tool": "cursor", "trigger": "//tokens"}
+   ```
+6. **Display** status:
+   ```
+   [TOKEN STATUS]
+   Session: ~Xk tokens (self-reported estimate)
+   Today's total: ~Yk (from session-log: N entries)
+   Status: 🟢/🟡/🟠/🔴
+
+   Note: Rough estimates ±30-50%. Better than static 0%.
+   ```
+7. **If session-log.json missing:** Create it (copy schema from `.ai/session-log.json`)
+
+**Also write to log at:**
+- `//COMPACT` trigger → append entry, then compress
+- After `git push` → append entry (POST-PUSH PROTOCOL)
+- Phase completion → append entry
+
+**CRITICAL:** NEVER show fake daily % like `~Xk/500k (Y%)` — 500k is our estimate, NOT real limit!
+
+**Graceful degradation (if can't write files):**
+Display session estimate only + explain why log unavailable.
 
 ---
 

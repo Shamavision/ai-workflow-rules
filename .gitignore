@@ -19,6 +19,9 @@
 # Session markers (temporary, per-session)
 .ai/.session-started
 
+# AI session token log (personal usage data - do not commit)
+.ai/session-log.json
+
 # Audit trail (local only, legal protection evidence)
 .ai/audit-trail.log
 

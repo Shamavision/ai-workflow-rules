@@ -1,0 +1,12 @@
+{
+  "_comment": "AI self-reported token usage log. Written by AI at //TOKENS, //COMPACT, and git push triggers.",
+  "_version": "1.0",
+  "_note": "Gitignored by default (personal usage data). AI writes rough estimates — better than static 0%.",
+  "_schema": {
+    "date": "YYYY-MM-DD (local date, used as day boundary for reset detection)",
+    "tokens": "integer (rough estimate ±30-50%, self-reported by AI)",
+    "tool": "string (claude-code | cursor | windsurf | other)",
+    "trigger": "string (//tokens | //compact | git-push | phase-complete)"
+  },
+  "sessions": []
+}

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Token Status Dashboard for AI Workflow Rules
-# Version: 1.1 (Phase 8.7.2 - MODEL_3 Support)
+# Version: 2.0 (Phase 11 - Session-Log Tracking)
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📊 TOKEN USAGE DASHBOARD"
@@ -81,6 +81,34 @@ if [ "$ARCH_MODEL" = "MODEL_3" ] || [ "$DAILY_LIMIT_TYPE" = "fair_use_dynamic" ]
     IS_MODEL3=true
 fi
 
+# Phase 11: Read session-log.json for real daily tracking
+TODAY=$(date +%Y-%m-%d)
+SESSION_LOG_TODAY=0
+SESSION_LOG_ENTRIES=0
+SESSION_LOG_HAS_DATA=false
+
+if [ -f ".ai/session-log.json" ]; then
+    LOG_SUM=$(jq -r --arg today "$TODAY" \
+        '[.sessions[] | select(.date == $today) | .tokens] | add // 0' \
+        .ai/session-log.json 2>/dev/null || echo "0")
+    LOG_COUNT=$(jq -r --arg today "$TODAY" \
+        '[.sessions[] | select(.date == $today)] | length' \
+        .ai/session-log.json 2>/dev/null || echo "0")
+    if [[ "$LOG_SUM" =~ ^[0-9]+$ ]]; then
+        SESSION_LOG_TODAY=$LOG_SUM
+    fi
+    if [[ "$LOG_COUNT" =~ ^[0-9]+$ ]]; then
+        SESSION_LOG_ENTRIES=$LOG_COUNT
+    fi
+    if [ "$SESSION_LOG_ENTRIES" -gt 0 ] 2>/dev/null; then
+        SESSION_LOG_HAS_DATA=true
+        # For MODEL_3: override DAILY_USED with real session-log total
+        if $IS_MODEL3; then
+            DAILY_USED=$SESSION_LOG_TODAY
+        fi
+    fi
+fi
+
 # Read context from config
 if [ -f ".ai/config.json" ]; then
     CONTEXT=$(jq -r '.context' .ai/config.json 2>/dev/null || echo "standard")
@@ -142,16 +170,22 @@ DAILY_REMAINING=$(($DAILY_LIMIT - $DAILY_USED))
 
 echo "─────────────────────────────────────────────────"
 if $IS_MODEL3; then
-    echo "📅 Daily Usage (ESTIMATE ONLY - not a real limit):"
+    echo "📅 Daily Tracking (session-log.json — AI self-reported):"
+    echo "   Date: $TODAY"
+    if $SESSION_LOG_HAS_DATA; then
+        echo "   Today total:  $(printf "%'d" $SESSION_LOG_TODAY) tokens (~${SESSION_LOG_ENTRIES} entries, ±30-50%)"
+        echo "   vs session:   ~$(($SESSION_LOG_TODAY * 100 / $SESSION_LIMIT))% of $(printf "%'d" $SESSION_LIMIT) cap"
+    else
+        echo "   Today total:  0 — no AI-reported data yet for $TODAY"
+        echo "   → Use //TOKENS in AI chat to start tracking"
+    fi
+    echo "   ⚠️  Real daily limit: UNKNOWN (MODEL_3 Fair Use)"
 else
     echo "📅 Daily Usage:"
+    echo "   Limit: $(printf "%'d" $DAILY_LIMIT) tokens"
+    echo "   Used: $(printf "%'d" $DAILY_USED) tokens (${DAILY_PERCENT}%)"
+    echo "   Remaining: $(printf "%'d" $DAILY_REMAINING) tokens"
 fi
-echo "   Limit: $(printf "%'d" $DAILY_LIMIT) tokens"
-if $IS_MODEL3 && [ -n "$PLAN_DAILY_NOTE" ]; then
-    echo "   Note: ${PLAN_DAILY_NOTE}"
-fi
-echo "   Used: $(printf "%'d" $DAILY_USED) tokens (${DAILY_PERCENT}%)"
-echo "   Remaining: $(printf "%'d" $DAILY_REMAINING) tokens"
 echo ""
 
 # Zone indicator (based on daily % for all models)
