@@ -115,7 +115,7 @@ Currently they do NOT — different source files, different file sets, different
 
 ## 🐇 Phase 10: "Кролик" Fixes (from real-world test 2026-02-18)
 
-> **Status:** 🔴 PLANNED — based on first кролик test (bash install, STUDIO project)
+> **Status:** 🟡 IN PROGRESS — Issues #1-3 done (2026-02-20), Issue #4 awaiting user feedback
 
 ### Confirmed Issue #1: //start fails in existing conversation
 
@@ -175,11 +175,11 @@ Will be documented after user provides full feedback.
 
 | Task | Priority | Status |
 |------|----------|--------|
-| Update "Next steps" in install.sh: "Open NEW conversation" | 🔴 Critical | ✅ DONE (docs updated) |
-| Remove language question from wizard (decision: Option A) | 🔴 Critical | 🔴 PLANNED |
-| Update CLAUDE.md + AI-ENFORCEMENT: start in Ukrainian+EN | 🔴 Critical | 🔴 PLANNED |
-| Update "Next steps" in bin/cli.js: same message | 🔴 Critical | 🔴 PLANNED |
-| Improve "Token budget priority?" with human-friendly labels | 🟠 High | 🔴 PLANNED |
+| Update "Next steps" in install.sh: "Open NEW conversation" | 🔴 Critical | ✅ DONE (2026-02-20) |
+| Remove language question from wizard (decision: Option A) | 🔴 Critical | ✅ DONE (2026-02-20) |
+| Update CLAUDE.md + AI-ENFORCEMENT: start in Ukrainian+EN | 🔴 Critical | ✅ DONE (2026-02-20) |
+| Update "Next steps" in bin/cli.js: same message | 🔴 Critical | ✅ DONE (2026-02-20) |
+| Improve "Token budget priority?" with human-friendly labels | 🟠 High | ✅ DONE (2026-02-20) |
 | Collect full кролик feedback (bash install issues #4) | 🔴 Critical | ⏳ Awaiting user |
 | Fix all bash install issues from feedback | 🔴 Critical | 🔴 PLANNED |
 | Re-test кролик after fixes | 🟠 High | 🔴 PLANNED |

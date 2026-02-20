@@ -65,7 +65,7 @@ If ANY of these conditions apply:
 ✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 
-Чим я можу вам допомогти?
+Чим я можу вам допомогти? | What can I help you with?
 
 **Examples:**
 - Minimal: "✓ Context: minimal (~10k, 5% of daily)"
@@ -75,7 +75,7 @@ If ANY of these conditions apply:
 ```
 
 ### Step 4: Follow Core Principles
-- **Internal dialogue (You ↔ User):** Adaptive - match user's language (Ukrainian, Russian, or English)
+- **Internal dialogue (You ↔ User):** Adaptive — **first response always in Ukrainian + English**, then match user's language
 - **Code comments:** English only
 - **Commit messages:** English only (`type(scope): description`)
 - **Token-conscious:** Monitor usage, optimize at 50%+

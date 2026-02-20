@@ -260,20 +260,6 @@ case $PROVIDER in
         PLAN="default" ;;
 esac
 
-# Language selection
-echo ""
-echo "Primary language for your project?"
-echo "  1) English (en-US)"
-echo "  2) Ukrainian (uk-UA)"
-echo "  3) Russian (ru-RU)"
-echo ""
-read -rp "Enter number (1-3): " LANG_CHOICE
-case $LANG_CHOICE in
-    2) LANGUAGE="uk-UA"; LANG_INTERNAL="uk" ;;
-    3) LANGUAGE="ru-RU"; LANG_INTERNAL="ru" ;;
-    *) LANGUAGE="en-US"; LANG_INTERNAL="en" ;;
-esac
-
 # Install git hooks?
 echo ""
 read -rp "Install security pre-commit hooks? (Y/n): " HOOKS_REPLY
@@ -307,8 +293,8 @@ echo ""
 read -rp "Enter number (1-2): " MARKET_CHOICE
 
 echo ""
-echo "3. Token budget priority?"
-echo "   1) High (minimize usage)   2) Medium (balanced)   3) Low (full features)"
+echo "3. How cautious should AI be with tokens?"
+echo "   1) Careful (warns early)   2) Balanced (standard)   3) Relaxed (minimal interruptions)"
 echo ""
 read -rp "Enter number (1-3): " TOKEN_PRIORITY
 
@@ -497,7 +483,7 @@ else
   "modules": [],
   "market": "$MARKET_VALUE",
   "language": {
-    "internal_dialogue": "$LANG_INTERNAL",
+    "internal_dialogue": "adaptive",
     "code_comments": "en",
     "commit_messages": "en",
     "variable_names": "en"
@@ -676,7 +662,7 @@ fi
 
 echo ""
 echo -e "${BLUE}Next steps:${NC}"
-echo "  1. Open your project in your AI assistant"
+echo "  1. Open a NEW conversation in your AI assistant"
 echo -e "  2. Type ${CYAN}//START${NC} in the chat"
 echo "  3. AI will load rules and start working"
 echo ""

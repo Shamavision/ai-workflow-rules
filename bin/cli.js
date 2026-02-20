@@ -84,12 +84,6 @@ const PLANS = {
   other: ['Default']
 };
 
-const LANGUAGES = [
-  { name: 'English (en-US)', value: 'en-US' },
-  { name: 'Ukrainian (uk-UA)', value: 'uk-UA' },
-  { name: 'Russian (ru-RU)', value: 'ru-RU' }
-];
-
 const CONTEXTS = [
   { name: 'Minimal - Startups, MVP (~10k tokens, v9.1)', value: 'minimal', tokens: 10000 },
   { name: 'Standard - Most projects (~14k tokens, v9.1)', value: 'standard', tokens: 14000 },
@@ -202,11 +196,11 @@ async function selectContextWithRecommendation() {
     {
       type: 'list',
       name: 'tokenPriority',
-      message: 'Token budget priority?',
+      message: 'How cautious should AI be with tokens?',
       choices: [
-        { name: 'High priority (minimize token usage)', value: 'high' },
-        { name: 'Medium (balanced)', value: 'medium' },
-        { name: 'Low (prefer full features)', value: 'low' }
+        { name: 'Careful — warns early, fewer long tasks (recommended for Pro/subscription)', value: 'high' },
+        { name: 'Balanced — standard warnings (recommended for most users)', value: 'medium' },
+        { name: 'Relaxed — minimal interruptions (good for API/pay-per-token)', value: 'low' }
       ]
     }
   ]);
@@ -294,13 +288,6 @@ async function main() {
         name: 'plan',
         message: (answers) => `What's your ${answers.provider} plan?`,
         choices: (answers) => PLANS[answers.provider] || PLANS.other
-      },
-      {
-        type: 'list',
-        name: 'language',
-        message: 'Primary language for your project?',
-        choices: LANGUAGES,
-        default: 'en-US'
       },
       {
         type: 'confirm',
@@ -493,7 +480,7 @@ async function main() {
     console.log('\n' + chalk.gray('━'.repeat(50)));
     console.log(chalk.bold.green('\n🎉 Setup complete!\n'));
     console.log(chalk.bold('Next steps:'));
-    console.log(chalk.gray('  1. Open your project in your AI assistant'));
+    console.log(chalk.gray('  1. Open a ') + chalk.bold('NEW conversation') + chalk.gray(' in your AI assistant'));
     console.log(chalk.gray('  2. Type ') + chalk.cyan('//START') + chalk.gray(' in the chat'));
     console.log(chalk.gray('  3. AI will load rules and start working\n'));
     console.log(chalk.bold.blue('🛡️  AI Protection v9.1 enabled:'));
@@ -619,10 +606,6 @@ async function createAiConfig(targetDir, answers) {
   // Derive market from context choice
   const market = answers.context === 'ukraine-full' ? 'ukraine' : 'international';
 
-  // Map language selection to internal_dialogue value
-  const langMap = { 'uk-UA': 'uk', 'ru-RU': 'ru', 'en-US': 'en' };
-  const internalLang = langMap[answers.language] || 'adaptive';
-
   const config = {
     "framework": "ai-workflow-rules",
     "version": "9.1.1",
@@ -631,7 +614,7 @@ async function createAiConfig(targetDir, answers) {
     "modules": [],
     "market": market,
     "language": {
-      "internal_dialogue": internalLang,
+      "internal_dialogue": "adaptive",
       "code_comments": "en",
       "commit_messages": "en",
       "variable_names": "en"

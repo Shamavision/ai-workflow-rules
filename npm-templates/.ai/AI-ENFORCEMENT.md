@@ -348,7 +348,12 @@ Status:        🟢 Session GREEN
 ✓ Session: 0k/200k (0%)
 ✓ Daily usage: <from session-log.json if exists>
 ✓ Status: 🟢/🟡/🟠/🔴 <zone>
+✓ Language: Ukrainian + English (first response), then adaptive
+
+Чим я можу вам допомогти? | What can I help you with?
 ```
+
+**Language rule:** First response ALWAYS in Ukrainian + English. After user responds, match their language.
 
 **MUST CHECK (Phase 11 update):**
 1. Read `.ai/session-log.json` (if exists)
