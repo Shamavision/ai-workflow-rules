@@ -49,6 +49,19 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rule
 > **⚠️ Claude Code users:** After install, open a **NEW conversation**, then type `//START`.
 > Do not type `//START` in an existing conversation — CLAUDE.md loads only at conversation start.
 
+**After installation:**
+
+```bash
+bash scripts/token-status.sh   # Check token budget dashboard
+bash scripts/sync-rules.sh     # Regenerate tool files after context change
+```
+
+```
+//START        ← type in AI chat to initialize session
+//CHECK:ALL    ← full compliance audit
+//TOKENS       ← current token budget
+```
+
 ---
 
 ## 🤖 AI Commands
@@ -264,41 +277,6 @@ your-project/
     ├── sync-rules.sh            # Regenerate tool files
     └── token-status.sh          # Token dashboard
 ```
-
-</details>
-
-<details>
-<summary>🔧 After Installation — useful commands</summary>
-
-```bash
-# Check token status
-npm run token-status
-# or
-bash scripts/token-status.sh
-
-# Regenerate tool files after context change
-bash scripts/sync-rules.sh
-
-# Edit context
-# .ai/config.json → change "context" field
-# .ai/token-limits.json → change provider/plan
-
-# Run in AI chat
-//CHECK:ALL    # Full compliance audit
-//TOKENS       # Current token budget
-```
-
-</details>
-
-<details>
-<summary>📝 Version History</summary>
-
-- **v9.1.1** [2026-02-20] — **КРОЛИК FIXES.** Phase 10: removed language question (always adaptive), Ukrainian+English first response, human-friendly token labels, "Open NEW conversation" in next steps. Phase 11: token self-reporting via `session-log.json` (time-anchored, gap-based session detection). Phase 12: README restructure with accordions.
-- **v9.1.1** [2026-02-18] — **INSTALLER PARITY.** Phase 9: both install paths (`npx` + `bash install.sh`) now produce identical 24-file sets. `.ai/config.json` generation added to npx. `install.sh` fully rewritten: npm-templates source, 10 providers, provider-specific plans, MODEL_3 support.
-- **v9.1.1** [2026-02-17] — **DISTRIBUTION AUDIT.** Phase 8: 6 bugs fixed in CLI installer. Token System 2026 VARIANT B: 13 MODEL_3 plans with conservative ESTIMATES. pre-commit hook: fixed set-e bug.
-- **v9.1** [2026-02-08] — **OPTIMIZATION RELEASE.** .ai/ hub restructure. Token optimization: 20-28% smaller contexts. Session management best practices guide.
-- **v9.0** [2026-02-05] — **AI ENFORCEMENT.** Mandatory protocols auto-loaded. Post-push compression. Multi-level compression (Light/Aggressive/Maximum).
-- **v8.1** [2026-02-04] — **MODULAR CONTEXTS.** Smart context loading. Token savings: 40-70%.
 
 </details>
 
