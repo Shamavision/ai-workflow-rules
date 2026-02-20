@@ -259,21 +259,24 @@ Session tokens 90%+   → Level 3 (Maximum)
    → Show: "📊 Continuing session. Today: ~Xk (N entries)"
 ```
 
-**SHOW [TOKEN STATUS] after every write:**
+**SHOW [AI STATUS] after every write — 3-Layer Mental Model:**
 ```
-[TOKEN STATUS]
-Session est.:  ~Xk tokens (±30% rough estimate)
-Today (log):   ~Yk accumulated (N entries, M sessions)
-  Session 1 (HH:MM): ~Ak tokens
-  Session 2 (HH:MM): ~Bk tokens
-Limit:         UNKNOWN (MODEL_3 — not disclosed by provider)
-Status:        🟢 Session GREEN
+[AI STATUS]
+Provider: Claude Pro (subscription)
+
+Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
+Rate Layer:     🟢 Normal           ← estimated from patterns
+Billing Layer:  N/A (subscription)
+
+Status: 🟢 GREEN
 ```
 
 **IMPORTANT — Honesty rules:**
-- ❌ NEVER show fake daily percentages (e.g., "~45k/500k = 9%") — 500k is our estimate
-- ✅ ALWAYS label estimates as estimates ("~Xk ±30%")
-- ✅ Token count is rough — but better than static 0%
+- ❌ NEVER show Billing Layer cost for subscription users (`N/A` is honest)
+- ❌ NEVER fabricate daily limits or percentages
+- ✅ Context Layer: session tokens / 200k → AI knows this exactly
+- ✅ Rate Layer: 🟢 Normal by default, 🟠 Elevated if signs of throttling
+- ✅ Billing Layer: `N/A (subscription)` for MODEL_3; cost data for API users
 - ✅ "Progressive truth > fabricated precision"
 
 **Graceful degradation (web AI, no file system):**
@@ -284,7 +287,7 @@ Status:        🟢 Session GREEN
 - This gives users REAL data (rough, but real)
 - Time anchor (date) enables cross-session accumulation without any API
 
-**FAILURE = VIOLATION:** If AI shows fake 0% usage or fake "500k/day" percentages.
+**FAILURE = VIOLATION:** If AI shows Billing Layer cost for subscription users, or fabricates daily limits. Use 3-layer [AI STATUS] format.
 
 ---
 
@@ -527,7 +530,7 @@ Proceed anyway? [YES/FIX/SKIP]
 
 | Threshold | Action |
 |-----------|--------|
-| 30% | Show `[TOKEN STATUS]` automatically |
+| 30% | Show `[AI STATUS]` automatically |
 | 50% | Activate optimizations + **suggest compression** |
 | 70% | Aggressive compression + **proactive warning** |
 | 90% | Finalization only + **mandatory warning** |

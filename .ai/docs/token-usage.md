@@ -216,7 +216,7 @@ Total: 90k / 200k (45% used)
 4. Upgrade to Pro plan
 
 ### Q: How do I track my token usage?
-**A:** Check `.ai/token-limits.json` - AI updates it automatically. Or use `//TOKENS` command.
+**A:** Use `//TOKENS` command — AI shows [AI STATUS] with Context Layer (exact session usage), Rate Layer (throttling signal), and Billing Layer (N/A for subscription, cost for API). The log is written to `.ai/session-log.json`.
 
 ### Q: Are these estimates accurate?
 **A:** Conservative estimates (10-20% lower than actual limits). Your actual usage may vary based on:
@@ -332,15 +332,26 @@ Check your current token status:
 AI: Just type "//TOKENS" and I'll show your current usage
 ```
 
-**In file:**
-```bash
-cat .ai/token-limits.json | grep "daily_percentage"
+**Output — 3-Layer Mental Model:**
+```
+[AI STATUS]
+Provider: Claude Pro (subscription)
+
+Context Layer:  ~85k / 200k (42%)   ← AI knows exactly
+Rate Layer:     🟢 Normal           ← estimated from patterns
+Billing Layer:  N/A (subscription)
+
+Status: 🟢 GREEN
 ```
 
-**Output example:**
-```json
-"daily_percentage": 35,  // You've used 35% today
-"current_status": "green"  // 🟢 You're good!
+**3 layers explained:**
+- **Context Layer** — session tokens vs 200k window. AI estimates this accurately.
+- **Rate Layer** — behavioral signal: 🟢 Normal | 🟠 Elevated (slow responses, overloaded errors)
+- **Billing Layer** — for API users: shows cost from `.ai/config.json`. For Pro/subscription: `N/A`.
+
+**Via script:**
+```bash
+bash scripts/token-status.sh
 ```
 
 ---

@@ -118,19 +118,19 @@ When user sends these commands:
    - Rules loaded: ~18k (ukraine-full) / ~14k (standard) / ~10k (minimal)
    - + conversation length estimate
 6. Append to sessions[]: {date, tokens: estimate, tool: "claude-code", trigger: "//tokens", timestamp: UNIX_NOW}
-7. Show [TOKEN STATUS]:
+7. Show [AI STATUS] — 3-Layer Mental Model:
 
-[TOKEN STATUS]
-Tool:          claude-code
-Session est.:  ~Xk tokens (±30% rough estimate)
-Today (log):   ~Yk accumulated (N entries, M sessions)
-  Session 1 (HH:MM): ~Ak
-  Session 2 (HH:MM): ~Bk   ← if multiple sessions today
-Limit:         UNKNOWN (Claude Pro MODEL_3 — not disclosed)
-Status:        🟢 Session GREEN (session < 50%)
+[AI STATUS]
+Provider: Claude Pro (subscription)
+
+Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
+Rate Layer:     🟢 Normal           ← estimated from patterns
+Billing Layer:  N/A (subscription)
+
+Status: 🟢 GREEN
 ```
 
-**NEVER show fake daily percentages like "~Xk/500k (Y%)" — 500k is our estimate, not Anthropic's real limit.**
+**Billing Layer** shows `N/A (subscription)` for Claude Pro/subscription plans. For API plans: shows cost from `.ai/config.json` billing data. NEVER fabricate limits or percentages.
 
 ### `//COMPACT` — Token write (MANDATORY addition)
 

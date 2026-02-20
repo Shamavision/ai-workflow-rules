@@ -125,16 +125,16 @@ Next: [description] (~Nk estimate)
    ```json
    {"date": "YYYY-MM-DD", "tokens": ESTIMATE, "tool": "cursor", "trigger": "//tokens", "timestamp": UNIX_NOW}
    ```
-6. **Display** status:
+6. **Display** [AI STATUS] — 3-Layer Mental Model:
    ```
-   [TOKEN STATUS]
-   Session: ~Xk tokens (self-reported estimate)
-   Today (log): ~Yk accumulated (N entries, M sessions)
-     Session 1 (HH:MM): ~Ak tokens
-     Session 2 (HH:MM): ~Bk tokens  ← if multiple sessions
-   Status: 🟢/🟡/🟠/🔴
+   [AI STATUS]
+   Provider: Continue.dev (subscription)
 
-   Note: Rough estimates ±30-50%. Better than static 0%.
+   Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
+   Rate Layer:     🟢 Normal           ← estimated from patterns
+   Billing Layer:  N/A (subscription)
+
+   Status: 🟢 GREEN
    ```
 7. **If session-log.json missing:** Create it (copy schema from `.ai/session-log.json`)
 
@@ -149,7 +149,7 @@ Next: [description] (~Nk estimate)
 - After `git push` → append entry (POST-PUSH PROTOCOL)
 - Phase completion → append entry
 
-**CRITICAL:** NEVER show fake daily % like `~Xk/500k (Y%)` — 500k is our estimate, NOT real limit!
+**CRITICAL:** **Billing Layer** = `N/A (subscription)` for subscription plans. For API: show cost from `.ai/config.json`. NEVER fabricate limits or percentages.
 
 **Graceful degradation (if can't write files):**
 Display session estimate only + explain why log unavailable.

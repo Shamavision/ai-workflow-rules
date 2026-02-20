@@ -181,35 +181,44 @@ No provider API needed — local date is the day boundary anchor.
 
 ```
 //TOKENS output:
-[TOKEN STATUS]
-Session est.:  ~45k tokens (±30% rough estimate)
-Today (log):   ~112k accumulated (2 sessions)
-  Session 1 (09:15): ~67k tokens
-  Session 2 (14:30): ~45k tokens
-Limit:         UNKNOWN (MODEL_3 — not disclosed by provider)
-Status:        🟢 Session GREEN
+[AI STATUS]
+Provider: Claude Pro (subscription)
+
+Context Layer:  ~45k / 200k (22%)   ← AI knows exactly
+Rate Layer:     🟢 Normal           ← estimated from patterns
+Billing Layer:  N/A (subscription)
+
+Status: 🟢 GREEN
 ```
 
 **Triggered automatically at:** `//TOKENS`, `//COMPACT`, `git push`, phase complete, `//START`
 
 <details>
-<summary>💡 Why "UNKNOWN"? — 2026 provider reality</summary>
+<summary>💡 3-Layer Mental Model — 2026 provider reality</summary>
+
+**3 layers of token awareness:**
+
+| Layer | What It Tracks | Accuracy |
+|-------|---------------|----------|
+| **Context Layer** | Session tokens / 200k context window | ✅ AI knows exactly |
+| **Rate Layer** | Behavioral throttling signal | ⚠️ Estimated from patterns |
+| **Billing Layer** | Financial cost (API only) | ✅ Exact for API; N/A for subscription |
 
 **3 architecture models** (auto-detected by installer):
 
-| Model | Providers | Daily Limit | Tracking |
-|-------|-----------|-------------|---------|
-| **MODEL_1** (Hard Billing) | Anthropic API, Mistral, DeepSeek, Google API | Published, metered | Per-token billing |
-| **MODEL_2** (Request Quota) | GitHub Copilot | ~300 requests/month | Request counting |
-| **MODEL_3** (Fair Use Dynamic) | Claude Pro, Gemini Advanced, Cursor, Windsurf | **UNKNOWN (not disclosed)** | Session-based |
+| Model | Providers | Billing Layer |
+|-------|-----------|--------------|
+| **MODEL_1** (Hard Billing) | Anthropic API, Mistral, DeepSeek, Google API | Cost per token (tracked) |
+| **MODEL_2** (Request Quota) | GitHub Copilot | Request count (not cost) |
+| **MODEL_3** (Fair Use Dynamic) | Claude Pro, Gemini Advanced, Cursor, Windsurf | **N/A — subscription** |
 
 **MODEL_3 reality (most users):**
-- Daily/monthly limits: **NOT DISCLOSED by provider** — intentional opacity since 2024
-- Session limit: **200K tokens / ~5h rolling window** — this is your primary budget metric
-- Framework uses **conservative estimates** for planning (clearly labeled as estimates)
+- Billing Layer: `N/A (subscription)` — no per-token cost, no disclosed daily limit
+- Context Layer: **200K tokens / ~5h rolling window** — this is your primary budget metric
+- Rate Layer: Dynamic throttling — 🟢 Normal until behavior changes
 
-> "I don't know exact limit, but I know I used ~112k today — be careful."
-> *Progressive truth > fabricated precision.*
+> "Context Layer is what I know. Rate Layer is what I estimate. Billing Layer is N/A for you."
+> *Honest layers > fabricated precision.*
 
 </details>
 

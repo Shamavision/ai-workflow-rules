@@ -77,7 +77,7 @@
 ```bash
 # Session management
 //START    - Session start protocol (mandatory first command)
-//TOKENS   - Show token usage status
+//TOKENS   - Show AI Status (3-layer: Context / Rate / Billing)
 //COMPACT  - Compress context (save 40-60% tokens)
 //THINK    - Show AI reasoning
 
