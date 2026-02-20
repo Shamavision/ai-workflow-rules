@@ -352,14 +352,30 @@ Files (dev + npm-templates pairs = 8 files):
 
 ---
 
-## 🧪 Phase 12: Cross-AI Validation
+## 🧪 Phase 12: README Overhaul + Cross-AI Validation
 
-> **Status:** 🔴 PLANNED — after Phase 11 implementation
+> **Status:** 🟡 IN PROGRESS — README restructure done, polish items remain
 
-### Goal
-Verify that session-log.json tracking + `//TOKENS` command works correctly across ALL supported AI tools.
+### ✅ Done (2026-02-20)
 
-### Test Matrix
+- README restructured with `<details>` accordions (file tree, layers, history, docs)
+- AI Commands table: added `//REFRESH`, `//CHECK:RULES`, `//WHICH:RULES`
+- Token Monitoring section added (Phase 11 session-log architecture explained)
+- `//START` example updated: UK+EN greeting + session-log output
+- Version History moved into `<details>` accordion
+
+### 🔴 README Polish (remaining)
+
+| Task | Notes | Status |
+|------|-------|--------|
+| Remove Version History from README entirely | Internal doc — belongs in ROADMAP only, not user-facing | 🔴 PLANNED |
+| Move "After Installation" commands into Quick Start | Currently buried in bottom accordion — should be prominent | 🔴 PLANNED |
+| Update/replace "47% GitHub 2024" statistic | Archaic in 2026, damages credibility. Options: find 2026 source, or rephrase without specific number. **Needs research — don't guess.** | 🔴 NEEDS RESEARCH |
+| Rethink Token Monitoring display | Current `//TOKENS` output example is too verbose for README. Open question — what's the ideal user-facing format? Revisit with fresh eyes. | 🔴 OPEN QUESTION |
+
+### 🔴 Cross-AI Validation (planned)
+
+Verify that `session-log.json` tracking + `//TOKENS` works correctly across ALL supported AI tools.
 
 | AI Tool | Entry Point | Hook support | `//TOKENS` | New day detection | Status |
 |---------|-------------|-------------|-----------|------------------|--------|
@@ -370,40 +386,10 @@ Verify that session-log.json tracking + `//TOKENS` command works correctly acros
 | Continue.dev | `.continuerules` | ❓ Unknown | ❓ TBD | ❓ TBD | 🔴 Not tested |
 | Claude Web / Any AI | `AGENTS.md` | ❌ No hooks | ❓ TBD | ❓ TBD | 🔴 Not tested |
 
-### Key Questions
+Key questions:
 - Do hooks work in Cursor/Windsurf at all?
 - Does each AI correctly read/write `session-log.json`?
-- Is `//TOKENS` behavior consistent across different rule file formats?
-
-### Also in Phase 12: README + AGENTS.md Commands Audit
-
-**Problem:** New commands appeared but README/AGENTS.md not updated.
-
-Current README "AI Commands" table has: `//START`, `//TOKENS`, `//CHECK:*`, `//COMPACT`, `//THINK`
-
-Commands that appeared or will appear — need audit:
-- `//REFRESH` — reload rules (in CLAUDE.md, but is it in README?)
-- `//UPDATE` — framework update (Phase 13, new)
-- `//TOKENS` — verify format matches Phase 11 implementation
-- `//WHICH:RULES`, `//CHECK:RULES` — in CLAUDE.md but not README?
-
-**Task:** Compare ALL commands in `CLAUDE.md` + `AGENTS.md` vs README table → sync them.
-
-### Also in Phase 12: README Token Monitoring Documentation
-
-**Problem:** Users don't understand how token tracking works (especially MODEL_3 providers with unknown limits).
-
-**Task:** Add dedicated section to README on GitHub explaining:
-- Why token limits are "estimates" for Claude Pro / Cursor / Windsurf (MODEL_3)
-- How session-log.json self-reporting works
-- How AI uses time (new calendar day = fresh daily budget)
-- What triggers token count writes (git push, //COMPACT, //TOKENS)
-- How to read `//TOKENS` output correctly
-- Practical advice: how to do quality monitoring as a user
-
-**Format:** Simple, non-technical explanation. Analogies welcome.
-**Location:** README.md → new section "Token Monitoring" OR expand existing "AI Commands" section.
-**Goal:** User reads → immediately understands their daily budget picture.
+- Is `//TOKENS` behavior consistent across rule file formats?
 
 ---
 
