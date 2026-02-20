@@ -369,7 +369,7 @@ VISUAL_GUIDE.md
 examples/
 
 # Public assets readme (SVG stays, internal readme hidden)
-public/README.md
+public/
 
 # Temporary session files
 commit-output.txt
