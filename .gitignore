@@ -347,3 +347,31 @@ dependency-check-report.html
 
 # Audit archives (internal use only)
 audits/
+
+# ==============================================================================
+# INTERNAL DEV DOCS (not shipped to users, not in npm-templates)
+# Keep root clean — modular structure means docs live in .ai/docs/
+# ==============================================================================
+
+# Internal specs & threat models
+.ai/DISCLAIMERS.md
+.ai/RULES-CRITICAL.md
+.ai/THREAT_MODEL.md
+.ai/token-control-v3-spec.md
+.ai/docs/npm-publish-workflow.md
+
+# Internal dev files (root)
+ROADMAP.md
+QUICK_CONTEXT.md
+VISUAL_GUIDE.md
+
+# Example dialogs (internal)
+examples/
+
+# Public assets readme (SVG stays, internal readme hidden)
+public/README.md
+
+# Temporary session files
+commit-output.txt
+push-output.txt
+task.txt
