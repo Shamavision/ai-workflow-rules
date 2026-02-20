@@ -122,20 +122,26 @@ async function generateRulesFiles(targetDir, context) {
   // Note: AGENTS.md and .claude/CLAUDE.md are now static templates (copied, not generated)
   const tools = [
     { name: 'Cursor', file: '.cursorrules' },
-    { name: 'Windsurf', file: '.windsurfrules' }
+    { name: 'Windsurf', file: '.windsurfrules' },
+    { name: 'Continue.dev', file: '.continuerules' }
   ];
 
   console.log(chalk.gray(`Found: ${tools.length} tool(s)\n`));
 
-  // Generate files
+  // Generate files (non-destructive: skip if already exists)
+  let created = 0;
+  let skipped = 0;
+
   for (const tool of tools) {
     const targetFile = path.join(targetDir, tool.file);
-    const targetDir_file = path.dirname(targetFile);
 
-    // Ensure directory exists
-    await fs.ensureDir(targetDir_file);
+    if (await fs.pathExists(targetFile)) {
+      console.log(chalk.yellow(`  ⚠️  ${tool.file} already exists, skipping`));
+      skipped++;
+      continue;
+    }
 
-    console.log(chalk.gray(`  → Generating ${tool.file} for ${tool.name}...`));
+    await fs.ensureDir(path.dirname(targetFile));
 
     const header = `# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # AI WORKFLOW RULES FRAMEWORK v9.1
@@ -163,9 +169,15 @@ async function generateRulesFiles(targetDir, context) {
 
     await fs.writeFile(targetFile, header + sourceContent + footer, 'utf8');
     console.log(chalk.green(`  ✓ ${tool.file} created`));
+    created++;
   }
 
-  console.log(chalk.green(`\n✓ Rules generated for ${tools.length} AI tool(s)\n`));
+  const summary = [
+    created > 0 ? `${created} created` : null,
+    skipped > 0 ? `${skipped} skipped (already exist)` : null
+  ].filter(Boolean).join(', ');
+
+  console.log(chalk.green(`\n✓ Rules: ${summary}\n`));
 }
 
 // Function: Smart context selection with recommendations

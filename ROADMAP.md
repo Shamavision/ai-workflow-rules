@@ -298,16 +298,15 @@ Rate Layer: 🟢 Normal
 
 ## Бонус: Phase 16.5 — Фикс .continuerules
 
-> **Status:** 🔴 PLANNED (обнаружен 2026-02-20)
+> **Status:** ✅ DONE (2026-02-20)
 > **Scope:** 2 файла + оба инсталлятора
-> **Estimate:** ~5k tokens
+> **Actual:** ~5k tokens
 
-README и документация упоминают Continue.dev как поддерживаемый инструмент, но `.continuerules` **не существует** ни в dev, ни в npm-templates. Оба инсталлятора его не создают.
-
-**Что нужно:**
-- Создать `.continuerules` (dev) + `npm-templates/.continuerules`
-- Добавить копирование в `bin/cli.js` и `scripts/install.sh`
-- Содержимое: аналогично `.cursorrules` (тот же формат)
+**Сделано:**
+- ✅ `.continuerules` (dev) + `npm-templates/.continuerules` — созданы
+- ✅ `bin/cli.js` — добавлен `Continue.dev` в tools array
+- ✅ `scripts/install.sh` — добавлен `generate_rules_file ".continuerules"`
+- ✅ `provider-comparison.md` — статус Continue.dev → ✅ Full support
 
 ---
 

@@ -608,8 +608,9 @@ generate_rules_file() {
     print_success "$1 created"
 }
 
-generate_rules_file ".cursorrules"  "Cursor"
-generate_rules_file ".windsurfrules" "Windsurf"
+generate_rules_file ".cursorrules"   "Cursor"
+generate_rules_file ".windsurfrules"  "Windsurf"
+generate_rules_file ".continuerules"  "Continue.dev"
 
 # ========================================
 # Verification

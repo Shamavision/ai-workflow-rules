@@ -33,7 +33,7 @@
 | Cursor | `.cursorrules` | ✅ Full support |
 | Windsurf | `.windsurfrules` | ✅ Full support |
 | Any AI (web) | `AGENTS.md` | ✅ Via `//START` |
-| Continue.dev | `.continuerules` | ❌ File missing — planned |
+| Continue.dev | `.continuerules` | ✅ Full support |
 
 ---
 
