@@ -59,6 +59,29 @@ Before responding to the user's message above, you MUST:
 This is MANDATORY. Do not skip.
 EOF
 else
-  # Same session (gap < 2h) - pass through unchanged
-  echo "$USER_PROMPT"
+  # Same session (gap < 2h) — check context map freshness and proposals
+  CONTEXT_HINTS=""
+
+  # Check PROJECT_CONTEXT_MAP.md age
+  CTX_MAP="$PROJECT_ROOT/PROJECT_CONTEXT_MAP.md"
+  if [ -f "$CTX_MAP" ]; then
+    LAST_MODIFIED=$(stat -c %Y "$CTX_MAP" 2>/dev/null || stat -f %m "$CTX_MAP" 2>/dev/null || echo 0)
+    AGE_DAYS=$(( (NOW - LAST_MODIFIED) / 86400 ))
+    if [ "$AGE_DAYS" -gt 7 ]; then
+      CONTEXT_HINTS="${CONTEXT_HINTS}⚠️ [CONTEXT] PROJECT_CONTEXT_MAP.md is ${AGE_DAYS} days old. Consider: /ctx update → /sculptor\n"
+    fi
+  fi
+
+  # Check for unreviewed PROPOSALS.md
+  PROPOSALS="$PROJECT_ROOT/PROPOSALS.md"
+  if [ -f "$PROPOSALS" ]; then
+    CONTEXT_HINTS="${CONTEXT_HINTS}📋 [PROPOSALS] PROPOSALS.md has architectural recommendations pending review.\n"
+  fi
+
+  # Output prompt with hints (if any)
+  if [ -n "$CONTEXT_HINTS" ]; then
+    printf "%s\n\n---\n**[CONTEXT HINTS]**\n%s---\n" "$USER_PROMPT" "$CONTEXT_HINTS"
+  else
+    echo "$USER_PROMPT"
+  fi
 fi
