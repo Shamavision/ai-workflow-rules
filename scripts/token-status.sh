@@ -1,6 +1,6 @@
 #!/bin/bash
 # Token Status Dashboard for AI Workflow Rules
-# Version: 2.0 (Phase 11 - Session-Log Tracking)
+# Version: 2.1 (Phase 15 - Burst Detection)
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📊 TOKEN USAGE DASHBOARD"
@@ -109,6 +109,18 @@ if [ -f ".ai/session-log.json" ]; then
     fi
 fi
 
+# Phase 15: Burst detection — count today's entries with context_pct > 60
+BURST_COUNT=0
+BURST_DETECTED=false
+if [ -f ".ai/session-log.json" ]; then
+    BURST_COUNT=$(jq -r --arg today "$TODAY" \
+        '[.sessions[] | select(.date == $today and (.context_pct // 0) > 60)] | length' \
+        .ai/session-log.json 2>/dev/null || echo "0")
+    if [[ "$BURST_COUNT" =~ ^[0-9]+$ ]] && [ "$BURST_COUNT" -ge 3 ] 2>/dev/null; then
+        BURST_DETECTED=true
+    fi
+fi
+
 # Read context from config
 if [ -f ".ai/config.json" ]; then
     CONTEXT=$(jq -r '.context' .ai/config.json 2>/dev/null || echo "standard")
@@ -204,6 +216,41 @@ else
 fi
 
 echo "   Status: $ZONE - $ZONE_DESC"
+echo ""
+
+# Rate Layer — 3-layer model (Phase 15: burst detection)
+echo "─────────────────────────────────────────────────"
+echo "📡 Rate Layer:"
+if $BURST_DETECTED; then
+    echo "   🟠 High load — context_pct >60% in ${BURST_COUNT} entries today"
+    echo "   ⚠️  Recommendation: use //COMPACT to reduce context pressure"
+else
+    echo "   🟢 Normal — no burst detected (context_pct threshold: 3+ entries >60%)"
+fi
+echo ""
+
+# Billing Layer — Phase 16: access_type aware
+ACCESS_TYPE=$(jq -r '.access_type // "subscription"' .ai/config.json 2>/dev/null || echo "subscription")
+
+echo "─────────────────────────────────────────────────"
+echo "💳 Billing Layer:"
+if [ "$ACCESS_TYPE" = "billing" ]; then
+    COST_INPUT=$(jq -r '.billing.cost_per_1k_input // 0.003' .ai/config.json 2>/dev/null || echo "0.003")
+    COST_OUTPUT=$(jq -r '.billing.cost_per_1k_output // 0.015' .ai/config.json 2>/dev/null || echo "0.015")
+    DAILY_BUDGET=$(jq -r '.billing.daily_budget_usd // 20' .ai/config.json 2>/dev/null || echo "20")
+    # Estimate cost: assume 50/50 input/output split of daily_used tokens
+    HALF_TOKENS=$(($DAILY_USED / 2))
+    # Cost = (tokens/1000) * price — using integer math (cents)
+    INPUT_CENTS=$(echo "$HALF_TOKENS $COST_INPUT" | awk '{printf "%.0f", ($1/1000)*$2*100}')
+    OUTPUT_CENTS=$(echo "$HALF_TOKENS $COST_OUTPUT" | awk '{printf "%.0f", ($1/1000)*$2*100}')
+    TOTAL_CENTS=$(($INPUT_CENTS + $OUTPUT_CENTS))
+    TOTAL_USD=$(echo "$TOTAL_CENTS" | awk '{printf "%.2f", $1/100}')
+    BUDGET_PCT=$(echo "$TOTAL_USD $DAILY_BUDGET" | awk '{printf "%.0f", ($1/$2)*100}')
+    echo "   ~\$$TOTAL_USD today / \$$DAILY_BUDGET budget (${BUDGET_PCT}%)"
+    echo "   Input: \$${COST_INPUT}/1k | Output: \$${COST_OUTPUT}/1k"
+else
+    echo "   N/A (subscription)"
+fi
 echo ""
 
 # Monthly Usage

@@ -411,7 +411,13 @@ TODAY=$(date -u +"%Y-%m-%dT00:00:00Z")
 THIS_MONTH=$(date -u +"%Y-%m")
 MONTH_START="${THIS_MONTH}-01T00:00:00Z"
 IS_MODEL3=0
+IS_MODEL1=0
 [ "$ARCH_MODEL" = "MODEL_3" ] && IS_MODEL3=1
+[ "$ARCH_MODEL" = "MODEL_1" ] && IS_MODEL1=1
+
+# access_type: "billing" for API (MODEL_1), "subscription" for all others
+ACCESS_TYPE="subscription"
+[ "$IS_MODEL1" = "1" ] && ACCESS_TYPE="billing"
 
 TOKEN_LIMITS_PATH="$TARGET_DIR/.ai/token-limits.json"
 
@@ -474,11 +480,28 @@ CONFIG_PATH="$TARGET_DIR/.ai/config.json"
 if [ -f "$CONFIG_PATH" ]; then
     print_warning ".ai/config.json already exists, skipping"
 else
+    # Build optional billing block for API plans
+    BILLING_BLOCK=""
+    if [ "$ACCESS_TYPE" = "billing" ]; then
+        BILLING_BLOCK=',
+  "billing": {
+    "cost_per_1k_input": 0.003,
+    "cost_per_1k_output": 0.015,
+    "daily_budget_usd": 20,
+    "_note": "Update cost_per_1k_input/output to match your model pricing."
+  }'
+    fi
+
     cat > "$CONFIG_PATH" << EOF
 {
   "framework": "ai-workflow-rules",
   "version": "9.1.1",
-  "config_version": "2.0",
+  "config_version": "2.1",
+  "access_type": "$ACCESS_TYPE",
+  "model": {
+    "name": "claude-sonnet-4-6",
+    "context_limit": 200000
+  },
   "context": "$CONTEXT",
   "modules": [],
   "market": "$MARKET_VALUE",
@@ -517,10 +540,10 @@ else
   "detection": {
     "auto_detect_market": true,
     "smart_preset_suggestion": true
-  }
+  }$BILLING_BLOCK
 }
 EOF
-    print_success ".ai/config.json (context: $CONTEXT, market: $MARKET_VALUE)"
+    print_success ".ai/config.json (context: $CONTEXT, access_type: $ACCESS_TYPE)"
 fi
 
 # ========================================

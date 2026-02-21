@@ -614,6 +614,10 @@ async function createAiConfig(targetDir, answers) {
   const provider = answers.provider;
   const plan = answers.plan.toLowerCase();
   const limits = TOKEN_PRESETS[provider]?.[plan] || TOKEN_PRESETS.other.default;
+  const archModel = getArchModel(provider, plan);
+
+  // access_type: "billing" for API plans (MODEL_1), "subscription" for all others
+  const accessType = archModel === 'MODEL_1' ? 'billing' : 'subscription';
 
   // Derive market from context choice
   const market = answers.context === 'ukraine-full' ? 'ukraine' : 'international';
@@ -621,7 +625,12 @@ async function createAiConfig(targetDir, answers) {
   const config = {
     "framework": "ai-workflow-rules",
     "version": "9.1.1",
-    "config_version": "2.0",
+    "config_version": "2.1",
+    "access_type": accessType,
+    "model": {
+      "name": "claude-sonnet-4-6",
+      "context_limit": 200000
+    },
     "context": answers.context,
     "modules": [],
     "market": market,
@@ -663,6 +672,16 @@ async function createAiConfig(targetDir, answers) {
     }
   };
 
+  // Add billing block for API plans (access_type == "billing")
+  if (accessType === 'billing') {
+    config.billing = {
+      "cost_per_1k_input": 0.003,
+      "cost_per_1k_output": 0.015,
+      "daily_budget_usd": 20,
+      "_note": "Update cost_per_1k_input/output to match your model pricing. daily_budget_usd = soft spending limit."
+    };
+  }
+
   const targetPath = path.join(targetDir, '.ai', 'config.json');
 
   if (await fs.pathExists(targetPath)) {
@@ -671,7 +690,7 @@ async function createAiConfig(targetDir, answers) {
   }
 
   await fs.writeJson(targetPath, config, { spaces: 2 });
-  console.log(chalk.green(`  ✓ .ai/config.json (context: ${answers.context}, market: ${market})`));
+  console.log(chalk.green(`  ✓ .ai/config.json (context: ${answers.context}, access_type: ${accessType})`));
 }
 
 async function installPreCommitHook(targetDir) {

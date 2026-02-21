@@ -212,9 +212,9 @@ Session tokens 90%+   → Level 3 (Maximum)
 | Trigger | Tokens written | Entry format |
 |---------|---------------|--------------|
 | `//start` / session start | 0 (marker) | `session-start` + timestamp |
-| `//TOKENS` | current estimate | `//tokens` + timestamp |
-| `//COMPACT` | estimate before compress | `//compact` + timestamp |
-| `git push` | estimate | `git-push` + timestamp |
+| `//TOKENS` | current estimate | `//tokens` + context_pct + timestamp |
+| `//COMPACT` | estimate before compress | `//compact` + context_pct + timestamp |
+| `git push` | estimate | `git-push` + context_pct + timestamp |
 | Phase complete | estimate | `phase-complete` + timestamp |
 
 **REQUIRED ACTION — Write entry to session-log.json:**
@@ -223,6 +223,7 @@ Session tokens 90%+   → Level 3 (Maximum)
 {
   "date": "YYYY-MM-DD",
   "tokens": 45000,
+  "context_pct": 22,
   "tool": "claude-code",
   "trigger": "//tokens",
   "timestamp": 1740012345
@@ -242,9 +243,11 @@ Session tokens 90%+   → Level 3 (Maximum)
    → Show: "🟢 New day! Yesterday: ~Xk. Fresh limits."
 4. today_total = sum sessions[].tokens where date == today
 5. Estimate current session tokens (rules_load + conversation ±30-50%)
-6. Append: {date: today, tokens: estimate, tool: "...", trigger: "<trigger>", timestamp: NOW}
-7. Write updated file back
-8. Show session breakdown (group entries by session-start markers, gap >2h)
+   Estimate context_pct = round(session_tokens / context_window × 100)
+6. Burst check: count today's entries where context_pct > 60. If 3+ → Rate Layer = "🟠 High load"
+7. Append: {date: today, tokens: estimate, context_pct: X, tool: "...", trigger: "<trigger>", timestamp: NOW}
+8. Write updated file back
+9. Show session breakdown (group entries by session-start markers, gap >2h)
 ```
 
 **Step by step (for `//start` — session boundary):**
@@ -265,7 +268,7 @@ Session tokens 90%+   → Level 3 (Maximum)
 Provider: Claude Pro (subscription)
 
 Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
-Rate Layer:     🟢 Normal           ← estimated from patterns
+Rate Layer:     🟢 Normal / 🟠 High load  ← context_pct burst (3+ entries >60% today)
 Billing Layer:  N/A (subscription)
 
 Status: 🟢 GREEN
@@ -275,8 +278,8 @@ Status: 🟢 GREEN
 - ❌ NEVER show Billing Layer cost for subscription users (`N/A` is honest)
 - ❌ NEVER fabricate daily limits or percentages
 - ✅ Context Layer: session tokens / 200k → AI knows this exactly
-- ✅ Rate Layer: 🟢 Normal by default, 🟠 Elevated if signs of throttling
-- ✅ Billing Layer: `N/A (subscription)` for MODEL_3; cost data for API users
+- ✅ Rate Layer: 🟢 Normal by default, 🟠 High load if burst (3+ entries with context_pct > 60 today)
+- ✅ Billing Layer: read `access_type` from `.ai/config.json`. "subscription" (or missing) → `N/A`; "billing" → cost from `billing` block vs `daily_budget_usd`
 - ✅ "Progressive truth > fabricated precision"
 
 **Graceful degradation (web AI, no file system):**

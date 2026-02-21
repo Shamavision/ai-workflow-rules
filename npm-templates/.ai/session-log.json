@@ -1,10 +1,11 @@
 {
   "_comment": "AI self-reported token usage log. Written by AI at //start, //TOKENS, //COMPACT, and git push triggers.",
-  "_version": "1.1",
+  "_version": "1.2",
   "_note": "Gitignored by default (personal usage data). AI writes rough estimates — better than static 0%.",
   "_schema": {
     "date": "YYYY-MM-DD (local date, used as day boundary for reset detection)",
     "tokens": "integer (rough estimate ±30-50%, self-reported by AI; 0 for session-start markers)",
+    "context_pct": "integer 0-100 (optional; % of session context window used; omitted for session-start entries)",
     "tool": "string (claude-code | cursor | windsurf | other)",
     "trigger": "string (session-start | //tokens | //compact | git-push | phase-complete)",
     "timestamp": "integer (Unix seconds — required for session boundary detection)"
@@ -12,7 +13,8 @@
   "_session_logic": {
     "new_session": "gap > 7200 seconds (2h) since last entry = new session boundary",
     "context_refresh": "gap < 7200 seconds = same session, //refresh only — no new log entry",
-    "daily_reset": "date field changes = new day, all daily totals reset"
+    "daily_reset": "date field changes = new day, all daily totals reset",
+    "burst_detection": "3+ entries with context_pct > 60 on same day → Rate Layer shows 🟠 High load"
   },
   "sessions": []
 }

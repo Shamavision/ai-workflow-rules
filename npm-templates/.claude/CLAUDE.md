@@ -117,20 +117,25 @@ When user sends these commands:
 5. Estimate current session (rough ±30-50%):
    - Rules loaded: ~18k (ukraine-full) / ~14k (standard) / ~10k (minimal)
    - + conversation length estimate
-6. Append to sessions[]: {date, tokens: estimate, tool: "claude-code", trigger: "//tokens", timestamp: UNIX_NOW}
-7. Show [AI STATUS] — 3-Layer Mental Model:
+   - context_pct = round(session_tokens / context_window × 100)
+6. Burst check: count today's entries where context_pct > 60. If 3+ → Rate Layer = "🟠 High load"
+7. Append to sessions[]: {date, tokens: estimate, context_pct: X, tool: "claude-code", trigger: "//tokens", timestamp: UNIX_NOW}
+8. Show [AI STATUS] — 3-Layer Mental Model:
 
 [AI STATUS]
 Provider: Claude Pro (subscription)
 
 Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
-Rate Layer:     🟢 Normal           ← estimated from patterns
+Rate Layer:     🟢 Normal / 🟠 High load  ← context_pct burst (3+ entries >60% today)
 Billing Layer:  N/A (subscription)
 
 Status: 🟢 GREEN
 ```
 
-**Billing Layer** shows `N/A (subscription)` for Claude Pro/subscription plans. For API plans: shows cost from `.ai/config.json` billing data. NEVER fabricate limits or percentages.
+**Billing Layer** determined by `access_type` in `.ai/config.json`:
+- `"subscription"` (or missing) → `N/A (subscription)`
+- `"billing"` → calculate: `tokens × cost_per_token`, compare to `billing.daily_budget_usd`
+NEVER fabricate limits or percentages.
 
 ### `//COMPACT` — Token write (MANDATORY addition)
 
@@ -146,7 +151,7 @@ When user runs `//COMPACT`:
 After every `git push`:
 1. Perform compression (existing POST-PUSH behavior)
 2. **ALSO write to session-log.json:**
-   - Append: `{date, tokens: estimate, tool: "claude-code", trigger: "git-push"}`
+   - Append: `{date, tokens: estimate, context_pct: X, tool: "claude-code", trigger: "git-push"}`
 
 ### `//start` / SESSION START — Write + Log check (Phase 11.5)
 

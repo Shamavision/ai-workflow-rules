@@ -121,17 +121,19 @@ Next: [description] (~Nk estimate)
 2. **Check date** of last entry vs today (`YYYY-MM-DD`)
 3. **Calculate** daily total: sum all entries where `date == today`
 4. **Estimate** current session tokens (rough ±30-50%)
-5. **Append** new entry to `session-log.json`:
+5. **Estimate context_pct** = round(session_tokens / context_window × 100)
+6. **Burst check**: count today's entries where `context_pct > 60`. If 3+ → Rate Layer = "🟠 High load"
+7. **Append** new entry to `session-log.json`:
    ```json
-   {"date": "YYYY-MM-DD", "tokens": ESTIMATE, "tool": "windsurf", "trigger": "//tokens", "timestamp": UNIX_NOW}
+   {"date": "YYYY-MM-DD", "tokens": ESTIMATE, "context_pct": X, "tool": "windsurf", "trigger": "//tokens", "timestamp": UNIX_NOW}
    ```
-6. **Display** [AI STATUS] — 3-Layer Mental Model:
+8. **Display** [AI STATUS] — 3-Layer Mental Model:
    ```
    [AI STATUS]
    Provider: Windsurf (subscription)
 
    Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
-   Rate Layer:     🟢 Normal           ← estimated from patterns
+   Rate Layer:     🟢 Normal / 🟠 High load  ← context_pct burst (3+ entries >60% today)
    Billing Layer:  N/A (subscription)
 
    Status: 🟢 GREEN
@@ -149,7 +151,10 @@ Next: [description] (~Nk estimate)
 - After `git push` → append entry (POST-PUSH PROTOCOL)
 - Phase completion → append entry
 
-**CRITICAL:** **Billing Layer** = `N/A (subscription)` for subscription plans. For API: show cost from `.ai/config.json`. NEVER fabricate limits or percentages.
+**CRITICAL:** **Billing Layer** determined by `access_type` in `.ai/config.json`:
+- `"subscription"` (or missing) → `N/A (subscription)`
+- `"billing"` → calculate cost from `billing` block, compare to `billing.daily_budget_usd`
+NEVER fabricate limits or percentages.
 
 **Graceful degradation (if can't write files):**
 Display session estimate only + explain why log unavailable.
