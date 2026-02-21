@@ -112,7 +112,7 @@
 └── forbidden-trackers.json   # Blocked tracking services
 ```
 
-**Tool-specific files** (`.claude/CLAUDE.md`, `.cursorrules`, `.windsurfrules`) are **auto-generated** from your selected context.
+**Tool-specific files** (`.claude/CLAUDE.md`, `.cursorrules`) are **auto-generated** from your selected context.
 
 **Don't edit them directly.** Use `npm run sync-rules` to regenerate.
 
@@ -192,7 +192,6 @@
 │   ├── CLAUDE.md          # Auto-generated (from .ai/contexts/)
 │   └── hooks/             # CLI hooks
 ├── .cursorrules           # Auto-generated (Cursor IDE)
-├── .windsurfrules         # Auto-generated (Windsurf IDE)
 ├── scripts/
 │   ├── pre-commit         # Security checks
 │   └── sync-rules.sh      # Regenerate tool files

@@ -139,27 +139,6 @@ case $RESULT in
 esac
 echo ""
 
-# Windsurf IDE
-ensure_ide_config ".windsurfrules" "Windsurf IDE"
-RESULT=$?
-case $RESULT in
-    0) ((CREATED_COUNT++)) ;;
-    1) ((SYNCED_COUNT++)) ;;
-    2) ((FAILED_COUNT++)) ;;
-esac
-echo ""
-
-# Continue.dev (optional)
-if [ -f "$TEMPLATE_DIR/.continuerules" ]; then
-    ensure_ide_config ".continuerules" "Continue.dev"
-    RESULT=$?
-    case $RESULT in
-        0) ((CREATED_COUNT++)) ;;
-        1) ((SYNCED_COUNT++)) ;;
-        2) ((FAILED_COUNT++)) ;;
-    esac
-    echo ""
-fi
 
 # ==============================================================================
 # SUMMARY

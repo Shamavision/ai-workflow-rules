@@ -210,7 +210,6 @@ echo ""
 TOOL_FILES=(
   ".claude/CLAUDE.md:Claude Code config"
   ".cursorrules:Cursor IDE config"
-  ".windsurfrules:Windsurf IDE config"
 )
 
 for ITEM in "${TOOL_FILES[@]}"; do

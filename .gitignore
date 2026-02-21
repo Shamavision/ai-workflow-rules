@@ -68,9 +68,7 @@ licenses.csv
 # Note: Committed to repository as templates, but users can regenerate
 # via: npm run sync-rules or bash scripts/sync-rules.sh
 .cursorrules     # Cursor IDE rules (auto-generated)
-.windsurfrules   # Windsurf IDE rules (auto-generated)
 !.cursorrules    # Exception: commit template
-!.windsurfrules  # Exception: commit template
 ai-logs/
 ai-costs.db
 .ai-cache/

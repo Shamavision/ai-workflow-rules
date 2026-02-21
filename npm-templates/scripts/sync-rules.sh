@@ -8,7 +8,7 @@
 #   bash scripts/sync-rules.sh
 #
 # This script regenerates IDE-specific rule files from the selected context.
-# Files regenerated: .cursorrules, .windsurfrules, .continuerules
+# Files regenerated: .cursorrules
 # Files NOT touched: AGENTS.md (navigation hub), .claude/CLAUDE.md (custom wrapper)
 #
 # Use this after:
@@ -81,8 +81,6 @@ RULE_FILES=()
 #
 # These files are synchronized from IDE templates (.cursorrules, .windsurfrules, etc.)
 [ -f ".cursorrules" ] && RULE_FILES+=(".cursorrules:Cursor")
-[ -f ".windsurfrules" ] && RULE_FILES+=(".windsurfrules:Windsurf")
-[ -f ".continuerules" ] && RULE_FILES+=(".continuerules:Continue.dev")
 
 if [ ${#RULE_FILES[@]} -eq 0 ]; then
     echo -e "${YELLOW}⚠️  No rule files found${NC}"

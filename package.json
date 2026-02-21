@@ -1,20 +1,18 @@
 {
   "name": "@shamavision/ai-workflow-rules",
   "version": "9.1.1",
-  "description": "Universal AI workflow rules framework for Claude, Cursor, Windsurf, and other AI coding assistants. Session management, token optimization, security guards, AI protection (prompt injection + PII detection), and best practices. Made in Ukraine.",
+  "description": "AI workflow rules framework for Claude Code and Cursor. Session management, token optimization, security guards, AI protection (prompt injection + PII detection). Made in Ukraine.",
   "keywords": [
     "ai",
     "workflow",
     "rules",
     "claude",
     "cursor",
-    "windsurf",
-    "aider",
-    "copilot",
     "coding-assistant",
     "productivity",
     "token-management",
-    "security"
+    "security",
+    "ukraine"
   ],
   "main": "bin/cli.js",
   "bin": {

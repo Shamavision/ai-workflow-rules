@@ -90,11 +90,6 @@ get_token_limits() {
         cursor.free)                 TOKEN_DAILY=20000;      TOKEN_MONTHLY=400000    ;;
         cursor.pro)                  TOKEN_DAILY=80000;      TOKEN_MONTHLY=1500000   ;;
         cursor.business)             TOKEN_DAILY=120000;     TOKEN_MONTHLY=2500000   ;;
-        windsurf.free)               TOKEN_DAILY=10000;      TOKEN_MONTHLY=200000    ;;
-        windsurf.enterprise)         TOKEN_DAILY=50000;      TOKEN_MONTHLY=1000000   ;;
-        github_copilot.individual)   TOKEN_DAILY=25000;      TOKEN_MONTHLY=500000    ;;
-        github_copilot.business)     TOKEN_DAILY=100000;     TOKEN_MONTHLY=2000000   ;;
-        github_copilot.enterprise)   TOKEN_DAILY=200000;     TOKEN_MONTHLY=5000000   ;;
         perplexity.free)             TOKEN_DAILY=10000;      TOKEN_MONTHLY=200000    ;;
         perplexity.pro)              TOKEN_DAILY=20000;      TOKEN_MONTHLY=400000    ;;
         mistral.api)                 TOKEN_DAILY=999999999;  TOKEN_MONTHLY=999999999 ;;
@@ -111,8 +106,6 @@ get_arch_model() {
     case "$provider.$plan" in
         anthropic.api|google.api|mistral.api|deepseek.api)
             echo "MODEL_1" ;;
-        github_copilot.individual|github_copilot.business|github_copilot.enterprise)
-            echo "MODEL_2" ;;
         *)
             echo "MODEL_3" ;;
     esac
@@ -184,26 +177,22 @@ echo "What AI provider are you using?"
 echo "  1) Claude (Anthropic)"
 echo "  2) Gemini (Google)"
 echo "  3) Cursor IDE"
-echo "  4) Windsurf IDE"
-echo "  5) GitHub Copilot"
-echo "  6) Perplexity"
-echo "  7) Mistral API"
-echo "  8) DeepSeek API"
-echo "  9) Groq"
-echo " 10) Other / Custom"
+echo "  4) Perplexity"
+echo "  5) Mistral API"
+echo "  6) DeepSeek API"
+echo "  7) Groq"
+echo "  8) Other / Custom"
 echo ""
-read -rp "Enter number (1-10): " PROVIDER_CHOICE
+read -rp "Enter number (1-8): " PROVIDER_CHOICE
 
 case $PROVIDER_CHOICE in
     1) PROVIDER="anthropic" ;;
     2) PROVIDER="google" ;;
     3) PROVIDER="cursor" ;;
-    4) PROVIDER="windsurf" ;;
-    5) PROVIDER="github_copilot" ;;
-    6) PROVIDER="perplexity" ;;
-    7) PROVIDER="mistral" ;;
-    8) PROVIDER="deepseek" ;;
-    9) PROVIDER="groq" ;;
+    4) PROVIDER="perplexity" ;;
+    5) PROVIDER="mistral" ;;
+    6) PROVIDER="deepseek" ;;
+    7) PROVIDER="groq" ;;
     *) PROVIDER="other" ;;
 esac
 
@@ -230,20 +219,6 @@ case $PROVIDER in
         read -rp "Enter number (1-3): " PLAN_CHOICE
         case $PLAN_CHOICE in
             1) PLAN="free" ;; 2) PLAN="pro" ;; 3) PLAN="business" ;; *) PLAN="pro" ;;
-        esac ;;
-    windsurf)
-        echo "Your Windsurf plan?"
-        echo "  1) Free   2) Enterprise"
-        read -rp "Enter number (1-2): " PLAN_CHOICE
-        case $PLAN_CHOICE in
-            1) PLAN="free" ;; 2) PLAN="enterprise" ;; *) PLAN="free" ;;
-        esac ;;
-    github_copilot)
-        echo "Your GitHub Copilot plan?"
-        echo "  1) Individual   2) Business   3) Enterprise"
-        read -rp "Enter number (1-3): " PLAN_CHOICE
-        case $PLAN_CHOICE in
-            1) PLAN="individual" ;; 2) PLAN="business" ;; 3) PLAN="enterprise" ;; *) PLAN="individual" ;;
         esac ;;
     perplexity)
         echo "Your Perplexity plan?"
@@ -632,8 +607,6 @@ generate_rules_file() {
 }
 
 generate_rules_file ".cursorrules"   "Cursor"
-generate_rules_file ".windsurfrules"  "Windsurf"
-generate_rules_file ".continuerules"  "Continue.dev"
 
 # ========================================
 # Verification

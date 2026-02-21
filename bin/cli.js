@@ -29,11 +29,6 @@ const TOKEN_PRESETS = {
     pro: { monthly: 1500000, daily: 80000 },
     business: { monthly: 2500000, daily: 120000 }
   },
-  github_copilot: {
-    individual: { monthly: 500000, daily: 25000 },
-    business: { monthly: 2000000, daily: 100000 },
-    enterprise: { monthly: 5000000, daily: 200000 }
-  },
   mistral: {
     api: { monthly: 999999999, daily: 999999999 }
   },
@@ -47,10 +42,6 @@ const TOKEN_PRESETS = {
     free: { monthly: 200000, daily: 10000 },
     pro: { monthly: 400000, daily: 20000 }
   },
-  windsurf: {
-    free: { monthly: 200000, daily: 10000 },
-    enterprise: { monthly: 1000000, daily: 50000 }
-  },
   other: {
     default: { monthly: 500000, daily: 20000 }
   }
@@ -62,8 +53,6 @@ const PROVIDERS = [
   { name: 'Claude (Anthropic)', value: 'anthropic' },
   { name: 'Gemini (Google)', value: 'google' },
   { name: 'Cursor IDE', value: 'cursor' },
-  { name: 'Windsurf IDE', value: 'windsurf' },
-  { name: 'GitHub Copilot', value: 'github_copilot' },
   { name: 'Perplexity', value: 'perplexity' },
   { name: 'Mistral API', value: 'mistral' },
   { name: 'DeepSeek API', value: 'deepseek' },
@@ -75,8 +64,6 @@ const PLANS = {
   anthropic: ['Free', 'Pro', 'Team', 'API'],
   google: ['Free', 'Advanced', 'API'],
   cursor: ['Free', 'Pro', 'Business'],
-  windsurf: ['Free', 'Enterprise'],
-  github_copilot: ['Individual', 'Business', 'Enterprise'],
   perplexity: ['Free', 'Pro'],
   mistral: ['API'],
   deepseek: ['API'],
@@ -96,12 +83,10 @@ const CONTEXTS = [
 // MODEL_2: Request Quota (GitHub Copilot)
 // MODEL_3: Fair Use Dynamic (limits NOT DISCLOSED by provider)
 const MODEL_1_KEYS = new Set(['anthropic.api', 'google.api', 'mistral.api', 'deepseek.api']);
-const MODEL_2_KEYS = new Set(['github_copilot.individual', 'github_copilot.business', 'github_copilot.enterprise']);
 
 function getArchModel(provider, plan) {
   const key = `${provider}.${plan}`;
   if (MODEL_1_KEYS.has(key)) return 'MODEL_1';
-  if (MODEL_2_KEYS.has(key)) return 'MODEL_2';
   return 'MODEL_3';
 }
 
@@ -121,9 +106,7 @@ async function generateRulesFiles(targetDir, context) {
   // Detect AI tools (v9.1: Only generate IDE-specific files)
   // Note: AGENTS.md and .claude/CLAUDE.md are now static templates (copied, not generated)
   const tools = [
-    { name: 'Cursor', file: '.cursorrules' },
-    { name: 'Windsurf', file: '.windsurfrules' },
-    { name: 'Continue.dev', file: '.continuerules' }
+    { name: 'Cursor', file: '.cursorrules' }
   ];
 
   console.log(chalk.gray(`Found: ${tools.length} tool(s)\n`));

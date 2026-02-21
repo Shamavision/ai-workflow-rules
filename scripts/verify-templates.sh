@@ -55,7 +55,6 @@ SYNC_FILES=(
   ".claude/CLAUDE.md"
   ".claude/hooks/user-prompt-submit.sh"
   ".cursorrules"
-  ".windsurfrules"
 )
 
 # ----------------------------------------

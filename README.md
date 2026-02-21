@@ -32,7 +32,7 @@ AI coding assistants are powerful but dangerous:
 - ✅ **Token optimization** — saves 40-60% budget (MODEL_3 session-aware, 2026-ready)
 - ✅ **Ukrainian market compliance** — GDPR-ready, language rules, zero russian services
 
-Works with **Claude Code, Cursor, Windsurf, Continue.dev**, and any AI that reads `AGENTS.md`.
+Works with **Claude Code, Cursor**, and any AI that reads `AGENTS.md`.
 
 ---
 
@@ -208,8 +208,7 @@ Daily    ~45k today
 | Model | Providers | Billing Layer |
 |-------|-----------|--------------|
 | **MODEL_1** (Hard Billing) | Anthropic API, Mistral, DeepSeek, Google API | Cost per token (tracked) |
-| **MODEL_2** (Request Quota) | GitHub Copilot | Request count (not cost) |
-| **MODEL_3** (Fair Use Dynamic) | Claude Pro, Gemini Advanced, Cursor, Windsurf | **N/A — subscription** |
+| **MODEL_3** (Fair Use Dynamic) | Claude Pro, Gemini Advanced, Cursor | **N/A — subscription** |
 
 **MODEL_3 reality (most users):**
 - Billing Layer: `N/A (subscription)` — no per-token cost, no disclosed daily limit
@@ -229,8 +228,6 @@ Daily    ~45k today
 |------|-------------|-------------|
 | **Claude Code** (CLI/VSCode) | `.claude/CLAUDE.md` | ✅ Auto |
 | **Cursor** | `.cursorrules` | ✅ Auto |
-| **Windsurf** | `.windsurfrules` | ✅ Auto |
-| **Continue.dev** | `.continuerules` | ✅ Auto |
 | **Any AI** (Claude web, Gemini, ChatGPT) | `AGENTS.md` | Via `//START` |
 
 All tool files auto-generated from your selected context. Update with `bash scripts/sync-rules.sh`.
@@ -268,7 +265,6 @@ your-project/
 │   └── hooks/
 │       └── user-prompt-submit.sh # Auto session start (CLI)
 ├── .cursorrules                 # Cursor IDE rules (generated)
-├── .windsurfrules               # Windsurf IDE rules (generated)
 ├── .ai/
 │   ├── config.json              # Your context selection
 │   ├── token-limits.json        # Token budget config
