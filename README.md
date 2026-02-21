@@ -181,14 +181,13 @@ No provider API needed — local date is the day boundary anchor.
 
 ```
 //TOKENS output:
-[AI STATUS]
-Provider: Claude Pro (subscription)
+[AI STATUS] 🟢 GREEN
+Provider: Claude Pro · MODEL_3
 
-Context Layer:  ~45k / 200k (22%)   ← AI knows exactly
-Rate Layer:     🟢 Normal           ← estimated from patterns
-Billing Layer:  N/A (subscription)
-
-Status: 🟢 GREEN
+Context  ███░░░░░░░░░░░  22%  ~45k / 200k
+Rate     🟢 Normal
+Billing  N/A
+Daily    ~45k today
 ```
 
 **Triggered automatically at:** `//TOKENS`, `//COMPACT`, `git push`, phase complete, `//START`

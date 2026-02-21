@@ -127,14 +127,13 @@ Next: [description] (~Nk estimate)
    ```
 6. **Display** [AI STATUS] — 3-Layer Mental Model:
    ```
-   [AI STATUS]
-   Provider: Continue.dev (subscription)
+   [AI STATUS] 🟢 GREEN
+   Provider: Continue.dev · [PLAN]
 
-   Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
-   Rate Layer:     🟢 Normal           ← estimated from patterns
-   Billing Layer:  N/A (subscription)
-
-   Status: 🟢 GREEN
+   Context  ████░░░░░░░░░░  Y%  ~Xk / 200k
+   Rate     🟢 Normal
+   Billing  N/A
+   Daily    ~Zk today
    ```
 7. **If session-log.json missing:** Create it (copy schema from `.ai/session-log.json`)
 

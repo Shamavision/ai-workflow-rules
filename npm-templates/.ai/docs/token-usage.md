@@ -334,14 +334,13 @@ AI: Just type "//TOKENS" and I'll show your current usage
 
 **Output — 3-Layer Mental Model:**
 ```
-[AI STATUS]
-Provider: Claude Pro (subscription)
+[AI STATUS] 🟢 GREEN
+Provider: Claude Pro · MODEL_3
 
-Context Layer:  ~85k / 200k (42%)   ← AI knows exactly
-Rate Layer:     🟢 Normal           ← estimated from patterns
-Billing Layer:  N/A (subscription)
-
-Status: 🟢 GREEN
+Context  ██████░░░░░░░░  42%  ~85k / 200k
+Rate     🟢 Normal
+Billing  N/A
+Daily    ~85k today
 ```
 
 **3 layers explained:**

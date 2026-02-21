@@ -264,14 +264,13 @@ Session tokens 90%+   → Level 3 (Maximum)
 
 **SHOW [AI STATUS] after every write — 3-Layer Mental Model:**
 ```
-[AI STATUS]
-Provider: Claude Pro (subscription)
+[AI STATUS] 🟢 GREEN
+Provider: Claude Pro · MODEL_3
 
-Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
-Rate Layer:     🟢 Normal / 🟠 High load  ← context_pct burst (3+ entries >60% today)
-Billing Layer:  N/A (subscription)
-
-Status: 🟢 GREEN
+Context  ████░░░░░░░░░░  Y%  ~Xk / 200k
+Rate     🟢 Normal / 🟠 High load
+Billing  N/A
+Daily    ~Zk today
 ```
 
 **IMPORTANT — Honesty rules:**

@@ -122,18 +122,17 @@ When user sends these commands:
 7. Append to sessions[]: {date, tokens: estimate, context_pct: X, tool: "claude-code", trigger: "//tokens", timestamp: UNIX_NOW}
 8. Show [AI STATUS] — 3-Layer Mental Model:
 
-[AI STATUS]
-Provider: Claude Pro (subscription)
+[AI STATUS] 🟢 GREEN
+Provider: Claude Pro · MODEL_3
 
-Context Layer:  ~Xk / 200k (Y%)     ← AI knows exactly
-Rate Layer:     🟢 Normal / 🟠 High load  ← context_pct burst (3+ entries >60% today)
-Billing Layer:  N/A (subscription)
-
-Status: 🟢 GREEN
+Context  ████░░░░░░░░░░  Y%  ~Xk / 200k
+Rate     🟢 Normal / 🟠 High load
+Billing  N/A
+Daily    ~Zk today
 ```
 
 **Billing Layer** determined by `access_type` in `.ai/config.json`:
-- `"subscription"` (or missing) → `N/A (subscription)`
+- `"subscription"` (or missing) → `N/A`
 - `"billing"` → calculate: `tokens × cost_per_token`, compare to `billing.daily_budget_usd`
 NEVER fabricate limits or percentages.
 
