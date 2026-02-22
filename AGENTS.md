@@ -21,8 +21,10 @@
 **MANDATORY before any work:**
 
 1. **Load context:** Read `.ai/config.json` → Load appropriate `.ai/contexts/[context].context.md`
-2. **Load enforcement:** Read `.ai/AI-ENFORCEMENT.md` for mandatory protocols
-3. **Display confirmation:**
+2. **Read session anchor:** Search `PROJECT_CONTEXT_MAP.md` for `## 📍 Last Push` section.
+   Extract date → compare with today → `today != anchor_date` → 🟢 New day! / `today == anchor_date` → 📊 Same day.
+3. **Load enforcement:** Read `.ai/AI-ENFORCEMENT.md` for mandatory protocols
+4. **Display confirmation:**
 
 ```markdown
 [SESSION START]
@@ -32,6 +34,7 @@
 ✓ Token limit: Zk daily ([provider] [plan])
 ✓ Current usage: Ak (B%) | Remaining: ~Ck
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
+✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
 Чім я можу вам допомогти?
 ```

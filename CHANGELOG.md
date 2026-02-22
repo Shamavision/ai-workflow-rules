@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.1.1] - 2026-02-22
 
+### 🆕 Added - Session Memory Anchor (Task 7)
+
+Universal session anchor for new-day detection — works across all AI tools:
+- **New:** `scripts/post-push.sh` — auto-updates `## 📍 Last Push` section in `PROJECT_CONTEXT_MAP.md` after every `git push`
+- **New:** `npm-templates/scripts/post-push.sh` — distributed to users via installer
+- **Updated:** `.claude/CLAUDE.md` — Step 2.2: reads anchor at session start, compares date with today
+- **Updated:** `AGENTS.md` — same anchor instruction for Cursor and other AI tools
+- **Updated:** `bin/cli.js` — auto-installs `.git/hooks/post-push` during setup (no user question)
+- **Updated:** `PROJECT_CONTEXT_MAP.md` — `## 📍 Last Push` section added as manual seed
+- **Architecture:** `git push → post-push.sh → updates map → AI reads date → new day detection`
+- **Principle:** "New day = fresh limits" is the anchor. No API needed. Date comparison only.
+
 ### 🆕 Added - /arbiter Skill: Execution Planner (Task 8)
 
 Third vertex of the skill triangle `/ctx → /sculptor → /arbiter`:

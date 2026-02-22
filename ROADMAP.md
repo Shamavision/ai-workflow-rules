@@ -1,17 +1,15 @@
 # AI Workflow Rules — ROADMAP
 
 > **Version:** 9.1.1
-> **Last Updated:** 2026-02-22 (Task 5 done)
-> **Archive:** [Previous ROADMAP + old tasks](ai-logs/ROADMAP-archive-2026-02-21.md)
+> **Last Updated:** 2026-02-22
+> **Archive:** [Tasks 1-8 + old backlog](ai-logs/ROADMAP-archive-2026-02-21.md)
 > **Vision:** Opinionated Ukrainian product. No opt-outs. Less is more.
 
 ---
 
-## Карта файлов (Source of Truth)
+## Карта файлів (Source of Truth)
 
-> Перед любой фазой — сверяться с этой таблицей.
-
-### Rule-файлы (6 файлов — 2 пары після Task 2)
+> Перед будь-якою фазою — звіряти з цією таблицею.
 
 | AI / IDE | Dev файл | npm-templates файл |
 |----------|----------|--------------------|
@@ -19,76 +17,64 @@
 | Cursor | `.cursorrules` | `npm-templates/.cursorrules` |
 | Any AI (web) | `AGENTS.md` | `npm-templates/AGENTS.md` |
 
-> **Правило:** любое изменение rule-файла = 6 файлов (3 пары). ~~Було 10.~~
-
----
-
-## Виконані задачі
-
-| Task | Дата | Результат |
-|------|------|-----------|
-| Task 1: /ctx + /sculptor + auto-monitoring | 2026-02-21 | ✅ DONE — pipeline працює |
-| Task 2: Remove Windsurf/Continue.dev | 2026-02-21 | ✅ DONE — rule-файлів 10→6 |
-| Task 3: Fix pre-commit hook | 2026-02-21 | ✅ DONE — 5-15 хв → <2 сек, false positives виправлено |
-| Task 4: Reduce context presets 4→2 | 2026-02-22 | ✅ DONE — залишились minimal + ukraine-full |
-| Task 5: inquirer@8 → @clack/prompts | 2026-02-22 | ✅ DONE — lightweight, сучасний API, -44 packages |
-| Task 6: Token system redesign | 2026-02-22 | ✅ DONE — presets.json v1.0, removed MODEL_1/2/3 + fake limits |
-| Task 8: /arbiter skill | 2026-02-22 | ✅ DONE — трикутник скілів повний, всі 3 в npm-templates + installer |
+> **Правило:** будь-яка зміна rule-файлу = 6 файлів (3 пари).
 
 ---
 
 ## Активні задачі
 
-### Task 7 — Session memory anchor
+### Round 1 — Швидке прибирання (поточна сесія або сьогодні)
 
-> **Status:** ⏳ Відкладено — перерахувати після Task 2-4
-> **Priority:** Low
-
-**Ідея:** `PROJECT_CONTEXT_MAP.md` авто-завантажується при старті сесії як "якір". Post-push hook оновлює "Last Push" секцію.
-
-**Чому відкладено:** Після Task 2-4 архітектура і розміри суттєво зміняться → перерахуємо з актуальними даними.
-
----
-
-## ⏳ Wizard Redesign Backlog — повернутись після Task 8 + /arbiter
-
-> **Не чіпати зараз.** Повернутись після: Task 8 (/arbiter), новий скіл/контекст, аналіз sculptor.
-> **Чому?** Інсталери зміняться знову після нових скілів — міняти двічі нераціонально.
-
-### Зафіксовані рішення (2026-02-22)
-
-**Що ставити автоматично (питань не задавати):**
-- ✅ **Pre-commit hooks** — завжди auto-install, без питання
-- ✅ **`.gitignore`** — auto-append (НІКОЛИ не перезаписувати). Логіка: якщо блок "# AI Workflow Rules" вже є → skip. Якщо немає → дописати в кінець. Файли користувача не чіпати.
-
-**Що спростити:**
-- ❌ **"Use recommended context?"** — прибрати. Контекст визначається market selection автоматично. Без підтвердження.
-- ❌ **Team size** (bash) — мертвий код після Task 4, видалити
-- ❌ **Token priority: careful/balanced/relaxed** (bash) — мертвий код після Task 4, видалити
-- ❌ **"Install product rules?"** — злити з market selection (ukraine → product.md auto)
-
-**Архітектурне рішення:**
-- NPX і Bash повинні бути **ідентичні логічно** — однаковий набір питань, однакова логіка
-- Скіли (`/ctx`, `/sculptor`, `/arbiter`) копіюються автоматично через installer — окреме питання не потрібно
-- Після Task 8: переглянути весь wizard з нуля з урахуванням трикутника скілів
-
-**Відомі баги (не фіксити зараз):**
-- `install.sh` рядки 258-293: `teamSize` + `tokenPriority` → рекомендують неіснуючі `standard`/`enterprise`
-- `install.sh` рядок 317: manual selection показує 4 варіанти (standard/enterprise видалені)
-- `install.sh` рядок 374: `for ctx in minimal standard ukraine-full enterprise` — копіює неіснуючі файли
+| Task | Опис | Effort |
+|------|------|--------|
+| **Task 9a:** Commit Task 7 | Закомітити post-push.sh + всі зміни Task 7 | ~5 хв |
+| **Task 9b:** Delete `task2.txt` | Прибрати артефакт з кореня проекту | ~5 хв |
+| **Task 9c:** Delete `.ai/token-limits.json` | 840-рядковий мертвий файл — пастка для AI (замінений presets.json) | ~30 хв |
+| **Task 9d:** Sync guard у pre-commit | Warning якщо rule-файл змінено без npm-templates копії | ~1 год |
+| **Task 9e:** Slim CLAUDE.md | Прибрати "File Structure Reference" + "What's New v9.1" (дублюють map + changelog) | ~30 хв |
 
 ---
 
-## Архів старих задач
+### Round 2 — Нова сесія (основна робота)
 
+| Task | Опис | Effort |
+|------|------|--------|
+| **Task 10:** install.sh Wizard Redesign | Виправити зламаний bash-інсталер: прибрати teamSize, tokenPriority, показати 2 пресети замість 4, auto-install hooks, auto-append .gitignore. NPX ≡ Bash логічно. | ~1-2 дні |
+
+**Деталі реалізації Task 10** (рішення зафіксовані):
+- Прибрати питання: teamSize, tokenPriority, "Use recommended context?", "Install product rules?"
+- Зробити автоматично: pre-commit hooks, .gitignore append-only
+- Злити: market selection → context + product.md автоматично
+- Пресети: показати тільки `minimal` + `ukraine-full`
+
+---
+
+### Round 3 — Після Task 10
+
+| Task | Опис | Effort | Залежність |
+|------|------|--------|-----------|
+| **Task 11:** install.ps1 (Windows) | PowerShell-інсталер з тою ж логікою що redesigned install.sh | ~1 день | Task 10 |
+| **Task 12:** Cursor format check | Перевірити чи підтримується `.cursorrules` в поточних версіях Cursor. Якщо ні — додати `.cursor/rules/ai-workflow.mdc` | ~1 год | Верифікація користувачем |
+
+> **Для Task 12:** Відкрий проект з `.cursorrules` у Cursor і перевір чи застосовуються правила.
+> Якщо НІ → Task 12 стає пріоритетом Round 1.
+
+---
+
+### Опціонально (low priority)
+
+| Task | Опис | Рішення |
+|------|------|---------|
+| `/pipeline` skill | Автоматизувати `/ctx → /sculptor → /arbiter` в одну команду | ⏸ Відкласти — ручний контроль між кроками є перевагою |
+| README polish | Оновити README для кінцевих користувачів | Після стабілізації інсталерів |
+| Cross-AI validation | Тестування на різних AI-тулах | Після Task 11 |
+
+---
+
+## Архів
+
+> Задачі 1-8 виконані 2026-02-21 — 2026-02-22.
 > Повний контекст: [ROADMAP-archive-2026-02-21.md](ai-logs/ROADMAP-archive-2026-02-21.md)
-
-| Задача | Статус | Примечание |
-|--------|--------|-----------|
-| Bash Install Fixes (кролик #4) | ⏳ Blocked | Ждём feedback |
-| install.ps1 (Windows PowerShell) | ⏳ Відкладено | Workaround: NPX |
-| Cross-AI Validation | ⏳ Відкладено | — |
-| README Polish | ⏳ Відкладено | — |
 
 ---
 

@@ -1,7 +1,7 @@
 # AI Workflow Rules Framework
 
 > **🚪 Entry point for all AI assistants**
-> **Framework:** v9.1 Optimization | **Made in Ukraine 🇺🇦**
+> **Framework:** v9.1.1 | **Made in Ukraine 🇺🇦**
 
 ---
 
@@ -21,8 +21,10 @@
 **MANDATORY before any work:**
 
 1. **Load context:** Read `.ai/config.json` → Load appropriate `.ai/contexts/[context].context.md`
-2. **Load enforcement:** Read `.ai/AI-ENFORCEMENT.md` for mandatory protocols
-3. **Display confirmation:**
+2. **Read session anchor:** Search `PROJECT_CONTEXT_MAP.md` for `## 📍 Last Push` section.
+   Extract date → compare with today → `today != anchor_date` → 🟢 New day! / `today == anchor_date` → 📊 Same day.
+3. **Load enforcement:** Read `.ai/AI-ENFORCEMENT.md` for mandatory protocols
+4. **Display confirmation:**
 
 ```markdown
 [SESSION START]
@@ -32,6 +34,7 @@
 ✓ Token limit: Zk daily ([provider] [plan])
 ✓ Current usage: Ak (B%) | Remaining: ~Ck
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
+✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
 Чім я можу вам допомогти?
 ```
@@ -39,6 +42,8 @@
 4. **Follow core principles:** Discuss → Approve → Execute | Token-conscious | Atomic commits
 
 **User command trigger:** `//START` or `//start` → Execute this protocol immediately
+
+> **Note:** Always type `//START` in a **new conversation**. Claude Code loads `.claude/CLAUDE.md` at conversation start — typing it in an existing conversation won't load the rules.
 
 **Details:** See [.claude/CLAUDE.md](.claude/CLAUDE.md) Section "Session Start Protocol"
 
@@ -52,6 +57,7 @@
 | [Cheatsheet](.ai/docs/cheatsheet.md) | Commands & shortcuts reference | ~3k |
 | [Token Usage](.ai/docs/token-usage.md) | Understanding token costs | ~3k |
 | [Session Management](.ai/docs/session-mgmt.md) | When to restart vs continue | ~4k |
+| [Code Quality](.ai/docs/code-quality.md) | Lint setup & pre-commit checks | ~3k |
 | [Compatibility](.ai/docs/compatibility.md) | Supported AI tools & models | ~3k |
 | [Getting Started](.ai/docs/start.md) | Onboarding guide | ~2k |
 | [Provider Comparison](.ai/docs/provider-comparison.md) | AI provider comparison | ~3k |
@@ -129,7 +135,7 @@
 
 ## 📊 Context Comparison (v9.1 Optimized)
 
-| Context | Tokens | Daily % | Best For | Includes |
+| Context | Tokens | Session % | Best For | Includes |
 |---------|--------|---------|----------|----------|
 | **Minimal** | ~10k | 5% | Startups, MVP, simple projects | Core workflow, basic security |
 | **Ukraine-Full** | ~18k | 9% | Ukrainian market compliance | + Language rules, market policy, i18n |
@@ -186,10 +192,10 @@
 │   ├── CLAUDE.md          # Auto-generated (from .ai/contexts/)
 │   └── hooks/             # CLI hooks
 ├── .cursorrules           # Auto-generated (Cursor IDE)
-├── scripts/
-│   ├── pre-commit         # Security checks
-│   └── sync-rules.sh      # Regenerate tool files
-└── examples/              # Production code examples
+└── scripts/
+    ├── pre-commit         # Security checks
+    ├── sync-rules.sh      # Regenerate tool files
+    └── token-status.sh    # Token budget dashboard
 ```
 
 ---
@@ -236,18 +242,15 @@
 - ✅ All rules: .ai/rules/
 - ✅ Tool files: Auto-generated from contexts
 
-**Migration:** Existing users run `scripts/migrate-to-hub.sh`
-
 **Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
 
 ---
 
 **Made with ❤️ in Ukraine 🇺🇦**
-**License:** MIT
-**Website:** [wellme.ua](https://wellme.ua)
+**License:** GPL v3
 **GitHub:** [Shamavision/ai-workflow-rules](https://github.com/Shamavision/ai-workflow-rules)
 
 ---
 
-**Last Updated:** 2026-02-08
-**Framework Version:** 9.1 (Optimization Release)
+**Last Updated:** 2026-02-18
+**Framework Version:** 9.1.1

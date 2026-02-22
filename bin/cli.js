@@ -371,11 +371,19 @@ async function main() {
       path.join(currentDir, 'scripts'),
       'token-status.sh'
     );
+    await copyFile(
+      path.join(templatesDir, 'scripts'),
+      path.join(currentDir, 'scripts'),
+      'post-push.sh'
+    );
 
     // Install pre-commit hook
     if (answers.installHooks) {
       await installPreCommitHook(currentDir);
     }
+
+    // Install post-push hook (session memory anchor — always automatic)
+    await installPostPushHook(currentDir);
 
     // Update .gitignore
     if (answers.updateGitignore) {
@@ -547,6 +555,35 @@ async function installPreCommitHook(targetDir) {
   }
 
   console.log(chalk.green('  ✓ Pre-commit hook installed'));
+}
+
+async function installPostPushHook(targetDir) {
+  const gitDir = path.join(targetDir, '.git');
+  const gitHooksDir = path.join(gitDir, 'hooks');
+
+  // Skip silently if no .git (not a git repo)
+  if (!await fs.pathExists(gitDir)) {
+    return;
+  }
+
+  await fs.ensureDir(gitHooksDir);
+
+  const source = path.join(targetDir, 'scripts', 'post-push.sh');
+  const target = path.join(gitHooksDir, 'post-push');
+
+  // Skip if post-push.sh not found in scripts/ (shouldn't happen, but defensive)
+  if (!await fs.pathExists(source)) {
+    return;
+  }
+
+  await fs.copy(source, target);
+
+  // Make executable (Unix systems)
+  if (process.platform !== 'win32') {
+    await fs.chmod(target, 0o755);
+  }
+
+  console.log(chalk.green('  ✓ Post-push hook installed (session memory anchor)'));
 }
 
 async function updateGitignore(targetDir) {

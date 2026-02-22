@@ -38,6 +38,24 @@ If ANY of these conditions apply:
 
 **Why this matters:** Selective loading saves 40-70% tokens for specific users.
 
+### Step 2.2: Read Session Anchor (Task 7 — v9.2)
+
+**🆕 Session Anchor:** Check last push date for new-day detection.
+
+1. **Grep** `PROJECT_CONTEXT_MAP.md` for `## 📍 Last Push` section
+2. **Extract** the `Date` field from the anchor table
+3. **Compare** with today's date:
+   - `today == anchor_date` → 📊 Same day, continuing
+   - `today != anchor_date` → 🟢 New day! Fresh token limits
+4. **Add to SESSION START block:** `✓ Last push: [date] | [commit] | [verdict]`
+
+**If file missing or no anchor yet:** show `✓ Last push: no anchor (run /ctx first)`
+
+**Why this matters:** Works across all AI tools (Claude Code, Cursor, any AI).
+No API needed — date comparison is the anchor. New day = fresh limits.
+
+---
+
 ### Step 2.5: Load AI Enforcement (v9.0)
 
 **🆕 MANDATORY:** Read `.ai/AI-ENFORCEMENT.md` for automatic protocols
@@ -62,16 +80,18 @@ If ANY of these conditions apply:
 ✓ Token limit: [daily_limit] daily ([provider] [plan])
 ✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
+✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
-Чим я можу вам допомогти? | What can I help you with?
+Чим я можу вам допомогти?
 
 **Examples:**
 - Minimal: "✓ Context: minimal (~10k, 5% of daily)"
 - Ukraine-full: "✓ Context: ukraine-full (~18k, 9% of daily)"
+- Last push: "✓ Last push: 2026-02-22 | a1b2c3d | 🟢 New day! Fresh limits"
 ```
 
 ### Step 4: Follow Core Principles
-- **Internal dialogue (You ↔ User):** Adaptive — **first response always in Ukrainian + English**, then match user's language
+- **Internal dialogue (You ↔ User):** Adaptive - match user's language (Ukrainian, Russian, or English)
 - **Code comments:** English only
 - **Commit messages:** English only (`type(scope): description`)
 - **Token-conscious:** Monitor usage, optimize at 50%+
