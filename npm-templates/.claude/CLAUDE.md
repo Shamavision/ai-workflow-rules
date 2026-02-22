@@ -451,37 +451,7 @@ Then **WAIT** for user approval.
 
 ## 📁 File Structure Reference
 
-```
-.
-├── AGENTS.md              # Project overview (auto-loaded, entry point)
-├── .ai/                   # AI Framework Hub (v9.1 restructured)
-│   ├── contexts/          # Pre-bundled context files (v9.1 optimized)
-│   │   ├── minimal.context.md (~10k tokens)
-│   │   └── ukraine-full.context.md (~18k tokens)
-│   ├── docs/              # 🆕 Documentation hub
-│   │   ├── quickstart.md
-│   │   ├── cheatsheet.md
-│   │   ├── token-usage.md
-│   │   ├── session-mgmt.md  # v9.1 Session best practices
-│   │   ├── compatibility.md
-│   │   ├── start.md
-│   │   └── provider-comparison.md
-│   ├── rules/             # 🆕 Rules hub
-│   │   ├── core.md        # Full AI workflow rules (v8.0, source of truth)
-│   │   └── product.md     # Ukrainian market specifics
-│   ├── config.json        # Context selection (minimal/ukraine-full)
-│   ├── registry.json      # Context & module metadata
-│   ├── token-limits.json  # Token budget tracking
-│   ├── locale-context.json
-│   └── forbidden-trackers.json
-├── .claude/
-│   ├── CLAUDE.md          # ← YOU ARE HERE (auto-loaded)
-│   └── hooks/
-│       └── user-prompt-submit.sh  # CLI-only auto Session Start
-└── scripts/
-    ├── pre-commit         # Security checks
-    └── seo-check.sh       # Pre-deploy validation
-```
+→ See `PROJECT_CONTEXT_MAP.md` for current structure (auto-updated by `/ctx`).
 
 ---
 
@@ -506,24 +476,6 @@ Verify at session start:
 
 ---
 
-**Last Updated:** 2026-02-07
-**Framework Version:** 9.1 (Optimization Release)
+**Last Updated:** 2026-02-22
+**Framework Version:** 9.1.1
 **Made in Ukraine 🇺🇦**
-
----
-
-## 🆕 What's New in v9.1 Optimization
-
-**Content Optimization (15-35% token reduction):**
-- ✅ Minimal: 13k → 10k (-23%)
-- ✅ Ukraine-full: 25k → 18k (-28%)
-
-**Session Management Best Practices:**
-- ✅ New guide: [`.ai/docs/session-mgmt.md`](../.ai/docs/session-mgmt.md)
-- ✅ Continue vs restart decision guide
-- ✅ Platform-specific tips (VSCode, Cursor, Windsurf)
-- ✅ Expected savings: 50% fewer restarts = ~35-50k tokens/day
-
-**Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
-
-**Migration:** Automatic - contexts updated in place. Read [.ai/docs/session-mgmt.md](../.ai/docs/session-mgmt.md) for best practices.

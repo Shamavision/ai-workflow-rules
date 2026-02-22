@@ -222,9 +222,9 @@ session-log.json    → dynamic: sessions today, estimated tokens
 |-------|-------|
 | **Date** | 2026-02-22 |
 | **Time** | — |
-| **Commit** | `7b1b5fd` — feat(tasks-4-8): simplify presets, modernize CLI, complete skill triangle |
+| **Commit** | `e2594d3` — feat(task-7): add session memory anchor + triangle run outputs |
 | **Branch** | `main` |
-| **Files changed** | 38 |
+| **Files changed** | 12 |
 
 **New-day detection (for AI):**
 ```

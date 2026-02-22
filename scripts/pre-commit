@@ -584,6 +584,52 @@ if [ -f ".ai/ai-protection-policy.json" ]; then
 fi
 
 # ==============================================================================
+# DUAL-STRUCTURE SYNC CHECK (WARNING ONLY — does not block commit)
+# Verifies that rule-file pairs (dev ↔ npm-templates) are staged together.
+# Silent on unrelated commits. Warns only when one side is staged without the other.
+# ==============================================================================
+
+echo "━━━ Dual-structure sync check..."
+
+SYNC_WARN=false
+
+check_sync_pair() {
+    local dev_file="$1"
+    local npm_file="$2"
+    local dev_staged npm_staged
+
+    echo "$STAGED_FILES" | grep -qF "$dev_file" && dev_staged=true || dev_staged=false
+    echo "$STAGED_FILES" | grep -qF "$npm_file" && npm_staged=true || npm_staged=false
+
+    if [ "$dev_staged" == "true" ] && [ "$npm_staged" == "false" ]; then
+        echo -e "${YELLOW}⚠️  Sync: $dev_file staged but $npm_file was not${NC}"
+        SYNC_WARN=true
+    fi
+    if [ "$npm_staged" == "true" ] && [ "$dev_staged" == "false" ]; then
+        echo -e "${YELLOW}⚠️  Sync: $npm_file staged but $dev_file was not${NC}"
+        SYNC_WARN=true
+    fi
+}
+
+# Rule-file pairs (dev ↔ npm-templates) — all must stay in sync
+check_sync_pair ".claude/CLAUDE.md"              "npm-templates/.claude/CLAUDE.md"
+check_sync_pair ".cursorrules"                   "npm-templates/.cursorrules"
+check_sync_pair "AGENTS.md"                      "npm-templates/AGENTS.md"
+check_sync_pair ".claude/commands/ctx.md"        "npm-templates/.claude/commands/ctx.md"
+check_sync_pair ".claude/commands/sculptor.md"   "npm-templates/.claude/commands/sculptor.md"
+check_sync_pair ".claude/commands/arbiter.md"    "npm-templates/.claude/commands/arbiter.md"
+check_sync_pair "scripts/pre-commit"             "npm-templates/scripts/pre-commit"
+check_sync_pair "scripts/post-push.sh"           "npm-templates/scripts/post-push.sh"
+
+if [ "$SYNC_WARN" == "true" ]; then
+    echo -e "${YELLOW}   Tip: stage the npm-templates counterpart to keep distribution in sync.${NC}"
+    echo -e "${YELLOW}   Commit will PROCEED — this is a warning, not a block.${NC}"
+else
+    echo "  ✓ Sync OK"
+fi
+echo ""
+
+# ==============================================================================
 # FINAL VERDICT
 # ==============================================================================
 
