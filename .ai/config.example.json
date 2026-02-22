@@ -7,12 +7,10 @@
   "_comment": "Copy this file to config.json and customize for your project",
 
   "context": "minimal",
-  "_context_options": ["minimal", "standard", "ukraine-full", "enterprise", "custom"],
+  "_context_options": ["minimal", "ukraine-full", "custom"],
   "_context_description": {
-    "minimal": "Quick start, essential workflow (13k tokens)",
-    "standard": "Production-ready, balanced (18k tokens)",
-    "ukraine-full": "Ukrainian market, full compliance (25k tokens)",
-    "enterprise": "Maximum control, all features (30k tokens)",
+    "minimal": "Quick start, essential workflow (10k tokens)",
+    "ukraine-full": "Ukrainian market, full compliance (18k tokens)",
     "custom": "Select specific modules (advanced users)"
   },
 

@@ -164,13 +164,11 @@ AI automatically loads project rules at session start:
 | Context | Tokens | Session % | Best For |
 |---------|--------|-----------|----------|
 | Minimal | ~10k | 5% | Startups, MVP |
-| Standard | ~14k | 7% | Most projects |
 | Ukraine-Full | ~18k | 9% | Ukrainian market |
-| Enterprise | ~23k | 11.5% | Large teams |
 
 *Session % = tokens of 200K session limit (MODEL_3 primary metric)*
 
-The installer wizard asks 3 questions and recommends the right preset.
+The installer wizard asks 2 questions and recommends the right preset.
 
 ---
 

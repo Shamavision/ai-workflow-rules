@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [9.1.1] - 2026-02-22
+
+### 🆕 Added - /arbiter Skill: Execution Planner (Task 8)
+
+Third vertex of the skill triangle `/ctx → /sculptor → /arbiter`:
+- **New:** `.claude/commands/arbiter.md` — execution planner & safety gatekeeper
+- **New:** `npm-templates/.claude/commands/` — all 3 skills now distributed to users via installer
+- **Fixed:** `/ctx` and `/sculptor` were missing from `npm-templates` — now included
+- **Updated:** `bin/cli.js` — installer copies all 3 skills to `.claude/commands/` during setup
+- **Arbiter output:** `ARBITER_REPORT.md` with ordered execution queue + risk register
+- **Verdicts:** 🟢 Ready | 🟡 Needs review | 🔴 Blocked
+- **Pipeline complete:** `/ctx` → `/sculptor` → `/arbiter` → ROADMAP update
+
+### 🔧 Changed - Token System Redesign (Task 6)
+
+Replaced 840-line `TOKEN_PRESETS` inline constant with clean `presets.json` v1.0:
+- **New:** `npm-templates/.ai/presets.json` — single source of truth for tool/plan configs
+- **Removed:** `TOKEN_PRESETS` hardcoded object from `bin/cli.js`
+- **Removed:** `MODEL_1` / `MODEL_3` architecture model classification
+- **Removed:** Fake daily/monthly limits (all were either invented or unknown)
+- **New:** `token-limits.json` v4.0 — session-based, honest nulls for unknown limits
+- **New:** `config.json` v2.2 — no USD pricing, no fake `token_budget` block
+- **Principle:** session_limit = public context window. daily_limit = null (not published). No prices.
+- **Providers in presets.json:** anthropic, google, cursor, openai, deepseek, groq, mistral, perplexity
+
+### 🔧 Changed - CLI Wizard Modernized (Task 5)
+
+Replaced `inquirer@8` (legacy) with `@clack/prompts` (lightweight, 2025 standard):
+- Cleaner UX: spinner, intro/outro, cancel-safe prompts
+- Removed 44 transitive packages, added 4
+- Fixed naming collision bug: `updateGitignore` variable now `shouldUpdateGitignore` in `main()`
+- Removed dead code: `teamSize` + `tokenPriority` questions (no longer needed after Task 4)
+- `node` engine requirement: `>=14.0.0` → `>=16.0.0`
+
+### 🗑️ Removed - Context Presets Simplified (Task 4)
+
+Removed `standard` and `enterprise` context presets. Framework now provides two clear choices:
+- **`minimal`** (~10k) — startups, MVP, simple projects
+- **`ukraine-full`** (~18k) — Ukrainian market, full compliance
+
+**Rationale:** `minimal` and `ukraine-full` cover 95%+ of real use cases. Fewer choices = better UX.
+
+**Files removed:**
+- `.ai/contexts/standard.context.md`
+- `.ai/contexts/enterprise.context.md`
+- `npm-templates/.ai/contexts/standard.context.md`
+- `npm-templates/.ai/contexts/enterprise.context.md`
+
+**Files updated:** CLAUDE.md (×2), AGENTS.md (×2), registry.json, config.example.json, README.md, bin/cli.js
+
+---
+
 ## [9.1.0] - 2026-02-08
 
 ### 🚀 Changed - Token Optimization + .ai/ Hub Restructure
@@ -17,9 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Context Size Reductions:**
 - **Minimal:** 13k → 10k (-23%, -3k tokens)
-- **Standard:** 18k → 14k (-22%, -4k tokens)
 - **Ukraine-full:** 25k → 18k (-28%, -7k tokens)
-- **Enterprise:** 30k → 23k (-23%, -7k tokens)
 
 **How we achieved it:**
 - ✅ Removed repetition
@@ -186,9 +236,7 @@ Savings: 64k tokens/day from session management alone
 - `.ai/AI-ENFORCEMENT.md` → v2.0 (Enhanced Compression)
 - `.ai/token-limits.json` → Comprehensive provider database
 - `.ai/contexts/minimal.context.md` → Optimized (-23%)
-- `.ai/contexts/standard.context.md` → Optimized (-22%)
 - `.ai/contexts/ukraine-full.context.md` → Optimized (-28%)
-- `.ai/contexts/enterprise.context.md` → Optimized (-23%)
 - `.claude/CLAUDE.md` → Updated with v9.1 token counts
 - `README.md` → Added v9.1 features section
 - `package.json` → Added npm scripts for token management
@@ -314,7 +362,7 @@ Savings: 64k tokens/day from session management alone
 ## [8.1.0] - 2026-02-03
 
 ### Added
-- Modular context system (minimal, standard, ukraine-full, enterprise)
+- Modular context system (minimal, ukraine-full)
 - Token efficiency (40-70% savings for international users)
 - Smart context selection wizard
 

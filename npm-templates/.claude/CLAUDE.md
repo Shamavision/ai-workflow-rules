@@ -32,9 +32,7 @@ If ANY of these conditions apply:
 1. **Read config:** `.ai/config.json` to determine context preset
 2. **Load context:**
    - If `config.context = "minimal"` → Read `.ai/contexts/minimal.context.md` (~10k tokens, v9.1 optimized)
-   - If `config.context = "standard"` → Read `.ai/contexts/standard.context.md` (~14k tokens, v9.1 optimized)
    - If `config.context = "ukraine-full"` → Read `.ai/contexts/ukraine-full.context.md` (~18k tokens, v9.1 optimized)
-   - If `config.context = "enterprise"` → Read `.ai/contexts/enterprise.context.md` (~23k tokens, v9.1 optimized)
    - **Fallback:** If no config or contexts → Read `.ai/rules/core.md` (legacy mode)
 3. **Token budget:** Read `.ai/token-limits.json` for tracking
 
@@ -69,9 +67,7 @@ If ANY of these conditions apply:
 
 **Examples:**
 - Minimal: "✓ Context: minimal (~10k, 5% of daily)"
-- Standard: "✓ Context: standard (~14k, 7% of daily)"
 - Ukraine-full: "✓ Context: ukraine-full (~18k, 9% of daily)"
-- Enterprise: "✓ Context: enterprise (~23k, 11.5% of daily)"
 ```
 
 ### Step 4: Follow Core Principles
@@ -115,7 +111,7 @@ When user sends these commands:
    → Show: "🟢 New day! Yesterday: ~Xk tokens. Fresh limits today."
 4. today_total = sum of sessions[].tokens where date == today
 5. Estimate current session (rough ±30-50%):
-   - Rules loaded: ~18k (ukraine-full) / ~14k (standard) / ~10k (minimal)
+   - Rules loaded: ~18k (ukraine-full) / ~10k (minimal)
    - + conversation length estimate
    - context_pct = round(session_tokens / context_window × 100)
 6. Burst check: count today's entries where context_pct > 60. If 3+ → Rate Layer = "🟠 High load"
@@ -441,9 +437,7 @@ Then **WAIT** for user approval.
 ├── .ai/                   # AI Framework Hub (v9.1 restructured)
 │   ├── contexts/          # Pre-bundled context files (v9.1 optimized)
 │   │   ├── minimal.context.md (~10k tokens)
-│   │   ├── standard.context.md (~14k tokens)
-│   │   ├── ukraine-full.context.md (~18k tokens)
-│   │   └── enterprise.context.md (~23k tokens)
+│   │   └── ukraine-full.context.md (~18k tokens)
 │   ├── docs/              # 🆕 Documentation hub
 │   │   ├── quickstart.md
 │   │   ├── cheatsheet.md
@@ -455,7 +449,7 @@ Then **WAIT** for user approval.
 │   ├── rules/             # 🆕 Rules hub
 │   │   ├── core.md        # Full AI workflow rules (v8.0, source of truth)
 │   │   └── product.md     # Ukrainian market specifics
-│   ├── config.json        # Context selection (minimal/standard/ukraine-full/enterprise)
+│   ├── config.json        # Context selection (minimal/ukraine-full)
 │   ├── registry.json      # Context & module metadata
 │   ├── token-limits.json  # Token budget tracking
 │   ├── locale-context.json
@@ -502,9 +496,7 @@ Verify at session start:
 
 **Content Optimization (15-35% token reduction):**
 - ✅ Minimal: 13k → 10k (-23%)
-- ✅ Standard: 18k → 14k (-22%)
 - ✅ Ukraine-full: 25k → 18k (-28%)
-- ✅ Enterprise: Now self-contained (~23k)
 
 **Session Management Best Practices:**
 - ✅ New guide: [`.ai/docs/session-mgmt.md`](../.ai/docs/session-mgmt.md)

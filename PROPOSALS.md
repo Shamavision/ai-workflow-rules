@@ -64,19 +64,9 @@ The framework has a strong core concept (Ukrainian-first AI workflow rules, hone
 
 ## P2 Proposals — Important
 
-### P2.1: REMOVE — Reduce from 4 context presets to 2
-**Why:** minimal (10k) + ukraine-full (18k) cover 95% of real use cases. `standard` is a weak middle ground between them. `enterprise` at 23k tokens is 5k more than ukraine-full — does anyone choose enterprise who wouldn't use ukraine-full?
-
-**What exactly:**
-1. Audit: who uses standard vs ukraine-full? (check config.json patterns in installs)
-2. If standard has <10% adoption → deprecate, redirect to minimal or ukraine-full
-3. Enterprise: convert from separate file to "ukraine-full + enterprise addon sections" (optional append)
-4. Result: 2 primary presets + 1 optional extension
-
-**Impact:** Medium — reduces maintenance surface by 40%, simpler UX
-**Effort:** Medium (~4h)
-**Market context:** Users want one obvious choice, not a matrix. "Good/Better" beats "Good/Better/Best/Enterprise"
-**ROADMAP candidate:** Yes → "Task 5: Consolidate context presets"
+### ~~P2.1: REMOVE — Reduce from 4 context presets to 2~~ ✅ DONE (2026-02-22, Task 4)
+**Result:** Removed `standard` and `enterprise` presets. Now: `minimal` (10k) + `ukraine-full` (18k).
+**Impact:** 2 files deleted (×2 pairs = 4 total), 12 files updated, simpler UX.
 
 ---
 

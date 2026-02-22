@@ -27,34 +27,13 @@
       ]
     },
 
-    "standard": {
-      "path": "contexts/standard.context.md",
-      "description": "Production projects, growing teams",
-      "priority": "core",
-      "tokens": 18000,
-      "includes": [
-        "All from minimal",
-        "Full Workflow (roadmaps, stages)",
-        "Discussion Protocol",
-        "Token Management (advanced)",
-        "Workflow Triggers",
-        "Anti-Overengineering",
-        "Session Checkpoints"
-      ],
-      "target_audience": [
-        "production",
-        "growing-teams",
-        "medium-projects"
-      ]
-    },
-
     "ukraine-full": {
       "path": "contexts/ukraine-full.context.md",
       "description": "Ukrainian businesses, full compliance",
       "priority": "core",
-      "tokens": 25000,
+      "tokens": 18000,
       "includes": [
-        "All from standard",
+        "All from minimal",
         "Ukrainian Market Policy",
         "Cyber Defense Protocols",
         "LANG-CRITICAL checks",
@@ -71,33 +50,6 @@
         ".ai/forbidden-trackers.json",
         ".ai/locale-context.json"
       ]
-    },
-
-    "enterprise": {
-      "path": "contexts/enterprise.context.md",
-      "description": "Large teams, enterprise projects, maximum control",
-      "priority": "optional",
-      "tokens": 30000,
-      "includes": [
-        "Everything from RULES_CORE.md",
-        "Full Token Control v3.0",
-        "Pre-flight Approval",
-        "Confidence-based Estimation",
-        "Learning Engine",
-        "Emergency Reserve Management",
-        "Smart Batch Detection",
-        "All Security Protocols"
-      ],
-      "target_audience": [
-        "enterprise",
-        "large-teams",
-        "complex-projects",
-        "strict-budgets"
-      ],
-      "dependencies": [
-        ".ai/token-limits.json",
-        ".ai/token-control-v3-spec.md"
-      ]
     }
   },
 
@@ -109,25 +61,11 @@
       "recommended_for": "New projects, MVPs, international teams"
     },
 
-    "standard": {
-      "context": "standard",
-      "description": "Production-ready, balanced features",
-      "tokens": 18000,
-      "recommended_for": "Most production projects"
-    },
-
     "ukraine-full": {
       "context": "ukraine-full",
       "description": "Ukrainian market, full compliance",
       "tokens": 25000,
       "recommended_for": "Ukrainian businesses, government projects"
-    },
-
-    "enterprise": {
-      "context": "enterprise",
-      "description": "Maximum control, all features",
-      "tokens": 30000,
-      "recommended_for": "Large teams, strict token budgets"
     },
 
     "custom": {
@@ -196,30 +134,17 @@
       "action": "suggest minimal preset"
     },
 
-    "auto_detect_enterprise": {
-      "triggers": [
-        "Large codebase (>500 files)",
-        "Multiple team members",
-        "Strict token budget configured"
-      ],
-      "action": "suggest enterprise preset"
-    }
   },
 
   "token_savings": {
     "minimal_vs_full": {
       "saving": "12k tokens (48%)",
-      "context": "Minimal (13k) vs Full RULES_CORE.md (25k)"
-    },
-
-    "standard_vs_full": {
-      "saving": "7k tokens (28%)",
-      "context": "Standard (18k) vs Full RULES_CORE.md (25k)"
+      "context": "Minimal (10k) vs Ukraine-full (18k)"
     },
 
     "ukraine_vs_minimal": {
-      "overhead": "12k tokens (92%)",
-      "context": "Ukraine-full (25k) vs Minimal (13k)",
+      "overhead": "8k tokens (80%)",
+      "context": "Ukraine-full (18k) vs Minimal (10k)",
       "justification": "Full compliance, cyber defense, Ukrainian market specifics"
     }
   },

@@ -5,47 +5,14 @@
  * Universal setup wizard for AI coding assistants
  */
 
-const inquirer = require('inquirer');
+const { select, confirm, intro, outro, isCancel, cancel, log } = require('@clack/prompts');
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 
-// Presets for token limits by provider and plan
-// Synced with .ai/token-limits.json (v3.0 VARIANT B) - 2026-02-17
-const TOKEN_PRESETS = {
-  anthropic: {
-    free: { monthly: 200000, daily: 20000 },
-    pro: { monthly: 5000000, daily: 500000 },
-    team: { monthly: 8000000, daily: 800000 },
-    api: { monthly: 999999999, daily: 999999999 }
-  },
-  google: {
-    free: { monthly: 100000, daily: 5000 },
-    advanced: { monthly: 1500000, daily: 80000 },
-    api: { monthly: 999999999, daily: 999999999 }
-  },
-  cursor: {
-    free: { monthly: 400000, daily: 20000 },
-    pro: { monthly: 1500000, daily: 80000 },
-    business: { monthly: 2500000, daily: 120000 }
-  },
-  mistral: {
-    api: { monthly: 999999999, daily: 999999999 }
-  },
-  groq: {
-    free: { monthly: 100000, daily: 5000 }
-  },
-  deepseek: {
-    api: { monthly: 999999999, daily: 999999999 }
-  },
-  perplexity: {
-    free: { monthly: 200000, daily: 10000 },
-    pro: { monthly: 400000, daily: 20000 }
-  },
-  other: {
-    default: { monthly: 500000, daily: 20000 }
-  }
-};
+// Tool/plan presets — loaded from presets.json (v1.0)
+// No hardcoded limits: session_limit from public docs, daily_limit = null (not published)
+const PRESETS_PATH = path.join(__dirname, '../npm-templates/.ai/presets.json');
 
 // Provider and plan mappings
 // Synced with .ai/token-limits.json PRESETS - 2026-02-17
@@ -73,22 +40,8 @@ const PLANS = {
 
 const CONTEXTS = [
   { name: 'Minimal - Startups, MVP (~10k tokens, v9.1)', value: 'minimal', tokens: 10000 },
-  { name: 'Standard - Most projects (~14k tokens, v9.1)', value: 'standard', tokens: 14000 },
-  { name: 'Ukraine-Full - Ukrainian businesses (~18k tokens, v9.1)', value: 'ukraine-full', tokens: 18000 },
-  { name: 'Enterprise - Large teams (~23k tokens, v9.1)', value: 'enterprise', tokens: 23000 }
+  { name: 'Ukraine-Full - Ukrainian businesses (~18k tokens, v9.1)', value: 'ukraine-full', tokens: 18000 }
 ];
-
-// Architecture model classification (2026 reality)
-// MODEL_1: Hard Token Billing (API, metered)
-// MODEL_2: Request Quota (GitHub Copilot)
-// MODEL_3: Fair Use Dynamic (limits NOT DISCLOSED by provider)
-const MODEL_1_KEYS = new Set(['anthropic.api', 'google.api', 'mistral.api', 'deepseek.api']);
-
-function getArchModel(provider, plan) {
-  const key = `${provider}.${plan}`;
-  if (MODEL_1_KEYS.has(key)) return 'MODEL_1';
-  return 'MODEL_3';
-}
 
 // Function: Generate rules files for AI tools
 async function generateRulesFiles(targetDir, context) {
@@ -165,148 +118,99 @@ async function generateRulesFiles(targetDir, context) {
 
 // Function: Smart context selection with recommendations
 async function selectContextWithRecommendation() {
-  console.log(chalk.bold.cyan('\n📊 Context Selection Wizard\n'));
-  console.log(chalk.gray('Answer a few questions to get the best recommendation\n'));
-
-  const answers = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'teamSize',
-      message: 'How many team members?',
-      choices: [
-        { name: '1-2 developers (solo/small)', value: 'small' },
-        { name: '3-5 developers (team)', value: 'medium' },
-        { name: '6+ developers (large team)', value: 'large' }
-      ]
-    },
-    {
-      type: 'list',
-      name: 'market',
-      message: 'Primary market?',
-      choices: [
-        { name: 'Ukrainian market (compliance, language rules)', value: 'ukraine' },
-        { name: 'International (English-focused)', value: 'international' }
-      ]
-    },
-    {
-      type: 'list',
-      name: 'tokenPriority',
-      message: 'How cautious should AI be with tokens?',
-      choices: [
-        { name: 'Careful — warns early, fewer long tasks (recommended for Pro/subscription)', value: 'high' },
-        { name: 'Balanced — standard warnings (recommended for most users)', value: 'medium' },
-        { name: 'Relaxed — minimal interruptions (good for API/pay-per-token)', value: 'low' }
-      ]
-    }
-  ]);
+  const market = await select({
+    message: 'Primary market?',
+    options: [
+      { value: 'ukraine', label: 'Ukrainian market', hint: 'compliance, language rules' },
+      { value: 'international', label: 'International', hint: 'English-focused' }
+    ]
+  });
+  if (isCancel(market)) { cancel('Setup cancelled.'); process.exit(0); }
 
   // Recommendation logic
-  let recommended;
-  const reasons = [];
-
-  if (answers.market === 'ukraine') {
-    recommended = 'ukraine-full';
-    reasons.push('Ukrainian market needs full compliance features');
-  } else if (answers.tokenPriority === 'high') {
-    recommended = 'minimal';
-    reasons.push('Token efficiency prioritized');
-  } else if (answers.teamSize === 'large' || answers.tokenPriority === 'low') {
-    recommended = 'enterprise';
-    reasons.push(answers.teamSize === 'large' ? 'Large team benefits from enterprise workflows' : 'Full features prioritized');
-  } else {
-    recommended = 'standard';
-    reasons.push('Balanced approach for most projects');
-  }
+  const recommended = market === 'ukraine' ? 'ukraine-full' : 'minimal';
+  const reason = market === 'ukraine'
+    ? 'Ukrainian market needs full compliance features'
+    : 'Minimal context covers most use cases efficiently';
 
   // Show comparison table
-  console.log(chalk.bold.cyan('\n📊 Context Comparison\n'));
+  console.log('\n' + chalk.bold.cyan('📊 Context Comparison'));
   console.log('┌─────────────────┬────────────┬─────────────┬──────────────────────┐');
   console.log('│ Context         │ Tokens     │ Session %   │ Best For             │');
   console.log('├─────────────────┼────────────┼─────────────┼──────────────────────┤');
   console.log('│ Minimal         │ ~10k       │ 5%          │ Startups, MVP        │');
-  console.log('│ Standard        │ ~14k       │ 7%          │ Most projects        │');
   console.log('│ Ukraine-Full    │ ~18k       │ 9%          │ Ukrainian market     │');
-  console.log('│ Enterprise      │ ~23k       │ 11.5%       │ Large teams          │');
   console.log('└─────────────────┴────────────┴─────────────┴──────────────────────┘');
   console.log(chalk.gray('  Session % = tokens used of 200K session limit (MODEL_3 primary metric)\n'));
 
-  // Show recommendation
-  console.log(chalk.bold.green(`✅ Recommended: ${recommended}\n`));
-  console.log(chalk.gray('Reasoning:'));
-  reasons.forEach(reason => console.log(chalk.gray(`  • ${reason}`)));
-  console.log();
+  log.success(`Recommended: ${recommended}`);
+  log.info(`Reason: ${reason}`);
 
-  // Confirm or choose manually
-  const confirmation = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'useRecommended',
-      message: `Use ${recommended} context?`,
-      default: true
-    }
-  ]);
+  const useRecommended = await confirm({
+    message: `Use ${recommended} context?`,
+    initialValue: true
+  });
+  if (isCancel(useRecommended)) { cancel('Setup cancelled.'); process.exit(0); }
 
-  if (confirmation.useRecommended) {
-    return recommended;
-  }
+  if (useRecommended) return recommended;
 
   // Manual selection
-  const manual = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'context',
-      message: 'Choose context manually:',
-      choices: CONTEXTS,
-      default: recommended
-    }
-  ]);
+  const context = await select({
+    message: 'Choose context manually:',
+    options: CONTEXTS.map(c => ({ value: c.value, label: c.name })),
+    initialValue: recommended
+  });
+  if (isCancel(context)) { cancel('Setup cancelled.'); process.exit(0); }
 
-  return manual.context;
+  return context;
 }
 
 async function main() {
-  console.log(chalk.bold.cyan('\n🤖 AI Workflow Rules Setup v9.1\n'));
+  intro(chalk.bold.cyan('🤖 AI Workflow Rules Setup v9.1'));
   console.log(chalk.gray('Universal framework for AI coding assistants\n'));
-  console.log(chalk.gray('━'.repeat(50)) + '\n');
 
   try {
-    // Ask questions
-    const answers = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'provider',
-        message: 'What AI provider are you using?',
-        choices: PROVIDERS
-      },
-      {
-        type: 'list',
-        name: 'plan',
-        message: (answers) => `What's your ${answers.provider} plan?`,
-        choices: (answers) => PLANS[answers.provider] || PLANS.other
-      },
-      {
-        type: 'confirm',
-        name: 'installHooks',
-        message: 'Install security pre-commit hooks? (Recommended)',
-        default: true
-      },
-      {
-        type: 'confirm',
-        name: 'updateGitignore',
-        message: 'Add AI files to .gitignore? (Recommended)',
-        default: true
-      },
-      {
-        type: 'confirm',
-        name: 'installProductRules',
-        message: 'Install product rules? (Ukrainian market specifics → .ai/rules/product.md)',
-        default: false
-      }
-    ]);
+    const provider = await select({
+      message: 'What AI provider are you using?',
+      options: PROVIDERS.map(p => ({ value: p.value, label: p.name }))
+    });
+    if (isCancel(provider)) { cancel('Setup cancelled.'); process.exit(0); }
+
+    const planOptions = (PLANS[provider] || PLANS.other).map(p => ({ value: p, label: p }));
+    const plan = await select({
+      message: `What's your ${provider} plan?`,
+      options: planOptions
+    });
+    if (isCancel(plan)) { cancel('Setup cancelled.'); process.exit(0); }
+
+    const installHooks = await confirm({
+      message: 'Install security pre-commit hooks? (Recommended)',
+      initialValue: true
+    });
+    if (isCancel(installHooks)) { cancel('Setup cancelled.'); process.exit(0); }
+
+    const shouldUpdateGitignore = await confirm({
+      message: 'Add AI files to .gitignore? (Recommended)',
+      initialValue: true
+    });
+    if (isCancel(shouldUpdateGitignore)) { cancel('Setup cancelled.'); process.exit(0); }
+
+    const installProductRules = await confirm({
+      message: 'Install product rules? (Ukrainian market specifics → .ai/rules/product.md)',
+      initialValue: false
+    });
+    if (isCancel(installProductRules)) { cancel('Setup cancelled.'); process.exit(0); }
 
     // Smart context selection (v9.1)
     const selectedContext = await selectContextWithRecommendation();
-    answers.context = selectedContext;
+    const answers = {
+      provider,
+      plan,
+      installHooks,
+      updateGitignore: shouldUpdateGitignore,
+      installProductRules,
+      context: selectedContext
+    };
 
     console.log('\n' + chalk.gray('━'.repeat(50)));
     console.log(chalk.bold('\n📦 Installing files...\n'));
@@ -332,6 +236,16 @@ async function main() {
       path.join(currentDir, '.claude'),
       'settings.json'
     );
+
+    // Copy Claude Code skills (/ctx, /sculptor, /arbiter)
+    await fs.ensureDir(path.join(currentDir, '.claude', 'commands'));
+    for (const skill of ['ctx.md', 'sculptor.md', 'arbiter.md']) {
+      await copyFile(
+        path.join(templatesDir, '.claude', 'commands'),
+        path.join(currentDir, '.claude', 'commands'),
+        skill
+      );
+    }
 
     // Create .claude/hooks and copy Session Start hook
     await fs.ensureDir(path.join(currentDir, '.claude', 'hooks'));
@@ -471,10 +385,9 @@ async function main() {
     // Generate rules for AI tools (reads from .ai/contexts/ copied above)
     await generateRulesFiles(currentDir, answers.context);
 
-    // Success message
-    console.log('\n' + chalk.gray('━'.repeat(50)));
-    console.log(chalk.bold.green('\n🎉 Setup complete!\n'));
-    console.log(chalk.bold('Next steps:'));
+    // Success
+    outro(chalk.bold.green('🎉 Setup complete!'));
+    console.log(chalk.bold('\nNext steps:'));
     console.log(chalk.gray('  1. Open a ') + chalk.bold('NEW conversation') + chalk.gray(' in your AI assistant'));
     console.log(chalk.gray('  2. Type ') + chalk.cyan('//START') + chalk.gray(' in the chat'));
     console.log(chalk.gray('  3. AI will load rules and start working\n'));
@@ -486,11 +399,7 @@ async function main() {
     console.log(chalk.gray('Made with ❤️  in Ukraine 🇺🇦\n'));
 
   } catch (error) {
-    if (error.isTtyError) {
-      console.error(chalk.red('\n❌ Interactive prompt not supported in this environment'));
-    } else {
-      console.error(chalk.red('\n❌ Error:'), error.message);
-    }
+    log.error(`Setup failed: ${error.message}`);
     process.exit(1);
   }
 }
@@ -514,9 +423,7 @@ async function copyContextFiles(templatesDir, targetDir) {
 
   const contextFiles = [
     'minimal.context.md',
-    'standard.context.md',
-    'ukraine-full.context.md',
-    'enterprise.context.md'
+    'ukraine-full.context.md'
   ];
 
   for (const file of contextFiles) {
@@ -528,91 +435,53 @@ async function createTokenLimitsConfig(targetDir, answers) {
   const provider = answers.provider;
   const plan = answers.plan.toLowerCase();
 
-  const limits = TOKEN_PRESETS[provider]?.[plan] || TOKEN_PRESETS.other.default;
-  const archModel = getArchModel(provider, plan);
-  const isModel3 = archModel === 'MODEL_3';
+  const presets = await fs.readJson(PRESETS_PATH);
+  const key = `${provider}.${plan}`;
+  const mapping = presets.mappings[key] || presets.default;
+  const billingInfo = presets.billing_types[mapping.billing] || presets.billing_types.subscription;
 
   const config = {
-    "_comment": "🤖 Universal AI Token Tracker v3.0 - Auto-configured",
-    "provider": provider,
+    "_comment": "AI Token Tracker v4.0 — session-based. New day = fresh limits.",
+    "tool": provider,
     "plan": plan,
-    "_architecture_model": archModel,
-    "monthly_limit": limits.monthly,
-    "daily_limit": limits.daily,
-    "tracking_enabled": true,
-    "current_month": new Date().toISOString().slice(0, 7),
-    "monthly_usage": 0,
-    "monthly_percentage": 0,
-    "daily_usage": 0,
-    "daily_percentage": 0,
-    "last_reset_daily": new Date().toISOString().split('T')[0] + 'T00:00:00Z',
-    "last_reset_monthly": new Date().toISOString().slice(0, 8) + '01T00:00:00Z',
-    "thresholds": {
-      "green": 50,
-      "moderate": 70,
-      "caution": 90,
-      "critical": 95
-    },
-    "current_status": "green",
-    "current_zone": "🟢 Green - Full capacity",
-    "sessions": [],
-    "optimization_stats": {
-      "context_compressions": 0,
-      "tokens_saved_by_compression": 0,
-      "diff_only_mode_activations": 0,
-      "lazy_loading_prevented_reads": 0
-    },
-    "notes": [
-      "Auto-configured by ai-workflow-rules installer",
-      "Limits are CONSERVATIVE (10-20% lower) for early warnings",
-      "Context compression auto-triggers at 50% (saves 40-60% tokens)",
-      "AI automatically updates this file - no manual tracking needed"
-    ],
-    "history": {}
+    "billing": mapping.billing,
+    "session_limit": mapping.session_limit,
+    "session_thresholds": billingInfo.session_thresholds,
+    "daily_limit": null,
+    "daily_note": billingInfo.daily_note,
+    "today": new Date().toISOString().split('T')[0],
+    "today_sessions": 0,
+    "today_estimated_tokens": 0,
+    "sessions": []
   };
-
-  // MODEL_3: Add Fair Use Dynamic fields (daily/monthly limits UNKNOWN by provider)
-  if (isModel3) {
-    config.daily_limit_type = "fair_use_dynamic";
-    config.daily_limit_note = "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).";
-    config.monthly_limit_note = "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).";
-    config.session_limit = 200000;
-    config.session_duration_hours = 5;
-    config.notes.unshift(
-      "MODEL_3: Fair Use Dynamic - real daily/monthly limits NOT DISCLOSED by provider",
-      "Session limit: 200K tokens / ~5h rolling window (primary budget metric for MODEL_3)"
-    );
-  }
 
   const targetPath = path.join(targetDir, '.ai', 'token-limits.json');
   await fs.writeJson(targetPath, config, { spaces: 2 });
 
-  const limitLabel = isModel3
-    ? `${limits.daily.toLocaleString()} daily est. (MODEL_3: real limit UNKNOWN)`
-    : `${limits.daily.toLocaleString()} daily`;
-  console.log(chalk.green(`  ✓ .ai/token-limits.json (${provider} ${plan}: ${limitLabel})`));
+  const sessionLabel = mapping.session_limit
+    ? `session: ${Math.round(mapping.session_limit / 1000)}k`
+    : 'session: unknown (not published)';
+  console.log(chalk.green(`  ✓ .ai/token-limits.json (${provider} ${plan}: ${sessionLabel}, ${mapping.billing})`));
 }
 
 async function createAiConfig(targetDir, answers) {
   const provider = answers.provider;
   const plan = answers.plan.toLowerCase();
-  const limits = TOKEN_PRESETS[provider]?.[plan] || TOKEN_PRESETS.other.default;
-  const archModel = getArchModel(provider, plan);
 
-  // access_type: "billing" for API plans (MODEL_1), "subscription" for all others
-  const accessType = archModel === 'MODEL_1' ? 'billing' : 'subscription';
+  const presets = await fs.readJson(PRESETS_PATH);
+  const key = `${provider}.${plan}`;
+  const mapping = presets.mappings[key] || presets.default;
 
-  // Derive market from context choice
   const market = answers.context === 'ukraine-full' ? 'ukraine' : 'international';
 
   const config = {
     "framework": "ai-workflow-rules",
     "version": "9.1.1",
-    "config_version": "2.1",
-    "access_type": accessType,
+    "config_version": "2.2",
+    "access_type": mapping.billing,
     "model": {
       "name": "claude-sonnet-4-6",
-      "context_limit": 200000
+      "context_limit": mapping.session_limit || 200000
     },
     "context": answers.context,
     "modules": [],
@@ -622,16 +491,6 @@ async function createAiConfig(targetDir, answers) {
       "code_comments": "en",
       "commit_messages": "en",
       "variable_names": "en"
-    },
-    "token_budget": {
-      "daily_limit": limits.daily,
-      "monthly_limit": limits.monthly,
-      "auto_approve_thresholds": {
-        "green_zone": 15000,
-        "moderate_zone": 8000,
-        "caution_zone": 3000,
-        "critical_zone": 0
-      }
     },
     "optimizations": {
       "auto_compress": true,
@@ -655,16 +514,6 @@ async function createAiConfig(targetDir, answers) {
     }
   };
 
-  // Add billing block for API plans (access_type == "billing")
-  if (accessType === 'billing') {
-    config.billing = {
-      "cost_per_1k_input": 0.003,
-      "cost_per_1k_output": 0.015,
-      "daily_budget_usd": 20,
-      "_note": "Update cost_per_1k_input/output to match your model pricing. daily_budget_usd = soft spending limit."
-    };
-  }
-
   const targetPath = path.join(targetDir, '.ai', 'config.json');
 
   if (await fs.pathExists(targetPath)) {
@@ -673,7 +522,7 @@ async function createAiConfig(targetDir, answers) {
   }
 
   await fs.writeJson(targetPath, config, { spaces: 2 });
-  console.log(chalk.green(`  ✓ .ai/config.json (context: ${answers.context}, access_type: ${accessType})`));
+  console.log(chalk.green(`  ✓ .ai/config.json (context: ${answers.context}, access_type: ${mapping.billing})`));
 }
 
 async function installPreCommitHook(targetDir) {

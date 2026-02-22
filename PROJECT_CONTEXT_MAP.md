@@ -146,14 +146,12 @@ Billing Layer  → Financial (N/A for subscription, $X.XX for API billing)
 
 ---
 
-## Context Presets (4 → 2 planned in Task 4)
+## Context Presets (спрощено в Task 4, 2026-02-22)
 
 | Preset | Tokens | Status |
 |--------|--------|--------|
 | `minimal` | ~10k | ✅ Keep |
-| `standard` | ~14k | ❌ Remove (Task 4) |
 | `ukraine-full` | ~18k | ✅ Keep ← ACTIVE |
-| `enterprise` | ~23k | ❌ Remove (Task 4) |
 
 ---
 

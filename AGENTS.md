@@ -95,9 +95,7 @@
 .ai/                          # AI Framework Hub (v9.1)
 ├── contexts/                 # Context presets (loaded at session start)
 │   ├── minimal.context.md    # ~10k tokens (startups, MVP)
-│   ├── standard.context.md   # ~14k tokens (most projects)
-│   ├── ukraine-full.context.md  # ~18k tokens (Ukrainian market)
-│   └── enterprise.context.md    # ~23k tokens (large teams)
+│   └── ukraine-full.context.md  # ~18k tokens (Ukrainian market)
 ├── docs/                     # Documentation
 │   ├── quickstart.md
 │   ├── cheatsheet.md
@@ -137,18 +135,14 @@
 | Context | Tokens | Session % | Best For | Includes |
 |---------|--------|---------|----------|----------|
 | **Minimal** | ~10k | 5% | Startups, MVP, simple projects | Core workflow, basic security |
-| **Standard** | ~14k | 7% | Most projects (recommended) | + Git discipline, token management |
 | **Ukraine-Full** | ~18k | 9% | Ukrainian market compliance | + Language rules, market policy, i18n |
-| **Enterprise** | ~23k | 11.5% | Large teams, complex workflows | + Advanced patterns, enterprise features |
 
 **Token savings (v9.1 optimization):**
 - minimal: -23% (13k → 10k)
-- standard: -22% (18k → 14k)
 - ukraine-full: -28% (25k → 18k)
-- enterprise: -23% (30k → 23k)
 
 **Change context:**
-1. Edit `.ai/config.json` → Set `"context": "standard"` (or minimal/ukraine-full/enterprise)
+1. Edit `.ai/config.json` → Set `"context": "minimal"` (or `"ukraine-full"`)
 2. Run `npm run sync-rules` to regenerate tool files
 3. Restart AI session
 
@@ -224,7 +218,7 @@
 
 - **v9.1** [2026-02-08] - **OPTIMIZATION RELEASE**. Phase 7: .ai/ hub restructure. Clean root directory (only AGENTS.md). All docs → .ai/docs/, rules → .ai/rules/. Token optimization: 20-30% smaller contexts. Session management best practices. Enhanced compression. Zero feature loss.
 - **v9.0** [2026-02-05] - **AI ENFORCEMENT**. Mandatory protocols auto-loaded. Post-push compression. Multi-level compression (Light/Aggressive/Maximum). Proactive token suggestions.
-- **v8.1** [2026-02-04] - **MODULAR CONTEXTS**. Smart context loading system (minimal/standard/ukraine-full/enterprise). Token savings: 40-70% for international users.
+- **v8.1** [2026-02-04] - **MODULAR CONTEXTS**. Smart context loading system (minimal/ukraine-full). Token savings: 40-70% for international users.
 - **v8.0** [2026-02-03] - **TOKEN CONTROL v3.0**. Intelligent budget management. Pre-flight approval, variance learning, emergency reserves.
 - **v7.2** [2026-02-02] - Layer 0: CLAUDE.md for universal VSCode support. 4-layer protection system.
 

@@ -50,11 +50,11 @@
   "author": "Shamavision <shamavision@wellme.ua>",
   "license": "GPL-3.0",
   "dependencies": {
-    "inquirer": "^8.2.6",
+    "@clack/prompts": "^0.8.0",
     "fs-extra": "^11.2.0",
     "chalk": "^4.1.2"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   }
 }

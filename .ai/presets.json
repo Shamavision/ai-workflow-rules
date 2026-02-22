@@ -1,0 +1,65 @@
+{
+  "_comment": "AI Workflow Rules — Tool Presets v1.0",
+  "_note": "session_limit = context window per conversation (publicly documented). daily_limit = null for all (not published by providers). No pricing — check your dashboard.",
+  "_updated": "2026-02-22",
+  "version": "1.0",
+
+  "mappings": {
+    "_note": "Key format: provider.plan (lowercase). Used by installer to configure .ai/token-limits.json",
+
+    "anthropic.free":     { "billing": "subscription", "session_limit": 200000 },
+    "anthropic.pro":      { "billing": "subscription", "session_limit": 200000 },
+    "anthropic.team":     { "billing": "subscription", "session_limit": 200000 },
+    "anthropic.api":      { "billing": "billing",      "session_limit": 200000 },
+
+    "google.free":        { "billing": "subscription", "session_limit": 1000000 },
+    "google.advanced":    { "billing": "subscription", "session_limit": 1000000 },
+    "google.api":         { "billing": "billing",      "session_limit": 1000000 },
+
+    "cursor.free":        { "billing": "subscription", "session_limit": null },
+    "cursor.pro":         { "billing": "subscription", "session_limit": null },
+    "cursor.business":    { "billing": "subscription", "session_limit": null },
+
+    "openai.free":        { "billing": "subscription", "session_limit": 128000 },
+    "openai.plus":        { "billing": "subscription", "session_limit": 128000 },
+    "openai.api":         { "billing": "billing",      "session_limit": 128000 },
+
+    "deepseek.api":       { "billing": "billing",      "session_limit": 128000 },
+    "groq.free":          { "billing": "billing",      "session_limit": 32768 },
+    "mistral.api":        { "billing": "billing",      "session_limit": 128000 },
+
+    "perplexity.free":    { "billing": "subscription", "session_limit": null },
+    "perplexity.pro":     { "billing": "subscription", "session_limit": null },
+
+    "other.default":      { "billing": "subscription", "session_limit": null }
+  },
+
+  "billing_types": {
+    "subscription": {
+      "daily_limit": null,
+      "daily_note": "Fair use subscription — new day = fresh limits. Exact daily limit not published by provider.",
+      "session_thresholds": {
+        "green":    0.50,
+        "yellow":   0.70,
+        "red":      0.90,
+        "critical": 0.95
+      }
+    },
+    "billing": {
+      "daily_limit": null,
+      "daily_note": "API billing — new day = fresh token count. Check your provider dashboard for costs.",
+      "session_thresholds": {
+        "green":    0.50,
+        "yellow":   0.70,
+        "red":      0.90,
+        "critical": 0.95
+      }
+    }
+  },
+
+  "default": {
+    "billing": "subscription",
+    "session_limit": null,
+    "daily_note": "Unknown provider — limits not available. Configure manually in .ai/token-limits.json"
+  }
+}
