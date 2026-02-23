@@ -72,7 +72,8 @@ Extract:
 - Key files and their approximate sizes (large files = higher change cost)
 - Any in-progress work (uncommitted changes = higher collision risk)
 - Last 10 commits (reveals velocity and patterns)
-- **From PROJECT_IDEOLOGY.md (if loaded):** PRINCIPLES and ANTI-GOALS — used to flag proposals that may conflict
+- **From PROJECT_IDEOLOGY.md (if loaded):** PRINCIPLES, ANTI-GOALS, and DECISIONS — all three used to flag proposals that may conflict
+  - DECISIONS are especially important: if a proposal reverses an explicit architectural decision, it must be flagged as 🟡 "Ideology Review Required"
 
 ---
 
@@ -101,6 +102,15 @@ P2.2 → (independent, can run parallel with P2.1)
 - Independent proposals first (reduce dependencies)
 - High-risk proposals at start of session (fresh context = better judgment)
 
+**Cross-proposal conflict check:**
+After building the dependency map, scan for contradictions:
+- Does any proposal delete a file that another proposal reads, extends, or uses as a template?
+- Does any proposal add a feature that another proposal removes?
+- Do two proposals modify the same file in ways that may conflict?
+
+If conflict found → flag both proposals with ⚡ [CONFLICT: with PX.Y] and explain.
+If conflict is unresolvable without user input → add to "What the Arbiter Won't Order" section.
+
 Output: Ordered execution queue (Step 2 of report).
 
 ---
@@ -123,6 +133,12 @@ For each proposal, check:
 - Does it break the dual-structure invariant? (dev ↔ npm-templates sync)
 - Does it change a function or interface another part of the code depends on?
 - Does it affect the pre-commit hook behavior?
+
+**Uncommitted work collision check (REMOVE proposals only):**
+From the `git status` loaded in Step 1 — for every proposal that REMOVES or OVERWRITES a file:
+- Is that file currently modified (M) or new/untracked (??) in git status?
+- If YES → flag 🔴 "UNCOMMITTED WORK AT RISK: [filename] has unsaved changes — commit or stash before executing this proposal."
+- This check prevents silent data loss.
 
 **Ideology conflicts (if PROJECT_IDEOLOGY.md loaded):**
 - Does any proposal contradict a stated PRINCIPLE or cross into ANTI-GOALS territory?

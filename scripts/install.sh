@@ -265,9 +265,10 @@ echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${BLUE}📦 Installing files...${NC}"
 echo ""
 
-# AGENTS.md + LICENSE
-copy_file "$TEMPLATES_DIR/AGENTS.md" "$TARGET_DIR/AGENTS.md"
-copy_file "$TEMPLATES_DIR/LICENSE"   "$TARGET_DIR/LICENSE"
+# AGENTS.md + LICENSE + PROJECT_IDEOLOGY.md (top-level project soul document)
+copy_file "$TEMPLATES_DIR/AGENTS.md"            "$TARGET_DIR/AGENTS.md"
+copy_file "$TEMPLATES_DIR/LICENSE"              "$TARGET_DIR/LICENSE"
+copy_file "$TEMPLATES_DIR/PROJECT_IDEOLOGY.md"  "$TARGET_DIR/PROJECT_IDEOLOGY.md"
 
 # .claude/ — CLAUDE.md, settings.json, hooks
 mkdir -p "$TARGET_DIR/.claude/hooks"
@@ -521,6 +522,7 @@ check_file() {
 }
 
 check_file "AGENTS.md"
+check_file "PROJECT_IDEOLOGY.md"
 check_file ".claude/CLAUDE.md"
 check_file ".claude/settings.json"
 check_file ".claude/hooks/user-prompt-submit.sh"
@@ -566,6 +568,8 @@ echo -e "${BLUE}Next steps:${NC}"
 echo "  1. Open a NEW conversation in your AI assistant"
 echo -e "  2. Type ${CYAN}//START${NC} in the chat"
 echo "  3. AI will load rules and start working"
+echo -e "  4. Fill in ${CYAN}PROJECT_IDEOLOGY.md${NC} — WHY / PRINCIPLES / VISION"
+echo -e "  5. Run ${CYAN}/ctx${NC} to auto-generate your project's context + ideology map"
 echo ""
 echo -e "${BLUE}🛡️  AI Protection v9.1 enabled:${NC}"
 echo "  ✓ Prompt injection detection"

@@ -246,6 +246,20 @@ NOT what it does mechanically — WHY it matters to the people who use it.]
 [Describe the primary user in 2-3 sentences.
 Their context, their pain, what they need. Be specific — not "developers" but what kind.]
 
+### PRODUCT — What It Delivers (Concrete)
+[This section makes the ideology file useful for writing README, pitches, and documentation.
+Describe what the project actually gives users — not the philosophy, but the tangible output.
+
+Examples:
+- Tool: "Run X command → get Y in 2 minutes"
+- SaaS: "Sign up → dashboard with features A, B, C"
+- Library: "import X, call Y() → achieve Z in 3 lines"
+
+Structure:
+- List 3-6 key capabilities (concrete, not abstract)
+- What users get after install/setup (deliverables)
+- One-line differentiator vs obvious alternative]
+
 ### PRINCIPLES — Non-Negotiable Rules
 [List 3-6 principles that the project will NEVER violate.
 Examples: "Quality > Speed", "No Russian services", "Opinionated by default"]

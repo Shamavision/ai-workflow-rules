@@ -38,11 +38,6 @@ const PLANS = {
   other: ['Default']
 };
 
-const CONTEXTS = [
-  { name: 'Minimal - Startups, MVP (~10k tokens, v9.1)', value: 'minimal', tokens: 10000 },
-  { name: 'Ukraine-Full - Ukrainian businesses (~18k tokens, v9.1)', value: 'ukraine-full', tokens: 18000 }
-];
-
 // Function: Generate rules files for AI tools
 async function generateRulesFiles(targetDir, context) {
   console.log(chalk.cyan('\n🤖 Generating rules for AI tools...\n'));
@@ -189,9 +184,10 @@ async function main() {
     const templatesDir = path.join(__dirname, '../npm-templates');
     const currentDir = process.cwd();
 
-    // Copy entry point
+    // Copy entry points + project soul document
     await copyFile(templatesDir, currentDir, 'AGENTS.md');
     await copyFile(templatesDir, currentDir, 'LICENSE');
+    await copyFile(templatesDir, currentDir, 'PROJECT_IDEOLOGY.md');
 
     // Create .claude directory and copy Claude Code configuration
     await fs.ensureDir(path.join(currentDir, '.claude'));
@@ -369,7 +365,9 @@ async function main() {
     console.log(chalk.bold('\nNext steps:'));
     console.log(chalk.gray('  1. Open a ') + chalk.bold('NEW conversation') + chalk.gray(' in your AI assistant'));
     console.log(chalk.gray('  2. Type ') + chalk.cyan('//START') + chalk.gray(' in the chat'));
-    console.log(chalk.gray('  3. AI will load rules and start working\n'));
+    console.log(chalk.gray('  3. AI will load rules and start working'));
+    console.log(chalk.gray('  4. Fill in ') + chalk.cyan('PROJECT_IDEOLOGY.md') + chalk.gray(' — WHY / PRINCIPLES / VISION'));
+    console.log(chalk.gray('  5. Run ') + chalk.cyan('/ctx') + chalk.gray(' to auto-generate your project\'s context + ideology map\n'));
     console.log(chalk.bold.blue('🛡️  AI Protection v9.1 enabled:'));
     console.log(chalk.gray('  ✓ Prompt injection detection'));
     console.log(chalk.gray('  ✓ PII protection (GDPR-ready)'));
