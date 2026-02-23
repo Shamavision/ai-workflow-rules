@@ -1,7 +1,7 @@
 {
   "framework": "ai-workflow-rules",
   "version": "9.1.1",
-  "config_version": "2.1",
+  "config_version": "2.2",
 
   "access_type": "subscription",
   "model": {
@@ -10,7 +10,6 @@
   },
 
   "context": "ukraine-full",
-  "modules": [],
   "market": "ukraine",
 
   "language": {
@@ -18,17 +17,6 @@
     "code_comments": "en",
     "commit_messages": "en",
     "variable_names": "en"
-  },
-
-  "token_budget": {
-    "daily_limit": 200000,
-    "monthly_limit": 6000000,
-    "auto_approve_thresholds": {
-      "green_zone": 15000,
-      "moderate_zone": 8000,
-      "caution_zone": 3000,
-      "critical_zone": 0
-    }
   },
 
   "optimizations": {

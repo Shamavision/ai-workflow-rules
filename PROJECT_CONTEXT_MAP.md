@@ -49,7 +49,6 @@ AGENTS.md                          →   npm-templates/AGENTS.md
 scripts/pre-commit                 →   npm-templates/scripts/pre-commit
 scripts/post-push.sh               →   npm-templates/scripts/post-push.sh
 scripts/sync-rules.sh              →   npm-templates/scripts/sync-rules.sh
-scripts/token-status.sh            →   npm-templates/scripts/token-status.sh
 .claude/commands/*.md              →   npm-templates/.claude/commands/*.md
 PROJECT_IDEOLOGY.md (template)     →   npm-templates/PROJECT_IDEOLOGY.md
 ```
@@ -182,13 +181,7 @@ session-log.json    → dynamic: sessions today, estimated tokens
 
 | Issue | Severity | Location | Notes |
 |-------|----------|----------|-------|
-| `scripts/` bloat | ⚠️ Medium | `scripts/` | 28 files, ~20 appear legacy (install.ps1, setup.sh, pre-commit.js, ai-protection.ps1, etc.) |
-| `token-limits.json` 840+ lines | ⚠️ Low | `.ai/token-limits.json` | Exists for reference, never read whole |
-| `.ai/config.json` version mismatch | ⚠️ Low | `.ai/config.json` | Shows `config_version: "2.1"` + old `token_budget` block — should be "2.2" (Task 10) |
-| `CHANGELOG.md` gap | ⚠️ Low | `CHANGELOG.md` | No entries for Rounds 2+3 (Tasks 12, 13, 10) |
-| `npm-templates/.ai/token-limits.json` | ⚠️ Low | `npm-templates/.ai/` | Runtime file in distributable — should not be there |
-| `npm-templates/.ai/session-log.json` | ⚠️ Low | `npm-templates/.ai/` | Same — runtime file in distributable |
-| `QUICK_CONTEXT.md` outdated | ⚠️ Low | `QUICK_CONTEXT.md` | Describes old //START workflow; doesn't mention skills triangle or PROJECT_IDEOLOGY.md |
+| `CHANGELOG.md` gap | ⚠️ Low | `CHANGELOG.md` | No entries for Rounds 2+3+4 (Tasks 10, 12, 13, 14) — Task 14e |
 | No real tests | ⚠️ Low | `package.json scripts.test` | `test` just runs `--help` |
 
 ~~Pre-commit hook slow~~ ✅ Fixed Task 3
@@ -196,6 +189,10 @@ session-log.json    → dynamic: sessions today, estimated tokens
 ~~inquirer@8 legacy~~ ✅ Fixed Task 5
 ~~install.sh wizard outdated~~ ✅ Fixed Task 10
 ~~install.ps1 missing~~ ✅ Cancelled Task 11 (not needed)
+~~scripts/ bloat (28 files)~~ ✅ Fixed Task 14d (4 active, 24 deleted)
+~~config.json token_budget dead schema~~ ✅ Fixed Task 14b (bumped to 2.2)
+~~npm-templates runtime files~~ ✅ Fixed Task 14a (token-limits + session-log deleted)
+~~QUICK_CONTEXT.md outdated~~ ✅ Fixed Task 14c (deleted)
 
 ---
 
