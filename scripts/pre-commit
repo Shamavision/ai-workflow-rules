@@ -463,6 +463,7 @@ is_lang_excluded() {
     # Skip rule files
     [[ "$file" == *.cursorrules ]] && return 0
     [[ "$file" == *.continuerules ]] && return 0
+    [[ "$file" == *.mdc ]] && return 0
 
     # Skip known false-positive files
     local LANG_ALWAYS_SKIP=(
