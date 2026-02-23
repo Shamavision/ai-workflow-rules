@@ -614,6 +614,7 @@ check_sync_pair() {
 # Rule-file pairs (dev ↔ npm-templates) — all must stay in sync
 check_sync_pair ".claude/CLAUDE.md"              "npm-templates/.claude/CLAUDE.md"
 check_sync_pair ".cursorrules"                   "npm-templates/.cursorrules"
+check_sync_pair ".cursor/rules/ai-workflow.mdc"  "npm-templates/.cursor/rules/ai-workflow.mdc"
 check_sync_pair "AGENTS.md"                      "npm-templates/AGENTS.md"
 check_sync_pair ".claude/commands/ctx.md"        "npm-templates/.claude/commands/ctx.md"
 check_sync_pair ".claude/commands/sculptor.md"   "npm-templates/.claude/commands/sculptor.md"

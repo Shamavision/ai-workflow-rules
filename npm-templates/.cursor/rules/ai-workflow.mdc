@@ -1,0 +1,247 @@
+---
+description: AI Workflow Rules — session protocol, token management, security guards
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI WORKFLOW RULES FRAMEWORK v9.1.1
+# Tool: Cursor IDE (≥0.45 format)
+# Auto-generated - DO NOT EDIT MANUALLY
+# Update via: npm run sync-rules (or bash scripts/sync-rules.sh)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🔴 TOKEN PRE-FLIGHT CHECK (MANDATORY!)
+
+**BEFORE ANY task >20k tokens:**
+1. ASK: "How many tokens used TODAY?"
+2. CALCULATE: remaining = daily_limit - daily_used
+3. IF insufficient → STOP + WARN + GET APPROVAL
+4. NEVER start without check!
+
+**Failure = 2 days downtime!**
+
+## 🔴 AI BEHAVIOR RULES (CRITICAL - NON-NEGOTIABLE!)
+
+> **Added 2026-02-10 from ROADMAP Phase 1 - Override ALL other considerations!**
+
+### Rule #1: КАЧЕСТВО > СКОРОСТЬ (Quality > Speed)
+- ✅ Attention to details - ALWAYS
+- ✅ Quality > Speed - NOT negotiable
+- ✅ Thorough approach to every task
+- ❌ NEVER skip steps to save time/tokens
+- ❌ NEVER "quick verification" instead of detailed work
+
+### Rule #2: "I Don't Know" Honesty
+- ✅ Think HARDER before answering
+- ✅ If uncertain → say "I don't know"
+- ✅ If guessing → state it's a guess
+- ✅ If need to check → check FIRST
+- ❌ NEVER fabricate facts/data
+- ❌ NEVER pretend to know
+
+### Rule #3: Token Status After EVERY Phase
+After EVERY phase/stage completion:
+```
+[PHASE X COMPLETE]
+Session: Xk/200k (Y%)
+Daily: ~Xk today (self-reported, ±30-50%)
+Status: 🟢/🟡/🟠/🔴
+
+Next: [description] (~Nk estimate)
+Продолжить? [Y/n]
+```
+❌ NEVER start next phase without user approval
+❌ NEVER show fake daily % like "Zk/150k (W%)" — 150k is NOT a real limit
+
+### Rule #4: No Auto-Commit/Push
+- ❌ NEVER auto-commit
+- ❌ NEVER auto-push
+- ✅ ONLY when explicitly requested
+- ✅ After phase → PROPOSE (don't execute)
+
+**These rules are MORE important than token savings!**
+
+---
+
+## 🚀 SESSION START PROTOCOL (MANDATORY)
+
+**BEFORE any work in this project, you MUST:**
+
+1. **Load project context:**
+   - Read `.ai/config.json` to get selected context
+   - Load appropriate context from `.ai/contexts/[context].context.md`
+   - Context options: minimal, ukraine-full
+
+2. **Load enforcement protocols:**
+   - Read `.ai/AI-ENFORCEMENT.md` for mandatory workflows
+   - Includes: post-push compression, lint checks, token management
+
+3. **Display SESSION START confirmation:**
+
+```markdown
+[SESSION START]
+✓ Context loaded: [context_name] (~Xk tokens, v9.1 optimized)
+✓ Token budget: ~Xk for rules (Y% of daily)
+✓ Language: Adaptive (matches user's language)
+✓ Token limit: Zk daily
+✓ Current usage: Ak (B%) | Remaining: ~Ck
+✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
+
+Чім я можу вам допомогти? (or adapt to user's language)
+```
+
+4. **Follow core principles from loaded context**
+
+---
+
+## 📁 PROJECT STRUCTURE
+
+```
+.ai/                        # AI Framework Hub (v9.1)
+├── contexts/               # Context presets (load at session start)
+│   ├── minimal.context.md     (~10k tokens)
+│   └── ukraine-full.context.md (~18k tokens)
+├── docs/                   # Documentation
+│   ├── quickstart.md
+│   ├── cheatsheet.md
+│   ├── session-mgmt.md
+│   ├── code-quality.md
+│   └── ...
+├── rules/                  # Full rules reference
+│   ├── core.md             # Complete workflow rules
+│   └── product.md          # Ukrainian market specifics
+├── config.json             # Your configuration
+└── AI-ENFORCEMENT.md       # Mandatory protocols
+```
+
+---
+
+## 📊 //TOKENS Protocol (Phase 11 — Token Self-Reporting)
+
+**When user types `//TOKENS`:**
+1. **Read** `.ai/session-log.json` (if exists)
+2. **Check date** of last entry vs today (`YYYY-MM-DD`)
+3. **Calculate** daily total: sum all entries where `date == today`
+4. **Estimate** current session tokens (rough ±30-50%)
+5. **Estimate context_pct** = round(session_tokens / context_window × 100)
+6. **Burst check**: count today's entries where `context_pct > 60`. If 3+ → Rate Layer = "🟠 High load"
+7. **Append** new entry to `session-log.json`:
+   ```json
+   {"date": "YYYY-MM-DD", "tokens": ESTIMATE, "context_pct": X, "tool": "cursor", "trigger": "//tokens", "timestamp": UNIX_NOW}
+   ```
+8. **Display** [AI STATUS] — 3-Layer Mental Model:
+   ```
+   [AI STATUS] 🟢 GREEN
+   Provider: Cursor · [PLAN]
+
+   Context  ████░░░░░░░░░░  Y%  ~Xk / 200k
+   Rate     🟢 Normal / 🟠 High load
+   Billing  N/A
+   Daily    ~Zk today
+   ```
+7. **If session-log.json missing:** Create it (copy schema from `.ai/session-log.json`)
+
+**`//start` — Session boundary marker (Phase 11.5):**
+- Read `session-log.json`, get `LAST_TS` = last entry's timestamp (0 if none)
+- `GAP = NOW - LAST_TS`
+- IF GAP > 7200s (2h): write `{tokens: 0, trigger: "session-start", timestamp: NOW}` → show "🟢 New session started"
+- IF GAP < 7200s: context refresh only — do NOT write → show "📊 Continuing session"
+
+**Also write to log at:**
+- `//COMPACT` trigger → append entry, then compress
+- After `git push` → append entry (POST-PUSH PROTOCOL)
+- Phase completion → append entry
+
+**CRITICAL:** **Billing Layer** determined by `access_type` in `.ai/config.json`:
+- `"subscription"` (or missing) → `N/A (subscription)`
+- `"billing"` → calculate cost from `billing` block, compare to `billing.daily_budget_usd`
+NEVER fabricate limits or percentages.
+
+**Graceful degradation (if can't write files):**
+Display session estimate only + explain why log unavailable.
+
+---
+
+## 🎯 KEY COMMANDS
+
+```bash
+//START          - Execute session start protocol
+//TOKENS         - Show token usage status
+//COMPACT        - Compress context (save 40-60% tokens)
+//THINK          - Show AI reasoning
+//CHECK:SECURITY - Security audit
+//CHECK:LANG     - Language compliance check
+//CHECK:ALL      - Full audit
+//CHECK:RULES    - Display full protocol checklist + confirm active rules
+//REFRESH        - Re-read RULES-CRITICAL.md + AI-ENFORCEMENT.md (anti-amnesia)
+//WHICH:RULES    - Show which protocols apply to current operation
+```
+
+---
+
+## 🔒 SECURITY (Zero Tolerance)
+
+**NEVER:**
+- ❌ Hardcode secrets (API keys, passwords)
+- ❌ Use russian tracking services (Yandex, VK, Mail.ru)
+- ❌ Commit secrets to git
+- ❌ Skip pre-commit hooks
+
+**ALWAYS:**
+- ✅ Use `process.env.VAR` for secrets
+- ✅ Add error handling (try/catch, null checks)
+- ✅ Follow Ukrainian market policy (if ukraine-full context)
+
+---
+
+## 💡 WORKFLOW
+
+1. **Discuss → Approve → Execute** (never code before approval)
+2. **One stage = one commit** (atomic commits)
+3. **Token-conscious** (monitor usage, optimize at 50%+)
+4. **Post-push compression** (mandatory after git push)
+
+---
+
+## 📊 TOKEN ZONES
+
+- 🟢 **0-50% (GREEN):** Full capacity, normal mode
+- 🟡 **50-70% (MODERATE):** Brief mode, optimizations active
+- 🟠 **70-90% (CAUTION):** Silent mode, aggressive compression
+- 🔴 **90-95% (CRITICAL):** Finalization only, commit + stop
+
+---
+
+## 🆘 NAVIGATION
+
+- **Entry point:** [AGENTS.md](AGENTS.md) - Navigation hub
+- **Quick start:** [.ai/docs/quickstart.md](.ai/docs/quickstart.md)
+- **Full rules:** [.ai/rules/core.md](.ai/rules/core.md)
+- **Session management:** [.ai/docs/session-mgmt.md](.ai/docs/session-mgmt.md)
+- **Code quality:** [.ai/docs/code-quality.md](.ai/docs/code-quality.md)
+
+---
+
+## ⚠️ RED FLAGS - Auto-Stop
+
+**STOP and ask confirmation before:**
+- Deleting >10 files
+- Changing core configs (`package.json`, `tsconfig`)
+- Database migrations
+- `rm -rf` or recursive deletes
+- Publishing to production
+- **[LANG-CRITICAL]** Russian content detected
+- **[TOKEN-CRITICAL]** >95% tokens used
+
+---
+
+**Framework:** AI Workflow Rules v9.1.1 (Optimization Release)
+**Made in Ukraine 🇺🇦**
+**GitHub:** https://github.com/Shamavision/ai-workflow-rules
+
+---
+
+**NOTE:** This file is auto-generated from selected context.
+To update: Run `npm run sync-rules` or `bash scripts/sync-rules.sh`
+To change context: Edit `.ai/config.json` → Run sync-rules

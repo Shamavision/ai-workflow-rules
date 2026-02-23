@@ -59,7 +59,8 @@ async function generateRulesFiles(targetDir, context) {
   // Detect AI tools (v9.1: Only generate IDE-specific files)
   // Note: AGENTS.md and .claude/CLAUDE.md are now static templates (copied, not generated)
   const tools = [
-    { name: 'Cursor', file: '.cursorrules' }
+    { name: 'Cursor (legacy <0.45)', file: '.cursorrules' },
+    { name: 'Cursor (new ≥0.45)', file: '.cursor/rules/ai-workflow.mdc', addFrontmatter: true }
   ];
 
   console.log(chalk.gray(`Found: ${tools.length} tool(s)\n`));
@@ -79,7 +80,15 @@ async function generateRulesFiles(targetDir, context) {
 
     await fs.ensureDir(path.dirname(targetFile));
 
-    const header = `# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    let header;
+    if (tool.addFrontmatter) {
+      header = `---
+description: AI Workflow Rules — session protocol, token management, security guards
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # AI WORKFLOW RULES FRAMEWORK v9.1
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #
@@ -93,6 +102,22 @@ async function generateRulesFiles(targetDir, context) {
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 `;
+    } else {
+      header = `# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI WORKFLOW RULES FRAMEWORK v9.1
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Tool: ${tool.name}
+# Context: ${context}
+# Auto-generated from: .ai/contexts/${context}.context.md
+#
+# To update rules: npm run sync-rules
+# Framework: https://github.com/Shamavision/ai-workflow-rules
+#
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+`;
+    }
 
     const footer = `
 
