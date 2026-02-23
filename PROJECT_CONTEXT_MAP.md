@@ -113,7 +113,6 @@ PROJECT_IDEOLOGY.md (template)     →   npm-templates/PROJECT_IDEOLOGY.md
 
 **Optional backlog (low priority):**
 - `/pipeline` skill — automate `/ctx → /sculptor → /arbiter`
-- README polish — 3-question wizard, new skills, PROJECT_IDEOLOGY.md
 - Cross-AI validation — test skills in Cursor/Windsurf
 
 ---
