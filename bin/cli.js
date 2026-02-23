@@ -5,7 +5,7 @@
  * Universal setup wizard for AI coding assistants
  */
 
-const { select, confirm, intro, outro, isCancel, cancel, log } = require('@clack/prompts');
+const { select, intro, outro, isCancel, cancel, log } = require('@clack/prompts');
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
@@ -141,54 +141,6 @@ alwaysApply: true
   console.log(chalk.green(`\n✓ Rules: ${summary}\n`));
 }
 
-// Function: Smart context selection with recommendations
-async function selectContextWithRecommendation() {
-  const market = await select({
-    message: 'Primary market?',
-    options: [
-      { value: 'ukraine', label: 'Ukrainian market', hint: 'compliance, language rules' },
-      { value: 'international', label: 'International', hint: 'English-focused' }
-    ]
-  });
-  if (isCancel(market)) { cancel('Setup cancelled.'); process.exit(0); }
-
-  // Recommendation logic
-  const recommended = market === 'ukraine' ? 'ukraine-full' : 'minimal';
-  const reason = market === 'ukraine'
-    ? 'Ukrainian market needs full compliance features'
-    : 'Minimal context covers most use cases efficiently';
-
-  // Show comparison table
-  console.log('\n' + chalk.bold.cyan('📊 Context Comparison'));
-  console.log('┌─────────────────┬────────────┬─────────────┬──────────────────────┐');
-  console.log('│ Context         │ Tokens     │ Session %   │ Best For             │');
-  console.log('├─────────────────┼────────────┼─────────────┼──────────────────────┤');
-  console.log('│ Minimal         │ ~10k       │ 5%          │ Startups, MVP        │');
-  console.log('│ Ukraine-Full    │ ~18k       │ 9%          │ Ukrainian market     │');
-  console.log('└─────────────────┴────────────┴─────────────┴──────────────────────┘');
-  console.log(chalk.gray('  Session % = tokens used of 200K session limit (MODEL_3 primary metric)\n'));
-
-  log.success(`Recommended: ${recommended}`);
-  log.info(`Reason: ${reason}`);
-
-  const useRecommended = await confirm({
-    message: `Use ${recommended} context?`,
-    initialValue: true
-  });
-  if (isCancel(useRecommended)) { cancel('Setup cancelled.'); process.exit(0); }
-
-  if (useRecommended) return recommended;
-
-  // Manual selection
-  const context = await select({
-    message: 'Choose context manually:',
-    options: CONTEXTS.map(c => ({ value: c.value, label: c.name })),
-    initialValue: recommended
-  });
-  if (isCancel(context)) { cancel('Setup cancelled.'); process.exit(0); }
-
-  return context;
-}
 
 async function main() {
   intro(chalk.bold.cyan('🤖 AI Workflow Rules Setup v9.1'));
@@ -208,32 +160,26 @@ async function main() {
     });
     if (isCancel(plan)) { cancel('Setup cancelled.'); process.exit(0); }
 
-    const installHooks = await confirm({
-      message: 'Install security pre-commit hooks? (Recommended)',
-      initialValue: true
+    const market = await select({
+      message: 'Primary market?',
+      options: [
+        { value: 'ukraine', label: 'Ukrainian market', hint: 'ukraine-full context + compliance rules' },
+        { value: 'international', label: 'International', hint: 'minimal context' }
+      ]
     });
-    if (isCancel(installHooks)) { cancel('Setup cancelled.'); process.exit(0); }
+    if (isCancel(market)) { cancel('Setup cancelled.'); process.exit(0); }
 
-    const shouldUpdateGitignore = await confirm({
-      message: 'Add AI files to .gitignore? (Recommended)',
-      initialValue: true
-    });
-    if (isCancel(shouldUpdateGitignore)) { cancel('Setup cancelled.'); process.exit(0); }
+    const selectedContext = market === 'ukraine' ? 'ukraine-full' : 'minimal';
+    const installProductRules = market === 'ukraine';
 
-    const installProductRules = await confirm({
-      message: 'Install product rules? (Ukrainian market specifics → .ai/rules/product.md)',
-      initialValue: false
-    });
-    if (isCancel(installProductRules)) { cancel('Setup cancelled.'); process.exit(0); }
+    log.success(`Context: ${selectedContext}`);
 
-    // Smart context selection (v9.1)
-    const selectedContext = await selectContextWithRecommendation();
     const answers = {
       provider,
       plan,
-      installHooks,
-      updateGitignore: shouldUpdateGitignore,
-      installProductRules,
+      installHooks: true,          // always
+      updateGitignore: true,       // always
+      installProductRules,         // from market
       context: selectedContext
     };
 

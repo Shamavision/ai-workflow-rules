@@ -72,42 +72,30 @@ cleanup() {
 trap cleanup EXIT
 
 # ========================================
-# Token presets lookup
-# Synced with TOKEN_PRESETS in bin/cli.js (v9.1.1 VARIANT B)
+# Session config lookup
+# Synced with presets.json — billing type + session_limit only
+# daily_limit = null (not published by providers)
 # ========================================
 
-get_token_limits() {
-    local provider="$1"
-    local plan="$2"
-    case "$provider.$plan" in
-        anthropic.free)              TOKEN_DAILY=20000;      TOKEN_MONTHLY=200000    ;;
-        anthropic.pro)               TOKEN_DAILY=500000;     TOKEN_MONTHLY=5000000   ;;
-        anthropic.team)              TOKEN_DAILY=800000;     TOKEN_MONTHLY=8000000   ;;
-        anthropic.api)               TOKEN_DAILY=999999999;  TOKEN_MONTHLY=999999999 ;;
-        google.free)                 TOKEN_DAILY=5000;       TOKEN_MONTHLY=100000    ;;
-        google.advanced)             TOKEN_DAILY=80000;      TOKEN_MONTHLY=1500000   ;;
-        google.api)                  TOKEN_DAILY=999999999;  TOKEN_MONTHLY=999999999 ;;
-        cursor.free)                 TOKEN_DAILY=20000;      TOKEN_MONTHLY=400000    ;;
-        cursor.pro)                  TOKEN_DAILY=80000;      TOKEN_MONTHLY=1500000   ;;
-        cursor.business)             TOKEN_DAILY=120000;     TOKEN_MONTHLY=2500000   ;;
-        perplexity.free)             TOKEN_DAILY=10000;      TOKEN_MONTHLY=200000    ;;
-        perplexity.pro)              TOKEN_DAILY=20000;      TOKEN_MONTHLY=400000    ;;
-        mistral.api)                 TOKEN_DAILY=999999999;  TOKEN_MONTHLY=999999999 ;;
-        deepseek.api)                TOKEN_DAILY=999999999;  TOKEN_MONTHLY=999999999 ;;
-        groq.free)                   TOKEN_DAILY=5000;       TOKEN_MONTHLY=100000    ;;
-        *)                           TOKEN_DAILY=20000;      TOKEN_MONTHLY=500000    ;;
-    esac
-}
-
-# Returns MODEL_1, MODEL_2, or MODEL_3
-get_arch_model() {
+get_session_config() {
     local provider="$1"
     local plan="$2"
     case "$provider.$plan" in
         anthropic.api|google.api|mistral.api|deepseek.api)
-            echo "MODEL_1" ;;
+            BILLING_TYPE="api"
+            SESSION_LIMIT=200000 ;;
+        google.free)
+            BILLING_TYPE="subscription"
+            SESSION_LIMIT=128000 ;;
+        google.advanced)
+            BILLING_TYPE="subscription"
+            SESSION_LIMIT=128000 ;;
+        cursor.free|cursor.pro|cursor.business)
+            BILLING_TYPE="subscription"
+            SESSION_LIMIT=200000 ;;
         *)
-            echo "MODEL_3" ;;
+            BILLING_TYPE="subscription"
+            SESSION_LIMIT=200000 ;;
     esac
 }
 
@@ -167,7 +155,7 @@ fi
 print_success "Repository downloaded"
 
 # ========================================
-# WIZARD - Provider Selection
+# WIZARD — Question 1: Provider
 # ========================================
 
 echo ""
@@ -196,7 +184,10 @@ case $PROVIDER_CHOICE in
     *) PROVIDER="other" ;;
 esac
 
-# Provider-specific plan selection (matches cli.js PLANS)
+# ========================================
+# WIZARD — Question 2: Plan
+# ========================================
+
 echo ""
 case $PROVIDER in
     anthropic)
@@ -235,119 +226,63 @@ case $PROVIDER in
         PLAN="default" ;;
 esac
 
-# Install git hooks?
-echo ""
-read -rp "Install security pre-commit hooks? (Y/n): " HOOKS_REPLY
-[[ "$HOOKS_REPLY" =~ ^[Nn]$ ]] && INSTALL_HOOKS="no" || INSTALL_HOOKS="yes"
-
-# Update .gitignore?
-read -rp "Add AI files to .gitignore? (Y/n): " GITIGNORE_REPLY
-[[ "$GITIGNORE_REPLY" =~ ^[Nn]$ ]] && UPDATE_GITIGNORE="no" || UPDATE_GITIGNORE="yes"
-
-# Install product rules?
-read -rp "Install product rules? (Ukrainian market specifics) (y/N): " PRODUCT_REPLY
-[[ "$PRODUCT_REPLY" =~ ^[Yy]$ ]] && INSTALL_PRODUCT="yes" || INSTALL_PRODUCT="no"
-
 # ========================================
-# WIZARD - Context Selection
+# WIZARD — Question 3: Market
 # ========================================
 
 echo ""
-echo -e "${CYAN}━━━ Context Selection Wizard ━━━${NC}"
+echo -e "${CYAN}━━━ Market Selection ━━━${NC}"
 echo ""
-echo "1. How many team members?"
-echo "   1) 1-2 (solo/small)   2) 3-5 (team)   3) 6+ (large)"
-echo ""
-read -rp "Enter number (1-3): " TEAM_SIZE
-
-echo ""
-echo "2. Primary market?"
-echo "   1) Ukrainian market (compliance, language rules)"
-echo "   2) International (English-focused)"
+echo "Primary market?"
+echo "  1) Ukrainian market (ukraine-full context + compliance rules)"
+echo "  2) International (minimal context)"
 echo ""
 read -rp "Enter number (1-2): " MARKET_CHOICE
 
-echo ""
-echo "3. How cautious should AI be with tokens?"
-echo "   1) Careful (warns early)   2) Balanced (standard)   3) Relaxed (minimal interruptions)"
-echo ""
-read -rp "Enter number (1-3): " TOKEN_PRIORITY
-
-# Recommendation logic (mirrors cli.js selectContextWithRecommendation)
 if [ "$MARKET_CHOICE" = "1" ]; then
-    RECOMMENDED="ukraine-full"
-    REASON="Ukrainian market needs full compliance features"
+    CONTEXT="ukraine-full"
+    INSTALL_PRODUCT="yes"
     MARKET_VALUE="ukraine"
-elif [ "$TOKEN_PRIORITY" = "1" ]; then
-    RECOMMENDED="minimal"
-    REASON="Token efficiency prioritized"
-    MARKET_VALUE="international"
-elif [ "$TEAM_SIZE" = "3" ] || [ "$TOKEN_PRIORITY" = "3" ]; then
-    RECOMMENDED="enterprise"
-    REASON="Large team / full features prioritized"
-    MARKET_VALUE="international"
 else
-    RECOMMENDED="standard"
-    REASON="Balanced approach for most projects"
+    CONTEXT="minimal"
+    INSTALL_PRODUCT="no"
     MARKET_VALUE="international"
 fi
 
-# Show comparison table
 echo ""
-echo -e "${CYAN}📊 Context Comparison${NC}"
+echo -e "${GREEN}✓ Context: $CONTEXT${NC}"
 echo ""
-echo "┌─────────────────┬────────────┬─────────────┬──────────────────────┐"
-echo "│ Context         │ Tokens     │ Session %   │ Best For             │"
-echo "├─────────────────┼────────────┼─────────────┼──────────────────────┤"
-echo "│ Minimal         │ ~10k       │ 5%          │ Startups, MVP        │"
-echo "│ Standard        │ ~14k       │ 7%          │ Most projects        │"
-echo "│ Ukraine-Full    │ ~18k       │ 9%          │ Ukrainian market     │"
-echo "│ Enterprise      │ ~23k       │ 11.5%       │ Large teams          │"
-echo "└─────────────────┴────────────┴─────────────┴──────────────────────┘"
-echo -e "  ${GRAY}Session % = tokens used of 200K session limit (MODEL_3 primary metric)${NC}"
-echo ""
-echo -e "${GREEN}✅ Recommended: $RECOMMENDED${NC}"
-echo -e "${GRAY}   Reasoning: $REASON${NC}"
-echo ""
-read -rp "Use $RECOMMENDED context? (Y/n): " CONTEXT_REPLY
 
-if [[ "$CONTEXT_REPLY" =~ ^[Nn]$ ]]; then
-    echo ""
-    echo "Choose context manually:"
-    echo "  1) Minimal (~10k)   2) Standard (~14k)   3) Ukraine-Full (~18k)   4) Enterprise (~23k)"
-    echo ""
-    read -rp "Enter number (1-4): " MANUAL_CTX
-    case $MANUAL_CTX in
-        1) CONTEXT="minimal" ;;
-        2) CONTEXT="standard" ;;
-        3) CONTEXT="ukraine-full" ;;
-        4) CONTEXT="enterprise" ;;
-        *) CONTEXT="$RECOMMENDED" ;;
-    esac
-else
-    CONTEXT="$RECOMMENDED"
-fi
+# All other settings are automatic
+INSTALL_HOOKS="yes"
+UPDATE_GITIGNORE="yes"
 
 # ========================================
 # Install Files
 # ========================================
 
-echo ""
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BLUE}📦 Installing files...${NC}"
 echo ""
 
 # AGENTS.md + LICENSE
 copy_file "$TEMPLATES_DIR/AGENTS.md" "$TARGET_DIR/AGENTS.md"
-copy_file "$TEMPLATES_DIR/LICENSE" "$TARGET_DIR/LICENSE"
+copy_file "$TEMPLATES_DIR/LICENSE"   "$TARGET_DIR/LICENSE"
 
-# .claude/ - CLAUDE.md, settings.json, hooks
+# .claude/ — CLAUDE.md, settings.json, hooks
 mkdir -p "$TARGET_DIR/.claude/hooks"
-copy_file "$TEMPLATES_DIR/.claude/CLAUDE.md"   "$TARGET_DIR/.claude/CLAUDE.md"
+copy_file "$TEMPLATES_DIR/.claude/CLAUDE.md"    "$TARGET_DIR/.claude/CLAUDE.md"
 copy_file "$TEMPLATES_DIR/.claude/settings.json" "$TARGET_DIR/.claude/settings.json"
 copy_file "$TEMPLATES_DIR/.claude/hooks/user-prompt-submit.sh" \
           "$TARGET_DIR/.claude/hooks/user-prompt-submit.sh"
 chmod +x "$TARGET_DIR/.claude/hooks/user-prompt-submit.sh" 2>/dev/null || true
+
+# .claude/commands/ — AI skills (/ctx, /sculptor, /arbiter)
+mkdir -p "$TARGET_DIR/.claude/commands"
+for skill in ctx.md sculptor.md arbiter.md; do
+    copy_file "$TEMPLATES_DIR/.claude/commands/$skill" \
+              "$TARGET_DIR/.claude/commands/$skill"
+done
 
 # .ai/ directory structure
 mkdir -p "$TARGET_DIR/.ai/docs" "$TARGET_DIR/.ai/rules" "$TARGET_DIR/.ai/contexts"
@@ -370,8 +305,8 @@ fi
 # Forbidden trackers
 copy_file "$TEMPLATES_DIR/.ai/forbidden-trackers.json" "$TARGET_DIR/.ai/forbidden-trackers.json"
 
-# All 4 context files
-for ctx in minimal standard ukraine-full enterprise; do
+# Context files (only 2 presets)
+for ctx in minimal ukraine-full; do
     copy_file "$TEMPLATES_DIR/.ai/contexts/$ctx.context.md" \
               "$TARGET_DIR/.ai/contexts/$ctx.context.md"
 done
@@ -380,70 +315,30 @@ done
 # Generate .ai/token-limits.json
 # ========================================
 
-get_token_limits "$PROVIDER" "$PLAN"
-ARCH_MODEL=$(get_arch_model "$PROVIDER" "$PLAN")
-TODAY=$(date -u +"%Y-%m-%dT00:00:00Z")
-THIS_MONTH=$(date -u +"%Y-%m")
-MONTH_START="${THIS_MONTH}-01T00:00:00Z"
-IS_MODEL3=0
-IS_MODEL1=0
-[ "$ARCH_MODEL" = "MODEL_3" ] && IS_MODEL3=1
-[ "$ARCH_MODEL" = "MODEL_1" ] && IS_MODEL1=1
-
-# access_type: "billing" for API (MODEL_1), "subscription" for all others
-ACCESS_TYPE="subscription"
-[ "$IS_MODEL1" = "1" ] && ACCESS_TYPE="billing"
+get_session_config "$PROVIDER" "$PLAN"
+TODAY_DATE=$(date -u +"%Y-%m-%d")
 
 TOKEN_LIMITS_PATH="$TARGET_DIR/.ai/token-limits.json"
 
 if [ -f "$TOKEN_LIMITS_PATH" ]; then
     print_warning ".ai/token-limits.json already exists, skipping"
 else
-    # Build MODEL_3 extra fields if applicable
-    MODEL3_FIELDS=""
-    if [ "$IS_MODEL3" = "1" ]; then
-        MODEL3_FIELDS=",
-  \"daily_limit_type\": \"fair_use_dynamic\",
-  \"daily_limit_note\": \"ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).\",
-  \"monthly_limit_note\": \"ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3 - Fair Use Dynamic).\",
-  \"session_limit\": 200000,
-  \"session_duration_hours\": 5"
-    fi
-
     cat > "$TOKEN_LIMITS_PATH" << EOF
 {
-  "_comment": "🤖 Universal AI Token Tracker v3.0 - Auto-configured",
-  "provider": "$PROVIDER",
+  "_comment": "AI Token Tracker v4.0 — session-based. New day = fresh limits.",
+  "tool": "$PROVIDER",
   "plan": "$PLAN",
-  "_architecture_model": "$ARCH_MODEL",
-  "monthly_limit": $TOKEN_MONTHLY,
-  "daily_limit": $TOKEN_DAILY$MODEL3_FIELDS,
-  "tracking_enabled": true,
-  "current_month": "$THIS_MONTH",
-  "monthly_usage": 0,
-  "monthly_percentage": 0,
-  "daily_usage": 0,
-  "daily_percentage": 0,
-  "last_reset_daily": "$TODAY",
-  "last_reset_monthly": "$MONTH_START",
-  "thresholds": {
-    "green": 50,
-    "moderate": 70,
-    "caution": 90,
-    "critical": 95
-  },
-  "current_status": "green",
-  "current_zone": "🟢 Green - Full capacity",
-  "sessions": [],
-  "notes": [
-    "Auto-configured by ai-workflow-rules installer",
-    "Limits are CONSERVATIVE (10-20% lower) for early warnings",
-    "Context compression auto-triggers at 50% (saves 40-60% tokens)"
-  ],
-  "history": {}
+  "billing": "$BILLING_TYPE",
+  "session_limit": $SESSION_LIMIT,
+  "daily_limit": null,
+  "daily_note": "Daily limit not published by provider — track via session count",
+  "today": "$TODAY_DATE",
+  "today_sessions": 0,
+  "today_estimated_tokens": 0,
+  "sessions": []
 }
 EOF
-    print_success ".ai/token-limits.json ($PROVIDER $PLAN: $TOKEN_DAILY daily)"
+    print_success ".ai/token-limits.json ($PROVIDER $PLAN: session ${SESSION_LIMIT}, $BILLING_TYPE)"
 fi
 
 # ========================================
@@ -455,27 +350,15 @@ CONFIG_PATH="$TARGET_DIR/.ai/config.json"
 if [ -f "$CONFIG_PATH" ]; then
     print_warning ".ai/config.json already exists, skipping"
 else
-    # Build optional billing block for API plans
-    BILLING_BLOCK=""
-    if [ "$ACCESS_TYPE" = "billing" ]; then
-        BILLING_BLOCK=',
-  "billing": {
-    "cost_per_1k_input": 0.003,
-    "cost_per_1k_output": 0.015,
-    "daily_budget_usd": 20,
-    "_note": "Update cost_per_1k_input/output to match your model pricing."
-  }'
-    fi
-
     cat > "$CONFIG_PATH" << EOF
 {
   "framework": "ai-workflow-rules",
   "version": "9.1.1",
-  "config_version": "2.1",
-  "access_type": "$ACCESS_TYPE",
+  "config_version": "2.2",
+  "access_type": "$BILLING_TYPE",
   "model": {
     "name": "claude-sonnet-4-6",
-    "context_limit": 200000
+    "context_limit": $SESSION_LIMIT
   },
   "context": "$CONTEXT",
   "modules": [],
@@ -485,16 +368,6 @@ else
     "code_comments": "en",
     "commit_messages": "en",
     "variable_names": "en"
-  },
-  "token_budget": {
-    "daily_limit": $TOKEN_DAILY,
-    "monthly_limit": $TOKEN_MONTHLY,
-    "auto_approve_thresholds": {
-      "green_zone": 15000,
-      "moderate_zone": 8000,
-      "caution_zone": 3000,
-      "critical_zone": 0
-    }
   },
   "optimizations": {
     "auto_compress": true,
@@ -515,10 +388,10 @@ else
   "detection": {
     "auto_detect_market": true,
     "smart_preset_suggestion": true
-  }$BILLING_BLOCK
+  }
 }
 EOF
-    print_success ".ai/config.json (context: $CONTEXT, access_type: $ACCESS_TYPE)"
+    print_success ".ai/config.json (context: $CONTEXT, market: $MARKET_VALUE, access_type: $BILLING_TYPE)"
 fi
 
 # ========================================
@@ -526,16 +399,17 @@ fi
 # ========================================
 
 mkdir -p "$TARGET_DIR/scripts"
-copy_file "$TEMPLATES_DIR/scripts/pre-commit"      "$TARGET_DIR/scripts/pre-commit"
-copy_file "$TEMPLATES_DIR/scripts/sync-rules.sh"   "$TARGET_DIR/scripts/sync-rules.sh"
+copy_file "$TEMPLATES_DIR/scripts/pre-commit"    "$TARGET_DIR/scripts/pre-commit"
+copy_file "$TEMPLATES_DIR/scripts/sync-rules.sh" "$TARGET_DIR/scripts/sync-rules.sh"
 copy_file "$TEMPLATES_DIR/scripts/token-status.sh" "$TARGET_DIR/scripts/token-status.sh"
+copy_file "$TEMPLATES_DIR/scripts/post-push.sh"  "$TARGET_DIR/scripts/post-push.sh"
 chmod +x "$TARGET_DIR/scripts/"*.sh 2>/dev/null || true
 
 # ========================================
-# Install pre-commit hook (conditional)
+# Install pre-commit hook (automatic)
 # ========================================
 
-if [ "$INSTALL_HOOKS" = "yes" ]; then
+if [ -d "$TARGET_DIR/.git" ]; then
     if [ -f "$TARGET_DIR/.git/hooks/pre-commit" ]; then
         print_warning "Pre-commit hook already exists, backing up..."
         mv "$TARGET_DIR/.git/hooks/pre-commit" "$TARGET_DIR/.git/hooks/pre-commit.backup"
@@ -546,20 +420,28 @@ if [ "$INSTALL_HOOKS" = "yes" ]; then
 fi
 
 # ========================================
-# Update .gitignore (conditional)
+# Install post-push hook (automatic — session memory anchor)
 # ========================================
 
-if [ "$UPDATE_GITIGNORE" = "yes" ]; then
-    GITIGNORE_PATH="$TARGET_DIR/.gitignore"
-    [ -f "$GITIGNORE_PATH" ] || touch "$GITIGNORE_PATH"
+if [ -d "$TARGET_DIR/.git" ] && [ -f "$TARGET_DIR/scripts/post-push.sh" ]; then
+    cp "$TARGET_DIR/scripts/post-push.sh" "$TARGET_DIR/.git/hooks/post-push"
+    chmod +x "$TARGET_DIR/.git/hooks/post-push"
+    print_success "Post-push hook installed (session memory anchor)"
+fi
 
-    if grep -qF "# AI Workflow Rules" "$GITIGNORE_PATH" 2>/dev/null; then
-        print_warning ".gitignore already contains AI rules, skipping"
-    else
-        printf '\n# AI Workflow Rules\n.ai/.session-started\n.ai/checkpoint-*.md\nai-logs/\n' \
-            >> "$GITIGNORE_PATH"
-        print_success ".gitignore updated"
-    fi
+# ========================================
+# Update .gitignore (automatic, append-only)
+# ========================================
+
+GITIGNORE_PATH="$TARGET_DIR/.gitignore"
+[ -f "$GITIGNORE_PATH" ] || touch "$GITIGNORE_PATH"
+
+if grep -qF "# AI Workflow Rules" "$GITIGNORE_PATH" 2>/dev/null; then
+    print_warning ".gitignore already contains AI rules, skipping"
+else
+    printf '\n# AI Workflow Rules\n.ai/.session-started\n.ai/checkpoint-*.md\nai-logs/\n' \
+        >> "$GITIGNORE_PATH"
+    print_success ".gitignore updated"
 fi
 
 # ========================================
@@ -570,9 +452,11 @@ print_step "Generating rules for AI tools..."
 
 SOURCE_RULES="$TARGET_DIR/.ai/contexts/$CONTEXT.context.md"
 
+# generate_rules_file <relative_path> <tool_name> [frontmatter=yes|no]
 generate_rules_file() {
     local target_file="$TARGET_DIR/$1"
     local tool_name="$2"
+    local add_frontmatter="${3:-no}"
 
     if [ -f "$target_file" ]; then
         print_warning "$1 already exists, skipping"
@@ -581,6 +465,16 @@ generate_rules_file() {
 
     mkdir -p "$(dirname "$target_file")"
     {
+        if [ "$add_frontmatter" = "yes" ]; then
+            cat << 'FRONTMATTER'
+---
+description: AI Workflow Rules — session protocol, token management, security guards
+globs: ["**/*"]
+alwaysApply: true
+---
+
+FRONTMATTER
+        fi
         echo "# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo "# AI WORKFLOW RULES FRAMEWORK v9.1"
         echo "# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -606,7 +500,8 @@ generate_rules_file() {
     print_success "$1 created"
 }
 
-generate_rules_file ".cursorrules"   "Cursor"
+generate_rules_file ".cursorrules"                    "Cursor (legacy <0.45)"
+generate_rules_file ".cursor/rules/ai-workflow.mdc"  "Cursor (new ≥0.45)" "yes"
 
 # ========================================
 # Verification
@@ -629,6 +524,9 @@ check_file "AGENTS.md"
 check_file ".claude/CLAUDE.md"
 check_file ".claude/settings.json"
 check_file ".claude/hooks/user-prompt-submit.sh"
+check_file ".claude/commands/ctx.md"
+check_file ".claude/commands/sculptor.md"
+check_file ".claude/commands/arbiter.md"
 check_file ".ai/AI-ENFORCEMENT.md"
 check_file ".ai/config.json"
 check_file ".ai/token-limits.json"
@@ -638,9 +536,15 @@ check_file ".ai/contexts/$CONTEXT.context.md"
 check_file "scripts/pre-commit"
 check_file "scripts/sync-rules.sh"
 check_file "scripts/token-status.sh"
+check_file "scripts/post-push.sh"
+check_file ".cursorrules"
+check_file ".cursor/rules/ai-workflow.mdc"
 
-if [ "$INSTALL_HOOKS" = "yes" ] && [ -x "$TARGET_DIR/.git/hooks/pre-commit" ]; then
+if [ -x "$TARGET_DIR/.git/hooks/pre-commit" ]; then
     print_success ".git/hooks/pre-commit (executable)"
+fi
+if [ -x "$TARGET_DIR/.git/hooks/post-push" ]; then
+    print_success ".git/hooks/post-push (executable)"
 fi
 
 # ========================================
