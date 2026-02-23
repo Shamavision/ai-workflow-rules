@@ -105,21 +105,11 @@ PROJECT_IDEOLOGY.md (template)     →   npm-templates/PROJECT_IDEOLOGY.md
 
 ---
 
-## Current State (ROADMAP as of 2026-02-23)
+## Current State
 
 **All planned tasks completed. No active tasks.**
 
-| Round | Tasks | Status | Date |
-|-------|-------|--------|------|
-| Tasks 1-8 | Core framework | ✅ DONE | 2026-02-21—22 |
-| Round 1 (9a-9e) | Clean dead weight, sync guard, slim CLAUDE.md | ✅ DONE | 2026-02-22 |
-| Round 2 (Task 12) | Cursor ≥0.45 migration — `.cursor/rules/ai-workflow.mdc` | ✅ DONE | 2026-02-23 |
-| Round 3 (Task 13) | Skill triangle: ideology + WebSearch + think harder | ✅ DONE | 2026-02-23 |
-| Round 3 (Task 10) | Installer wizard 8 questions → 3 | ✅ DONE | 2026-02-23 |
-| Round 3 (Task 11) | PowerShell installer | ❌ CANCELLED | 2026-02-23 |
-| Round 4 (Крок 0) | PROJECT_IDEOLOGY.md + arbiter improvements + full ctx scan | ✅ DONE | 2026-02-23 |
-| Round 4 (Task 14) | Cleanup sprint: 24 scripts deleted, config v2.2, dead files | ✅ DONE | 2026-02-23 |
-| Round 4 (Task 15) | AGENTS.md: skills triangle + ideology + session anchor | ✅ DONE | 2026-02-23 |
+> History in `CHANGELOG.md` and `ROADMAP.md` → Архів.
 
 **Optional backlog (low priority):**
 - `/pipeline` skill — automate `/ctx → /sculptor → /arbiter`
@@ -147,14 +137,12 @@ session-log.json    → dynamic: sessions today, estimated tokens
 | Google Gemini API | 1,000,000 | api |
 | DeepSeek API | 128,000 | api |
 
-~~MODEL_1 / MODEL_2 / MODEL_3~~ — removed Task 6.
-
 ---
 
 ## Dependencies
 
 **Core (3 packages):**
-- `@clack/prompts@^0.8.0` — Interactive CLI prompts (replaced inquirer Task 5)
+- `@clack/prompts@^0.8.0` — Interactive CLI prompts
 - `fs-extra@^11.2.0` — File system operations
 - `chalk@^4.1.2` — Terminal colors
 
@@ -168,8 +156,6 @@ session-log.json    → dynamic: sessions today, estimated tokens
 |--------|--------|--------|
 | `minimal` | ~10k | ✅ Active |
 | `ukraine-full` | ~18k | ✅ Active ← used in this project |
-| ~~standard~~ | ~~14k~~ | ❌ Removed Task 4 |
-| ~~enterprise~~ | ~~23k~~ | ❌ Removed Task 4 |
 
 ---
 
@@ -177,18 +163,7 @@ session-log.json    → dynamic: sessions today, estimated tokens
 
 | Issue | Severity | Location | Notes |
 |-------|----------|----------|-------|
-| `CHANGELOG.md` gap | ⚠️ Low | `CHANGELOG.md` | No entries for Rounds 2+3+4 (Tasks 10, 12, 13, 14) — Task 14e |
 | No real tests | ⚠️ Low | `package.json scripts.test` | `test` just runs `--help` |
-
-~~Pre-commit hook slow~~ ✅ Fixed Task 3
-~~TOKEN_PRESETS diverge~~ ✅ Fixed Task 6
-~~inquirer@8 legacy~~ ✅ Fixed Task 5
-~~install.sh wizard outdated~~ ✅ Fixed Task 10
-~~install.ps1 missing~~ ✅ Cancelled Task 11 (not needed)
-~~scripts/ bloat (28 files)~~ ✅ Fixed Task 14d (4 active, 24 deleted)
-~~config.json token_budget dead schema~~ ✅ Fixed Task 14b (bumped to 2.2)
-~~npm-templates runtime files~~ ✅ Fixed Task 14a (token-limits + session-log deleted)
-~~QUICK_CONTEXT.md outdated~~ ✅ Fixed Task 14c (deleted)
 
 ---
 
@@ -226,7 +201,7 @@ session-log.json    → dynamic: sessions today, estimated tokens
 2. **token-limits.json:** Do NOT read this file whole. It's 840+ lines. Read `.ai/presets.json` instead.
 3. **Backward compatibility:** Every schema change must be non-breaking (optional fields + fallbacks).
 4. **This project's own stack:** This project uses its OWN framework (`ukraine-full` context). Changes affect this session too.
-5. **Scripts bloat:** `scripts/` has ~20 legacy files. Do not add new scripts there without removing old ones first.
+5. **Scripts discipline:** `scripts/` has 4 active files only (`pre-commit`, `post-push.sh`, `sync-rules.sh`, `install.sh`). Do not add without removing something.
 
 ---
 
