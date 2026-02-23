@@ -24,11 +24,31 @@
 
 ## Активні задачі
 
-### Round 3 — Нова сесія
+### 🔴 Priority — Task 13 (виконати ПЕРЕД Task 10)
 
 | Task | Опис | Effort | Залежність |
 |------|------|--------|-----------|
-| **Task 10:** install.sh + cli.js Redesign | Виправити bash-інсталер і синхронізувати з NPX: єдина логіка wizard | ~1 день | — |
+| **Task 13:** Skill Triangle Enhancement | ctx + sculptor + arbiter: WebSearch, PROJECT_IDEOLOGY.md, sculptor→arbiter chain | ~3-4 год | — |
+
+**Деталі Task 13:**
+- `ctx.md`: + Phase для `PROJECT_IDEOLOGY.md` (append-only), + WebSearch для позиціонування
+- `sculptor.md`: + читає `PROJECT_IDEOLOGY.md`, Lens 3 → обов'язковий WebSearch (не training data!)
+- `arbiter.md`: + читає `PROJECT_IDEOLOGY.md`, + секція "Sculptor's Top Proposals" у звіті
+- Всі три: Think harder + "I don't know" rule
+- 6 файлів: dev + npm-templates для кожного
+
+**PROJECT_IDEOLOGY.md — behavior:**
+- Перший `/ctx`: створює з нуля (WHY / WHO / PRINCIPLES / ANTI-GOALS / DECISIONS)
+- Наступний `/ctx update`: **append-only** (нова секція `## [vX.Y] YYYY-MM-DD — Logic Delta`)
+- Sculptor + Arbiter читають його для глибшого контексту
+
+---
+
+### Round 3 — Нова сесія (після Task 13)
+
+| Task | Опис | Effort | Залежність |
+|------|------|--------|-----------|
+| **Task 10:** install.sh + cli.js Redesign | Виправити bash-інсталер і синхронізувати з NPX: єдина логіка wizard | ~1 день | Task 13 |
 | **Task 11:** install.ps1 (Windows) | PowerShell-інсталер з тою ж логікою | ~1 день | Task 10 |
 
 ---

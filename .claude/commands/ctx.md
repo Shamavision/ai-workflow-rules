@@ -1,5 +1,5 @@
 # /ctx — Project Context Understanding PRO
-# Usage: /ctx [all | arch | deps | debt | update | quick]
+# Usage: /ctx [all | arch | deps | debt | update | quick | ideology]
 # Default: all
 
 Perform a structured project context analysis. Mode: "$ARGUMENTS" (empty = "all").
@@ -15,6 +15,7 @@ Determine mode from "$ARGUMENTS":
 - "debt"            → Tech debt scan only (~3k tokens)
 - "update"          → Refresh existing map from recent git changes (~3k tokens)
 - "quick"           → Structure + classification only, no file reads (~2k tokens)
+- "ideology"        → PROJECT_IDEOLOGY.md only — capture/update project WHY (~3k tokens)
 
 Check if `PROJECT_CONTEXT_MAP.md` exists in project root:
 - EXISTS → Load first 20 lines to understand last analysis date. If mode="update", do incremental only.
@@ -186,20 +187,143 @@ If no package file found: "No dependency file detected."
 | Current work | ROADMAP.md |
 | Adding features | [main source dir] |
 | Checking rules | .ai/rules/core.md |
+
+---
+
+## 📍 Last Push
+| Field | Value |
+|-------|-------|
+| Date  | [YYYY-MM-DD] |
+| Commit | [hash] |
+| Message | [commit message] |
 ```
 
 ---
 
-## Phase 5: Done Report
+## Phase 5: Ideology Capture
+(Write to `PROJECT_IDEOLOGY.md` in project root — append-only after first creation)
+
+**SKIP for modes: "quick", "arch", "deps", "debt", "update"**
+**ALWAYS run for modes: "all", "ideology"**
+
+### Step 5.1: WebSearch for Context (mandatory)
+
+Before writing ideology, use WebSearch to understand the current landscape:
+
+Search for: `"[project_name OR primary_tool] best practices 2026"`
+
+Use results to inform the VISION and PRINCIPLES sections — cite what you found vs. what was already known.
+Mark any unverified claims as [ESTIMATE].
+
+### Step 5.2: Check existing PROJECT_IDEOLOGY.md
+
+**If MISSING (first run):** → Case A below.
+**If EXISTS:** → Case B below.
+
+---
+
+### Case A: First run — Create PROJECT_IDEOLOGY.md
+
+Think deeply before writing. This document captures the soul of the project — not just what it does, but WHY it exists, WHO it serves, and WHAT it refuses to become.
+
+Write `PROJECT_IDEOLOGY.md` to project root:
+
+```markdown
+# PROJECT IDEOLOGY
+> Created by `/ctx` on [DATE].
+> Append-only. Update with `/ctx update` or `/ctx ideology` — never overwrite.
+> This document captures WHY the project exists and the decisions that define it.
+
+---
+
+## [v1.0] [DATE] — Initial Ideology Capture
+
+### WHY — Core Purpose
+[1-3 sentences: the fundamental problem this project solves.
+NOT what it does mechanically — WHY it matters to the people who use it.]
+
+### WHO — Primary User
+[Describe the primary user in 2-3 sentences.
+Their context, their pain, what they need. Be specific — not "developers" but what kind.]
+
+### PRINCIPLES — Non-Negotiable Rules
+[List 3-6 principles that the project will NEVER violate.
+Examples: "Quality > Speed", "No Russian services", "Opinionated by default"]
+
+### ANTI-GOALS — What This Project Is NOT
+[List 3-5 things this project explicitly refuses to be.
+Examples: "Not a generic tool", "Not opt-in everything", "Not enterprise-first"]
+
+### DECISIONS — Architectural Choices Locked In
+[List key decisions that were made and WHY. Format:
+- Decision: [what was decided]
+  Rationale: [why — the tradeoff considered]
+  Alternatives rejected: [what was not chosen]]
+
+### VISION — Where This Is Going (2026+)
+[1-3 sentences: what does this project look like when it's "done"?
+What would make the creator say "yes, this is exactly what I wanted"?]
+
+### MARKET CONTEXT (from WebSearch [DATE])
+[Brief summary of what the industry looks like for this type of project.
+What competitors/alternatives exist. Why this approach is distinct.
+Source: [search query used]]
+```
+
+---
+
+### Case B: Subsequent run — Append delta to PROJECT_IDEOLOGY.md
+
+Read the existing `PROJECT_IDEOLOGY.md` (first 30 lines to check last version).
+
+Think: what has changed since the last entry? Check:
+- Recent ROADMAP.md changes (what decisions were made?)
+- Recent git log (what was built/removed?)
+- Any architectural shifts visible in PROJECT_CONTEXT_MAP.md
+
+If nothing meaningful changed → do NOT append. Show:
+```
+ℹ️ PROJECT_IDEOLOGY.md: no significant changes detected. Skipping append.
+   Last entry: [date] [version]
+```
+
+If changes detected → append this section to `PROJECT_IDEOLOGY.md`:
+
+```markdown
+
+---
+
+## [vX.Y] [DATE] — Logic Delta
+
+### What Changed
+[2-4 bullet points: decisions made since last ideology entry]
+
+### Why It Matters
+[1-2 sentences: how these decisions reinforce or adjust the project's direction]
+
+### Updated Market Context (from WebSearch [DATE])
+[Any new market developments relevant to the project's positioning.
+Source: [search query used]]
+```
+
+**Version bump rule:**
+- Major architectural decision → bump minor (v1.0 → v1.1)
+- Clarification or small adjustment → bump patch (v1.0 → v1.0.1)
+- Ask yourself: "Would the project's soul recognize itself after this change?"
+
+---
+
+## Phase 6: Done Report
 
 Always show this at the end:
 
 ```
 [CTX COMPLETE] ─────────────────────────────
-Mode:      [full/arch/deps/debt/update/quick]
+Mode:      [full/arch/deps/debt/update/quick/ideology]
 Scanned:   X files via Glob
 Read:      Y files
 Written:   PROJECT_CONTEXT_MAP.md ✓ (or "not written" for quick modes)
+Ideology:  PROJECT_IDEOLOGY.md ✓ created / ✓ updated (vX.Y) / ℹ️ no changes (or "skipped" for quick modes)
 Tokens:    ~Zk for this analysis
 
 Key insight: [1 most important thing to know about this project right now]
@@ -219,8 +343,21 @@ When mode = "update":
 4. Read ONLY the changed files (targeted)
 5. Update only the relevant sections of the map
 6. Note: "Updated X sections based on Y recent commits"
+7. **Also run Phase 5 Case B** — check if ideology needs a delta append
 
 Cost: ~3-4k tokens instead of 10-15k for full scan.
+
+---
+
+## Honesty Protocol (mandatory)
+
+- ❌ Never fabricate project structure — only report what Glob/Read confirmed
+- ❌ Never guess complexity score — base it on actual file count + signals found
+- ❌ Never write ideology from assumptions — ground it in README, ROADMAP, git history
+- ✅ Think harder before finalizing ideology — it's the project's soul, not a summary
+- ✅ "I don't know the WHY yet" → ask the user, don't invent it
+- ✅ Mark WebSearch results with source and date
+- ✅ Mark uncertain claims with [ESTIMATE] or [VERIFY]
 
 ---
 
@@ -236,4 +373,6 @@ What it DOES support:
 - Manual invocation at any time: `/ctx`
 - Incremental updates: `/ctx update`
 - Focused scans: `/ctx deps`, `/ctx debt`, `/ctx arch`
+- Ideology capture: `/ctx ideology`
 - Persistent map in `PROJECT_CONTEXT_MAP.md` for cheap future reference
+- Persistent ideology in `PROJECT_IDEOLOGY.md` (append-only)
