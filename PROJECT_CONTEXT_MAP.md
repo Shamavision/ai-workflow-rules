@@ -117,13 +117,9 @@ PROJECT_IDEOLOGY.md (template)     →   npm-templates/PROJECT_IDEOLOGY.md
 | Round 3 (Task 13) | Skill triangle: ideology + WebSearch + think harder | ✅ DONE | 2026-02-23 |
 | Round 3 (Task 10) | Installer wizard 8 questions → 3 | ✅ DONE | 2026-02-23 |
 | Round 3 (Task 11) | PowerShell installer | ❌ CANCELLED | 2026-02-23 |
-
-**Uncommitted changes (current session):**
-- `PROJECT_IDEOLOGY.md` — NEW (created this session)
-- `npm-templates/PROJECT_IDEOLOGY.md` — NEW (user template)
-- `bin/cli.js`, `scripts/install.sh` — add PROJECT_IDEOLOGY.md copy
-- `.claude/commands/ctx.md`, `npm-templates/.claude/commands/ctx.md` — PRODUCT section added
-- `PROJECT_CONTEXT_MAP.md` — this file
+| Round 4 (Крок 0) | PROJECT_IDEOLOGY.md + arbiter improvements + full ctx scan | ✅ DONE | 2026-02-23 |
+| Round 4 (Task 14) | Cleanup sprint: 24 scripts deleted, config v2.2, dead files | ✅ DONE | 2026-02-23 |
+| Round 4 (Task 15) | AGENTS.md: skills triangle + ideology + session anchor | ✅ DONE | 2026-02-23 |
 
 **Optional backlog (low priority):**
 - `/pipeline` skill — automate `/ctx → /sculptor → /arbiter`
