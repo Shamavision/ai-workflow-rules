@@ -7,12 +7,11 @@
 
 ## 🚀 Quick Start
 
-**New to the framework?** → [Quick Start Guide](.ai/docs/quickstart.md)
+**New to this project?** → Read `PROJECT_IDEOLOGY.md` first (soul doc — WHY/WHO/PRODUCT/VISION, ~3k).
 
-**Your AI will automatically load:**
-- Context from: `.ai/contexts/[your-selection].context.md`
-- Current selection: Check `.ai/config.json`
-- Session Start Protocol: See [.claude/CLAUDE.md](.claude/CLAUDE.md)
+**Understand current state:** → Read `PROJECT_CONTEXT_MAP.md` (architecture snapshot, ~3k).
+
+**Session Start Protocol:** → See [.claude/CLAUDE.md](.claude/CLAUDE.md)
 
 ---
 
@@ -36,42 +35,34 @@
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 ✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
-Чім я можу вам допомогти?
+Чим я можу вам допомогти?
 ```
 
-4. **Follow core principles:** Discuss → Approve → Execute | Token-conscious | Atomic commits
+5. **Follow core principles:** Discuss → Approve → Execute | Token-conscious | Atomic commits
 
 **User command trigger:** `//START` or `//start` → Execute this protocol immediately
 
 > **Note:** Always type `//START` in a **new conversation**. Claude Code loads `.claude/CLAUDE.md` at conversation start — typing it in an existing conversation won't load the rules.
 
-**Details:** See [.claude/CLAUDE.md](.claude/CLAUDE.md) Section "Session Start Protocol"
+**Session anchor auto-update:** `scripts/post-push.sh` updates `## 📍 Last Push` in `PROJECT_CONTEXT_MAP.md` after every `git push`. New-day detection requires no API — just date comparison.
 
 ---
 
-## 📚 Documentation
+## 🔺 Skills Triangle (Claude Code)
 
-| Guide | Description | Tokens |
-|-------|-------------|--------|
-| [Quick Start](.ai/docs/quickstart.md) | Get started in 5 minutes | ~2k |
-| [Cheatsheet](.ai/docs/cheatsheet.md) | Commands & shortcuts reference | ~3k |
-| [Token Usage](.ai/docs/token-usage.md) | Understanding token costs | ~3k |
-| [Session Management](.ai/docs/session-mgmt.md) | When to restart vs continue | ~4k |
-| [Code Quality](.ai/docs/code-quality.md) | Lint setup & pre-commit checks | ~3k |
-| [Compatibility](.ai/docs/compatibility.md) | Supported AI tools & models | ~3k |
-| [Getting Started](.ai/docs/start.md) | Onboarding guide | ~2k |
-| [Provider Comparison](.ai/docs/provider-comparison.md) | AI provider comparison | ~3k |
+The framework includes 3 skills that form a sequential analysis pipeline:
 
----
+```
+/ctx (Reality) → /sculptor (Clarity) → /arbiter (Order + Safety)
+```
 
-## 📖 Full Rules
+| Skill | Command | Output | Purpose |
+|-------|---------|--------|---------|
+| **Context** | `/ctx` | `PROJECT_CONTEXT_MAP.md` + `PROJECT_IDEOLOGY.md` | Full project scan — current state + ideology capture |
+| **Sculptor** | `/sculptor` | `PROPOSALS.md` | 5-lens architectural analysis + mandatory WebSearch |
+| **Arbiter** | `/arbiter` | `ARBITER_REPORT.md` | Execution order + risk scoring + ideology conflict detection |
 
-| Document | Description | Size |
-|----------|-------------|------|
-| [Core Rules](.ai/rules/core.md) | Complete workflow rules (v8.0) | ~56k |
-| [Product Rules](.ai/rules/product.md) | Ukrainian market specifics | ~76k |
-
-**Note:** AI loads context files (`.ai/contexts/*.context.md`) at session start, not these full rules. Full rules are reference documentation.
+**Typical run:** `/ctx update` → `/sculptor all` → `/arbiter all` → implement from ARBITER_REPORT.md
 
 ---
 
@@ -80,9 +71,10 @@
 ```bash
 # Session management
 //START    - Session start protocol (mandatory first command)
-//TOKENS   - Show AI Status (3-layer: Context / Rate / Billing) + burst detection (access_type aware)
+//TOKENS   - Show AI Status (3-layer: Context / Rate / Billing)
 //COMPACT  - Compress context (save 40-60% tokens)
 //THINK    - Show AI reasoning
+//REFRESH  - Re-read rules (anti-amnesia)
 
 # Security checks
 //CHECK:SECURITY  - Scan for vulnerabilities, secrets, API leaks
@@ -100,25 +92,27 @@
 │   ├── minimal.context.md    # ~10k tokens (startups, MVP)
 │   └── ukraine-full.context.md  # ~18k tokens (Ukrainian market)
 ├── docs/                     # Documentation
-│   ├── quickstart.md
-│   ├── cheatsheet.md
-│   ├── token-usage.md
-│   ├── session-mgmt.md
-│   ├── compatibility.md
-│   ├── start.md
-│   └── provider-comparison.md
 ├── rules/                    # Full rules reference
 │   ├── core.md               # Complete workflow rules
 │   └── product.md            # Ukrainian market rules
 ├── config.json               # Your configuration
-├── token-limits.json         # Token budget tracking
 ├── AI-ENFORCEMENT.md         # Mandatory protocols for AI
+├── presets.json              # Tool/plan token presets (source of truth)
 └── forbidden-trackers.json   # Blocked tracking services
 ```
 
-**Tool-specific files** (`.claude/CLAUDE.md`, `.cursorrules`) are **auto-generated** from your selected context.
+**Tool-specific files** (`.claude/CLAUDE.md`, `.cursorrules`, `.cursor/rules/ai-workflow.mdc`, `AGENTS.md`) are distributed to users via the installer and must be kept in sync with `npm-templates/`.
 
-**Don't edit them directly.** Use `npm run sync-rules` to regenerate.
+---
+
+## 📊 Context Presets (v9.1)
+
+| Context | Tokens | Best For |
+|---------|--------|----------|
+| **Minimal** | ~10k | Startups, MVP, simple projects |
+| **Ukraine-Full** | ~18k | Ukrainian market compliance (default) |
+
+**Change context:** Edit `.ai/config.json` → Set `"context": "minimal"` (or `"ukraine-full"`) → restart AI session.
 
 ---
 
@@ -126,28 +120,10 @@
 
 **Philosophy:** Quality > Speed | No Overengineering | Token-Conscious
 
-- **Discuss → Approve → Execute** - Never code before approval
-- **One stage = one commit** - Atomic commits
-- **Security-first** - No secrets, no russian trackers
-- **Token zones** - 🟢 Green → 🟡 Moderate → 🟠 Caution → 🔴 Critical
-
----
-
-## 📊 Context Comparison (v9.1 Optimized)
-
-| Context | Tokens | Session % | Best For | Includes |
-|---------|--------|---------|----------|----------|
-| **Minimal** | ~10k | 5% | Startups, MVP, simple projects | Core workflow, basic security |
-| **Ukraine-Full** | ~18k | 9% | Ukrainian market compliance | + Language rules, market policy, i18n |
-
-**Token savings (v9.1 optimization):**
-- minimal: -23% (13k → 10k)
-- ukraine-full: -28% (25k → 18k)
-
-**Change context:**
-1. Edit `.ai/config.json` → Set `"context": "minimal"` (or `"ukraine-full"`)
-2. Run `npm run sync-rules` to regenerate tool files
-3. Restart AI session
+- **Discuss → Approve → Execute** — Never code before approval
+- **One stage = one commit** — Atomic commits
+- **Security-first** — No secrets, no russian trackers
+- **Token zones** — 🟢 Green → 🟡 Moderate → 🟠 Caution → 🔴 Critical
 
 ---
 
@@ -160,47 +136,15 @@
 - ❌ Committing `.env`, credentials, private keys
 
 **Automatic protection:**
-- ✅ Pre-commit hook scans for secrets/trackers
-- ✅ AI Protection checks prompts for injection/PII
-- ✅ Token budget monitoring prevents overuse
+- ✅ Pre-commit hook: secrets, Russian trackers, prompt injection, PII detection
+- ✅ Post-push hook: session anchor update in `PROJECT_CONTEXT_MAP.md`
+- ✅ Token budget zones: 🟢→🟡→🟠→🔴
 
-**Check compliance:** Run `//CHECK:ALL` command
-
----
-
-## 🆘 Need Help?
-
-- **Quick reference:** [Cheatsheet](.ai/docs/cheatsheet.md)
-- **Getting started:** [Quick Start](.ai/docs/quickstart.md)
-- **Token efficiency:** [Session Management](.ai/docs/session-mgmt.md)
-- **Issues/Support:** [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
-- **Updates:** Run `npm run sync-rules` to regenerate tool files
+**Check compliance:** Run `//CHECK:ALL`
 
 ---
 
-## 📁 Project Structure Reference
-
-```
-.
-├── AGENTS.md              # ← YOU ARE HERE (entry point)
-├── .ai/                   # AI Framework Hub
-│   ├── contexts/          # Context presets
-│   ├── docs/              # Documentation
-│   ├── rules/             # Full rules reference
-│   └── *.json            # Configuration files
-├── .claude/               # Claude Code configuration
-│   ├── CLAUDE.md          # Auto-generated (from .ai/contexts/)
-│   └── hooks/             # CLI hooks
-├── .cursorrules           # Auto-generated (Cursor IDE)
-└── scripts/
-    ├── pre-commit         # Security checks
-    ├── sync-rules.sh      # Regenerate tool files
-    └── token-status.sh    # Token budget dashboard
-```
-
----
-
-## ⚠️ Red Flags - Auto-Stop Conditions
+## ⚠️ Red Flags — Auto-Stop Conditions
 
 **AI MUST stop and ask confirmation before:**
 
@@ -217,32 +161,39 @@
 
 ---
 
-## 📝 Version History
+## 📁 Project Structure Reference
 
-- **v9.1** [2026-02-08] - **OPTIMIZATION RELEASE**. Phase 7: .ai/ hub restructure. Clean root directory (only AGENTS.md). All docs → .ai/docs/, rules → .ai/rules/. Token optimization: 20-30% smaller contexts. Session management best practices. Enhanced compression. Zero feature loss.
-- **v9.0** [2026-02-05] - **AI ENFORCEMENT**. Mandatory protocols auto-loaded. Post-push compression. Multi-level compression (Light/Aggressive/Maximum). Proactive token suggestions.
-- **v8.1** [2026-02-04] - **MODULAR CONTEXTS**. Smart context loading system (minimal/ukraine-full). Token savings: 40-70% for international users.
-- **v8.0** [2026-02-03] - **TOKEN CONTROL v3.0**. Intelligent budget management. Pre-flight approval, variance learning, emergency reserves.
-- **v7.2** [2026-02-02] - Layer 0: CLAUDE.md for universal VSCode support. 4-layer protection system.
+```
+.
+├── AGENTS.md              # ← YOU ARE HERE (entry point)
+├── PROJECT_IDEOLOGY.md    # Soul doc — WHY/WHO/PRODUCT/VISION
+├── PROJECT_CONTEXT_MAP.md # Auto-generated architecture snapshot
+├── PROPOSALS.md           # Generated by /sculptor
+├── ARBITER_REPORT.md      # Generated by /arbiter
+├── .ai/                   # AI Framework Hub
+│   ├── contexts/          # Context presets
+│   ├── docs/              # Documentation
+│   ├── rules/             # Full rules reference
+│   └── *.json             # Configuration files
+├── .claude/               # Claude Code configuration
+│   ├── CLAUDE.md          # Session protocol (auto-loaded)
+│   └── commands/          # Skills: /ctx, /sculptor, /arbiter
+├── .cursor/rules/         # Cursor ≥0.45 rules (.mdc format)
+├── .cursorrules           # Cursor <0.45 legacy rules
+└── scripts/
+    ├── pre-commit         # Security checks (auto-installed as hook)
+    ├── post-push.sh       # Session anchor update (auto-installed as hook)
+    └── sync-rules.sh      # Sync dev ↔ npm-templates pairs
+```
 
 ---
 
-## 🎉 What's New in v9.1 Optimization
+## 🆘 Need Help?
 
-**Token Optimization (30-40% savings):**
-- ✅ Optimized contexts: 20-28% smaller, same features
-- ✅ Session management best practices (50% fewer restarts)
-- ✅ Smart context selection wizard
-- ✅ Enhanced auto-compression (3 levels)
-- ✅ Token usage dashboard
-
-**Clean Repository Structure:**
-- ✅ Root: Only AGENTS.md (entry point)
-- ✅ All documentation: .ai/docs/
-- ✅ All rules: .ai/rules/
-- ✅ Tool files: Auto-generated from contexts
-
-**Philosophy:** Evolution, not revolution. Quality > Speed. No overengineering.
+- **Full vision:** `PROJECT_IDEOLOGY.md` (send this to AI for instant project context)
+- **Current state:** `PROJECT_CONTEXT_MAP.md` (architecture snapshot, always fresh)
+- **Issues/Support:** [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues)
+- **Full docs:** See `.ai/docs/` directory
 
 ---
 
@@ -252,5 +203,5 @@
 
 ---
 
-**Last Updated:** 2026-02-18
+**Last Updated:** 2026-02-23
 **Framework Version:** 9.1.1
