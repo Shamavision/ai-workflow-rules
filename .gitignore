@@ -58,17 +58,14 @@ licenses.csv
 # AI API credentials
 .anthropic
 .openai
-# Claude Code settings
-.claude/*  # Ignore all files in .claude by default
-!.claude/hooks/  # Exception: commit hooks (part of framework)
-!.claude/CLAUDE.md  # Exception: session instructions (part of framework)
-!.claude/settings.json  # Exception: project settings (if exists)
+# .claude/ — installed from npm-templates/.claude/ (source of truth = npm-templates/)
+# Not tracked in dev repo. Restore: node bin/cli.js or cp -r npm-templates/.claude .claude
+.claude/
 
-# IDE integration files (auto-generated from contexts)
-# Note: Committed to repository as templates, but users can regenerate
-# via: npm run sync-rules or bash scripts/sync-rules.sh
-.cursorrules     # Cursor IDE rules (auto-generated)
-!.cursorrules    # Exception: commit template
+# Cursor IDE rules — generated from contexts, installed from npm-templates/
+# Not tracked in dev repo.
+.cursorrules
+.cursor/
 ai-logs/
 ai-costs.db
 .ai-cache/
@@ -360,6 +357,9 @@ audits/
 
 # Internal dev files (root)
 ROADMAP.md
+PROJECT_CONTEXT_MAP.md
+PROPOSALS.md
+ARBITER_REPORT.md
 QUICK_CONTEXT.md
 VISUAL_GUIDE.md
 
@@ -373,3 +373,26 @@ public/
 commit-output.txt
 push-output.txt
 task.txt
+
+# ==============================================================================
+# INSTALLED COPIES: Source of truth = npm-templates/
+# These files are installed into the project root for local dev use.
+# NOT tracked — edit directly in npm-templates/, these are just local copies.
+# After fresh clone: node bin/cli.js  OR  cp -r npm-templates/. .
+# ==============================================================================
+
+# Entry points (copies of npm-templates/)
+AGENTS.md
+PROJECT_IDEOLOGY.md
+.editorconfig
+
+# .ai/ framework files (copies of npm-templates/.ai/)
+.ai/AI-ENFORCEMENT.md
+.ai/presets.json
+.ai/forbidden-trackers.json
+.ai/contexts/
+.ai/docs/
+.ai/rules/
+
+# Dev config (generated per developer, never shared)
+.ai/config.json
