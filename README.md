@@ -82,7 +82,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rule
 | Command | What It Does |
 |---------|--------------|
 | `//START` | Load rules, init session, show token status |
-| `//TOKENS` | Token budget: context layer + rate layer + billing layer |
+| `//TOKENS` | Message tracking v2.0: messages today + session count + write to session-log |
 | `//COMPACT` | Compress context, save 40–60% tokens |
 | `//REFRESH` | Reload rules mid-session (anti-amnesia) |
 | `//CHECK:SECURITY` | Audit: secrets, XSS, injection |
@@ -100,10 +100,10 @@ You: //START
 ✓ Context loaded: ukraine-full (~18k tokens, v9.1 optimized)
 ✓ Token budget: ~18k for rules (9% of session)
 ✓ Language: Adaptive (matches user's language)
-✓ Token limit: 200k daily (Claude Pro subscription)
-✓ Current usage: ~18k (9%) | Remaining: ~182k
+✓ Session context: 9% / 200k
+✓ Messages today: 0 / ~80    ← primary metric
 ✓ Status: 🟢 Green — Full capacity
-✓ Last push: 2026-02-23 | c3d43af | 🟢 New day! Fresh limits
+✓ Last push: 2026-02-25 | a62ebd4 | 🟢 New day! Fresh limits
 
 Чим я можу вам допомогти?
 ```
@@ -169,37 +169,34 @@ Yookassa, 2GIS, Wildberries, Ozon, and all `.ru` domains in production code.
 
 ---
 
-## 📊 Token Monitoring
+## 📊 Token Monitoring v2.0
 
-**How it works:** AI self-reports estimates to `.ai/session-log.json` at key moments.
-No provider API needed — local date is the session boundary.
+**Philosophy:** Count messages, not tokens. Day is the anchor. No provider API needed.
+
+Primary metric: `messages_today` — AI counts EXACTLY (not estimate ±50%).
 
 ```
-[AI STATUS] 🟢 GREEN
-Provider: Claude Pro
-
-Context  ███░░░░░░░░░░░  22%  ~45k / 200k
-Rate     🟢 Normal
-Billing  N/A
-Daily    ~45k today
+[AI STATUS] 🟢
+Context (сесія):       22% / 200k
+Повідомлень сьогодні:  12 / ~80     ← PRIMARY METRIC
+Сесій сьогодні:        1
+Behavioral:            🟢 Normal
+New day:               ✅ 2026-02-25
 ```
 
 <details>
-<summary>3-Layer Mental Model — honest about what AI knows vs. estimates</summary>
+<summary>How session tracking works</summary>
 
-| Layer | What It Tracks | Accuracy |
-|-------|---------------|----------|
-| **Context** | Session tokens / 200k window | ✅ AI knows exactly |
-| **Rate** | Behavioral throttling signal | ⚠️ Estimated from patterns |
-| **Billing** | Financial cost (API plans only) | ✅ Exact for API; `N/A` for subscription |
+- AI writes to `.ai/session-log.json` at `//START`, `//TOKENS`, `//COMPACT`, and after `git push`
+- Day boundary: local date change resets message count, fresh limits
+- Session boundary: gap > 2h since last `session-start` = new session
+- No provider API needed — date comparison is the anchor
 
-**For subscription users (Claude Pro, Cursor Pro):**
-- Billing Layer: `N/A` — no per-token cost, honest
-- Context Layer: 200k tokens per session — your primary budget metric
-- Rate Layer: 🟢 Normal until patterns suggest throttling
-
-> "Context Layer is what I know. Rate Layer is what I estimate. Billing is N/A."
-> *Progressive truth > fabricated precision.*
+| Metric | Source | Accuracy |
+|--------|--------|----------|
+| `messages_today` | AI counts messages in current session | ✅ Exact |
+| `session context %` | Token estimate relative to 200k window | ⚠️ Estimate |
+| `billing cost` | API plans only — from `access_type` in config | ✅ Exact (API); `N/A` (subscription) |
 
 </details>
 
@@ -257,27 +254,33 @@ Built during the war, for teams that keep shipping. Ukrainian compliance require
 your-project/
 ├── AGENTS.md                         # Universal AI entry point (//START)
 ├── PROJECT_IDEOLOGY.md               # Soul doc — WHY/WHO/PRODUCT/VISION (template)
+├── .editorconfig                     # Consistent editor settings
 ├── .claude/
 │   ├── CLAUDE.md                     # Claude Code session protocol (auto-loaded)
+│   ├── settings.json                 # Enables hooks in Claude Code
+│   ├── hooks/
+│   │   └── user-prompt-submit.sh     # Session-start auto-trigger
 │   └── commands/
 │       ├── ctx.md                    # /ctx skill
 │       ├── sculptor.md               # /sculptor skill
 │       └── arbiter.md                # /arbiter skill
 ├── .cursor/
 │   └── rules/
-│       └── ai-workflow.mdc           # Cursor ≥0.45 rules (YAML frontmatter)
-├── .cursorrules                      # Cursor <0.45 legacy rules
+│       └── ai-workflow.mdc           # Cursor ≥0.45 rules (YAML frontmatter, generated)
+├── .cursorrules                      # Cursor <0.45 legacy rules (generated)
 ├── .ai/
 │   ├── config.json                   # Your configuration (context, provider, market)
 │   ├── AI-ENFORCEMENT.md             # Mandatory AI protocols (auto-loaded)
-│   ├── presets.json                  # Tool/plan token presets
+│   ├── ai-protection-policy.json     # Prompt injection + PII + directory protection config
+│   ├── presets.json                  # Tool/plan message limit presets
 │   ├── forbidden-trackers.json       # 40+ blocked russian services
 │   ├── contexts/
 │   │   ├── minimal.context.md        # ~10k tokens
 │   │   └── ukraine-full.context.md   # ~18k tokens
-│   └── rules/
-│       ├── core.md                   # Complete workflow rules
-│       └── product.md                # Ukrainian market rules
+│   ├── rules/
+│   │   ├── core.md                   # Complete workflow rules
+│   │   └── product.md                # Ukrainian market rules
+│   └── docs/                         # Reference docs (token usage, sessions, etc.)
 └── scripts/
     ├── pre-commit                    # Security hook → auto-installed to .git/hooks/
     ├── post-push.sh                  # Session anchor update → auto-installed to .git/hooks/
@@ -288,4 +291,4 @@ your-project/
 
 ---
 
-**Made with ❤️ in Ukraine 🇺🇦** | **License:** GPL v3 | [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues) | **v9.1.1** | Updated: 2026-02-23
+**Made with ❤️ in Ukraine 🇺🇦** | **License:** GPL v3 | [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues) | **v9.1.1** | Updated: 2026-02-25
