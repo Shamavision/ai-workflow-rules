@@ -228,3 +228,25 @@ today != 2026-02-23 → 🟢 New day! Fresh token limits since last push
 > Install: `.git/hooks/post-push` (auto-installed by `npx @shamavision/ai-workflow-rules`).
 
 ---
+
+## 📍 Last Push (Session Anchor)
+
+> **AI: Compare this date with today to detect new day. New day = fresh limits!**
+>
+> Read this section at session start to orient yourself.
+
+| Field | Value |
+|-------|-------|
+| **Date** | 2026-02-24 |
+| **Time** | 18:41 |
+| **Commit** | `c6426a1` — feat(task-16): universal token monitoring v2.0 — message-count ground truth, quiet helper, anti-amnesia |
+| **Branch** | `main` |
+| **Files changed** | 14 |
+
+**New-day detection (for AI):**
+```
+today == 2026-02-24 → 📊 Same day, continuing (check session usage)
+today != 2026-02-24 → 🟢 New day! Fresh token limits since last push
+```
+
+---
