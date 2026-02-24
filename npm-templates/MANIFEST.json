@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "description": "Single source of truth for all files distributed by ai-workflow-rules installers (bin/cli.js + scripts/install.sh). Add new template files here ONLY — both installers read this list automatically.",
+
+  "groups": {
+    "core":    "Always installed for all users",
+    "ukraine": "Installed only when user selects Ukraine market (product rules)"
+  },
+
+  "files": [
+    { "src": ".ai/AI-ENFORCEMENT.md",                "dest": ".ai/AI-ENFORCEMENT.md",                "group": "core" },
+    { "src": ".ai/ai-protection-policy.json",         "dest": ".ai/ai-protection-policy.json",         "group": "core" },
+    { "src": ".ai/contexts/minimal.context.md",       "dest": ".ai/contexts/minimal.context.md",       "group": "core" },
+    { "src": ".ai/contexts/ukraine-full.context.md",  "dest": ".ai/contexts/ukraine-full.context.md",  "group": "core" },
+    { "src": ".ai/docs/cheatsheet.md",                "dest": ".ai/docs/cheatsheet.md",                "group": "core" },
+    { "src": ".ai/docs/code-quality.md",              "dest": ".ai/docs/code-quality.md",              "group": "core" },
+    { "src": ".ai/docs/compatibility.md",             "dest": ".ai/docs/compatibility.md",             "group": "core" },
+    { "src": ".ai/docs/provider-comparison.md",       "dest": ".ai/docs/provider-comparison.md",       "group": "core" },
+    { "src": ".ai/docs/quickstart.md",                "dest": ".ai/docs/quickstart.md",                "group": "core" },
+    { "src": ".ai/docs/session-mgmt.md",              "dest": ".ai/docs/session-mgmt.md",              "group": "core" },
+    { "src": ".ai/docs/start.md",                     "dest": ".ai/docs/start.md",                     "group": "core" },
+    { "src": ".ai/docs/token-usage.md",               "dest": ".ai/docs/token-usage.md",               "group": "core" },
+    { "src": ".ai/forbidden-trackers.json",           "dest": ".ai/forbidden-trackers.json",           "group": "core" },
+    { "src": ".ai/presets.json",                      "dest": ".ai/presets.json",                      "group": "core" },
+    { "src": ".ai/rules/core.md",                     "dest": ".ai/rules/core.md",                     "group": "core" },
+
+    { "src": ".ai/rules/product.md",                  "dest": ".ai/rules/product.md",                  "group": "ukraine" },
+
+    { "src": ".claude/CLAUDE.md",                     "dest": ".claude/CLAUDE.md",                     "group": "core" },
+    { "src": ".claude/commands/arbiter.md",           "dest": ".claude/commands/arbiter.md",           "group": "core" },
+    { "src": ".claude/commands/ctx.md",               "dest": ".claude/commands/ctx.md",               "group": "core" },
+    { "src": ".claude/commands/sculptor.md",          "dest": ".claude/commands/sculptor.md",          "group": "core" },
+    { "src": ".claude/hooks/user-prompt-submit.sh",   "dest": ".claude/hooks/user-prompt-submit.sh",   "group": "core", "chmod": true },
+    { "src": ".claude/settings.json",                 "dest": ".claude/settings.json",                 "group": "core" },
+
+    { "src": ".editorconfig",                         "dest": ".editorconfig",                         "group": "core" },
+    { "src": "AGENTS.md",                             "dest": "AGENTS.md",                             "group": "core" },
+    { "src": "LICENSE",                               "dest": "LICENSE",                               "group": "core" },
+    { "src": "PROJECT_IDEOLOGY.md",                   "dest": "PROJECT_IDEOLOGY.md",                   "group": "core" },
+
+    { "src": "scripts/post-push.sh",                  "dest": "scripts/post-push.sh",                  "group": "core", "chmod": true },
+    { "src": "scripts/pre-commit",                    "dest": "scripts/pre-commit",                    "group": "core" },
+    { "src": "scripts/sync-rules.sh",                 "dest": "scripts/sync-rules.sh",                 "group": "core", "chmod": true }
+  ],
+
+  "excluded": {
+    ".ai/config.json":                "Generated per-user during install (not a static copy)",
+    ".cursor/rules/ai-workflow.mdc":  "Generated from selected context preset (not static)",
+    ".cursorrules":                   "Generated from selected context preset (not static)",
+    "scripts/install.sh":             "The installer itself — not a project template"
+  }
+}

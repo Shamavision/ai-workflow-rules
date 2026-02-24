@@ -184,168 +184,35 @@ async function main() {
     const templatesDir = path.join(__dirname, '../npm-templates');
     const currentDir = process.cwd();
 
-    // Copy entry points + project soul document
-    await copyFile(templatesDir, currentDir, 'AGENTS.md');
-    await copyFile(templatesDir, currentDir, 'LICENSE');
-    await copyFile(templatesDir, currentDir, 'PROJECT_IDEOLOGY.md');
-    await copyFile(templatesDir, currentDir, '.editorconfig');
-
-    // Create .claude directory and copy Claude Code configuration
-    await fs.ensureDir(path.join(currentDir, '.claude'));
-    await copyFile(
-      path.join(templatesDir, '.claude'),
-      path.join(currentDir, '.claude'),
-      'CLAUDE.md'
+    // Copy all static files from MANIFEST (single source of truth for both installers)
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(templatesDir, 'MANIFEST.json'), 'utf8')
     );
+    for (const entry of manifest.files) {
+      if (entry.group === 'ukraine' && !answers.installProductRules) continue;
 
-    // Copy Claude Code settings (enables hooks)
-    await copyFile(
-      path.join(templatesDir, '.claude'),
-      path.join(currentDir, '.claude'),
-      'settings.json'
-    );
+      const src = path.join(templatesDir, entry.src);
+      const dest = path.join(currentDir, entry.dest);
+      await fs.ensureDir(path.dirname(dest));
 
-    // Copy Claude Code skills (/ctx, /sculptor, /arbiter)
-    await fs.ensureDir(path.join(currentDir, '.claude', 'commands'));
-    for (const skill of ['ctx.md', 'sculptor.md', 'arbiter.md']) {
-      await copyFile(
-        path.join(templatesDir, '.claude', 'commands'),
-        path.join(currentDir, '.claude', 'commands'),
-        skill
-      );
-    }
+      if (await fs.pathExists(dest)) {
+        console.log(chalk.yellow(`  ⚠️  ${entry.dest} already exists, skipping`));
+        continue;
+      }
 
-    // Create .claude/hooks and copy Session Start hook
-    await fs.ensureDir(path.join(currentDir, '.claude', 'hooks'));
-    await copyFile(
-      path.join(templatesDir, '.claude', 'hooks'),
-      path.join(currentDir, '.claude', 'hooks'),
-      'user-prompt-submit.sh'
-    );
+      await fs.copy(src, dest);
+      console.log(chalk.green(`  ✓ ${entry.dest}`));
 
-    // Make hook executable (Unix systems)
-    if (process.platform !== 'win32') {
-      const hookPath = path.join(currentDir, '.claude', 'hooks', 'user-prompt-submit.sh');
-      if (await fs.pathExists(hookPath)) {
-        await fs.chmod(hookPath, 0o755);
+      if (entry.chmod && process.platform !== 'win32') {
+        await fs.chmod(dest, 0o755);
       }
     }
 
-    // Create .ai directory structure
-    await fs.ensureDir(path.join(currentDir, '.ai'));
-    await fs.ensureDir(path.join(currentDir, '.ai/docs'));
-    await fs.ensureDir(path.join(currentDir, '.ai/rules'));
-    await fs.ensureDir(path.join(currentDir, '.ai/contexts'));
-
-    // Copy AI enforcement protocol (required by CLAUDE.md)
-    await copyFile(
-      path.join(templatesDir, '.ai'),
-      path.join(currentDir, '.ai'),
-      'AI-ENFORCEMENT.md'
-    );
-
-    // Copy presets (required by //TOKENS v2.0 for daily message limits)
-    await copyFile(
-      path.join(templatesDir, '.ai'),
-      path.join(currentDir, '.ai'),
-      'presets.json'
-    );
-
-    // Copy documentation files to .ai/docs/
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'quickstart.md'
-    );
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'cheatsheet.md'
-    );
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'token-usage.md'
-    );
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'compatibility.md'
-    );
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'start.md'
-    );
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'session-mgmt.md'
-    );
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'code-quality.md'
-    );
-    await copyFile(
-      path.join(templatesDir, '.ai/docs'),
-      path.join(currentDir, '.ai/docs'),
-      'provider-comparison.md'
-    );
-
-    // Copy rules files to .ai/rules/
-    await copyFile(
-      path.join(templatesDir, '.ai/rules'),
-      path.join(currentDir, '.ai/rules'),
-      'core.md'
-    );
-
-    // Copy product rules if requested
-    if (answers.installProductRules) {
-      await copyFile(
-        path.join(templatesDir, '.ai/rules'),
-        path.join(currentDir, '.ai/rules'),
-        'product.md'
-      );
-    }
-
-    // Copy forbidden trackers
-    await copyFile(
-      path.join(templatesDir, '.ai'),
-      path.join(currentDir, '.ai'),
-      'forbidden-trackers.json'
-    );
-
-    // Copy all context files (required for generateRulesFiles and future sync-rules)
-    await copyContextFiles(templatesDir, currentDir);
-
-    // Create token-limits.json with user config
+    // Create token-limits.json with user config (generated per-user — not in MANIFEST)
     await createTokenLimitsConfig(currentDir, answers);
 
-    // Create .ai/config.json with user's selected context (CRITICAL: CLAUDE.md reads this first)
+    // Create .ai/config.json with user's context preset (generated per-user — not in MANIFEST)
     await createAiConfig(currentDir, answers);
-
-    // Create scripts directory
-    await fs.ensureDir(path.join(currentDir, 'scripts'));
-
-    // Copy pre-commit script
-    await copyFile(
-      path.join(templatesDir, 'scripts'),
-      path.join(currentDir, 'scripts'),
-      'pre-commit'
-    );
-
-    // Copy utility scripts (framework tools)
-    await copyFile(
-      path.join(templatesDir, 'scripts'),
-      path.join(currentDir, 'scripts'),
-      'sync-rules.sh'
-    );
-    await copyFile(
-      path.join(templatesDir, 'scripts'),
-      path.join(currentDir, 'scripts'),
-      'post-push.sh'
-    );
 
     // Install pre-commit hook
     if (answers.installHooks) {
@@ -384,32 +251,7 @@ async function main() {
   }
 }
 
-async function copyFile(sourceDir, targetDir, filename) {
-  const source = path.join(sourceDir, filename);
-  const target = path.join(targetDir, filename);
 
-  if (await fs.pathExists(target)) {
-    console.log(chalk.yellow(`  ⚠️  ${filename} already exists, skipping`));
-    return;
-  }
-
-  await fs.copy(source, target);
-  console.log(chalk.green(`  ✓ ${filename}`));
-}
-
-async function copyContextFiles(templatesDir, targetDir) {
-  const sourceContextsDir = path.join(templatesDir, '.ai/contexts');
-  const targetContextsDir = path.join(targetDir, '.ai/contexts');
-
-  const contextFiles = [
-    'minimal.context.md',
-    'ukraine-full.context.md'
-  ];
-
-  for (const file of contextFiles) {
-    await copyFile(sourceContextsDir, targetContextsDir, file);
-  }
-}
 
 async function createTokenLimitsConfig(targetDir, answers) {
   const provider = answers.provider;

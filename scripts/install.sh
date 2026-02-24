@@ -265,54 +265,17 @@ echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${BLUE}📦 Installing files...${NC}"
 echo ""
 
-# AGENTS.md + LICENSE + PROJECT_IDEOLOGY.md (top-level project soul document)
-copy_file "$TEMPLATES_DIR/AGENTS.md"            "$TARGET_DIR/AGENTS.md"
-copy_file "$TEMPLATES_DIR/LICENSE"              "$TARGET_DIR/LICENSE"
-copy_file "$TEMPLATES_DIR/PROJECT_IDEOLOGY.md"  "$TARGET_DIR/PROJECT_IDEOLOGY.md"
-copy_file "$TEMPLATES_DIR/.editorconfig"        "$TARGET_DIR/.editorconfig"
-
-# .claude/ — CLAUDE.md, settings.json, hooks
-mkdir -p "$TARGET_DIR/.claude/hooks"
-copy_file "$TEMPLATES_DIR/.claude/CLAUDE.md"    "$TARGET_DIR/.claude/CLAUDE.md"
-copy_file "$TEMPLATES_DIR/.claude/settings.json" "$TARGET_DIR/.claude/settings.json"
-copy_file "$TEMPLATES_DIR/.claude/hooks/user-prompt-submit.sh" \
-          "$TARGET_DIR/.claude/hooks/user-prompt-submit.sh"
-chmod +x "$TARGET_DIR/.claude/hooks/user-prompt-submit.sh" 2>/dev/null || true
-
-# .claude/commands/ — AI skills (/ctx, /sculptor, /arbiter)
-mkdir -p "$TARGET_DIR/.claude/commands"
-for skill in ctx.md sculptor.md arbiter.md; do
-    copy_file "$TEMPLATES_DIR/.claude/commands/$skill" \
-              "$TARGET_DIR/.claude/commands/$skill"
-done
-
-# .ai/ directory structure
-mkdir -p "$TARGET_DIR/.ai/docs" "$TARGET_DIR/.ai/rules" "$TARGET_DIR/.ai/contexts"
-
-# AI-ENFORCEMENT.md + presets.json (required by //TOKENS v2.0 for daily message limits)
-copy_file "$TEMPLATES_DIR/.ai/AI-ENFORCEMENT.md" "$TARGET_DIR/.ai/AI-ENFORCEMENT.md"
-copy_file "$TEMPLATES_DIR/.ai/presets.json"       "$TARGET_DIR/.ai/presets.json"
-
-# Documentation files
-for doc in quickstart.md cheatsheet.md token-usage.md compatibility.md \
-           start.md session-mgmt.md code-quality.md provider-comparison.md; do
-    copy_file "$TEMPLATES_DIR/.ai/docs/$doc" "$TARGET_DIR/.ai/docs/$doc"
-done
-
-# Rules
-copy_file "$TEMPLATES_DIR/.ai/rules/core.md" "$TARGET_DIR/.ai/rules/core.md"
-if [ "$INSTALL_PRODUCT" = "yes" ]; then
-    copy_file "$TEMPLATES_DIR/.ai/rules/product.md" "$TARGET_DIR/.ai/rules/product.md"
-fi
-
-# Forbidden trackers
-copy_file "$TEMPLATES_DIR/.ai/forbidden-trackers.json" "$TARGET_DIR/.ai/forbidden-trackers.json"
-
-# Context files (only 2 presets)
-for ctx in minimal ukraine-full; do
-    copy_file "$TEMPLATES_DIR/.ai/contexts/$ctx.context.md" \
-              "$TARGET_DIR/.ai/contexts/$ctx.context.md"
-done
+# Copy all static files from MANIFEST (single source of truth for both installers)
+while IFS='|' read -r src dest chmod_flag; do
+    copy_file "$TEMPLATES_DIR/$src" "$TARGET_DIR/$dest"
+    [ "$chmod_flag" = "1" ] && chmod +x "$TARGET_DIR/$dest" 2>/dev/null || true
+done < <(node -e "
+const fs = require('fs');
+const m = JSON.parse(fs.readFileSync('$TEMPLATES_DIR/MANIFEST.json', 'utf8'));
+m.files
+  .filter(f => f.group === 'core' || ('$INSTALL_PRODUCT' === 'yes' && f.group === 'ukraine'))
+  .forEach(f => process.stdout.write(f.src + '|' + f.dest + '|' + (f.chmod ? '1' : '0') + '\n'));
+")
 
 # ========================================
 # Generate .ai/token-limits.json
@@ -396,16 +359,6 @@ else
 EOF
     print_success ".ai/config.json (context: $CONTEXT, market: $MARKET_VALUE, access_type: $BILLING_TYPE)"
 fi
-
-# ========================================
-# Scripts
-# ========================================
-
-mkdir -p "$TARGET_DIR/scripts"
-copy_file "$TEMPLATES_DIR/scripts/pre-commit"    "$TARGET_DIR/scripts/pre-commit"
-copy_file "$TEMPLATES_DIR/scripts/sync-rules.sh" "$TARGET_DIR/scripts/sync-rules.sh"
-copy_file "$TEMPLATES_DIR/scripts/post-push.sh"  "$TARGET_DIR/scripts/post-push.sh"
-chmod +x "$TARGET_DIR/scripts/"*.sh 2>/dev/null || true
 
 # ========================================
 # Install pre-commit hook (automatic)
@@ -534,6 +487,7 @@ check_file ".ai/AI-ENFORCEMENT.md"
 check_file ".ai/presets.json"
 check_file ".ai/config.json"
 check_file ".ai/token-limits.json"
+check_file ".ai/ai-protection-policy.json"
 check_file ".ai/forbidden-trackers.json"
 check_file ".ai/rules/core.md"
 check_file ".ai/contexts/$CONTEXT.context.md"
