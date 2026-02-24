@@ -269,6 +269,7 @@ echo ""
 copy_file "$TEMPLATES_DIR/AGENTS.md"            "$TARGET_DIR/AGENTS.md"
 copy_file "$TEMPLATES_DIR/LICENSE"              "$TARGET_DIR/LICENSE"
 copy_file "$TEMPLATES_DIR/PROJECT_IDEOLOGY.md"  "$TARGET_DIR/PROJECT_IDEOLOGY.md"
+copy_file "$TEMPLATES_DIR/.editorconfig"        "$TARGET_DIR/.editorconfig"
 
 # .claude/ — CLAUDE.md, settings.json, hooks
 mkdir -p "$TARGET_DIR/.claude/hooks"
@@ -288,8 +289,9 @@ done
 # .ai/ directory structure
 mkdir -p "$TARGET_DIR/.ai/docs" "$TARGET_DIR/.ai/rules" "$TARGET_DIR/.ai/contexts"
 
-# AI-ENFORCEMENT.md
+# AI-ENFORCEMENT.md + presets.json (required by //TOKENS v2.0 for daily message limits)
 copy_file "$TEMPLATES_DIR/.ai/AI-ENFORCEMENT.md" "$TARGET_DIR/.ai/AI-ENFORCEMENT.md"
+copy_file "$TEMPLATES_DIR/.ai/presets.json"       "$TARGET_DIR/.ai/presets.json"
 
 # Documentation files
 for doc in quickstart.md cheatsheet.md token-usage.md compatibility.md \
@@ -402,7 +404,6 @@ fi
 mkdir -p "$TARGET_DIR/scripts"
 copy_file "$TEMPLATES_DIR/scripts/pre-commit"    "$TARGET_DIR/scripts/pre-commit"
 copy_file "$TEMPLATES_DIR/scripts/sync-rules.sh" "$TARGET_DIR/scripts/sync-rules.sh"
-copy_file "$TEMPLATES_DIR/scripts/token-status.sh" "$TARGET_DIR/scripts/token-status.sh"
 copy_file "$TEMPLATES_DIR/scripts/post-push.sh"  "$TARGET_DIR/scripts/post-push.sh"
 chmod +x "$TARGET_DIR/scripts/"*.sh 2>/dev/null || true
 
@@ -530,6 +531,7 @@ check_file ".claude/commands/ctx.md"
 check_file ".claude/commands/sculptor.md"
 check_file ".claude/commands/arbiter.md"
 check_file ".ai/AI-ENFORCEMENT.md"
+check_file ".ai/presets.json"
 check_file ".ai/config.json"
 check_file ".ai/token-limits.json"
 check_file ".ai/forbidden-trackers.json"

@@ -204,30 +204,6 @@ session-log.json    → dynamic: sessions today, estimated tokens
 
 ---
 
-## 📍 Last Push (Session Anchor)
-
-> **AI: Compare this date with today to detect new day. New day = fresh limits!**
->
-> Read this section at session start to orient yourself.
-
-| Field | Value |
-|-------|-------|
-| **Date** | 2026-02-23 |
-| **Time** | — |
-| **Commit** | `aae9794` — docs(roadmap): archive round 2+3, clean ROADMAP |
-| **Branch** | `main` |
-| **Files changed** | 1 (ROADMAP.md cleanup) |
-
-**New-day detection (for AI):**
-```
-today == 2026-02-23 → 📊 Same day, continuing (check session usage)
-today != 2026-02-23 → 🟢 New day! Fresh token limits since last push
-```
-
-> **Note:** This section auto-updates via `scripts/post-push.sh` after every `git push`.
-> Install: `.git/hooks/post-push` (auto-installed by `npx @shamavision/ai-workflow-rules`).
-
----
 
 ## 📍 Last Push (Session Anchor)
 
@@ -237,16 +213,16 @@ today != 2026-02-23 → 🟢 New day! Fresh token limits since last push
 
 | Field | Value |
 |-------|-------|
-| **Date** | 2026-02-24 |
-| **Time** | 18:41 |
-| **Commit** | `c6426a1` — feat(task-16): universal token monitoring v2.0 — message-count ground truth, quiet helper, anti-amnesia |
+| **Date** | 2026-02-25 |
+| **Time** | 00:31 |
+| **Commit** | `1165c4e` — chore(roadmap): archive Task 16 done, activate Task 17 + update session anchor |
 | **Branch** | `main` |
-| **Files changed** | 14 |
+| **Files changed** | 2 |
 
 **New-day detection (for AI):**
 ```
-today == 2026-02-24 → 📊 Same day, continuing (check session usage)
-today != 2026-02-24 → 🟢 New day! Fresh token limits since last push
+today == 2026-02-25 → 📊 Same day, continuing (check session usage)
+today != 2026-02-25 → 🟢 New day! Fresh token limits since last push
 ```
 
 ---

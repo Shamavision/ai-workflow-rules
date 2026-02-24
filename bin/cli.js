@@ -188,6 +188,7 @@ async function main() {
     await copyFile(templatesDir, currentDir, 'AGENTS.md');
     await copyFile(templatesDir, currentDir, 'LICENSE');
     await copyFile(templatesDir, currentDir, 'PROJECT_IDEOLOGY.md');
+    await copyFile(templatesDir, currentDir, '.editorconfig');
 
     // Create .claude directory and copy Claude Code configuration
     await fs.ensureDir(path.join(currentDir, '.claude'));
@@ -241,6 +242,13 @@ async function main() {
       path.join(templatesDir, '.ai'),
       path.join(currentDir, '.ai'),
       'AI-ENFORCEMENT.md'
+    );
+
+    // Copy presets (required by //TOKENS v2.0 for daily message limits)
+    await copyFile(
+      path.join(templatesDir, '.ai'),
+      path.join(currentDir, '.ai'),
+      'presets.json'
     );
 
     // Copy documentation files to .ai/docs/
@@ -332,11 +340,6 @@ async function main() {
       path.join(templatesDir, 'scripts'),
       path.join(currentDir, 'scripts'),
       'sync-rules.sh'
-    );
-    await copyFile(
-      path.join(templatesDir, 'scripts'),
-      path.join(currentDir, 'scripts'),
-      'token-status.sh'
     );
     await copyFile(
       path.join(templatesDir, 'scripts'),

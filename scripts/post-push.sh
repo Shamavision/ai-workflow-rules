@@ -68,12 +68,13 @@ today != ${PUSH_DATE} → 🟢 New day! Fresh token limits since last push
 # ---------------------------------------------------------------------------
 TMPFILE=$(mktemp)
 
-if grep -q "^## 📍 Last Push" "$MAP_FILE" 2>/dev/null; then
+if grep -q "Last Push (Session Anchor)" "$MAP_FILE" 2>/dev/null; then
   # Section exists — replace everything from the header until the next "## " heading
   # (or end of file). Use awk for reliable multi-line replacement.
+  # Note: avoid emoji in awk pattern for Windows/Git-Bash compatibility
   awk -v new_block="$NEW_BLOCK" '
-    /^## 📍 Last Push/ { in_section=1; print new_block; next }
-    in_section && /^## [^📍]/ { in_section=0 }
+    /Last Push \(Session Anchor\)/ { in_section=1; print new_block; next }
+    in_section && /^## / && !/Last Push/ { in_section=0 }
     !in_section { print }
   ' "$MAP_FILE" > "$TMPFILE"
   mv "$TMPFILE" "$MAP_FILE"
