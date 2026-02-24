@@ -18,8 +18,8 @@
 [SESSION START]
 ✓ Context: minimal (~10k tokens)
 ✓ Language: Adaptive
-✓ Token limit: 200k/session (MODEL_3: daily UNKNOWN)
-✓ Usage: [X]k ([Y]%)
+✓ Session context: [X]% / 200k
+✓ Messages today: [N] / ~80    ← primary metric
 
 Чим я можу вам допомогти?
 ```
@@ -87,9 +87,15 @@ Status: 🟢/🟡/🟠/🔴
 
 ---
 
-## 2. TOKEN MANAGEMENT
+## 2. TOKEN MANAGEMENT (message-count model)
 
-### 2.1. Zones & Actions
+### 2.0. What We Measure
+
+**Primary: `messages_today`** (AI counts EXACTLY) | **Secondary: context %** (session window)
+- Soft limit ~80 msgs / hard limit ~120 msgs (Claude Pro, from presets.json)
+- Session context: 0–200k (real limit) | Daily token limit: UNKNOWN (not published)
+
+### 2.1. Context Zones (session window)
 
 | Zone | Range | Mode | Behavior |
 |------|-------|------|----------|

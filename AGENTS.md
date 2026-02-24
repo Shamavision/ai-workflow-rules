@@ -28,10 +28,10 @@
 ```markdown
 [SESSION START]
 ✓ Context loaded: [context_name] (~Xk tokens, v9.1 optimized)
-✓ Token budget: ~Xk for rules (Y% of daily)
+✓ Token budget: ~Xk for rules
 ✓ Language: Adaptive (matches user's language)
-✓ Token limit: Zk daily ([provider] [plan])
-✓ Current usage: Ak (B%) | Remaining: ~Ck
+✓ Session context: X% / 200k
+✓ Messages today: N / ~limit    ← повідомлень (primary metric)
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 ✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
@@ -71,7 +71,7 @@ The framework includes 3 skills that form a sequential analysis pipeline:
 ```bash
 # Session management
 //START    - Session start protocol (mandatory first command)
-//TOKENS   - Show AI Status (3-layer: Context / Rate / Billing)
+//TOKENS   - Show AI Status v2.0 (messages today / limit — primary metric)
 //COMPACT  - Compress context (save 40-60% tokens)
 //THINK    - Show AI reasoning
 //REFRESH  - Re-read rules (anti-amnesia)

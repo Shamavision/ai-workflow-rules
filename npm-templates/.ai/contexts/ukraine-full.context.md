@@ -19,12 +19,12 @@
 [SESSION START]
 ✓ Context: ukraine-full (~18k tokens)
 ✓ Language: Adaptive
-✓ Token limit: 200k/session (MODEL_3: daily UNKNOWN)
-✓ Usage: [X]k ([Y]%)
+✓ Session context: [X]% / 200k
+✓ Messages today: [N] / ~80    ← primary metric
 ✓ Ukrainian market compliance: active
 ✓ Cyber defense: enabled
 
-Чім я можу вам допомогти?
+Чим я можу вам допомогти?
 ```
 
 ---
@@ -91,21 +91,32 @@ Status: 🟢/🟡/🟠/🔴
 
 ---
 
-## 2. TOKEN MANAGEMENT v2.0
+## 2. TOKEN MANAGEMENT v3.0 (message-count model)
 
-### 2.1. Limits & Tracking
+### 2.1. What We Actually Measure
 
-```json
-{
-  "plan": "pro",
-  "_architecture_model": "MODEL_3",
-  "session_limit": 200000,
-  "daily_limit": 500000,
-  "daily_limit_type": "fair_use_dynamic",
-  "daily_limit_note": "ESTIMATE ONLY. Real limit UNKNOWN (MODEL_3).",
-  "daily_usage": 0
-}
+**Primary metric: `messages_today`** — AI counts messages EXACTLY.
+Token estimates had ±50% error. Message frequency = actual rate-limit trigger.
+
 ```
+What AI knows EXACTLY:        What AI does NOT know:
+✅ messages in this session    ❌ daily token limit (unpublished)
+✅ context % (session window)  ❌ exact rate-limit threshold
+✅ new day (date comparison)   ❌ provider billing internals
+✅ Level 2: .jsonl tokens      (Claude Code only, graceful degradation)
+```
+
+**Three levels of monitoring:**
+```
+Level 1 (Universal — all AI):  messages_today, context%, new_day_check
+Level 2 (Claude Code bonus):   input/output/cache tokens from .jsonl
+Level 3 (Weekly, 7+ days):     trend analysis, plan recommendation
+```
+
+**Message thresholds** (from `.ai/presets.json`, per plan):
+- Soft limit (~80 for Claude Pro): mention at next natural checkpoint
+- Hard limit (~120): alert immediately
+- `null` (API billing): no message limit, monitor cost instead
 
 ### 2.2. Zones & Actions
 

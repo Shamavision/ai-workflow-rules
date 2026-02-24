@@ -200,96 +200,239 @@ Session tokens 90%+   → Level 3 (Maximum)
 
 ---
 
-### 1.1. SESSION-LOG WRITE PROTOCOL (Phase 11 - MANDATORY)
+### 1.1. SESSION-LOG WRITE PROTOCOL v2.0 (MANDATORY)
 
-**Added 2026-02-19 — Universal token self-reporting, works for ALL AI tools**
+**Added 2026-02-19 (v1.x) — Redesigned 2026-02-24 (v2.0)**
+**Universal token monitoring: message count = primary metric. Works for ALL AI tools.**
 
-**WHAT:** AI writes its own token estimates to `.ai/session-log.json`
-**WHY:** No provider API → AI is the only source of truth → honest self-reporting
+**Core truth:** AI counts messages EXACTLY. Token estimates had ±50% error.
+Message frequency = what actually triggers rate limiting. This is the ground truth.
 
-**TRIGGERS (write to session-log.json when ANY of these fires):**
+**TRIGGERS:**
 
-| Trigger | Tokens written | Entry format |
-|---------|---------------|--------------|
-| `//start` / session start | 0 (marker) | `session-start` + timestamp |
-| `//TOKENS` | current estimate | `//tokens` + context_pct + timestamp |
-| `//COMPACT` | estimate before compress | `//compact` + context_pct + timestamp |
-| `git push` | estimate | `git-push` + context_pct + timestamp |
-| Phase complete | estimate | `phase-complete` + timestamp |
+| Trigger | Action | Key fields |
+|---------|--------|------------|
+| `//start` / session start | New session entry | `messages: 0`, `id: N+1` |
+| `//TOKENS` | Update current session | `messages: N` (exact count) |
+| `//COMPACT` | Save snapshot | `trigger: "compact"`, `messages: N` |
+| `git push` | Increment pushes | handled by `post-push.sh` |
+| Phase complete | Checkpoint | `trigger: "phase-complete"`, `messages: N` |
 
-**REQUIRED ACTION — Write entry to session-log.json:**
+**session-log.json v2.0 schema (day-based):**
 
 ```json
 {
-  "date": "YYYY-MM-DD",
-  "tokens": 45000,
-  "context_pct": 22,
-  "tool": "claude-code",
-  "trigger": "//tokens",
-  "timestamp": 1740012345
+  "_version": "2.0",
+  "_philosophy": "Count events, not tokens. Day is truth.",
+  "days": [
+    {
+      "date": "2026-02-24",
+      "sessions": [
+        {
+          "id": 1,
+          "tool": "claude-code",
+          "trigger": "session-start",
+          "timestamp": 1772002800,
+          "messages": 0
+        }
+      ],
+      "daily_total": {
+        "sessions": 1,
+        "messages": 0,
+        "pushes": 0
+      }
+    }
+  ]
 }
 ```
 
-**session-start entry (tokens = 0, marks session boundary):**
-```json
-{"date": "YYYY-MM-DD", "tokens": 0, "tool": "claude-code", "trigger": "session-start", "timestamp": 1740010000}
+- `messages` — REQUIRED for ALL AI (Level 1, exact count — not estimate)
+- `bonus_tokens` — OPTIONAL (Level 2, Claude Code only, from .jsonl)
+- v1.x files (with `"sessions"` root key) — ignored gracefully (backward compat)
+
+**Step-by-step (for `//start`):**
+```
+1. Read .ai/session-log.json (create if missing with empty v2.0 structure)
+2. NOW = Unix timestamp, today = local date (YYYY-MM-DD)
+3. Find today's day entry; if missing → create:
+   {date, sessions: [], daily_total: {sessions: 0, messages: 0, pushes: 0}}
+4. LAST_TS = last session-start timestamp for today (0 if none)
+5. GAP = NOW - LAST_TS
+6. IF GAP > 7200 (2h) OR no sessions today:
+   → Add: {id: N+1, tool, trigger: "session-start", timestamp: NOW, messages: 0}
+   → daily_total.sessions += 1
+   → Show: "🟢 New session started. (Gap: Xh since last activity)"
+7. IF GAP < 7200: context refresh — NO write
+   → Show: "📊 Continuing session. Today: X msgs (N sessions)"
+8. IF different date: "🟢 New day! Yesterday: X msgs. Fresh limits today."
 ```
 
-**Step by step (for `//TOKENS` and other estimate triggers):**
+**Step-by-step (for `//TOKENS`):**
 ```
-1. Read .ai/session-log.json (create if missing: {"_comment": "...", "sessions": []})
-2. today = local date (YYYY-MM-DD), NOW = Unix timestamp
-3. NEW DAY CHECK: last entry date != today?
-   → Show: "🟢 New day! Yesterday: ~Xk. Fresh limits."
-4. today_total = sum sessions[].tokens where date == today
-5. Estimate current session tokens (rules_load + conversation ±30-50%)
-   Estimate context_pct = round(session_tokens / context_window × 100)
-6. Burst check: count today's entries where context_pct > 60. If 3+ → Rate Layer = "🟠 High load"
-7. Append: {date: today, tokens: estimate, context_pct: X, tool: "...", trigger: "<trigger>", timestamp: NOW}
-8. Write updated file back
-9. Show session breakdown (group entries by session-start markers, gap >2h)
-```
-
-**Step by step (for `//start` — session boundary):**
-```
-1. Read .ai/session-log.json (or create)
-2. NOW = Unix timestamp, LAST_TS = last entry's timestamp (0 if none)
-3. GAP = NOW - LAST_TS
-4. IF GAP > 7200 (2h) OR no entry today:
-   → Append: {date, tokens: 0, tool, trigger: "session-start", timestamp: NOW}
-   → Show: "🟢 New session started (gap: Xh)"
-5. IF GAP < 7200: context refresh only — do NOT write entry
-   → Show: "📊 Continuing session. Today: ~Xk (N entries)"
+1. Read .ai/session-log.json
+2. today = local date, find today's day entry
+3. messages_this_session = count messages in current session (AI counts EXACTLY)
+4. Update current session entry: messages = N
+5. Update daily_total.messages = sum of sessions[].messages for today
+6. Read presets.json → daily_message_soft_limit / hard_limit for this plan
+7. OPTIONAL Level 2 (Claude Code only, graceful degradation):
+   Parse ~/.claude/projects/*/*.jsonl → bonus_tokens {input, output, cache_reads}
+8. Write updated session-log.json
+9. Show [AI STATUS] v2.0 (format below)
 ```
 
-**SHOW [AI STATUS] after every write — 3-Layer Mental Model:**
+**Level 2 bonus (Claude Code — skip gracefully if .jsonl unavailable):**
+```bash
+SESSION=$(ls -t "$HOME/.claude/projects/"*/*.jsonl 2>/dev/null | head -1)
+if [ -n "$SESSION" ]; then
+  input=$(grep -o '"input_tokens":[0-9]*' "$SESSION" | awk -F: '{s+=$2} END{print s}')
+  output=$(grep -o '"output_tokens":[0-9]*' "$SESSION" | awk -F: '{s+=$2} END{print s}')
+  cache=$(grep -o '"cache_read_input_tokens":[0-9]*' "$SESSION" | awk -F: '{s+=$2} END{print s}')
+fi
 ```
-[AI STATUS] 🟢 GREEN
-Provider: Claude Pro · MODEL_3
 
-Context  ████░░░░░░░░░░  Y%  ~Xk / 200k
-Rate     🟢 Normal / 🟠 High load
-Billing  N/A
-Daily    ~Zk today
+**[AI STATUS] v2.0 — formats by tool type:**
+
+*Universal (Level 1 — всі AI):*
+```
+[AI STATUS] 🟢
+Context (сесія):       22% / 200k
+Повідомлень сьогодні:  71 / ~120     ← ГОЛОВНИЙ ПОКАЗНИК
+Сесій сьогодні:        2
+Behavioral:            🟢 Normal
+New day:               ✅ 2026-02-24
 ```
 
-**IMPORTANT — Honesty rules:**
-- ❌ NEVER show Billing Layer cost for subscription users (`N/A` is honest)
-- ❌ NEVER fabricate daily limits or percentages
-- ✅ Context Layer: session tokens / 200k → AI knows this exactly
-- ✅ Rate Layer: 🟢 Normal by default, 🟠 High load if burst (3+ entries with context_pct > 60 today)
-- ✅ Billing Layer: read `access_type` from `.ai/config.json`. "subscription" (or missing) → `N/A`; "billing" → cost from `billing` block vs `daily_budget_usd`
+*Claude Code (Level 1 + Level 2 bonus):*
+```
+[AI STATUS] 🟢
+Context (сесія):       22% / 200k
+Повідомлень сьогодні:  71 / ~120
++ Токени (bonus):      45k input · 12k output · 782k cache
+Сесій сьогодні:        2
+Behavioral:            🟢 Normal
+New day:               ✅ 2026-02-24
+```
+
+*Claude API (billing mode):*
+```
+[AI STATUS] 🟢
+Context (сесія):       22% / 200k
+Витрачено сьогодні:    $0.43 / $5.00 budget
+Повідомлень:           71
+New day:               ✅ 2026-02-24
+```
+
+**Behavioral status:**
+- 🟢 Normal: `messages_today < daily_message_soft_limit`
+- 🟡 Elevated: `messages_today >= soft_limit` (mention at next natural checkpoint)
+- 🟠 High load: `messages_today >= hard_limit` OR 3+ sessions with context > 60%
+- 🔴 Approaching limits: "overloaded" error seen → mention immediately
+
+**HONESTY RULES (NON-NEGOTIABLE):**
+- ✅ `messages`: AI counts EXACTLY — show as fact, not estimate
+- ✅ `context %`: session tokens / context_window → AI knows exactly
+- ❌ NEVER show "200k/day" as fact — it's context window, not daily limit
+- ❌ NEVER fabricate daily token percentages (daily_limit = null = UNKNOWN)
+- ✅ Billing: `access_type` in config.json → "subscription" = N/A; "billing" = show cost
 - ✅ "Progressive truth > fabricated precision"
 
 **Graceful degradation (web AI, no file system):**
-> "Cross-session tracking requires a code editor. This session: ~Xk (estimate only)."
+> "Cross-session tracking requires a code editor. This session: ~X messages (estimate)."
 
-**WHY MANDATORY:**
-- Current state: `daily_usage = 0` in token-limits.json → total fiction
-- This gives users REAL data (rough, but real)
-- Time anchor (date) enables cross-session accumulation without any API
+**WHY v2.0 (diagnosis from 2026-02-23):**
+- "daily_limit: 200k" was fiction — 200k = ONE session context window, not daily ❌
+- AI token estimates ±50% error → unreliable for decisions ❌
+- Message frequency = actual rate-limit metric ✅
+- AI counts messages EXACTLY → single source of truth ✅
 
-**FAILURE = VIOLATION:** If AI shows Billing Layer cost for subscription users, or fabricates daily limits. Use 3-layer [AI STATUS] format.
+**FAILURE = VIOLATION:** Showing fake daily token percentages. Use message count as primary.
+
+---
+
+### 1.2. QUIET HELPER (SILENT GUARDIAN v2.0)
+
+**Added 2026-02-24 — Behavioral monitoring that doesn't interrupt work**
+
+**Philosophy:** Stay silent. Speak only when important. Never interrupt mid-task.
+
+**Thresholds (based on `daily_message_soft_limit` from presets.json):**
+
+| Messages today | When to speak | What to say |
+|----------------|---------------|-------------|
+| 0–60% of soft_limit | 🤫 SILENT | Nothing |
+| 60–80% of soft_limit | At next git push only | "Сьогодні X повідомлень (~Y% soft limit)" |
+| 80–90% of soft_limit | At push + //TOKENS | "⚠️ X/Y повідомлень — розглянь паузу після задачі" |
+| 90%+ of soft_limit | At any natural moment | "🔴 X/Y — рекомендую зупинитись сьогодні" |
+| >= hard_limit | IMMEDIATELY | "🔴 X/Y — HARD LIMIT. Пауза необхідна." |
+| "overloaded" error | IMMEDIATELY | "Rate limit hit — пауза необхідна" |
+
+**Natural moments to speak (ONLY these):**
+- `git push` (shown after compression block)
+- `//TOKENS` (shown in [AI STATUS] Behavioral line)
+- `//COMPACT` (shown after summary)
+- Phase complete checkpoint
+
+**Rules:**
+- ❌ NEVER interrupt mid-task with warnings
+- ❌ NEVER show warning below 60% threshold
+- ✅ One message per checkpoint (not repeated)
+- ✅ Silent mode is the DEFAULT (speak only when threshold crossed)
+
+**Example (80% threshold, shown at push):**
+```
+✓ Changes pushed to remote
+⚠️ Сьогодні 97/120 повідомлень (81%) — наближаємось до soft limit.
+Розглянь паузу після поточної задачі.
+```
+
+**Example (silent mode — 0–60%):**
+```
+✓ Changes pushed to remote
+→ Compressing context...
+[No message limit warning — operating in silent mode]
+```
+
+---
+
+### 1.3. WEEKLY ACTIVITY BONUS (Optional — тільки при //TOKENS)
+
+**Added 2026-02-24 — Pattern recognition for subscription planning**
+
+**CONDITION:** Show ONLY if session-log.json has **7+ days** of data in `days[]`.
+**TRIGGER:** `//TOKENS` command only.
+
+**Format:**
+```
+[WEEKLY] 2026-02-17 → 2026-02-24
+Пн: 47 повід · 1 push  🟢
+Вт: 89 повід · 3 pushes 🟡 Активний
+Ср: 12 повід · 0 pushes 🟢
+Чт: 134 повід · 5 pushes 🟠 Важкий
+Пт: 71 повід · 2 pushes 🟢
+────────────────────────────────────
+Всього: 353 повідомлення
+Важких днів: 1/5
+Порада: 🟢 Claude Pro достатньо для вашого ритму
+```
+
+**Day classification (relative to daily_message_soft_limit):**
+- 🟢 Normal: messages < 60% soft_limit
+- 🟡 Активний: 60–90% soft_limit
+- 🟠 Важкий: ≥ 90% soft_limit (or "overloaded" error in that day)
+
+**Advice logic:**
+```
+Важких 0–1/7 → "🟢 Claude Pro достатньо для вашого ритму"
+Важких 2–3/7 → "🟡 Середнє навантаження. Поточний план підходить"
+Важких 4+/7  → "🟠 Розгляньте Claude Team — часто наближаєтесь до лімітів"
+```
+
+**Rules:**
+- ❌ DO NOT show if < 7 days of data in session-log.json
+- ❌ DO NOT show if days are sparse (< 5 messages average)
+- ✅ Show only at //TOKENS (not at every push)
+- ✅ Data source: session-log.json `days[].daily_total`
 
 ---
 
@@ -660,12 +803,12 @@ IF AI violates protocol:
 - Remove protocols that prove unnecessary
 - Refine triggers based on experience
 
-**Last Updated:** 2026-02-11
-**Version:** 2.2 (v9.1.1 Rule Refresh & Anti-Amnesia)
-**Critical Protocols:** 6 (added Protocol 0.5 Pre-Phase Refresh + Protocol 1.5 Ukrainian Language)
+**Last Updated:** 2026-02-24
+**Version:** 3.0 (v2.0 Token Monitoring — message-count ground truth, quiet helper, weekly bonus)
+**Critical Protocols:** 8 (added 1.1 v2.0, 1.2 Quiet Helper, 1.3 Weekly Bonus)
 **Compression Levels:** 3 (Light/Aggressive/Maximum)
 **Triggers:** 5 (git push, 50% tokens, task completion, new task, 15+ messages)
-**Anti-Amnesia:** RULES-CRITICAL.md checklist system
+**Primary Metric:** messages_today (exact) — replaces token estimates (±50% error)
 
 ---
 

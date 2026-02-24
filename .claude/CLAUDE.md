@@ -74,19 +74,19 @@ No API needed — date comparison is the anchor. New day = fresh limits.
 
 ```markdown
 [SESSION START]
-✓ Context loaded: [context_name] (v8.1 Modular)
-✓ Token budget: ~[context_tokens]k for rules ([percentage]% of daily)
+✓ Context loaded: [context_name] (v9.1 Modular)
+✓ Token budget: ~[context_tokens]k for rules
 ✓ Language: Adaptive (matches user's language)
-✓ Token limit: [daily_limit] daily ([provider] [plan])
-✓ Current usage: [X]k ([Y]%) | Remaining: ~[Z]k
+✓ Session context: [X]% / 200k
+✓ Messages today: [N] / ~[limit]    ← повідомлень (primary metric)
 ✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
 ✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
 Чим я можу вам допомогти?
 
 **Examples:**
-- Minimal: "✓ Context: minimal (~10k, 5% of daily)"
-- Ukraine-full: "✓ Context: ukraine-full (~18k, 9% of daily)"
+- Minimal: "✓ Context: minimal (~10k) | Messages: 0 / ~80"
+- Ukraine-full: "✓ Context: ukraine-full (~18k) | Messages: 0 / ~80"
 - Last push: "✓ Last push: 2026-02-22 | a1b2c3d | 🟢 New day! Fresh limits"
 ```
 
@@ -105,7 +105,7 @@ No API needed — date comparison is the anchor. New day = fresh limits.
 When user sends these commands:
 
 - `//START` or `//start` → Execute Session Start Protocol (above)
-- `//TOKENS` → Token tracking: read session-log + estimate + write + show status
+- `//TOKENS` → Token tracking: read session-log v2.0 + count messages (exact) + write + show [AI STATUS] v2.0
 - `//CHECK:SECURITY` → Security audit (secrets, XSS, injection, API leaks)
 - `//CHECK:LANG` → LANG-CRITICAL violations scan
 - `//CHECK:ALL` → Full audit (security + performance + lang + i18n)
@@ -117,80 +117,80 @@ When user sends these commands:
 
 ---
 
-## 📊 Token Self-Reporting Protocol (Phase 11)
+## 📊 Token Self-Reporting Protocol v2.0
 
-> **Principle:** AI is its own source of truth. Time is the anchor. No provider API needed.
+> **Philosophy:** Count messages, not tokens. Day is the anchor. No provider API needed.
+> **Primary metric:** `messages_today` — AI counts EXACTLY (not estimate ±50%).
 
-### `//TOKENS` — Full behavior (MANDATORY)
+### `//TOKENS` — Full behavior v2.0 (MANDATORY)
 
 ```
-1. Read .ai/session-log.json
-   → If missing: lazy init (create with empty sessions: [])
+1. Read .ai/session-log.json (v2.0: "days" key; create if missing)
 2. today = local date (YYYY-MM-DD)
-3. NEW DAY CHECK: if last entry date != today
-   → Show: "🟢 New day! Yesterday: ~Xk tokens. Fresh limits today."
-4. today_total = sum of sessions[].tokens where date == today
-5. Estimate current session (rough ±30-50%):
-   - Rules loaded: ~18k (ukraine-full) / ~10k (minimal)
-   - + conversation length estimate
-   - context_pct = round(session_tokens / context_window × 100)
-6. Burst check: count today's entries where context_pct > 60. If 3+ → Rate Layer = "🟠 High load"
-7. Append to sessions[]: {date, tokens: estimate, context_pct: X, tool: "claude-code", trigger: "//tokens", timestamp: UNIX_NOW}
-8. Show [AI STATUS] — 3-Layer Mental Model:
+3. NEW DAY CHECK: if last day entry date != today
+   → Show: "🟢 New day! Yesterday: X messages. Fresh limits today."
+4. Find today's day entry → daily_total.messages (messages so far today)
+5. messages_this_session = count messages in current session (AI counts EXACTLY)
+6. Update session entry: {messages: N}; daily_total.messages = sum of sessions
+7. Read .ai/presets.json → get daily_message_soft_limit / hard_limit for this plan
+8. OPTIONAL Level 2 (Claude Code only, graceful degradation):
+   Parse ~/.claude/projects/*/*.jsonl → bonus_tokens {input, output, cache_reads}
+9. Write updated session-log.json
+10. Show [AI STATUS] v2.0:
 
-[AI STATUS] 🟢 GREEN
-Provider: Claude Pro · MODEL_3
-
-Context  ████░░░░░░░░░░  Y%  ~Xk / 200k
-Rate     🟢 Normal / 🟠 High load
-Billing  N/A
-Daily    ~Zk today
+[AI STATUS] 🟢
+Context (сесія):       22% / 200k
+Повідомлень сьогодні:  71 / ~120     ← ГОЛОВНИЙ ПОКАЗНИК
++ Токени (bonus):      45k in · 12k out · 782k cache  [Claude Code only, if available]
+Сесій сьогодні:        2
+Behavioral:            🟢 Normal
+New day:               ✅ YYYY-MM-DD
 ```
 
-**Billing Layer** determined by `access_type` in `.ai/config.json`:
-- `"subscription"` (or missing) → `N/A`
-- `"billing"` → calculate: `tokens × cost_per_token`, compare to `billing.daily_budget_usd`
-NEVER fabricate limits or percentages.
+**Billing (API users only)** — read `access_type` from `.ai/config.json`:
+- `"subscription"` (or missing) → no cost shown (N/A)
+- `"billing"` → show: `Витрачено: $X.XX / $budget` (from `billing.daily_budget_usd`)
+- NEVER fabricate daily token limits or percentages
 
 ### `//COMPACT` — Token write (MANDATORY addition)
 
 When user runs `//COMPACT`:
 1. Perform context compression (existing behavior)
-2. **ALSO write to session-log.json:**
-   - Estimate session tokens so far
-   - Append: `{date, tokens: estimate, tool: "claude-code", trigger: "//compact"}`
-3. Show compression results + token status
+2. **ALSO update session-log.json:** update current session `{messages: N, trigger: "//compact"}`
+3. Show compression results + [AI STATUS] v2.0
 
-### POST-PUSH PROTOCOL — Token write (MANDATORY addition)
+### POST-PUSH PROTOCOL — session-log write
 
 After every `git push`:
 1. Perform compression (existing POST-PUSH behavior)
-2. **ALSO write to session-log.json:**
-   - Append: `{date, tokens: estimate, context_pct: X, tool: "claude-code", trigger: "git-push"}`
+2. `post-push.sh` writes push count to session-log.json automatically
+3. AI shows [AI STATUS] v2.0 + Quiet Helper check (if messages >= 60% soft_limit)
 
-### `//start` / SESSION START — Write + Log check (Phase 11.5)
+### `//start` / SESSION START — Write + Log check v2.0
 
 At session start (after loading rules):
-1. **Read `.ai/session-log.json`** (if exists)
-2. Get `NOW` = current Unix timestamp, `LAST_TS` = last entry's timestamp (0 if none today)
-3. `GAP = NOW - LAST_TS`
-4. **If GAP > 7200 (2h) OR no entry today:**
-   - Write: `{date, tokens: 0, tool: "claude-code", trigger: "session-start", timestamp: NOW}`
+1. **Read `.ai/session-log.json`** (create if missing with empty v2.0 structure)
+2. `NOW` = Unix timestamp, `today` = local date (YYYY-MM-DD)
+3. Find today's day entry; if missing → create: `{date, sessions: [], daily_total: {...}}`
+4. `LAST_TS` = last session-start timestamp for today (0 if none)
+5. `GAP = NOW - LAST_TS`
+6. **If GAP > 7200 (2h) OR no sessions today:**
+   - Add: `{id: N+1, tool, trigger: "session-start", timestamp: NOW, messages: 0}`
+   - `daily_total.sessions += 1`
    - Display: "🟢 New session started. (Gap: Xh since last activity)"
-   - **If different date:** "🟢 New day! Yesterday: ~Xk. Fresh limits today."
-5. **If GAP < 7200 (same session, context refresh):**
-   - Do NOT write new entry (this is `//refresh`, not new session)
-   - Display: "📊 Continuing session. Today: ~Xk (from log, N entries)"
-6. **If file missing:** "📊 No session log yet — creating on first //TOKENS"
+   - **If different date:** "🟢 New day! Yesterday: X msgs. Fresh limits today."
+7. **If GAP < 7200 (same session, context refresh):**
+   - Do NOT write (this is `//refresh`, not new session)
+   - Display: "📊 Continuing session. Today: X msgs (N sessions)"
 
-**Note:** VSCode hook (`user-prompt-submit.sh`) auto-writes session-start before first message.
+**Note:** VSCode hook auto-writes session-start before first message.
 For Cursor/Windsurf: AI writes it during `//start` protocol.
 
 ### Graceful degradation (web AI / no file system)
 
 If AI cannot write files (Claude Web, etc.):
 > "Cross-session tracking requires a code editor (Claude Code, Cursor, Windsurf).
-> This session: ~Xk tokens (estimate). No persistent log available."
+> This session: ~X messages (estimate). No persistent log available."
 
 ### Ban prevention
 

@@ -90,7 +90,34 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 5. Done
+# 5. Update session-log.json push count (v2.0 — requires node)
+# ---------------------------------------------------------------------------
+SESSION_LOG="$REPO_ROOT/.ai/session-log.json"
+
+if [ -f "$SESSION_LOG" ] && command -v node &>/dev/null; then
+  node -e "
+    const fs = require('fs');
+    try {
+      const log = JSON.parse(fs.readFileSync('$SESSION_LOG', 'utf8'));
+      if (!log.days) process.exit(0); // v1.x format — skip
+      const today = new Date().toISOString().slice(0,10);
+      let day = log.days.find(d => d.date === today);
+      if (!day) {
+        day = { date: today, sessions: [], daily_total: { sessions: 0, messages: 0, pushes: 0 } };
+        log.days.push(day);
+      }
+      if (!day.daily_total) day.daily_total = { sessions: 0, messages: 0, pushes: 0 };
+      day.daily_total.pushes = (day.daily_total.pushes || 0) + 1;
+      fs.writeFileSync('$SESSION_LOG', JSON.stringify(log, null, 2));
+      console.log('[post-push] ✓ session-log.json: push #' + day.daily_total.pushes + ' recorded for ' + today);
+    } catch(e) {
+      console.log('[post-push] Note: could not update session-log.json (' + e.message + ')');
+    }
+  " 2>/dev/null || echo "[post-push] Note: session-log.json not updated (node error)"
+fi
+
+# ---------------------------------------------------------------------------
+# 6. Done
 # ---------------------------------------------------------------------------
 echo "[post-push] Session anchor: ${PUSH_DATE} | ${COMMIT_HASH} | ${BRANCH}"
 echo "[post-push] AI can compare today's date to '${PUSH_DATE}' for new-day detection."
