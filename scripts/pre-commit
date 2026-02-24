@@ -648,14 +648,8 @@ check_sync_pair() {
     fi
 }
 
-# Rule-file pairs (dev ↔ npm-templates) — all must stay in sync
-check_sync_pair ".claude/CLAUDE.md"              "npm-templates/.claude/CLAUDE.md"
-check_sync_pair ".cursorrules"                   "npm-templates/.cursorrules"
-check_sync_pair ".cursor/rules/ai-workflow.mdc"  "npm-templates/.cursor/rules/ai-workflow.mdc"
-check_sync_pair "AGENTS.md"                      "npm-templates/AGENTS.md"
-check_sync_pair ".claude/commands/ctx.md"        "npm-templates/.claude/commands/ctx.md"
-check_sync_pair ".claude/commands/sculptor.md"   "npm-templates/.claude/commands/sculptor.md"
-check_sync_pair ".claude/commands/arbiter.md"    "npm-templates/.claude/commands/arbiter.md"
+# Script pairs (both tracked in root + npm-templates) — must stay in sync
+# Note: .claude/, .cursor/, AGENTS.md etc are gitignored dev copies — not tracked, skip
 check_sync_pair "scripts/pre-commit"             "npm-templates/scripts/pre-commit"
 check_sync_pair "scripts/post-push.sh"           "npm-templates/scripts/post-push.sh"
 

@@ -1,0 +1,386 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "9.1.1",
+  "description": "AI Protection Policy - Comprehensive AI security configuration",
+  "updated": "2026-02-05",
+
+  "enabled": true,
+  "mode": "balanced",
+
+  "modes": {
+    "strict": {
+      "description": "Maximum protection, may have false positives",
+      "prompt_injection": "block_all_suspicious",
+      "pii_detection": "redact_everything",
+      "fail_safe": "fail_closed"
+    },
+    "balanced": {
+      "description": "Recommended - good security with minimal false positives",
+      "prompt_injection": "block_critical_warn_high",
+      "pii_detection": "redact_critical_warn_others",
+      "fail_safe": "fail_closed"
+    },
+    "permissive": {
+      "description": "Minimal protection, for development only",
+      "prompt_injection": "warn_only",
+      "pii_detection": "report_only",
+      "fail_safe": "fail_open"
+    }
+  },
+
+  "components": {
+    "prompt_injection_detection": {
+      "enabled": true,
+      "severity": "critical",
+      "patterns_file": ".ai/prompt-injection-patterns.json",
+      "description": "Detects malicious AI instructions in code/comments",
+
+      "actions": {
+        "critical": "block_commit",
+        "high": "warn_and_require_confirmation",
+        "medium": "warn_only",
+        "low": "log_only"
+      },
+
+      "whitelist_enabled": true,
+      "context_aware": true,
+
+      "bypass": {
+        "inline_comment": "ai-protection-ignore",
+        "file": ".ai-protection-ignore"
+      }
+    },
+
+    "pii_protection": {
+      "enabled": true,
+      "auto_redact": true,
+      "patterns_file": ".ai/pii-patterns.json",
+      "description": "Protects Personal Identifiable Information in AI logs",
+
+      "scan_on": {
+        "pre_commit": true,
+        "session_start": false,
+        "manual_command": true
+      },
+
+      "scan_paths": [
+        ".ai/token-limits.json",
+        ".ai/audit-trail.log",
+        ".ai/.ai-protection-cache/**",
+        "ai-logs/**"
+      },
+
+      "redaction": {
+        "mode": "auto",
+        "backup_enabled": true,
+        "backup_path": ".ai/.backups/",
+        "preserve_format": true
+      },
+
+      "gdpr_compliance_mode": true,
+      "ukrainian_market_focus": true
+    },
+
+    "directory_protection": {
+      "enabled": true,
+      "description": "Ensures AI working directories are secure",
+
+      "ai_directory": {
+        "path": ".ai/",
+        "mode": "protected",
+
+        "gitignore_required": [
+          ".ai/audit-trail.log",
+          ".ai/.ai-protection-cache/",
+          ".ai/.backups/",
+          ".ai/.pii-scan-summary.json"
+        ],
+
+        "files_allowed_in_git": [
+          ".ai/config.json",
+          ".ai/security-policy.json",
+          ".ai/ai-protection-policy.json",
+          ".ai/prompt-injection-patterns.json",
+          ".ai/pii-patterns.json",
+          ".ai/forbidden-trackers.json",
+          ".ai/locale-context.json",
+          ".ai/token-limits.json.example",
+          ".ai/THREAT_MODEL.md",
+          ".ai/DISCLAIMERS.md",
+          ".ai/contexts/**"
+        ],
+
+        "validation": {
+          "check_gitignore_on_commit": true,
+          "auto_add_to_gitignore": false,
+          "warn_if_missing": true
+        }
+      },
+
+      "ai_logs_directory": {
+        "path": "ai-logs/",
+        "mode": "blocked_from_git",
+
+        "validation": {
+          "must_be_in_gitignore": true,
+          "block_commit_if_staged": true,
+          "message": "ai-logs/ contains full AI conversations. Must be in .gitignore"
+        }
+      },
+
+      "claude_cache": {
+        "path": ".claude/cache/",
+        "mode": "blocked_from_git",
+        "must_be_in_gitignore": true
+      }
+    },
+
+    "fail_safe_mechanism": {
+      "enabled": true,
+      "mode": "fail_closed",
+      "description": "If AI protection fails, default to safe state",
+
+      "modes": {
+        "fail_closed": "If protection script fails → BLOCK commit (safe)",
+        "fail_open": "If protection script fails → ALLOW commit (unsafe, dev only)"
+      },
+
+      "scenarios": {
+        "script_error": "fail_closed",
+        "patterns_file_missing": "warn_and_continue",
+        "config_file_missing": "use_defaults_and_warn",
+        "dependency_missing": "fail_closed"
+      },
+
+      "error_handling": {
+        "log_errors": true,
+        "show_user_friendly_message": true,
+        "provide_fix_instructions": true
+      }
+    },
+
+    "audit_trail": {
+      "enabled": true,
+      "path": ".ai/audit-trail.log",
+      "description": "Immutable log of all AI protection events",
+
+      "format": "timestamp | event_type | file | details | severity | action_taken",
+
+      "events_to_log": [
+        "PROMPT_INJECTION_DETECTED",
+        "PII_DETECTED",
+        "PII_REDACTED",
+        "COMMIT_BLOCKED",
+        "COMMIT_ALLOWED_WITH_WARNING",
+        "AI_PROTECTION_ERROR",
+        "GITIGNORE_VALIDATION_FAILED"
+      ],
+
+      "retention": {
+        "max_size_mb": 50,
+        "rotate_when_full": true,
+        "keep_last_n_files": 5
+      },
+
+      "append_only": true,
+      "must_be_in_gitignore": true
+    }
+  },
+
+  "integration": {
+    "pre_commit_hook": {
+      "enabled": true,
+      "priority": "after_secret_scanning",
+      "description": "Run AI protection after existing security checks",
+
+      "execution_order": [
+        "1. Secret scanning (Tier 1/2/3)",
+        "2. Russian tracker detection",
+        "3. LANG-CRITICAL checks",
+        "4. 🆕 Prompt injection detection",
+        "5. 🆕 PII scanning",
+        "6. 🆕 Directory protection validation"
+      ]
+    },
+
+    "ai_assistants_supported": [
+      "Claude Code (Anthropic)",
+      "Cursor",
+      "Windsurf",
+      "Aider",
+      "Continue.dev",
+      "GitHub Copilot",
+      "ChatGPT (manual)",
+      "Gemini Code Assist",
+      "Generic AI tools"
+    ],
+
+    "platforms_supported": {
+      "bash": {
+        "script": "scripts/ai-protection.sh",
+        "platforms": ["Linux", "macOS", "Windows (Git Bash)", "WSL"]
+      },
+      "nodejs": {
+        "script": "scripts/ai-protection.js",
+        "platforms": ["All platforms with Node.js 14+"]
+      },
+      "powershell": {
+        "script": "scripts/ai-protection.ps1",
+        "platforms": ["Windows (native)", "PowerShell Core 7+"]
+      }
+    }
+  },
+
+  "ukrainian_market_specifics": {
+    "enabled": true,
+    "description": "Additional protections for Ukrainian businesses",
+
+    "pii_patterns_ua": {
+      "ipn": "Ukrainian IPN (tax ID) detection",
+      "passport": "Ukrainian passport number detection",
+      "phone": "Ukrainian phone numbers (+380)",
+      "iban": "Ukrainian IBAN (UA...)"
+    },
+
+    "compliance": {
+      "gdpr": {
+        "enabled": true,
+        "data_minimization": true,
+        "purpose_limitation": true,
+        "note": "Provides TOOLS for GDPR, not certification"
+      },
+
+      "ukrainian_data_protection_law": {
+        "enabled": true,
+        "note": "Law of Ukraine on Personal Data Protection"
+      }
+    },
+
+    "russian_services_zero_tolerance": {
+      "enabled": true,
+      "inherited_from": "security-policy.json → russian_trackers",
+      "note": "Already covered by existing v8.3 protection"
+    }
+  },
+
+  "performance": {
+    "parallel_processing": false,
+    "cache_enabled": true,
+    "cache_duration_minutes": 60,
+
+    "optimizations": {
+      "skip_unchanged_files": true,
+      "use_git_diff_for_scanning": true,
+      "max_file_size_mb": 10,
+      "skip_binary_files": true
+    },
+
+    "typical_execution_time": {
+      "small_commit": "1-2 seconds",
+      "medium_commit": "2-5 seconds",
+      "large_commit": "5-10 seconds",
+      "note": "Added to existing pre-commit time (2-3 sec)"
+    }
+  },
+
+  "reporting": {
+    "terminal_output": {
+      "enabled": true,
+      "format": "colored",
+      "verbosity": "normal",
+
+      "verbosity_levels": {
+        "silent": "No output (errors only)",
+        "normal": "Summary + critical issues",
+        "verbose": "Detailed scan results",
+        "debug": "Full debug information"
+      }
+    },
+
+    "summary": {
+      "show_at_end": true,
+      "format": "🤖 AI Protection: ✅ Passed | ⚠️  X warnings | ❌ Y blocked"
+    },
+
+    "statistics": {
+      "track_detection_rates": true,
+      "track_false_positives": false,
+      "track_performance": true
+    }
+  },
+
+  "user_commands": {
+    "description": "Manual AI protection commands",
+
+    "commands": [
+      {
+        "name": "//AI-SCAN",
+        "description": "Manually run AI protection scan",
+        "usage": "//AI-SCAN [path]"
+      },
+      {
+        "name": "//PII-SCAN",
+        "description": "Scan .ai/ directory for PII",
+        "usage": "//PII-SCAN [--redact]"
+      },
+      {
+        "name": "//AI-STATUS",
+        "description": "Show AI protection status",
+        "usage": "//AI-STATUS"
+      }
+    ]
+  },
+
+  "documentation": {
+    "threat_model": ".ai/THREAT_MODEL.md",
+    "disclaimers": ".ai/DISCLAIMERS.md",
+    "patterns_prompt_injection": ".ai/prompt-injection-patterns.json",
+    "patterns_pii": ".ai/pii-patterns.json",
+    "main_readme": "README.md (v9.0 section)"
+  },
+
+  "migration": {
+    "from_v8": {
+      "breaking_changes": false,
+      "new_files_required": [
+        ".ai/ai-protection-policy.json",
+        ".ai/prompt-injection-patterns.json",
+        ".ai/pii-patterns.json",
+        "scripts/ai-protection.sh",
+        "scripts/ai-protection.js",
+        "scripts/ai-protection.ps1"
+      ],
+      "backward_compatible": true,
+      "graceful_fallback": "If new files missing → skip AI protection with warning"
+    }
+  },
+
+  "legal": {
+    "disclaimer": "This framework provides TOOLS for AI protection, not guarantees",
+    "license": "GPL-3.0",
+    "warranty": "Provided 'AS IS' without warranty of any kind",
+    "shared_responsibility": {
+      "framework": "Maintain tools, update patterns, fix bugs",
+      "user": "Configure properly, review code, conduct audits, hire professionals"
+    },
+    "see_also": [
+      ".ai/THREAT_MODEL.md",
+      ".ai/DISCLAIMERS.md"
+    ]
+  },
+
+  "metadata": {
+    "framework": "ai-workflow-rules",
+    "version": "9.1.1",
+    "component": "AI Protection - Master Configuration",
+    "philosophy": "Silent Guardian - Protect without blocking productivity",
+    "approach": "Defense in Depth + Fail-Closed + Context-Aware",
+    "focus": "Ukrainian market, GDPR compliance tools, AI-specific threats",
+    "created": "2026-02-05",
+    "last_updated": "2026-02-05",
+    "maintainer": "Shamavision <shamavision@wellme.ua>",
+    "repository": "https://github.com/Shamavision/ai-workflow-rules",
+    "license": "GPL-3.0",
+    "made_in": "Ukraine 🇺🇦"
+  }
+}
