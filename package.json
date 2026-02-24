@@ -24,19 +24,6 @@
   ],
   "scripts": {
     "test": "node bin/cli.js --help",
-    "token-status": "bash scripts/token-status.sh || pwsh scripts/token-status.ps1 || powershell scripts/token-status.ps1",
-    "token-log": "bash scripts/token-log.sh",
-    "token-add": "bash scripts/token-log.sh add",
-    "token-reset": "bash scripts/token-log.sh reset",
-    "session": "bash scripts/ai-session.sh",
-    "session-stats": "bash scripts/ai-session.sh stats",
-    "estimate-tokens": "bash scripts/estimate-tokens.sh",
-    "providers": "cat .ai/docs/provider-comparison.md",
-    "check-links": "bash scripts/check-links.sh",
-    "cleanup-root": "bash scripts/cleanup-root.sh",
-    "validate-structure": "bash scripts/validate-structure.sh",
-    "verify-templates": "bash scripts/verify-templates.sh",
-    "compare-contexts": "bash scripts/context-diff.sh",
     "sync-rules": "bash scripts/sync-rules.sh"
   },
   "repository": {

@@ -323,20 +323,6 @@ dependency-check-report.html
 !.security-baseline
 
 # ==============================================================================
-# NOTES
-# ==============================================================================
-
-# This .gitignore implements the Security Onion approach:
-#
-# Layer 1: Client Data (protected by .ai-rules/ submodule)
-# Layer 2: RULES (RULES_*.md never committed)
-# Layer 3: Secrets (API keys, .env, private keys)
-# Layer 4: Client Code (dependencies, builds)
-# Layer 5: Public/SEO (robots.txt committed, but sensitive config ignored)
-#
-# For more info: See RULES_CORE.md Section 0 (Rules Security)
-
-# ==============================================================================
 # END OF FILE
 # ==============================================================================
 
