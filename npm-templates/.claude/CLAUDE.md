@@ -14,16 +14,21 @@ If ANY of these conditions apply:
 
 → **STOP and execute Session Start Protocol immediately**
 
-### Step 1.5: 🔴 TOKEN PRE-FLIGHT CHECK (CRITICAL!)
+### Step 1.5: 🔴 TOKEN PRE-FLIGHT CHECK (CRITICAL! — v2.1 updated)
 
 **BEFORE starting ANY task estimated >20k tokens:**
 
-1. ASK: "How many tokens used TODAY already?"
-2. CALCULATE: remaining = daily_limit - daily_used
-3. IF task > remaining → STOP + WARN + GET APPROVAL
-4. NEVER start >20k work without this check!
+1. CHECK context_pct NOW (primary signal — exact):
+   - context_pct > 35% → 🟠 STOP, task is risky
+   - context_pct > 55% → 🔴 STOP unconditionally
+2. ESTIMATE daily accumulation: context_pct × 200k + prev sessions × ~50k
+3. IF (context_pct > 35%) OR (daily_estimate > 100k) → WARN user:
+   "⚠️ Heavy session detected. Context: X%. Starting large task risks ban.
+    Recommend: //COMPACT first, or defer to tomorrow."
+4. WAIT for explicit user approval before proceeding
 
 **Failure = 2 days downtime. NON-NEGOTIABLE!**
+**v2.1: context% is the check — NOT "how many messages today"**
 
 ### Step 2: Load Project Rules (Smart Context Loading)
 
@@ -77,17 +82,20 @@ No API needed — date comparison is the anchor. New day = fresh limits.
 ✓ Context loaded: [context_name] (v9.1 Modular)
 ✓ Token budget: ~[context_tokens]k for rules
 ✓ Language: Adaptive (matches user's language)
-✓ Session context: [X]% / 200k
-✓ Messages today: [N] / ~[limit]    ← повідомлень (primary metric)
-✓ Status: [🟢/🟡/🟠/🔴] [Zone description]
+✓ Session context: [X]% / 200k    ← PRIMARY: росте під час роботи; >30% = важка сесія 🟡
+✓ Messages today: [N] / ~[limit]  ← вторинний проксі
+✓ Status: [🟢/🟡/🟠/🔴] [Zone description — based on context%, not messages]
 ✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
 Чим я можу вам допомогти?
 
+**Zone rule at session start:**
+- Context 0-20% → 🟢 (normal start)
+- Context >20% at START (after //compact continuation) → 🟡 immediately
+
 **Examples:**
-- Minimal: "✓ Context: minimal (~10k) | Messages: 0 / ~80"
-- Ukraine-full: "✓ Context: ukraine-full (~18k) | Messages: 0 / ~80"
-- Last push: "✓ Last push: 2026-02-22 | a1b2c3d | 🟢 New day! Fresh limits"
+- Minimal: "✓ Context: minimal (~10k) | Context: 0% 🟢 | Messages: 0 / ~80"
+- After compact: "✓ Context: ukraine-full (~18k) | Context: 8% 🟢 | Messages: 12 / ~80"
 ```
 
 ### Step 4: Follow Core Principles
@@ -105,7 +113,7 @@ No API needed — date comparison is the anchor. New day = fresh limits.
 When user sends these commands:
 
 - `//START` or `//start` → Execute Session Start Protocol (above)
-- `//TOKENS` → Token tracking: read session-log v2.0 + count messages (exact) + write + show [AI STATUS] v2.0
+- `//TOKENS` → Token tracking v2.1: context_pct PRIMARY + messages secondary + daily estimate + write session-log + show [AI STATUS] v2.1
 - `//CHECK:SECURITY` → Security audit (secrets, XSS, injection, API leaks)
 - `//CHECK:LANG` → LANG-CRITICAL violations scan
 - `//CHECK:ALL` → Full audit (security + performance + lang + i18n)
@@ -117,56 +125,82 @@ When user sends these commands:
 
 ---
 
-## 📊 Token Self-Reporting Protocol v2.0
+## 📊 Token Self-Reporting Protocol v2.1
 
-> **Philosophy:** Count messages, not tokens. Day is the anchor. No provider API needed.
-> **Primary metric:** `messages_today` — AI counts EXACTLY (not estimate ±50%).
+> **⚠️ v2.1 CRITICAL FIX:** "18 messages = 🟢" can be DANGEROUSLY WRONG.
+> A single message with WebSearch + 3 large file reads = ~30-50k tokens.
+> **Message count is a BAD proxy for token-heavy (tool-intensive) sessions.**
 
-### `//TOKENS` — Full behavior v2.0 (MANDATORY)
+> **Philosophy v2.1:** Context window % is the PRIMARY danger signal. It is EXACT — AI knows it precisely.
+> **Primary metric:** `context_pct` — session context %, known exactly. >30% = heavy session → escalate zone.
+> **Secondary metric:** `messages_today` — rough daily accumulation proxy only.
+
+### `//TOKENS` — Full behavior v2.1 (MANDATORY)
 
 ```
-1. Read .ai/session-log.json (v2.0: "days" key; create if missing)
-2. today = local date (YYYY-MM-DD)
-3. NEW DAY CHECK: if last day entry date != today
-   → Show: "🟢 New day! Yesterday: X messages. Fresh limits today."
-4. Find today's day entry → daily_total.messages (messages so far today)
-5. messages_this_session = count messages in current session (AI counts EXACTLY)
-6. Update session entry: {messages: N}; daily_total.messages = sum of sessions
-7. Read .ai/presets.json → get daily_message_soft_limit / hard_limit for this plan
-8. OPTIONAL Level 2 (Claude Code only, graceful degradation):
-   Parse ~/.claude/projects/*/*.jsonl → bonus_tokens {input, output, cache_reads}
-9. Write updated session-log.json
-10. Show [AI STATUS] v2.0:
+STEP 1: CONTEXT % FIRST — this is the TRUTH (AI knows exactly)
+   context_pct = current session context window %
+   session_tokens_estimate = context_pct × 200k
 
-[AI STATUS] 🟢
-Context (сесія):       22% / 200k
-Повідомлень сьогодні:  71 / ~120     ← ГОЛОВНИЙ ПОКАЗНИК
-+ Токени (bonus):      45k in · 12k out · 782k cache  [Claude Code only, if available]
-Сесій сьогодні:        2
-Behavioral:            🟢 Normal
-New day:               ✅ YYYY-MM-DD
+STEP 2: ZONE based on context_pct (PRIMARY — overrides message-based zone):
+   🟢  0-20%  (~0-40k tokens)   → Normal — full capacity
+   🟡 20-35%  (~40-70k tokens)  → Moderate — monitor carefully
+   🟠 35-55%  (~70-110k tokens) → CAUTION — finish task, then //COMPACT
+   🔴  >55%   (>110k tokens)    → STOP — ban risk, finalize only
+
+STEP 3: HEAVY SESSION DETECTION:
+   IF context_pct > 25% AND messages_this_session < 15:
+   → "⚠️ Heavy session (tool-intensive). Zone elevated by context%, not messages."
+   This means each "message" consumed ~5k+ tokens (WebSearch, large files, etc.)
+
+STEP 4: Read .ai/session-log.json (v2.0: "days" key; create if missing)
+   today = local date (YYYY-MM-DD)
+   NEW DAY CHECK: if last entry date != today → "🟢 New day! Fresh limits."
+   messages_this_session = count EXACTLY in current session
+   Update session: {messages: N, peak_context_pct: context_pct}
+
+STEP 5: DAILY TOKEN ACCUMULATION estimate:
+   daily_tokens_estimate = context_pct × 200k  ← current session
+                         + N_prev_sessions × ~50k  ← rough prior sessions
+   IF daily_tokens_estimate > 120k → escalate zone by 1 level
+
+STEP 6: Write updated session-log.json
+
+STEP 7: Show [AI STATUS] v2.1:
+
+[AI STATUS] 🟡
+Context (сесія):          35% / 200k  (~70k tokens)    ← PRIMARY: ТОЧНО
+Токени сьогодні (оцінка): ~120k                        ← накопичення за день
+Повідомлень сьогодні:     18 / ~80                     ← вторинний проксі
+Сесій сьогодні:           2
+Behavioral:               🟡 CAUTION — важка сесія (context 35% > 25%)
+Рекомендація:             Завершити задачу → //COMPACT → зупинитись
 ```
+
+**Zone override rules:**
+- NEVER show 🟢 if context_pct > 30%
+- NEVER show 🟢 if daily_tokens_estimate > 100k
+- context_pct zone ALWAYS wins over messages zone
 
 **Billing (API users only)** — read `access_type` from `.ai/config.json`:
 - `"subscription"` (or missing) → no cost shown (N/A)
 - `"billing"` → show: `Витрачено: $X.XX / $budget` (from `billing.daily_budget_usd`)
-- NEVER fabricate daily token limits or percentages
 
 ### `//COMPACT` — Token write (MANDATORY addition)
 
 When user runs `//COMPACT`:
 1. Perform context compression (existing behavior)
-2. **ALSO update session-log.json:** update current session `{messages: N, trigger: "//compact"}`
-3. Show compression results + [AI STATUS] v2.0
+2. **ALSO update session-log.json:** `{messages: N, peak_context_pct: context_pct, trigger: "//compact"}`
+3. Show compression results + [AI STATUS] v2.1
 
 ### POST-PUSH PROTOCOL — session-log write
 
 After every `git push`:
 1. Perform compression (existing POST-PUSH behavior)
 2. `post-push.sh` writes push count to session-log.json automatically
-3. AI shows [AI STATUS] v2.0 + Quiet Helper check (if messages >= 60% soft_limit)
+3. AI shows [AI STATUS] v2.1 + zone check (if context_pct > 30% → recommend stop for today)
 
-### `//start` / SESSION START — Write + Log check v2.0
+### `//start` / SESSION START — Write + Log check v2.1
 
 At session start (after loading rules):
 1. **Read `.ai/session-log.json`** (create if missing with empty v2.0 structure)
@@ -175,7 +209,7 @@ At session start (after loading rules):
 4. `LAST_TS` = last session-start timestamp for today (0 if none)
 5. `GAP = NOW - LAST_TS`
 6. **If GAP > 7200 (2h) OR no sessions today:**
-   - Add: `{id: N+1, tool, trigger: "session-start", timestamp: NOW, messages: 0}`
+   - Add: `{id: N+1, tool, trigger: "session-start", timestamp: NOW, messages: 0, peak_context_pct: 0}`
    - `daily_total.sessions += 1`
    - Display: "🟢 New session started. (Gap: Xh since last activity)"
    - **If different date:** "🟢 New day! Yesterday: X msgs. Fresh limits today."
@@ -194,8 +228,9 @@ If AI cannot write files (Claude Web, etc.):
 
 ### Ban prevention
 
-> **If responses become slow or "overloaded" errors appear → approaching daily limits.**
-> **Recommended: stop working for today, resume tomorrow.**
+> **⚠️ CRITICAL v2.1: Context window % > 30% = HIGH RISK even if message count looks low.**
+> **Tool-intensive sessions (file reads + WebSearch + writes) consume 10-50x more tokens per message.**
+> **If context_pct > 35% → finish current task, //COMPACT immediately, consider stopping for today.**
 
 ---
 
@@ -307,16 +342,20 @@ After completing **EVERY phase/stage/major task**, ALWAYS display:
 
 ```markdown
 [PHASE X COMPLETE]
-Session tokens: Xk/200k (Y%)
-Daily tokens: Zk/150k (W%)
-Remaining: ~Nk
-Status: 🟢/🟡/🟠/🔴
+Context (сесія): X% / 200k  (~Yk tokens)   ← PRIMARY
+Токени сьогодні: ~Zk estimate              ← daily accumulation
+Повідомлень:     N / ~80                   ← secondary
+Status: 🟢/🟡/🟠/🔴  [based on context%]
 
 Next: [Brief description of next phase]
-Estimate: ~Nk tokens
+Estimate: ~Nk tokens (context will grow ~M%)
 
-Продолжить Phase X+1? [Y/n]
+Продолжити Phase X+1? [Y/n]
 ```
+
+**Zone check at phase complete:**
+- context% > 35% → recommend //COMPACT before next phase
+- context% > 55% → STOP, must //COMPACT or restart session
 
 **MANDATORY RULES:**
 - ❌ **NEVER** start new phase without user confirmation
@@ -388,18 +427,31 @@ Then **WAIT** for user approval.
 
 ---
 
-## 📊 Token Management Zones
+## 📊 Token Management Zones (v2.1 — context%-based)
 
-- 🟢 **0-50% (GREEN):** Full capacity, normal mode
-- 🟡 **50-70% (MODERATE):** Brief mode, optimizations active
-- 🟠 **70-90% (CAUTION):** Silent mode, aggressive compression
-- 🔴 **90-95% (CRITICAL):** Finalization only, commit + stop
+> **⚠️ v2.1 FIX:** Zones are based on SESSION CONTEXT %, not arbitrary message % thresholds.
+> Context % is EXACT. Message % is a rough proxy that fails for tool-intensive sessions.
 
-**Auto-optimize at 50%+:**
+| Zone | Context % | Estimated tokens | Action |
+|------|-----------|-----------------|--------|
+| 🟢 **GREEN** | 0–20% | ~0–40k | Full capacity, normal mode |
+| 🟡 **MODERATE** | 20–35% | ~40–70k | Monitor; warn if tool-intensive |
+| 🟠 **CAUTION** | 35–55% | ~70–110k | Finish task → //COMPACT → stop |
+| 🔴 **CRITICAL** | >55% | >110k | Finalization ONLY — ban risk |
+
+**Daily accumulation override:**
+- If estimated daily tokens > 120k → escalate zone by 1 level regardless of session %
+- If 2+ heavy sessions today → treat as 🟠 by default
+
+**Auto-optimize at 🟡+:**
 - Use diff-only format for edits
 - Skip obvious explanations
-- Compress context after major commits
+- //COMPACT after every major task (не тільки при кризі!)
 - Batch operations where possible
+
+**Heavy session signal:**
+- context_pct > 25% with < 15 messages = tool-intensive (WebSearch, large files, sub-agents)
+- Each "message" in such sessions costs 5-50k tokens, not the usual ~500-2k
 
 ---
 
@@ -445,7 +497,7 @@ Then **WAIT** for user approval.
 - Auth/authorization changes
 - **[LANG-CRITICAL]** Russian content detected
 - **[AI-API-CRITICAL]** API key in client code
-- **[TOKEN-CRITICAL]** >95% tokens used
+- **[TOKEN-CRITICAL]** context_pct >55% OR daily_tokens_estimate >120k
 
 ---
 
