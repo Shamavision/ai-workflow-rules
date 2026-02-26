@@ -44,17 +44,18 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rule
 
 ---
 
-## What You Get
+<details>
+<summary>🛡️ What You Get</summary>
 
-### 🛡️ Security (automatic, zero config)
+### Security (automatic, zero config)
 
 | Guard | What It Blocks | When |
 |-------|---------------|------|
 | **Tier 1** | API keys (Anthropic, OpenAI, AWS, GitHub, Stripe...) | Hard block on `git commit` |
-| **LANG-CRITICAL** | 40+ russian services (Yandex, VK, Mail.ru, `.ru` domains) | Hard block on `git commit` |
+| **LANG-CRITICAL** | 65+ russian services (Yandex, VK, Mail.ru, Kaspersky, Bitrix24, `.ru` domains) | Hard block on `git commit` |
 | **AI Protection** | Prompt injection, PII in logs, `.ai/` directory guard | On `git commit` |
 
-### 🔺 Skills Triangle (Claude Code)
+### Skills Triangle (Claude Code)
 
 ```
 /ctx (Reality) → /sculptor (Clarity) → /arbiter (Order + Safety)
@@ -68,21 +69,24 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rule
 
 **Typical run:** `/ctx update` → `/sculptor all` → `/arbiter all` → implement from the report.
 
-### 📊 Session Discipline
+### Session Discipline
 
-- Token budget zones: 🟢 0–50% → 🟡 50–70% → 🟠 70–90% → 🔴 90–95%
+- Token budget zones: 🟢 0–20% → 🟡 20–35% → 🟠 35–55% → 🔴 >55% (context %, v2.1)
 - Post-push context compression (saves 40–60% tokens)
 - Session anchor: `## 📍 Last Push` in `PROJECT_CONTEXT_MAP.md` — new-day detection without any API
 - Discuss → Approve → Execute — AI never codes before approval
 
+</details>
+
 ---
 
-## 🤖 Commands
+<details>
+<summary>🤖 Commands</summary>
 
 | Command | What It Does |
 |---------|--------------|
 | `//START` | Load rules, init session, show token status |
-| `//TOKENS` | Message tracking v2.0: messages today + session count + write to session-log |
+| `//TOKENS` | Context% monitoring v2.1: session % + daily estimate + zone check |
 | `//COMPACT` | Compress context, save 40–60% tokens |
 | `//REFRESH` | Reload rules mid-session (anti-amnesia) |
 | `//CHECK:SECURITY` | Audit: secrets, XSS, injection |
@@ -100,22 +104,22 @@ You: //START
 ✓ Context loaded: ukraine-full (~18k tokens, v9.1 optimized)
 ✓ Token budget: ~18k for rules (9% of session)
 ✓ Language: Adaptive (matches user's language)
-✓ Session context: 9% / 200k
-✓ Messages today: 0 / ~80    ← primary metric
+✓ Session context: 9% / 200k    ← PRIMARY signal
+✓ Messages today: 0 / ~80       ← secondary proxy
 ✓ Status: 🟢 Green — Full capacity
-✓ Last push: 2026-02-25 | a62ebd4 | 🟢 New day! Fresh limits
+✓ Last push: 2026-02-26 | d4289da | 🟢 New day! Fresh limits
 
 Чим я можу вам допомогти?
 ```
 
 </details>
 
+</details>
+
 ---
 
-## 🛡️ Protection Layers
-
 <details>
-<summary>All 5 layers in detail</summary>
+<summary>🛡️ Protection Layers</summary>
 
 ### Layer 1: Secrets — Hard Block
 
@@ -134,7 +138,7 @@ Commit blocked.
 **Tier 2 (warning + choice):** Suspicious patterns, hardcoded credentials, database URLs
 **Tier 3 (silent):** Whitelisted files, example patterns, dev framework files
 
-### Layer 2: LANG-CRITICAL — Zero Russian Services
+### Layer 2: LANG-CRITICAL — 65+ Blocked Patterns
 
 ```bash
 ❌ RUSSIAN TRACKER detected in analytics.js:12
@@ -142,8 +146,15 @@ Commit blocked.
    Remove before committing.
 ```
 
-**40+ patterns blocked:** Yandex Metrika, VK Pixel, Mail.ru, Top.mail.ru,
-Yookassa, 2GIS, Wildberries, Ozon, and all `.ru` domains in production code.
+**65+ patterns across 15 categories:**
+- Analytics: Yandex Metrika, Mail.ru, Rambler, LiveInternet
+- Social: VK Pixel, Odnoklassniki
+- Payments: YooKassa, QIWI, Sberbank, Tinkoff, WebMoney
+- Hosting/CDN: Yandex Cloud, Yastatic, Selectel, Timeweb, Reg.ru
+- Enterprise: Bitrix24, AmoCRM, GetCourse *(sanctioned 2024)*
+- Security: Kaspersky, DrWeb *(US Commerce ban 2024)*
+- Banking APIs: Alfa-Bank RU, VTB, Raiffeisen RU
+- TLDs: `.ru`, `.su`, `.рф`
 
 ### Layer 3: AI Protection (inline, always active)
 
@@ -151,13 +162,13 @@ Yookassa, 2GIS, Wildberries, Ozon, and all `.ru` domains in production code.
 - **PII in AI logs:** Emails, phones, IBANs in `.ai/` files → BLOCKED
 - **Directory guard:** `.ai/` files without `.gitignore` protection → WARNING
 
-### Layer 4: Token Budget Monitoring
+### Layer 4: Token Budget Monitoring (v2.1)
 
-4 automatic zones:
-- 🟢 **0–50%** — Full capacity, normal mode
-- 🟡 **50–70%** — Brief mode, compression suggested
-- 🟠 **70–90%** — Caution, aggressive auto-compression
-- 🔴 **90–95%** — Finalization only, stop after commit
+4 zones based on **session context %** (exact, not estimated):
+- 🟢 **0–20%** — Full capacity, normal mode
+- 🟡 **20–35%** — Moderate, warn on heavy tasks
+- 🟠 **35–55%** — Caution — finish task, then `//COMPACT`
+- 🔴 **>55%** — Finalization only — ban risk
 
 ### Layer 5: Context-Aware Session Rules
 
@@ -169,19 +180,18 @@ Yookassa, 2GIS, Wildberries, Ozon, and all `.ru` domains in production code.
 
 ---
 
-## 📊 Token Monitoring v2.0
+<details>
+<summary>📊 Token Monitoring v2.1</summary>
 
-**Philosophy:** Count messages, not tokens. Day is the anchor. No provider API needed.
-
-Primary metric: `messages_today` — AI counts EXACTLY (not estimate ±50%).
+**Philosophy v2.1:** Context window % is the PRIMARY danger signal. It is exact — AI knows it precisely.
 
 ```
 [AI STATUS] 🟢
-Context (сесія):       22% / 200k
-Повідомлень сьогодні:  12 / ~80     ← PRIMARY METRIC
-Сесій сьогодні:        1
-Behavioral:            🟢 Normal
-New day:               ✅ 2026-02-25
+Context (сесія):          9% / 200k  (~18k tokens)    ← PRIMARY: exact
+Токени сьогодні (оцінка): ~18k                         ← daily accumulation
+Повідомлень сьогодні:     3 / ~80                      ← secondary proxy
+Сесій сьогодні:           1
+Behavioral:               🟢 Normal — full capacity
 ```
 
 <details>
@@ -194,15 +204,18 @@ New day:               ✅ 2026-02-25
 
 | Metric | Source | Accuracy |
 |--------|--------|----------|
-| `messages_today` | AI counts messages in current session | ✅ Exact |
-| `session context %` | Token estimate relative to 200k window | ⚠️ Estimate |
+| `session context %` | Token estimate relative to 200k window | ✅ Primary signal (exact) |
+| `messages_today` | AI counts messages in current session | ⚠️ Secondary proxy |
 | `billing cost` | API plans only — from `access_type` in config | ✅ Exact (API); `N/A` (subscription) |
+
+</details>
 
 </details>
 
 ---
 
-## 🎯 Context Presets
+<details>
+<summary>🎯 Context Presets</summary>
 
 | Context | Tokens | Best For |
 |---------|--------|----------|
@@ -212,9 +225,12 @@ New day:               ✅ 2026-02-25
 The installer wizard asks which preset fits your project. Switch anytime:
 edit `.ai/config.json` → change `"context"` → restart AI session.
 
+</details>
+
 ---
 
-## 🤖 Supported AI Tools
+<details>
+<summary>🤖 Supported AI Tools</summary>
 
 | Tool | Config File | How It Loads |
 |------|-------------|-------------|
@@ -223,19 +239,24 @@ edit `.ai/config.json` → change `"context"` → restart AI session.
 | **Cursor <0.45** | `.cursorrules` | Auto (legacy format) |
 | **Any AI** (web, Gemini, ChatGPT) | `AGENTS.md` | Manual `//START` command |
 
+</details>
+
 ---
 
-## 🆚 Why This Framework?
+<details>
+<summary>🆚 Why This Framework?</summary>
 
 | Feature | ❌ No framework | ✅ This framework |
 |---------|----------------|------------------|
 | Secret detection | Hope for the best | **Auto-blocked before commit** |
-| Russian trackers | Manual audit | **40+ patterns blocked** |
+| Russian trackers | Manual audit | **65+ patterns, 15 categories blocked** |
 | Token optimization | None | **40–60% savings, session log** |
 | Structured AI workflow | Ad-hoc prompting | **Skills triangle: ctx→sculptor→arbiter** |
 | Ukrainian compliance | DIY | **Built-in, GDPR-ready, zero russian services** |
 | Project ideology capture | Lost between sessions | **PROJECT_IDEOLOGY.md — AI knows your WHY** |
 | Setup time | Hours | **2 minutes** |
+
+</details>
 
 ---
 
@@ -273,7 +294,7 @@ your-project/
 │   ├── AI-ENFORCEMENT.md             # Mandatory AI protocols (auto-loaded)
 │   ├── ai-protection-policy.json     # Prompt injection + PII + directory protection config
 │   ├── presets.json                  # Tool/plan message limit presets
-│   ├── forbidden-trackers.json       # 40+ blocked russian services
+│   ├── forbidden-trackers.json       # 65+ blocked patterns, 15 categories
 │   ├── contexts/
 │   │   ├── minimal.context.md        # ~10k tokens
 │   │   └── ukraine-full.context.md   # ~18k tokens
@@ -291,4 +312,4 @@ your-project/
 
 ---
 
-**Made with ❤️ in Ukraine 🇺🇦** | **License:** GPL v3 | [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues) | **v9.1.1** | Updated: 2026-02-25
+**Made with ❤️ in Ukraine 🇺🇦** | **License:** GPL v3 | [GitHub Issues](https://github.com/Shamavision/ai-workflow-rules/issues) | **v9.1.1** | Updated: 2026-02-26
