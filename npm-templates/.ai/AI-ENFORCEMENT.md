@@ -468,7 +468,7 @@ New day:               ✅ 2026-02-24
    Keep as-is or change to "[suggestion]"?
    ```
 
-4. **Reference patterns:** See `.ai/contexts/ukraine-full.context.md` section 7.3
+4. **Reference patterns:** See `.ai/contexts/ukraine.context.md` section 7.3
 
 **IMPORTANT:**
 - This is SELF-CHECK, not external tool

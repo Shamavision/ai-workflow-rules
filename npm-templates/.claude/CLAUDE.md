@@ -37,7 +37,7 @@ If ANY of these conditions apply:
 1. **Read config:** `.ai/config.json` to determine context preset
 2. **Load context:**
    - If `config.context = "minimal"` → Read `.ai/contexts/minimal.context.md` (~10k tokens, v9.1 optimized)
-   - If `config.context = "ukraine-full"` → Read `.ai/contexts/ukraine-full.context.md` (~18k tokens, v9.1 optimized)
+   - If `config.context = "ukraine"` → Read `.ai/contexts/ukraine.context.md` (~18k tokens, v9.1 optimized)
    - **Fallback:** If no config or contexts → Read `.ai/rules/core.md` (legacy mode)
 3. **Token budget:** Read `.ai/token-limits.json` for tracking
 
@@ -95,7 +95,7 @@ No API needed — date comparison is the anchor. New day = fresh limits.
 
 **Examples:**
 - Minimal: "✓ Context: minimal (~10k) | Context: 0% 🟢 | Messages: 0 / ~80"
-- After compact: "✓ Context: ukraine-full (~18k) | Context: 8% 🟢 | Messages: 12 / ~80"
+- After compact: "✓ Context: ukraine (~18k) | Context: 8% 🟢 | Messages: 12 / ~80"
 ```
 
 ### Step 4: Follow Core Principles

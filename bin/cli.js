@@ -156,15 +156,15 @@ async function main() {
     if (isCancel(plan)) { cancel('Setup cancelled.'); process.exit(0); }
 
     const market = await select({
-      message: 'Primary market?',
+      message: 'Which context preset?',
       options: [
-        { value: 'ukraine', label: 'Ukrainian market', hint: 'ukraine-full context + compliance rules' },
-        { value: 'international', label: 'International', hint: 'minimal context' }
+        { value: 'international', label: 'minimal', hint: 'AI workflow essentials (skills + token monitoring)' },
+        { value: 'ukraine', label: 'minimal + ukraine', hint: 'Full Ukrainian market compliance' }
       ]
     });
     if (isCancel(market)) { cancel('Setup cancelled.'); process.exit(0); }
 
-    const selectedContext = market === 'ukraine' ? 'ukraine-full' : 'minimal';
+    const selectedContext = market === 'ukraine' ? 'ukraine' : 'minimal';
     const installProductRules = market === 'ukraine';
 
     log.success(`Context: ${selectedContext}`);
@@ -294,7 +294,7 @@ async function createAiConfig(targetDir, answers) {
   const key = `${provider}.${plan}`;
   const mapping = presets.mappings[key] || presets.default;
 
-  const market = answers.context === 'ukraine-full' ? 'ukraine' : 'international';
+  const market = answers.context === 'ukraine' ? 'ukraine' : 'international';
 
   const config = {
     "framework": "ai-workflow-rules",

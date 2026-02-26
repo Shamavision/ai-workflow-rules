@@ -71,7 +71,7 @@ Next: [description] (~Nk estimate)
 1. **Load project context:**
    - Read `.ai/config.json` to get selected context
    - Load appropriate context from `.ai/contexts/[context].context.md`
-   - Context options: minimal, ukraine-full
+   - Context options: minimal, ukraine
 
 2. **Load enforcement protocols:**
    - Read `.ai/AI-ENFORCEMENT.md` for mandatory workflows
@@ -101,7 +101,7 @@ Next: [description] (~Nk estimate)
 .ai/                        # AI Framework Hub (v9.1)
 ├── contexts/               # Context presets (load at session start)
 │   ├── minimal.context.md     (~10k tokens)
-│   └── ukraine-full.context.md (~18k tokens)
+│   └── ukraine.context.md       (~18k tokens)
 ├── docs/                   # Documentation
 │   ├── quickstart.md
 │   ├── cheatsheet.md
@@ -191,7 +191,7 @@ Display session estimate only + explain why log unavailable.
 **ALWAYS:**
 - ✅ Use `process.env.VAR` for secrets
 - ✅ Add error handling (try/catch, null checks)
-- ✅ Follow Ukrainian market policy (if ukraine-full context)
+- ✅ Follow Ukrainian market policy (if ukraine context)
 
 ---
 

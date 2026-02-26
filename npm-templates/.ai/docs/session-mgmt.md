@@ -126,7 +126,7 @@ Work → Commit → Push → [POST-PUSH PROTOCOL] → Fresh session
 ```mermaid
 Session 1 (Fresh):
 ├─ Start: 0k/200k
-├─ Load context: +18k (ukraine-full)
+├─ Load context: +18k (ukraine)
 ├─ Work on feature: +40k
 ├─ Stage 1 commit: +5k
 ├─ Stage 2 work: +30k

@@ -90,7 +90,7 @@ The framework includes 3 skills that form a sequential analysis pipeline:
 .ai/                          # AI Framework Hub (v9.1)
 ├── contexts/                 # Context presets (loaded at session start)
 │   ├── minimal.context.md    # ~10k tokens (startups, MVP)
-│   └── ukraine-full.context.md  # ~18k tokens (Ukrainian market)
+│   └── ukraine.context.md        # ~18k tokens (Ukrainian market)
 ├── docs/                     # Documentation
 ├── rules/                    # Full rules reference
 │   ├── core.md               # Complete workflow rules
@@ -110,9 +110,9 @@ The framework includes 3 skills that form a sequential analysis pipeline:
 | Context | Tokens | Best For |
 |---------|--------|----------|
 | **Minimal** | ~10k | Startups, MVP, simple projects |
-| **Ukraine-Full** | ~18k | Ukrainian market compliance (default) |
+| **Ukraine** | ~18k | Ukrainian market compliance (default) |
 
-**Change context:** Edit `.ai/config.json` → Set `"context": "minimal"` (or `"ukraine-full"`) → restart AI session.
+**Change context:** Edit `.ai/config.json` → Set `"context": "minimal"` (or `"ukraine"`) → restart AI session.
 
 ---
 

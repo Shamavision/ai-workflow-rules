@@ -11,7 +11,7 @@
     { "src": ".ai/AI-ENFORCEMENT.md",                "dest": ".ai/AI-ENFORCEMENT.md",                "group": "core" },
     { "src": ".ai/ai-protection-policy.json",         "dest": ".ai/ai-protection-policy.json",         "group": "core" },
     { "src": ".ai/contexts/minimal.context.md",       "dest": ".ai/contexts/minimal.context.md",       "group": "core" },
-    { "src": ".ai/contexts/ukraine-full.context.md",  "dest": ".ai/contexts/ukraine-full.context.md",  "group": "core" },
+    { "src": ".ai/contexts/ukraine.context.md",        "dest": ".ai/contexts/ukraine.context.md",        "group": "core" },
     { "src": ".ai/docs/cheatsheet.md",                "dest": ".ai/docs/cheatsheet.md",                "group": "core" },
     { "src": ".ai/docs/code-quality.md",              "dest": ".ai/docs/code-quality.md",              "group": "core" },
     { "src": ".ai/docs/compatibility.md",             "dest": ".ai/docs/compatibility.md",             "group": "core" },

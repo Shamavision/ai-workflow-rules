@@ -253,7 +253,7 @@ Daily usage → estimate only, use as planning guide
 
 **Small task session (2-3h coding):**
 ```
-Session start:  18k tokens (ukraine-full context)
+Session start:  18k tokens (ukraine context)
 Task 1:         15k tokens (refactor function)
 Task 2:         12k tokens (add tests)
 Task 3:          8k tokens (fix bug)

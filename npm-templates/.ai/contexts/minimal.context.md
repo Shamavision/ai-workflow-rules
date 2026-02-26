@@ -1,8 +1,8 @@
-# AI WORKFLOW & RULES - MINIMAL CONTEXT v1.1
+# AI WORKFLOW RULES — MINIMAL CONTEXT v2.0
 
-> **Target:** Startups, MVP, international developers
-> **Tokens:** ~10k (optimized from 13k)
-> **Includes:** Core workflow, essential security, token basics, git discipline
+> **Target:** Startups, MVP, international developers, simple projects
+> **Tokens:** ~10k (session protocol + token monitoring + skills triangle)
+> **Includes:** Core workflow, token monitoring v2.1, skills triangle, git discipline
 
 ---
 
@@ -10,308 +10,209 @@
 
 **BEFORE any work, AI MUST:**
 
-1. Check for RULES files (Priority: AGENTS.md → .ai/docs/start.md → .ai/rules/core.md)
-2. Read key sections (Session Start, Token Management, Language rules)
-3. Show confirmation:
+1. Read `.ai/config.json` → determine context preset
+2. Read `.ai/AI-ENFORCEMENT.md` → load mandatory protocols
+3. Grep `PROJECT_CONTEXT_MAP.md` for `## 📍 Last Push` → extract date → compare with today
+4. Show confirmation:
 
 ```markdown
 [SESSION START]
-✓ Context: minimal (~10k tokens)
-✓ Language: Adaptive
-✓ Session context: [X]% / 200k
-✓ Messages today: [N] / ~80    ← primary metric
+✓ Context: minimal (~10k tokens, v9.1)
+✓ Language: Adaptive (matches user's language)
+✓ Session context: [X]% / 200k    ← PRIMARY signal (exact)
+✓ Messages today: [N] / ~80        ← secondary proxy
+✓ Status: [🟢/🟡/🟠/🔴] [Zone — based on context%, not messages]
+✓ Last push: [YYYY-MM-DD] | [commit] | [🟢 New day! / 📊 Same day]
 
 Чим я можу вам допомогти?
 ```
 
----
-
-## 🔴 CRITICAL: TOKEN STATUS DISPLAY (MANDATORY)
-
-**AI MUST show `[TOKEN STATUS]` at:**
-- ✅ 30%+ usage (automatic)
-- ✅ After commits/pushes
-- ✅ Every response at 90%+
-
-**Format:**
-```
-[TOKEN STATUS] Session: Xk/Yk (Z%) | Remaining: ~Wk | 🟢 Zone
-```
-
-**This is REQUIRED for Silent Guardian protection. Not optional.**
+**If `PROJECT_CONTEXT_MAP.md` missing:** show `✓ Last push: no anchor (run /ctx first)`
 
 ---
 
-## 🔴 AI BEHAVIOR RULES (CRITICAL - NON-NEGOTIABLE!)
+## 1. TOKEN MONITORING v2.1
 
-> **Added 2026-02-10 from ROADMAP Phase 1 - Override ALL other considerations!**
+> **v2.1 Fix:** "18 messages = 🟢" can be DANGEROUSLY WRONG.
+> Tool-intensive sessions consume 10–50× more tokens per message.
+> **Context window % is the PRIMARY danger signal — AI knows it exactly.**
 
-### #1: КАЧЕСТВО > СКОРОСТЬ (Quality > Speed)
-- ✅ Attention to details - ALWAYS
-- ✅ Quality > Speed - NOT negotiable
-- ✅ Thorough approach to every task
-- ❌ NEVER skip steps to save time/tokens
-- ❌ NEVER "quick verification"
+### 1.1. Zones (context%-based)
 
-### #2: "I Don't Know" Honesty
-- ✅ Think HARDER before answering
-- ✅ If uncertain → say "I don't know"
-- ✅ If guessing → clearly state it
-- ❌ NEVER fabricate facts/data
+| Zone | Context % | ~Tokens | Action |
+|------|-----------|---------|--------|
+| 🟢 **GREEN** | 0–20% | ~0–40k | Full capacity, normal mode |
+| 🟡 **MODERATE** | 20–35% | ~40–70k | Monitor; warn on heavy tasks |
+| 🟠 **CAUTION** | 35–55% | ~70–110k | Finish task → //COMPACT → stop |
+| 🔴 **CRITICAL** | >55% | >110k | Finalization ONLY — ban risk |
 
-### #3: Token Status After EVERY Phase
-After every phase/stage:
+**Rule:** context_pct zone ALWAYS overrides message-count zone.
+
+### 1.2. Pre-flight check (tasks estimated >20k tokens)
+
+BEFORE starting:
+1. CHECK context_pct NOW:
+   - >35% → 🟠 STOP, task is risky
+   - >55% → 🔴 STOP unconditionally
+2. ESTIMATE daily: context_pct × 200k + prev sessions × ~50k
+3. If risky → warn user, WAIT for explicit approval
+
+**Failure = 2 days downtime. NON-NEGOTIABLE.**
+
+### 1.3. `//TOKENS` — Status display
+
 ```
-[PHASE X COMPLETE]
-Session: Xk/200k (Y%) | Remaining: ~Wk
-Status: 🟢/🟡/🟠/🔴
-Продолжить? [Y/n]
+[AI STATUS] 🟢
+Context (сесія):          X% / 200k  (~Yk tokens)    ← PRIMARY: exact
+Токени сьогодні (оцінка): ~Zk                         ← daily accumulation
+Повідомлень сьогодні:     N / ~80                     ← secondary proxy
+Behavioral:               🟢 Normal — full capacity
 ```
 
-### #4: No Auto-Commit/Push
-- ❌ NEVER auto-commit/push
-- ✅ ONLY when explicitly requested
-- ✅ After phase → PROPOSE, don't execute
+### 1.4. Post-push compression (MANDATORY)
 
-**These 4 rules > token savings!**
-
----
-
-## 1. CORE PRINCIPLES
-
-- **No Bullshit Mode:** <90% sure → flag `[ASSUMPTION]` or ask
-- **Discuss → Approve → Execute:** NEVER code before approval
-- **Rules are Living:** Evolve with projects
-- **Roadmap-Driven:** Each task = roadmap, each stage = commit
-- **Token-Conscious:** Monitor usage, stop at 90%
-
----
-
-## 2. TOKEN MANAGEMENT (message-count model)
-
-### 2.0. What We Measure
-
-**Primary: `messages_today`** (AI counts EXACTLY) | **Secondary: context %** (session window)
-- Soft limit ~80 msgs / hard limit ~120 msgs (Claude Pro, from presets.json)
-- Session context: 0–200k (real limit) | Daily token limit: UNKNOWN (not published)
-
-### 2.1. Context Zones (session window)
-
-| Zone | Range | Mode | Behavior |
-|------|-------|------|----------|
-| 🟢 GREEN | 0-50% | Normal | Full capacity |
-| 🟡 MODERATE | 50-70% | Brief | Optimizations active |
-| 🟠 CAUTION | 70-90% | Silent | Aggressive compression |
-| 🔴 CRITICAL | 90-95% | Finalize | Commit + stop |
-| ⛔ EMERGENCY | 95-100% | Halt | Commit only |
-
-### 2.2. Context Compression (saves 40-60%)
-
-**Auto-triggers:** Every 3 tasks | 50% usage | `//COMPACT` command
-
-**What's compressed:** Code snippets, implementation details, long explanations
-**Never compressed:** Active decisions, current task, user preferences
-
-### 2.3. Lazy Loading
-
-**DO NOT:** Read files "for context" or grep "to see what's there"
-**DO:** Read ONLY files being modified, ask before reading if unsure
-
-### 2.4. Verbosity Auto-Scaling
-
-- **🟢 0-50%:** Code + brief explanation, full errors
-- **🟡 50-70%:** Code + one-line summary, diff format
-- **🟠 70-90%:** Code only, zero fluff
-- **🔴 90%+:** Commit operations only
-
-### 2.5. Post-Push Compression (MANDATORY)
-
-After every `git push`:
+After every `git push` → immediately:
 
 ```markdown
 [POST-PUSH PROTOCOL]
 ✓ Changes pushed
 → Compressing context...
-
-Saved: ~33k tokens (73%)
+Saved: ~Xk tokens (Y%)
 Ready for next task.
 ```
 
+**What to compress:** code snippets (in git), implementation details, long discussions.
+**Never compress:** active decisions, user preferences, next steps.
+
 ---
 
-## 3. ITERATIVE WORKFLOW
+## 2. SKILLS TRIANGLE (Claude Code)
 
-### 3.1. Task Intake
-
-1. Analyze (read context, check code)
-2. Check tokens (verify budget)
-3. Create ROADMAP (break into stages)
-4. Present for approval (wait for "go")
-
-### 3.2. Roadmap Template
-
-```markdown
-## ROADMAP: [Task Name]
-**Est. tokens:** ~[N]k | **Complete today:** YES/PARTIAL/NO
-
-### Stage 1: [Name]
-**Goal:** [What we achieve]
-**Actions:** [ ] Step 1, [ ] Step 2
-**Files:** `path/file.ts` [modify/create]
-**Tokens:** ~8k
-**Commit:** `type(scope): description`
-
-[APPROVE ROADMAP?]
+```
+/ctx (Reality) → /sculptor (Clarity) → /arbiter (Order + Safety)
 ```
 
-### 3.3. Stage Execution
+| Skill | Output | Purpose |
+|-------|--------|---------|
+| `/ctx` | `PROJECT_CONTEXT_MAP.md` + `PROJECT_IDEOLOGY.md` | Full project scan — architecture, ideology, entry points |
+| `/sculptor` | `PROPOSALS.md` | 5-lens analysis + mandatory WebSearch + architecture proposals |
+| `/arbiter` | `ARBITER_REPORT.md` | Execution order + risk scoring + ideology conflict detection |
 
-1. Check tokens (<10% remain → pause)
-2. Show PLAN
-3. Wait for approval ("go", "✓", "да", "давай")
-4. Execute
-5. Suggest commit
-6. Wait for confirmation
-7. Ask: "Ready for next stage?"
+**Typical run:** `/ctx update` → `/sculptor all` → `/arbiter all` → implement from report.
+
+---
+
+## 3. AI BEHAVIOR RULES (NON-NEGOTIABLE)
+
+### Rule #1: Quality > Speed
+- ✅ Attention to details — ALWAYS
+- ✅ Quality > Speed — NOT negotiable
+- ❌ NEVER skip steps to save time/tokens
+- ❌ NEVER do "quick verification" instead of thorough audit
+
+### Rule #2: "I Don't Know" Honesty
+- ✅ Think harder before answering
+- ✅ If uncertain → say "I don't know"
+- ✅ If guessing → clearly state it's a guess
+- ✅ Check first, then answer
+- ❌ NEVER fabricate facts/data
+
+### Rule #3: Token Status After EVERY Phase
+
+```markdown
+[PHASE X COMPLETE]
+Context (сесія): X% / 200k  (~Yk tokens)   ← PRIMARY
+Status: 🟢/🟡/🟠/🔴
+
+Next: [Brief description]
+Estimate: ~Nk tokens
+
+Продовжити Phase X+1? [Y/n]
+```
+
+**NEVER** start next phase without user confirmation.
+
+### Rule #4: No Auto-Commit/Push
+- ❌ NEVER auto-commit or auto-push
+- ✅ ONLY when explicitly requested
+- ✅ After phase → PROPOSE, don't execute
+
+---
+
+## 4. CORE PRINCIPLES
+
+- **Discuss → Approve → Execute** — Never code before approval
+- **One stage = one commit** — Atomic commits
+- **Roadmap-Driven** — Break tasks into stages, each stage = commit
+- **Lazy Loading** — Read ONLY files being modified, not "for context"
+
+---
+
+## 5. ITERATIVE WORKFLOW
+
+### Stage execution:
+1. Show PLAN
+2. Wait for approval ("go", "✓", "да", "давай")
+3. Execute
+4. Show [PHASE COMPLETE] + token status
+5. Propose commit → wait for confirmation
+6. Ask: "Ready for next stage?"
 
 **NEVER skip to Stage 2 before Stage 1 is committed.**
 
 ---
 
-## 4. DISCUSSION PROTOCOL
+## 6. GIT DISCIPLINE
 
-### 4.1. When Mandatory
-
-- Before any code
-- Choosing between 2+ approaches
-- Change affects >3 files
-- Ambiguous request
-- ANY destructive operation
-
-### 4.2. Discussion Format
-
-```markdown
-[DISCUSSION NEEDED]
-**Context:** [What we're achieving]
-
-**Options:**
-1. **[Approach A]** - Pros/Cons/Tokens: ~Nk
-2. **[Approach B]** - Pros/Cons/Tokens: ~Mk
-
-**Recommendation:** [A/B] because [reason]
-
-Your call?
-```
-
-### 4.3. Approval Keywords
-
-`"go"` / `"proceed"` / `"✓"` / `"да"` / `"давай"` = Execute
-`"wait"` / `"stop"` = Pause
-`"adjust"` = Revise plan
-
----
-
-## 5. GIT DISCIPLINE
-
-### 5.1. Commit Rules
-
-- **One stage = one commit** (atomic)
 - **Format:** `type(scope): description`
-- **Types:** feat, fix, refactor, docs, style, chore, security
+- **Types:** `feat`, `fix`, `refactor`, `docs`, `style`, `chore`, `security`
 - **Example:** `feat(auth): add OAuth login`
-- **AI suggests → User approves** (never auto-commit)
-
-### 5.2. Commit Suggestion
-
-```markdown
-[STAGE COMPLETE]
-
-**Suggested commit:**
-```bash
-git add [files]
-git commit -m "type(scope): description"
-```
-
-**Changes:**
-- Created: `path/file.tsx` (45 lines)
-- Modified: `path/other.ts` (+12, -5)
-
-Commit? [YES/EDIT/WAIT]
-```
+- **AI suggests → User approves** — never auto-commit
 
 ---
 
-## 6. COMMUNICATION
-
-### 6.1. Language Rules
+## 7. COMMUNICATION
 
 - **Internal dialogue:** Adaptive (match user's language)
-  - Starts: "Чим я можу вам допомогти?"
-  - Then adapts to user
+  - Opens: "Чим я можу вам допомогти?"
+  - Then adapts to user (Ukrainian, Russian, English)
 - **Code comments:** English only
 - **Commit messages:** English only
-- **Variables:** English, camelCase/PascalCase
-
-### 6.2. Tone
-
-**Internal (chat):** Warm, friendly, casual, emoji OK
-**Public (README, docs):** Professional, confident but not arrogant
 
 ---
 
-## 7. SECURITY BASICS
+## 8. SECURITY BASICS
 
-- **Never** hardcode secrets (use `process.env.VAR`)
-- **Always** add error handling (try/catch, validation)
-- **Flag bugs:** `[GUARD]: [Issue] | Fix: [Description]`
+- ❌ Never hardcode secrets (use `process.env.VAR`)
+- ❌ Never commit `.env`, API keys, passwords
+- ✅ Security audit: `//CHECK:SECURITY`
 
 ---
 
-## 8. RED FLAGS (Auto-Stop)
+## 9. RED FLAGS (Auto-Stop)
 
-**STOP and ask confirmation if:**
-
+**STOP and ask confirmation before:**
 - Deleting >10 files
-- Changing core configs (package.json, tsconfig)
-- Database migrations
 - `rm -rf` or recursive deletes
 - Publishing to npm/production
-- **[TOKEN-CRITICAL]** >95% tokens used
+- Major dependency updates
+- Database migrations
+- **[TOKEN-CRITICAL]** context_pct >55%
 
 ---
 
-## 9. WORKFLOW TRIGGERS
+## 10. COMMANDS
 
-- `//TOKENS` - Show token usage
-- `//COMPACT` - Manual compression
-- `//THINK` - Show reasoning
-- `//CHECK:SECURITY` - Security audit
-- `//CHECK:RULES` - Protocol checklist (v9.1.1)
-- `//REFRESH` - Re-read rules (anti-amnesia, v9.1.1)
-- `//WHICH:RULES` - Show active protocols (v9.1.1)
-- `//ROADMAP` - Generate roadmap
-
-**NEW (v9.1.1):** Rule Refresh System - AI reads `.ai/RULES-CRITICAL.md` to prevent protocol amnesia
-
----
-
-## 10. THE GOLDEN RULE
-
-**You are my co-pilot, not autopilot.**
-
-Extend capabilities, don't replace judgment. Never execute before approval. Never auto-commit. Always discuss first.
+| Command | Action |
+|---------|--------|
+| `//START` | Session start protocol |
+| `//TOKENS` | Token status v2.1 (context% primary) |
+| `//COMPACT` | Context compression (save 40–60%) |
+| `//REFRESH` | Reload rules (anti-amnesia) |
+| `//THINK` | Show reasoning in `<thinking>` tags |
+| `//CHECK:SECURITY` | Security audit |
+| `//CHECK:RULES` | Protocol checklist |
 
 ---
 
-## 🔴 FINAL REMINDER
-
-**Before responding, check:**
-- Usage ≥30%? → Show `[TOKEN STATUS]`
-- Just committed/pushed? → Show `[TOKEN STATUS]`
-- Usage ≥90%? → Show `[TOKEN STATUS]` EVERY response
-
-**MANDATORY. Not a suggestion.**
-
----
-
-**Context:** minimal v1.1 (optimized) | **Generated:** 2026-02-08 | **From:** .ai/rules/core.md v8.0
+**Context:** minimal v2.0 | **Framework:** v9.1.1 | **Made in Ukraine 🇺🇦**

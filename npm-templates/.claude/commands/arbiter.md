@@ -125,7 +125,7 @@ For each proposal, check:
 **User-facing breaking changes:**
 - Does it remove a file users might reference? (`CLAUDE.md`, `.cursorrules`, etc.)
 - Does it change a CLI command or flag?
-- Does it remove a context preset users might have selected? (`minimal`, `ukraine-full`)
+- Does it remove a context preset users might have selected? (`minimal`, `ukraine`)
 - Does it change the structure of `config.json` or `token-limits.json`?
 - Does it require users to re-run the installer or update their setup?
 

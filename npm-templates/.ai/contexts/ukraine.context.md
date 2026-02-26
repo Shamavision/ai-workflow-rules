@@ -17,7 +17,7 @@
 
 ```markdown
 [SESSION START]
-✓ Context: ukraine-full (~18k tokens)
+✓ Context: ukraine (~18k tokens)
 ✓ Language: Adaptive
 ✓ Session context: [X]% / 200k
 ✓ Messages today: [N] / ~80    ← primary metric
@@ -617,5 +617,5 @@ Extend capabilities, don't replace judgment. When in doubt, give control and opt
 
 ---
 
-**Context:** ukraine-full v1.2 (Ukrainian Language Quality) | **Updated:** 2026-02-11 | **From:** .ai/rules/core.md v8.0
+**Context:** ukraine v1.2 (Ukrainian Language Quality) | **Updated:** 2026-02-26 | **From:** .ai/rules/core.md v8.0
 **Made in Ukraine 🇺🇦**

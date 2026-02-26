@@ -101,7 +101,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Shamavision/ai-workflow-rule
 You: //START
 
 [SESSION START]
-✓ Context loaded: ukraine-full (~18k tokens, v9.1 optimized)
+✓ Context loaded: ukraine (~18k tokens, v9.1 optimized)
 ✓ Token budget: ~18k for rules (9% of session)
 ✓ Language: Adaptive (matches user's language)
 ✓ Session context: 9% / 200k    ← PRIMARY signal
@@ -217,13 +217,18 @@ Behavioral:               🟢 Normal — full capacity
 <details>
 <summary>🎯 Context Presets</summary>
 
-| Context | Tokens | Best For |
-|---------|--------|----------|
-| `minimal` | ~10k | Startups, MVP, simple projects |
-| `ukraine-full` | ~18k | Ukrainian market compliance (default) |
+| Preset | Config key | Tokens | Includes |
+|--------|-----------|--------|----------|
+| `minimal` | `"context": "minimal"` | ~10k | Session protocol, token monitoring v2.1, skills triangle, git discipline |
+| `minimal + ukraine` | `"context": "ukraine"` | ~18k | Everything in minimal + UA compliance, zero russian services, GDPR |
 
-The installer wizard asks which preset fits your project. Switch anytime:
-edit `.ai/config.json` → change `"context"` → restart AI session.
+The installer wizard asks which preset fits your project:
+```
+1) minimal           — AI workflow essentials (skills + token monitoring)
+2) minimal + ukraine — Full Ukrainian market compliance
+```
+
+Switch anytime: edit `.ai/config.json` → change `"context"` → restart AI session.
 
 </details>
 
@@ -297,7 +302,7 @@ your-project/
 │   ├── forbidden-trackers.json       # 65+ blocked patterns, 15 categories
 │   ├── contexts/
 │   │   ├── minimal.context.md        # ~10k tokens
-│   │   └── ukraine-full.context.md   # ~18k tokens
+│   │   └── ukraine.context.md        # ~18k tokens
 │   ├── rules/
 │   │   ├── core.md                   # Complete workflow rules
 │   │   └── product.md                # Ukrainian market rules

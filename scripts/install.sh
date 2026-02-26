@@ -231,16 +231,16 @@ esac
 # ========================================
 
 echo ""
-echo -e "${CYAN}━━━ Market Selection ━━━${NC}"
+echo -e "${CYAN}━━━ Context Preset ━━━${NC}"
 echo ""
-echo "Primary market?"
-echo "  1) Ukrainian market (ukraine-full context + compliance rules)"
-echo "  2) International (minimal context)"
+echo "Which context preset?"
+echo "  1) minimal           — AI workflow essentials (skills + token monitoring)"
+echo "  2) minimal + ukraine — Full Ukrainian market compliance"
 echo ""
 read -rp "Enter number (1-2): " MARKET_CHOICE
 
-if [ "$MARKET_CHOICE" = "1" ]; then
-    CONTEXT="ukraine-full"
+if [ "$MARKET_CHOICE" = "2" ]; then
+    CONTEXT="ukraine"
     INSTALL_PRODUCT="yes"
     MARKET_VALUE="ukraine"
 else
