@@ -536,18 +536,80 @@ is_tracker_excluded() {
 }
 
 TRACKER_PATTERNS=(
+    # ── Analytics: Yandex ──────────────────────────────────────
     "metrika\\.yandex"
     "mc\\.yandex"
+    "webvisor"
+    # ── Analytics: Mail.ru / VK Group ──────────────────────────
     "top\\.mail\\.ru"
+    "top-fwz1"
+    "_tmr"
+    # ── Analytics: Other Russian ───────────────────────────────
+    "rambler.*counter"
+    "top100.*rambler"
+    "liveinternet"
+    "counter\\.yadro"
+    # ── Social: VK ─────────────────────────────────────────────
     "vk\\.com/js/api"
     "vk\\.com/pixel"
     "VK\\.Retargeting"
+    "VK\\.Goal"
+    "vkontakte"
+    "userapi\\.com"
+    # ── Social: OK.ru ──────────────────────────────────────────
+    "ok\\.ru"
+    "odnoklassniki"
+    # ── Maps ───────────────────────────────────────────────────
+    "api-maps\\.yandex"
+    "ymaps"
+    # ── Payments / Finance ─────────────────────────────────────
     "yookassa"
     "kassa\\.yandex"
-    "api-maps\\.yandex"
+    "money\\.yandex"
+    "qiwi\\."
+    "sberbank"
+    "webmoney"
+    "robokassa"
+    "tinkoff\\."
+    # ── Hosting / CDN ──────────────────────────────────────────
+    "yandexcloud\\.net"
+    "yastatic\\.net"
+    "yandex\\.st"
+    "imgsmail\\.ru"
+    "filin\\.mail\\.ru"
+    "selectel\\.ru"
+    "\\.timeweb\\.ru"
+    "\\.reg\\.ru"
+    "\\.majordomo\\.ru"
+    # ── Domains (Russian TLDs) ─────────────────────────────────
+    "\\.su/"
+    "\\.xn--p1ai"
+    # ── Video ──────────────────────────────────────────────────
+    "rutube\\.ru"
+    "vkvideo\\.ru"
+    "vk\\.com/video"
+    # ── E-commerce ─────────────────────────────────────────────
     "2gis"
     "wildberries"
+    "wbstatic"
     "ozon\\.ru"
+    # ── Captcha ────────────────────────────────────────────────
+    "smartcaptcha.*yandex"
+    # ── Enterprise Software (sanctioned 2024) ──────────────────
+    "bitrix24"
+    "1c-bitrix"
+    "amocrm\\.ru"
+    "getcourse\\.ru"
+    # ── Security Software (US ban 2024) ────────────────────────
+    "kaspersky"
+    "drweb\\.ru"
+    # ── Banking APIs ───────────────────────────────────────────
+    "alfabank\\.ru"
+    "vtb\\.ru"
+    "raiffeisen\\.ru"
+    # ── Cloud (VK Cloud / Mail.ru Cloud) ───────────────────────
+    "vk\\.cloud"
+    "mcs\\.mail\\.ru"
 )
 
 for file in "${SCAN_FILES[@]}"; do

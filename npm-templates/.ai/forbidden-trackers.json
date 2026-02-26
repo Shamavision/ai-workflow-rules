@@ -1,8 +1,8 @@
 {
   "$schema": "./forbidden-services-schema.json",
-  "_comment": "Forbidden Russian Services - Ukrainian IT Export Protection (Integrated v2.0)",
-  "version": "2.0.0",
-  "lastUpdated": "2026-01-31",
+  "_comment": "Forbidden Russian Services - Ukrainian IT Export Protection (Integrated v3.0)",
+  "version": "3.0.0",
+  "lastUpdated": "2026-02-26",
   "description": "Comprehensive blacklist of russian services, libraries, and practices that pose critical risks for Ukrainian IT export. Usage in EU/US client projects can lead to contract termination, fines, and reputational damage.",
 
   "threat_levels": {
@@ -398,6 +398,182 @@
           "alternatives": ["OpenWeatherMap", "LibreTranslate (open-source)", "EU-based services"]
         }
       ]
+    },
+
+    {
+      "id": "enterprise_software",
+      "name": "Корпоративне ПЗ (санкції 2024)",
+      "description": "Russian enterprise software sanctioned in 2024. Using in Ukrainian or EU/US client projects creates legal and security risk.",
+      "services": [
+        {
+          "id": "bitrix24",
+          "name": "Bitrix24 / 1C-Bitrix",
+          "domains": ["bitrix24.com", "*.bitrix24.com", "*.1c-bitrix.ru"],
+          "patterns": ["bitrix24", "1c-bitrix", "bitrix\\.info", "bitrix.*sdk"],
+          "npmPackages": ["node-1c-bitrix"],
+          "risk": "CRITICAL",
+          "reason": "1C and Bitrix24 under Ukraine sanctions until 2033. Russian company with data access obligations under russian law.",
+          "alternatives": ["Salesforce", "HubSpot CRM", "Monday.com", "Notion", "Jira (Atlassian)"],
+          "source": "https://businesscentral-smallbiz.innoware.ua/en/1s-parus-halaktyka-bitrix24-sanctions/"
+        },
+        {
+          "id": "amocrm",
+          "name": "AmoCRM / Kommo",
+          "domains": ["amocrm.ru", "kommo.com"],
+          "patterns": ["amocrm\\.ru", "kommo\\.com"],
+          "npmPackages": [],
+          "risk": "HIGH",
+          "reason": "Russian CRM company (rebranded to Kommo internationally). Data processing in russia.",
+          "alternatives": ["HubSpot CRM (free tier)", "Salesforce", "Pipedrive (EU-based)"]
+        },
+        {
+          "id": "getcourse",
+          "name": "GetCourse",
+          "domains": ["getcourse.ru", "getkurs.ru"],
+          "patterns": ["getcourse\\.ru", "getkurs\\.ru"],
+          "npmPackages": [],
+          "risk": "HIGH",
+          "reason": "Russian e-learning platform. User data in russian jurisdiction.",
+          "alternatives": ["Teachable", "Thinkific", "Moodle (self-hosted)"]
+        },
+        {
+          "id": "unisender",
+          "name": "Unisender",
+          "domains": ["unisender.com", "unisender.ru"],
+          "patterns": ["unisender\\.com", "unisender\\.ru"],
+          "npmPackages": [],
+          "risk": "MEDIUM",
+          "reason": "Russian email marketing service.",
+          "alternatives": ["Mailchimp", "SendGrid", "eSputnik (Ukrainian)"]
+        },
+        {
+          "id": "sendsay",
+          "name": "Sendsay",
+          "domains": ["sendsay.ru"],
+          "patterns": ["sendsay\\.ru"],
+          "npmPackages": [],
+          "risk": "MEDIUM",
+          "reason": "Russian email/SMS automation platform.",
+          "alternatives": ["Mailchimp", "Klaviyo", "eSputnik (Ukrainian)"]
+        }
+      ]
+    },
+
+    {
+      "id": "security_software",
+      "name": "Антивірус та Security ПЗ (US ban 2024)",
+      "description": "Russian security software banned by US Commerce Department in 2024. Represents supply chain risk and potential backdoors.",
+      "services": [
+        {
+          "id": "kaspersky",
+          "name": "Kaspersky Lab",
+          "domains": ["kaspersky.com", "kas.pr", "*.kaspersky.net"],
+          "patterns": ["kaspersky", "kasperskyapi", "kes\\.kaspersky"],
+          "npmPackages": [],
+          "risk": "CRITICAL",
+          "reason": "US Commerce Department ban (June 2024). Antivirus with full system access — highest risk for data exfiltration.",
+          "alternatives": ["Microsoft Defender", "CrowdStrike", "SentinelOne", "ESET (Slovakia)"],
+          "source": "https://www.internationaltradeinsights.com/2024/07/commerce-department-bans-kaspersky-software-in-first-icts-prohibition-signals-increased-risk-of-using-certain-foreign-software-and-technology/"
+        },
+        {
+          "id": "drweb",
+          "name": "Dr.Web",
+          "domains": ["drweb.ru", "drweb.com"],
+          "patterns": ["drweb\\.ru", "drweb.*api"],
+          "npmPackages": [],
+          "risk": "HIGH",
+          "reason": "Russian antivirus. System-level access. Potential backdoors and data collection.",
+          "alternatives": ["Microsoft Defender", "ESET (Slovakia)", "Bitdefender (Romania)"]
+        }
+      ]
+    },
+
+    {
+      "id": "banking_apis",
+      "name": "Банківські API (під санкціями)",
+      "description": "Russian banking APIs and payment services under US/EU/Ukraine sanctions.",
+      "services": [
+        {
+          "id": "tinkoff-api",
+          "name": "Tinkoff / Т-Банк API",
+          "domains": ["tinkoff.ru", "t-bank.ru", "invest.tinkoff.ru"],
+          "patterns": ["tinkoff\\.ru", "tinkoff.*api", "t-bank\\.ru"],
+          "npmPackages": [],
+          "risk": "CRITICAL",
+          "reason": "Sanctioned by US OFAC and EU. Any API integration violates sanctions.",
+          "alternatives": ["Stripe", "Adyen", "Monobank API (Ukrainian)"]
+        },
+        {
+          "id": "alfabank-ru",
+          "name": "Alfa-Bank Russia",
+          "domains": ["alfabank.ru", "alfa-bank.ru"],
+          "patterns": ["alfabank\\.ru", "alfa-bank\\.ru"],
+          "npmPackages": [],
+          "risk": "HIGH",
+          "reason": "Russian bank under sanctions. Note: Alfa-Bank Ukraine (now Sense Bank) is a separate entity.",
+          "alternatives": ["Stripe", "Monobank API (Ukraine)", "PrivatBank API (Ukraine)"]
+        },
+        {
+          "id": "vtb",
+          "name": "VTB Bank",
+          "domains": ["vtb.ru"],
+          "patterns": ["vtb\\.ru", "vtb.*api"],
+          "npmPackages": [],
+          "risk": "CRITICAL",
+          "reason": "State-owned russian bank. Under US/EU/Ukraine sanctions.",
+          "alternatives": ["EU-based banks with IBAN API", "Stripe"]
+        },
+        {
+          "id": "raiffeisen-ru",
+          "name": "Raiffeisen Bank Russia",
+          "domains": ["raiffeisen.ru"],
+          "patterns": ["raiffeisen\\.ru"],
+          "npmPackages": [],
+          "risk": "MEDIUM",
+          "reason": "Austrian bank's russian subsidiary. Under pressure to exit russia. Data in russian jurisdiction.",
+          "alternatives": ["Raiffeisen international branches", "EU-based banking APIs"],
+          "note": "Raiffeisen Austria HQ is safe. Only raiffeisen.ru is flagged."
+        }
+      ]
+    },
+
+    {
+      "id": "vk_cloud",
+      "name": "VK Cloud / Mail.ru Cloud (CRITICAL)",
+      "description": "Cloud infrastructure owned by VK Group (formerly Mail.ru Group). Sanctioned company with physical servers in russia.",
+      "services": [
+        {
+          "id": "vk-cloud",
+          "name": "VK Cloud (former Mail.ru Cloud Solutions)",
+          "domains": ["cloud.vk.com", "mcs.mail.ru", "*.cloud.vk.com"],
+          "patterns": ["vk\\.cloud", "mcs\\.mail\\.ru"],
+          "npmPackages": [],
+          "risk": "CRITICAL",
+          "reason": "VK Group is under US/EU/Ukraine sanctions. All data accessible to russian FSB.",
+          "alternatives": ["AWS (EU regions)", "Google Cloud (EU)", "Azure (EU)", "Hetzner (Germany)"]
+        },
+        {
+          "id": "mailru-cloud",
+          "name": "Mail.ru Cloud Storage",
+          "domains": ["cloud.mail.ru", "my.mail.ru"],
+          "patterns": ["cloud\\.mail\\.ru", "my\\.mail\\.ru"],
+          "npmPackages": [],
+          "risk": "HIGH",
+          "reason": "Mail.ru Group (VK Group) — state-affiliated. Data in russia.",
+          "alternatives": ["Google Drive API", "Dropbox API", "OneDrive", "S3-compatible (self-hosted)"]
+        },
+        {
+          "id": "cloud-ru",
+          "name": "Cloud.ru (VK Cloud rebrand)",
+          "domains": ["cloud.ru", "*.cloud.ru"],
+          "patterns": ["cloud\\.ru/"],
+          "npmPackages": [],
+          "risk": "CRITICAL",
+          "reason": "New brand of VK Cloud (2023 rebrand). Same infrastructure, same russian FSB access.",
+          "alternatives": ["AWS", "Cloudflare R2", "Backblaze B2"],
+          "note": "Pattern uses trailing slash 'cloud.ru/' to avoid false positives with 'cloudrun', 'cloud.ruby', etc."
+        }
+      ]
     }
   ],
 
@@ -481,9 +657,10 @@
 
   "metadata": {
     "created_at": "2025-01-27T00:00:00Z",
-    "updated_at": "2026-01-31T00:00:00Z",
-    "version": "2.0.0",
+    "updated_at": "2026-02-26T00:00:00Z",
+    "version": "3.0.0",
     "changelog": [
+      "v3.0.0 (2026-02-26): +4 new categories (enterprise_software, security_software, banking_apis, vk_cloud) — 11 → 15 categories, 65+ patterns. pre-commit TRACKER_PATTERNS expanded 12 → 58.",
       "v2.0.0 (2026-01-31): Integrated detailed service categories with npmPackages support, unified structure",
       "v1.0.0 (2025-01-27): Initial version with basic blacklist"
     ]
