@@ -266,14 +266,22 @@ echo -e "${BLUE}📦 Installing files...${NC}"
 echo ""
 
 # Copy all static files from MANIFEST (single source of truth for both installers)
+# On Windows/Git Bash, Node.js (native Windows binary) cannot resolve Unix paths like /tmp/...
+# cygpath -w converts /tmp/tmp.xxx → C:\Users\...\AppData\Local\Temp\tmp.xxx
+if command -v cygpath &>/dev/null; then
+    TEMPLATES_DIR_NODE=$(cygpath -w "$TEMPLATES_DIR")
+else
+    TEMPLATES_DIR_NODE="$TEMPLATES_DIR"
+fi
+
 while IFS='|' read -r src dest chmod_flag; do
     copy_file "$TEMPLATES_DIR/$src" "$TARGET_DIR/$dest"
     [ "$chmod_flag" = "1" ] && chmod +x "$TARGET_DIR/$dest" 2>/dev/null || true
-done < <(node -e "
+done < <(MANIFEST_PATH="$TEMPLATES_DIR_NODE/MANIFEST.json" INSTALL_PRODUCT="$INSTALL_PRODUCT" node -e "
 const fs = require('fs');
-const m = JSON.parse(fs.readFileSync('$TEMPLATES_DIR/MANIFEST.json', 'utf8'));
+const m = JSON.parse(fs.readFileSync(process.env.MANIFEST_PATH, 'utf8'));
 m.files
-  .filter(f => f.group === 'core' || ('$INSTALL_PRODUCT' === 'yes' && f.group === 'ukraine'))
+  .filter(f => f.group === 'core' || (process.env.INSTALL_PRODUCT === 'yes' && f.group === 'ukraine'))
   .forEach(f => process.stdout.write(f.src + '|' + f.dest + '|' + (f.chmod ? '1' : '0') + '\n'));
 ")
 
@@ -285,6 +293,8 @@ get_session_config "$PROVIDER" "$PLAN"
 TODAY_DATE=$(date -u +"%Y-%m-%d")
 
 TOKEN_LIMITS_PATH="$TARGET_DIR/.ai/token-limits.json"
+
+mkdir -p "$TARGET_DIR/.ai"
 
 if [ -f "$TOKEN_LIMITS_PATH" ]; then
     print_warning ".ai/token-limits.json already exists, skipping"
